@@ -142,7 +142,7 @@
 在这个周期结束时，攻击者已经利用了合约 B，利用了合约 A 的过时数据，然后让合约 A 中的回调和原始调用正常完成。该过程如图 9-1 所示。
 图 9-1. 只读重入
 
-![只读重入](images/ch9/maet_0901.png)
+![只读重入](https://img.learnblockchain.cn/masterethereumbook/images/ch9/maet_0901.png)
 
 **图 1-1.** 只读重入
 

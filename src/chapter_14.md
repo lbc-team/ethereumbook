@@ -17,7 +17,7 @@ EVM有一个*基于堆栈的架构*，将所有内存中的值存储在堆栈上
 
 还有一个在执行期间可用的一组环境变量和数据。我们将在本章的后面部分更详细地介绍这些。
 
-![EVM架构和执行上下文](images/ch14/maet_1401.png)
+![EVM架构和执行上下文](https://img.learnblockchain.cn/masterethereumbook/images/ch14/maet_1401.png)
 
 图14-1. EVM架构和执行上下文
 
@@ -238,7 +238,7 @@ Merkle 树是一种非常古老的数据结构，由 Ralph Merkle 于 1988 年�
 
 让我们从头开始创建一个二叉 Merkle 树 - Merkle 树的最简单形式 - 这样您就可以更熟悉它。 我们从八个数据块开始 - 您可以将它们视为英语中的不同单词。 我们使用特定的哈希函数对每个块进行哈希处理——正如第 4 章中已经提到的那样，以太坊使用 Keccak-256 哈希函数——获得 Merkle 树的叶子，在图 14-2 中表示为 hash_1、hash_2 等等。 然后，我们将每对叶子连接起来并再次对其进行哈希处理，创建 hash_12、hash_34 等等。 我们重复此连接和哈希处理的过程两次，直到得到一个最终结果，该结果代表我们的 Merkle 根：hash_12345678。
 
-![二叉 merkle 树](images/ch14/maet_1402.png)
+![二叉 merkle 树](https://img.learnblockchain.cn/masterethereumbook/images/ch14/maet_1402.png)
 
 图 14-2。二叉 merkle 树
 
@@ -248,7 +248,7 @@ Merkle 树是一种非常古老的数据结构，由 Ralph Merkle 于 1988 年�
 
 让我们使用我们之前的示例来在实践中看到这一点。 假设我们要证明 data_1 包含在数据集中。 天真的方法是提供整个数据集，从 data_1 到 data_8：总共八个项目。 使用 Merkle 树，我们只需要提供 hash_2、hash_34 和 hash_5678。 然后，任何人都可以自行计算 Merkle 根，并将其与我们最初计算的（公开共享的）进行比较。 如果它们匹配，您可以完全确定 data_1 是初始数据集的一部分，如图 14-3 所示。
 
-![用于验证 data_1 包含在树中的 Merkle 证明](images/ch14/maet_1403.png)
+![用于验证 data_1 包含在树中的 Merkle 证明](https://img.learnblockchain.cn/masterethereumbook/images/ch14/maet_1403.png)
 
 图 14-3. 用于验证 data_1 包含在树中的 Merkle 证明
 
@@ -265,7 +265,7 @@ Merkle 树是一种非常古老的数据结构，由 Ralph Merkle 于 1988 年�
 
 用数学术语来说，Merkle 树提供 O(log(n)) 复杂度，而天真方法的线性 O(n) 复杂度，如图 14-4 所示。
 
-![Merkle 树复杂度比较](images/ch14/maet_1404.png)
+![Merkle 树复杂度比较](https://img.learnblockchain.cn/masterethereumbook/images/ch14/maet_1404.png)
 
 图 14-4。O(n) 线性复杂度（顶部）与 O(log(n)) 复杂度（底部）
 
@@ -453,7 +453,7 @@ address = keccak256(0xff ++ sender_address ++ salt ++ keccak256(init_code))[12:]
 
 在本节中，我们将使用 Heimdall 来生成图 14-21。在获得 `Faucet.sol` 的运行时字节码之后，我们可以将其提供给 Heimdall，以查看 EVM 指令的外观。
 
-![反汇编 Faucet 运行时字节码](images/ch14/maet_1421.png)
+![反汇编 Faucet 运行时字节码](https://img.learnblockchain.cn/masterethereumbook/images/ch14/maet_1421.png)
 
 图 14-21。反汇编 Faucet 运行时字节码
 
@@ -521,13 +521,13 @@ $ cat cfg.dot
 
 此命令会将文件的全部内容打印到屏幕；复制它，打开一个 [*控制流图* (CFG) 在线生成器](https://oreil.ly/swOsK)，然后将其粘贴到网页的左侧，如图 14-22 所示。
 
-![Faucet.sol 合约的控制流图 (CFG)](images/ch14/maet_1422.png)
+![Faucet.sol 合约的控制流图 (CFG)](https://img.learnblockchain.cn/masterethereumbook/images/ch14/maet_1422.png)
 
 图 14-22。Faucet.sol 合约的控制流图 (CFG)
 
 图 14-23 显示了 `Faucet.sol` 合约的初始字节码。如你所见，它以与之前的 `Example.sol` 合约相同的模式开始：`PUSH1 0x80 PUSH1 0x40 MSTORE`。
 
-![放大 CFG 图的第一部分](images/ch14/maet_1423.png)
+![放大 CFG 图的第一部分](https://img.learnblockchain.cn/masterethereumbook/images/ch14/maet_1423.png)
 
 图 14-23。放大 CFG 图的第一部分
 
@@ -579,7 +579,7 @@ jumpi(label, cond) // 如果 "cond" 为真，则跳转到 "label"
 
 在 `0x20` 处，在两条 `JUMPDEST` 指令之后，仅跟随一条 `STOP` 指令，因为尽管我们声明了一个回退函数，但我们使其为空。正如你在图 14-24 中所见，如果我们没有实现回退函数，则合约会抛出异常。
 
-![JUMPI 指令导致回退函数](images/ch14/maet_1424.png)
+![JUMPI 指令导致回退函数](https://img.learnblockchain.cn/masterethereumbook/images/ch14/maet_1424.png)
 
 图 14-24。JUMPI 指令导致回退函数
 
@@ -797,7 +797,7 @@ Ethereum 鼓励删除已使用的存储变量，方法是退还合约执行期�
 
 从历史上看，区块 gas 上限在协议升级期间一次性提高，如图 14-25 所示。它的值通常设置为核心开发者建议的水平，以确保所有客户端都能够处理交易负载并及时处理区块。
 
-![区块 gas 上限历史](images/ch14/maet_1425.png)
+![区块 gas 上限历史](https://img.learnblockchain.cn/masterethereumbook/images/ch14/maet_1425.png)
 
 图 14-25. 以太坊平均 gas 上限图表
 
@@ -951,7 +951,7 @@ Jumpdest 分析是分析合约以了解哪些跳转目标有效，哪些无效�
 
 EVM 浏览所有字节码并创建一个映射，其中每个 `0x5b` 字节都被标记为有效或无效的跳转目标，如图 14-26 所示。
 
-![Jumpdest 分析映射](images/ch14/maet_1426.png)
+![Jumpdest 分析映射](https://img.learnblockchain.cn/masterethereumbook/images/ch14/maet_1426.png)
 
 图 14-26. 客户端创建一个 jumpdest 映射以将有效跳转目标与无效跳转目标分开
 
@@ -1051,7 +1051,7 @@ Error: Stack too deep. Try compiling with `--via-ir` (cli) or the equivalent `vi
 
 为了更好地可视化该问题，你可以查看图 14-27，该图详细显示了每个步骤的堆栈组成。你可以轻松地看到变量 `i` 在执行结束时位于深度 17 处。编译器不允许局部变量或参数在函数范围内不容易访问，因此它会抛出“堆栈太深”错误。
 
-![堆栈太深可视化](images/ch14/maet_1427.png)
+![堆栈太深可视化](https://img.learnblockchain.cn/masterethereumbook/images/ch14/maet_1427.png)
 
 图 14-27. 每个步骤的堆栈组成
 
@@ -1099,7 +1099,7 @@ Jumpdest 分析以及所有 gas 和代码内省操作码已完全删除，现在
 
 为此，添加了三个操作码——`CALLF`、`RETF` 和 `JUMPF`——和一个 *返回堆栈*（与 EVM 常用的操作数堆栈完全分离）。特别是，需要返回堆栈才能在跳转到函数之前保存执行信息，以便可以返回给调用者而不会丢失数据。图 14-28 可以帮助你更好地可视化其工作原理。
 
-![带有返回堆栈的 EOF 函数调用](images/ch14/maet_1428.png)
+![带有返回堆栈的 EOF 函数调用](https://img.learnblockchain.cn/masterethereumbook/images/ch14/maet_1428.png)
 
 图 14-28. EOF 引入了函数或代码部分的概念
 

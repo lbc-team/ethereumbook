@@ -35,7 +35,7 @@
 
 图 1-1 显示了区块链组件的图形表示。
 
-![区块链的组成部分](images/ch1/maet_0101.png)
+![区块链的组成部分](https://img.learnblockchain.cn/masterethereumbook/images/ch1/maet_0101.png)
 
 **图 1-1.** 区块链的组成部分
 

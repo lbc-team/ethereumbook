@@ -72,7 +72,7 @@
 
 让我们从最简单的预言机类型开始。即时读取预言机是那些提供仅用于立即决策所需数据的预言机，例如，“ethereumbook.info 的地址是什么？”或“这个人是否已满 18 岁？”如图 11-1 所示。
 
-![即时读取预言机](images/ch11/maet_1101.png)
+![即时读取预言机](https://img.learnblockchain.cn/masterethereumbook/images/ch11/maet_1101.png)
 
 图 11-1. 即时读取预言机
 
@@ -86,7 +86,7 @@
 
 下一个设置是发布-订阅，其中一个有效地为预期会更改（可能定期且频繁）的数据提供广播服务的预言机由链上的智能合约轮询或由链下守护程序监视更新，如图 11-2 所示。
 
-![发布-订阅预言机](images/ch11/maet_1102.png)
+![发布-订阅预言机](https://img.learnblockchain.cn/masterethereumbook/images/ch11/maet_1102.png)
 
 图 11-2. 发布-订阅预言机
 
@@ -102,7 +102,7 @@
 
 请求-响应类别是最复杂的：这是数据空间太大而无法存储在智能合约中，并且用户预计一次只需要整体数据集的一小部分，如图 11-3 所示。它也是适用于数据提供商业务的模型。
 
-![请求-响应预言机](images/ch11/maet_1103.png)
+![请求-响应预言机](https://img.learnblockchain.cn/masterethereumbook/images/ch11/maet_1103.png)
 
 图 11-3. 请求-响应预言机
 
@@ -180,7 +180,7 @@ Chainlink 提出了一个去中心化的预言机网络，该网络由三个关�
 
 在流行的跨链倡议中，LayerZero 提供了一个跨区块链的轻量级消息传递框架。它旨在通过专注于消息的“传输”和“验证”来提供更高效、更灵活的互操作性层。LayerZero 的设计围绕两个关键的链下实体（预言机和中继器）展开，它们协同验证跨链交易，如图 11-4 所示。
 
-![LayerZero跨链架构](images/ch11/maet_1104.png)
+![LayerZero跨链架构](https://img.learnblockchain.cn/masterethereumbook/images/ch11/maet_1104.png)
 
 图 11-4. LayerZero 跨链架构
 
@@ -188,7 +188,7 @@ Chainlink 提出了一个去中心化的预言机网络，该网络由三个关�
 
 另一个著名的项目 Wormhole 最初是为了实现 Solana 和以太坊之间的传输。此后，它已扩展到包括其他网络，例如 Binance Smart Chain、Hyperliquid 和 Avalanche。Wormhole 的方法基于一个监视单个链上事件并签署证明它们的消息的守护者网络。一旦有足够的守护者签署，该证明就被认为是有效的，从而允许在目标链上识别相应的事件（例如代币传输），如图 11-5 所示。该方案不仅可以帮助代币桥接，还可以帮助更复杂的任务，例如跨链治理提案和 NFT 传输。Wormhole 力求通过利用多个守护者的组合安全性来降低单点故障的风险；但是，这需要仔细选择和维护守护者集。
 
-![Wormhole跨链架构](images/ch11/maet_1105.png)
+![Wormhole跨链架构](https://img.learnblockchain.cn/masterethereumbook/images/ch11/maet_1105.png)
 
 图 11-5. Wormhole 跨链架构
 

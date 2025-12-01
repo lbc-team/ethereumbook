@@ -996,7 +996,7 @@ npm i ethers
 
 接下来，我们需要 USDT 合约的 ABI。你可以从 [Etherscan](https://oreil.ly/LoWH4) 获取它，就在合约源代码下方（参见图 7-1），并将其保存在你的项目文件夹中。
 
-![Etherscan’s USDT ABI section](images/ch1/maet_0701.png)
+![Etherscan’s USDT ABI section](https://img.learnblockchain.cn/masterethereumbook/images/ch1/maet_0701.png)
 
 **图 7-1.** Etherscan 的 USDT ABI 部分
 

@@ -10,7 +10,7 @@
 - 用于存储应用程序数据的中心化数据库
 - 允许用户访问应用程序的唯一前端
 
-![传统应用程序的通用架构](images/ch12/maet_1201.png)
+![传统应用程序的通用架构](https://img.learnblockchain.cn/masterethereumbook/images/ch12/maet_1201.png)
 
 图 12-1. 传统应用程序的通用架构
 
@@ -22,7 +22,7 @@ DApp 有两个明确的目标：不要有单点故障，并且即使整个团队
 - 智能合约也可以包含数据，充当适当的数据库，并收集所有必要的用户信息。
 - 人们可以通过官方前端访问应用程序，如果主前端由于任何原因无法工作，可以很容易地用替代前端（甚至是由社区制作的）替换。
 
-![DApp 的通用架构](images/ch12/maet_1202.png)
+![DApp 的通用架构](https://img.learnblockchain.cn/masterethereumbook/images/ch12/maet_1202.png)
 
 图 12-2. DApp 的通用架构
 
@@ -186,7 +186,7 @@ DApp 的前端是通过使用任何最著名的 Web2 框架创建的，例如 Re
 
 图 12-3 显示了一个完整的（简化的）DApp 架构。
 
-![完整的 DApp 架构](images/ch12/maet_1203.png)
+![完整的 DApp 架构](https://img.learnblockchain.cn/masterethereumbook/images/ch12/maet_1203.png)
 
 图 12-3. 完整的 DApp 架构
 
@@ -351,7 +351,7 @@ yarn start
 
 现在复制 localhost URL，打开你的浏览器，然后粘贴链接。你应该会看到前端，如图 12-4 所示。
 
-![Scaffold-ETH 前端](images/ch12/maet_1204.png)
+![Scaffold-ETH 前端](https://img.learnblockchain.cn/masterethereumbook/images/ch12/maet_1204.png)
 
 图 12-4. Scaffold-ETH 前端
 
@@ -366,21 +366,21 @@ yarn start
 
 Burner 钱包是你开发工作流程的一个杀手级功能，因为你无需每次都打开你的 Web3 钱包并将其连接到网站。你仍然可以在准备好后这样做：你只需单击下拉菜单并选择 Disconnect；然后，你可以单击 Connect Wallet 并从列表中选择你喜欢的钱包，如图 12-5、12-6 和 12-7 所示。
 
-![断开 burner 钱包的连接](images/ch12/maet_1205.png)
+![断开 burner 钱包的连接](https://img.learnblockchain.cn/masterethereumbook/images/ch12/maet_1205.png)
 
 图 12-5. 断开 burner 钱包的连接
 
-![Connect Wallet 按钮](images/ch12/maet_1206.png)
+![Connect Wallet 按钮](https://img.learnblockchain.cn/masterethereumbook/images/ch12/maet_1206.png)
 
 图 12-6. Connect Wallet 按钮
 
-![选择钱包](images/ch12/maet_1207.png)
+![选择钱包](https://img.learnblockchain.cn/masterethereumbook/images/ch12/maet_1207.png)
 
 图 12-7. 选择钱包
 
 第二个杀手级功能是 Debug Contracts 部分。要打开它，只需单击页面中心的 Debug Contracts 链接。使用默认示例，你现在应该看到类似图 12-8 的内容。
 
-![Debug Contracts 部分](images/ch12/maet_1208.png)
+![Debug Contracts 部分](https://img.learnblockchain.cn/masterethereumbook/images/ch12/maet_1208.png)
 
 图 12-8. Debug Contracts 部分
 
@@ -388,7 +388,7 @@ Burner 钱包是你开发工作流程的一个杀手级功能，因为你无需�
 
 让我们做一个小演示。首先，我们需要为我们的 burner 钱包充值，以便我们稍后可以发送一些交易来与已部署的合约进行交互。为此，你只需要单击最右边的按钮，如图 12-9 所示。你几乎会立即收到一些 ETH，并且你会看到你的 ETH 余额增加。
 
-![Grab funds 按钮](images/ch12/maet_1209.png)
+![Grab funds 按钮](https://img.learnblockchain.cn/masterethereumbook/images/ch12/maet_1209.png)
 
 图 12-9. Grab funds 按钮
 
@@ -396,13 +396,13 @@ Burner 钱包是你开发工作流程的一个杀手级功能，因为你无需�
 
 图 12-10 显示了点击 Send 按钮之前的合约状态。你可以看到你的合约持有 0 ETH，“greeting”是“Building Unstoppable Apps!!!”，premium 为 false，totalCounter 等于 0。
 
-![交易前的合约状态](images/ch12/maet_1210.png)
+![交易前的合约状态](https://img.learnblockchain.cn/masterethereumbook/images/ch12/maet_1210.png)
 
 图 12-10. 交易前的合约状态
 
 图 12-11 捕获了发送交易后的合约状态。你可以立即看到你的合约现在持有 0.1 ETH，“greeting”是“hello world”，premium 为 true，totalCounter 等于 1。
 
-![交易后的合约状态](images/ch12/maet_1211.png)
+![交易后的合约状态](https://img.learnblockchain.cn/masterethereumbook/images/ch12/maet_1211.png)
 
 图 12-11. 交易后的合约状态
 
@@ -422,7 +422,7 @@ $ yarn vercel:yolo
 
 如果你转到你的 Vercel 个人资料，你现在可以看到你新创建的项目。如图 12-12 所示，有一个 Domains 字段，你可以在其中找到 Vercel 为你自动生成的网站域名。
 
-![Vercel 项目页面](images/ch12/maet_1212.png)
+![Vercel 项目页面](https://img.learnblockchain.cn/masterethereumbook/images/ch12/maet_1212.png)
 
 图 12-12. Vercel 项目页面
 
@@ -508,7 +508,7 @@ $ yarn ipfs
 
 图 12-13 简要概述了创建完全去中心化应用程序所需的工程堆栈。
 
-![DApp 工程堆栈](images/ch12/maet_1213.png)
+![DApp 工程堆栈](https://img.learnblockchain.cn/masterethereumbook/images/ch12/maet_1213.png)
 
 图 12-13. DApp 完整工程堆栈的简要概述
 

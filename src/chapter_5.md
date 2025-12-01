@@ -78,7 +78,7 @@ keystore 格式使用 *密钥派生函数* (KDF)，也称为 *密码拉伸算法
 
 开发确定性钱包是为了更容易地从单个种子派生多个密钥。目前，最先进的确定性钱包形式之一是由比特币的 BIP-32 标准定义的 *分层确定性 (HD) 钱包*。HD 钱包包含以树状结构派生的密钥，因此父密钥可以派生一系列子密钥，每个子密钥都可以派生一系列孙密钥，依此类推。图 5-1 说明了这种树状结构。
 
-![HD 钱包：从单个种子生成的密钥树](images/ch5/maet_0501.png)
+![HD 钱包：从单个种子生成的密钥树](https://img.learnblockchain.cn/masterethereumbook/images/ch5/maet_0501.png)
 
 图 5-1. HD 钱包：从单个种子生成的密钥树
 
@@ -153,7 +153,7 @@ BIP-39 定义了助记码和种子的创建，我们在此用九个步骤进行�
 
 图 5-2 显示了如何使用熵来生成助记词。
 
-![生成助记词](images/ch5/maet_0502.png)
+![生成助记词](https://img.learnblockchain.cn/masterethereumbook/images/ch5/maet_0502.png)
 
 图 5-2. 生成助记词
 
@@ -185,7 +185,7 @@ BIP-39 定义了助记码和种子的创建，我们在此用九个步骤进行�
 
 图 5-3 显示了如何使用助记词来生成种子。
 
-![从助记词到种子](images/ch5/maet_0503.png)
+![从助记词到种子](https://img.learnblockchain.cn/masterethereumbook/images/ch5/maet_0503.png)
 
 图 5-3. 从助记词到种子
 
@@ -266,8 +266,7 @@ BIP-39 作为库在许多不同的编程语言中实现，例如：
 >
 > 这将在本章中被反复强调，因为这是种子安全性的最关键规则：在任何情况下都不要以数字形式保存你的种子短语。
 
-![BIP-39 生成器网页](images/ch5/maet_0504.png)
-
+![BIP-39 生成器网页](https://img.learnblockchain.cn/masterethereumbook/images/ch5/maet_0504.png)
 图 5-4. BIP-39 生成器网页
 
 ### 从种子创建 HD 钱包
@@ -425,7 +424,7 @@ ERC-4337 是以太坊区块链的一项进步，旨在使用户帐户更加通�
 
 ERC-4337 的实施引入了 *UserOperations* 来以不同的方式处理交易，如图 5-5 所示。 用户不是直接将每个交易广播到区块链，而是将 UserOperations 提交到高级别的内存池，交易在其中临时存储。 特殊参与者，称为 *bundler*，收集和处理这些 UserOperations，将它们打包成单个以太坊交易。 此过程减少了网络拥塞，并允许以更有效、更捆绑的方式处理多个操作。 ERC-4337 还建立了一个名为 *paymaster* 的新角色。 通常，以太坊交易需要以 ETH 支付 gas 费用，但 paymaster 使其成为可能，用户可以使用替代代币支付 gas 费用，甚至让第三方赞助支付费用。 这种转变消除了一个重大障碍，特别是对于可能没有 ETH 的新手来说，使以太坊网络更具包容性和可访问性。
 
-![ERC-4337 实施图](images/ch5/maet_0505.png)
+![ERC-4337 实施图](https://img.learnblockchain.cn/masterethereumbook/images/ch5/maet_0505.png)
 
 图 5-5. ERC-4337 实施图
 
@@ -447,7 +446,7 @@ ERC-4337 在应用级别引入了 AA，但由于其协议外设计，它存在�
 
 图 5-6 表示 RIP-7560 中概述的 AA 的交易流程。 该过程包含处理验证、部署和执行的几个关键合约，从而为管理以太坊区块链上的用户帐户和交易创建了简化的模块化方法。
 
-![RIP-7560 交易流程](images/ch5/maet_0506.png)
+![RIP-7560 交易流程](https://img.learnblockchain.cn/masterethereumbook/images/ch5/maet_0506.png)
 
 图 5-6. RIP-7560 交易流程
 
@@ -475,19 +474,19 @@ EIP-3074 引入了两个操作码 `AUTH` 和 `AUTHCALL`，以允许 EOA 将其�
 
 最初，重放保护和诸如值、gas 和其他 `AUTHCALL` 参数之类的字段也已签名。 该设计已演变为将这些任务委托给调用者合约，这使得用户信任调用者至关重要。 用户可以通过散列来“提交”到特定的调用属性。 仅当提交的值（例如用于重放保护的 nonce）与用户的承诺匹配时，调用者才会进行验证，如图 5-7 所示。 这确保了调用者处理的确切内容是用户授权的内容。
 
-![EIP-3074 承诺验证](images/ch5/maet_0507.png)
+![EIP-3074 承诺验证](https://img.learnblockchain.cn/masterethereumbook/images/ch5/maet_0507.png)
 
 图 5-7. EIP-3074 承诺验证
 
 提交哈希使调用者可以强制执行各种规则，例如允许并行 nonce 或将多个调用捆绑在一个签名下。 这启用了多调用流程，例如将 ERC-20 批准转移合并为单个交易，如图 5-8 所示。
 
-![EIP-3074 多调用流程](images/ch5/maet_0508.png)
+![EIP-3074 多调用流程](https://img.learnblockchain.cn/masterethereumbook/images/ch5/maet_0508.png)
 
 图 5-8. EIP-3074 多调用流程
 
 另外，它通过使用委托地址和访问策略签署提交消息来支持将 EOA 的控制权委托给其他密钥，调用者在代表 EOA 中继调用之前会验证该消息，如图 5-9 所示。
 
-![EIP-3074 委托流程](images/ch5/maet_0509.png)
+![EIP-3074 委托流程](https://img.learnblockchain.cn/masterethereumbook/images/ch5/maet_0509.png)
 
 图 5-9. EIP-3074 委托流程
 
@@ -551,7 +550,7 @@ EIP-7702 还引入了批处理和权限降级。 批处理允许在单个原子�
 
 与社交恢复相关的主要 EIP 是 EIP-2429。 EIP-2429 标题为“秘密多重签名恢复”，引入了一种机制，允许用户通过将受信任的个人或实体指定为“监护人”来重新获得对其钱包的访问权限。 如果用户丢失了他们的私钥，他们可以使用这些监护人来帮助恢复对钱包的控制权。 监护人仅在恢复过程中参与，从而限制了他们的权力，如图 5-10 所示。
 
-![社交恢复流程](images/ch5/maet_0510.png)
+![社交恢复流程](https://img.learnblockchain.cn/masterethereumbook/images/ch5/maet_0510.png)
 
 图 5-10. 社交恢复流程
 

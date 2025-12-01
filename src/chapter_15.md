@@ -38,7 +38,7 @@
 
 在区块链中，每个区块（除了特殊的创世区块）都建立在父区块之上并指向父区块。因此，我们最终得到一个区块链：一个区块链。在实施分叉共识协议的链上，这种线性条件在实践中通常不是这样：在现实世界的条件下，我们最终得到的东西更像是区块树——如图 15-1 所示——而不是区块链，共识协议的目标是让网络上的所有节点对相同的线性区块序列达成一致。
 
-![区块树结构](images/ch15/maet_1501.png)
+![区块树结构](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1501.png)
 
 图 15-1. 区块树结构
 
@@ -118,13 +118,13 @@ LMD-GHOST 是以太坊共识协议的主要部分：它是分叉选择规则算�
 
 当验证者在证明中投票支持某个区块时，他们实际上是在为其分配一个分数。该分数完全等于验证者在发布证明时质押的 ETH 金额。但还有更多：这种投票不仅是对该区块的投票，也是对位于该选定区块同一分叉中的所有祖先区块的投票，如图 15-2 所示。
 
-![投票传播到祖先](images/ch15/maet_1502.png)
+![投票传播到祖先](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1502.png)
 
 图 15-2. 投票传播到祖先
 
 您可以说对某个区块的投票会传播回其所有祖先。为了使这个概念更加清晰，我们可以为所有分支分配一个分数。*分支* 是将一个区块与其父区块连接起来的链接，如图 15-3 所示。
 
-![分支定义](images/ch15/maet_1503.png)
+![分支定义](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1503.png)
 
 图 15-3. 分支定义
 
@@ -132,13 +132,13 @@ LMD-GHOST 是以太坊共识协议的主要部分：它是分叉选择规则算�
 
 图 15-4 显示了一个区块链，其中每个区块的分数等于 1。连接 E 到 D 的分支的分数完全等于区块 E 的分数，因为没有后代区块。要计算分支 D→C 的分数，您需要将区块 D 的分数添加到所有后代分支的分数。在这种情况下，只有一个后代分支：分支 E→D。所以它是 1（区块 D 的分数）+ 1（分支 E→D 的分数）= 2。然后我们有分支 C→B：它的分数是 1（区块 C 的分数）+ 2（分支 D→C 的分数）= 3。在这里，我们有一个带有区块 C' 的小分叉；我们需要为分支 C'→B 分配一个分数。它的分数只有 1（区块 C' 的分数），因为区块 C' 没有直接后代。最后，我们有分支 B→A；要计算它的分数，我们需要将 1（区块 B 的分数）+ 1（分支 C'→B 的分数）+ 3（分支 C→B 的分数）相加 = 5。
 
-![分支分数计算示例](images/ch15/maet_1504.png)
+![分支分数计算示例](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1504.png)
 
 图 15-4. 分支分数计算示例
 
 图 15-5 包含一个更复杂的场景，其中有几个分叉，每个区块都有不同的分数。看看它，确保您理解了每个分支的分数是如何计算的。
 
-![复杂的分支评分](images/ch15/maet_1505.png)
+![复杂的分支评分](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1505.png)
 
 图 15-5. 复杂的分支评分
 
@@ -152,7 +152,7 @@ LMD-GHOST 是以太坊共识协议的主要部分：它是分叉选择规则算�
 
 图 15-6 显示了一个验证者在区块 B 上发布了一个证明，其中他们分享了他们认为区块 B 是链头的事实。然后，稍后在区块 F 期间，该验证者再次被选中发布一个新的证明，其中他们表达了他们对区块 F 作为新链头的偏好。当该验证者在区块 F 上发布新的证明时，其他验证者需要丢弃旧的证明（在区块 B 期间发布），并且只考虑最新的证明。
 
-![最新消息驱动示例](images/ch15/maet_1506.png)
+![最新消息驱动示例](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1506.png)
 
 图 15-6. 最新消息驱动示例
 
@@ -162,7 +162,7 @@ GHOST 是分叉选择规则的关键方面。头区块是没有进一步后代�
 
 让我们在实践中看看它，以更好地理解 LMD-GHOST 如何在实际场景中工作。图 15-7 表示我们之前使用的相同场景。
 
-![LMD-GHOST 场景](images/ch15/maet_1507.png)
+![LMD-GHOST 场景](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1507.png)
 
 图 15-7. LMD-GHOST 场景
 
@@ -174,7 +174,7 @@ LMD-GHOST 始终从被认为是最终链一部分的初始区块开始。最初�
 
 1. 它为所有分支分配一个分数，遵循我们之前解释的相同方法，通过向后传播每个区块的分数到所有先前的分支。图 15-8 显示了所有分支的最终分数。
 
-![计算出的分支分数](images/ch15/maet_1508.png)
+![计算出的分支分数](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1508.png)
 
 图 15-8. 计算出的分支分数
 
@@ -182,7 +182,7 @@ LMD-GHOST 始终从被认为是最终链一部分的初始区块开始。最初�
 
 让我们在我们的示例中逐步运行此过程。LMD-GHOST 从初始区块 A 开始，立即转到区块 B，因为没有其他分支可供选择，如图 15-9 所示。
 
-![LMD-GHOST 步骤 1](images/ch15/maet_1509.png)
+![LMD-GHOST 步骤 1](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1509.png)
 
 图 15-9. LMD-GHOST 步骤 1
 
@@ -193,7 +193,7 @@ LMD-GHOST 始终从被认为是最终链一部分的初始区块开始。最初�
 
 GHOST 贪婪地选择分支 C→B，因为它具有最高分数，如图 15-10 所示。请注意，区块 D 的分数高于区块 C 并不重要，因为 LMD-GHOST 不考虑单个区块的分数，而是考虑区块所在的整个分叉的分数。
 
-![LMD-GHOST 步骤 2](images/ch15/maet_1510.png)
+![LMD-GHOST 步骤 2](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1510.png)
 
 图 15-10. LMD-GHOST 步骤 2
 
@@ -204,13 +204,13 @@ GHOST 贪婪地选择分支 C→B，因为它具有最高分数，如图 15-10 �
 
 GHOST 选择分支 E→C，如图 15-11 所示。
 
-![LMD-GHOST 步骤 3](images/ch15/maet_1511.png)
+![LMD-GHOST 步骤 3](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1511.png)
 
 图 15-11. LMD-GHOST 步骤 3
 
 此时，我们只有一个分支可供选择，即分支 H→E，因此这是 GHOST 选择的分支，如图 15-12 所示。
 
-![LMD-GHOST 步骤 4](images/ch15/maet_1512.png)
+![LMD-GHOST 步骤 4](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1512.png)
 
 图 15-12. LMD-GHOST 步骤 4
 
@@ -231,13 +231,13 @@ LMD-GHOST 为严格遵守规则的验证者提供了各种明确的激励措施�
 
 当验证者被选择向链中提议一个新区块时，它必须只创建一个有效的区块。通过这样做，验证者将获得他们创建的区块中包含的所有交易的优先费用之和，加上一些新铸造的 ETH，如图 15-13 所示。
 
-![区块提议奖励](images/ch15/maet_1513.png)
+![区块提议奖励](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1513.png)
 
 图 15-13. 区块提议奖励
 
 如果验证者试图通过创建多个区块作弊，协议会明确地通过削减一部分他们的质押来惩罚他们。事实上，要成为验证者集合的一部分，您必须质押一些 ETH 作为抵押品（至少 32 ETH）。此质押（也）是必要的，以便协议可以通过削减来惩罚您——即，从中删除一些 ETH，如图 15-14 所示。
 
-![区块提议削减](images/ch15/maet_1514.png)
+![区块提议削减](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1514.png)
 
 图 15-14. 区块提议削减
 
@@ -253,13 +253,13 @@ LMD-GHOST 为严格遵守规则的验证者提供了各种明确的激励措施�
 
 当验证者被选择以证明的形式分享他们对网络的看法时，他们必须只发布一个有效的证明。通过这样做，他们会获得少量费用（远小于区块提议者获得的费用），如图 15-15 所示。
 
-![证明奖励](images/ch15/maet_1515.png)
+![证明奖励](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1515.png)
 
 图 15-15. 证明奖励
 
 如果验证者试图通过创建多个证明或矛盾证明来作弊，协议会明确地通过削减一部分他们的质押来惩罚他们，如图 15-16 所示。
 
-![证明削减](images/ch15/maet_1516.png)
+![证明削减](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1516.png)
 
 图 15-16. 证明削减
 
@@ -279,7 +279,7 @@ Casper FFG 像所有经典的拜占廷容错（BFT）协议一样，可以确保
 
 Casper FFG 通过要求一个 epoch 内超过三分之二的验证者进行投票来确保共识，将投票分散在 32 个 slot 中，以有效地管理大型验证者集合，如图 15-17 所示。一个 epoch 分为 32 个 slot，每个 slot 通常包含一个区块。一个 epoch 的第一个 slot 是它的 *检查点*。
 
-![Epochs 和检查点](images/ch15/maet_1517.png)
+![Epochs 和检查点](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1517.png)
 
 图 15-17. Epochs 和检查点
 
@@ -301,7 +301,7 @@ Casper FFG 像传统的 BFT 协议一样，分两个阶段确保网络上的协�
 
 在 Casper FFG 中，当节点观察到大多数验证者同意从一个检查点过渡到另一个检查点时，它会证明旧检查点是正当的。这表明该节点已经看到了来自验证者集合的很大一部分的共识证据，如图 15-18 所示，并且承诺除非显示出对替代路径的绝大多数共识，否则不会恢复到以前的状态。
 
-![正当化过程](images/ch15/maet_1518.png)
+![正当化过程](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1518.png)
 
 图 15-18. 正当化过程[^1]
 
@@ -311,7 +311,7 @@ Casper FFG 像传统的 BFT 协议一样，分两个阶段确保网络上的协�
 
 当节点观察到从一个经过证明是正当的检查点到其直接子项的共识（超多数链接）时，它将最终确定父检查点，如图 15-19 所示。这表明网络范围内的承诺不会从该点恢复，并得到绝大多数验证者支持的支持。最终确定通过使区块链历史记录不可变地超出该检查点来确保网络稳定性和安全性，从而防止在没有验证者的重大后果的情况下进行逆转。
 
-![最终确定过程](images/ch15/maet_1519.png)
+![最终确定过程](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1519.png)
 
 图 15-19. 最终确定过程
 
@@ -327,13 +327,13 @@ Casper FFG 修改了传统 LMD-GHOST 分叉选择规则，规定节点优先选�
 
 在 Casper FFG 中，检查点对于确保网络共识和安全性至关重要。它们标有随区块链进程增加的 epoch 编号。验证者必须遵守严格的投票规则：他们不能对同一检查点的不同结果进行投票，因此不能进行重复投票，如图 15-20 所示。如果不实施此投票规则，重组的可能性会大大增加，从而导致链高度不稳定。
 
-![禁止重复投票](images/ch15/maet_1520.png)
+![禁止重复投票](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1520.png)
 
 图 15-20. 禁止重复投票
 
 验证者还必须避免创建可以解释为与先前承诺相矛盾的投票（禁止环绕投票）。违反这些原则会导致削减，这是一种旨在维护共识机制的完整性和责任制的惩罚，如图 15-21 所示。
 
-![禁止环绕投票](images/ch15/maet_1521.png)
+![禁止环绕投票](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1521.png)
 
 图 15-21. 禁止环绕投票
 
@@ -358,13 +358,13 @@ Casper FFG 确保网络保持活跃，并且始终能够在没有任何诚实验
 
 投票分散在我们称之为 epoch 的时间内，该 epoch 分为 32 个 slots，每个持续 12 秒。这样，每个验证者每个 epoch 投票一次，每个 slot 中大约有 1/32 的验证者集合进行投票。图 15-22 显示了这样一个验证者池。
 
-![验证者池](images/ch15/maet_1522.png)
+![验证者池](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1522.png)
 
 图 15-22. 验证者池
 
 在本例中，验证者的数量当然比实际的以太坊网络要少得多，但我们确实有 64 个节点，它们被分成 32 组。每组将在 epoch 中为一个 slot 投票，如图 15-23 所示。
 
-![验证者分成组](images/ch15/maet_1523.png)
+![验证者分成组](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1523.png)
 
 图 15-23. 验证者分成组
 
@@ -378,7 +378,7 @@ Casper FFG 确保网络保持活跃，并且始终能够在没有任何诚实验
 
 一个 epoch 的表示——在本例中是 epoch N——如图 15-24 所示。检查点 N 是 slot 32N；一旦该检查点被最终确定，slot 32N-1 以及之前的所有其他 slot 都将被视为已最终确定。
 
-![Epoch 表示](images/ch15/maet_1524.png)
+![Epoch 表示](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1524.png)
 
 图 15-24. Epoch 表示
 
@@ -392,7 +392,7 @@ Casper FFG 确保网络保持活跃，并且始终能够在没有任何诚实验
 
 当一个验证者论证一个检查点时，他们已经收到了来自网络中三分之二的验证者对该特定检查点的批准，如图 15-25 所示，但是这第一轮批准仅对验证者本身有效。特别是在对抗条件下，可能没有足够的验证者达成共识。传统的 PBFT 风格的共识机制——比如 Algorand、Dfinity 和 Cosmos 中使用的那些——会在这个阶段停止并失去活跃性。另一方面，以太坊会继续前进。如果它不能论证一个检查点，没问题——它只需继续前进并尝试论证下一个。这是可行的，因为以太坊依赖 LMD-GHOST 来保持活跃性，而 Casper FFG 只是一个覆盖层——一个“锦上添花”。因此，如果最终性暂时停滞，那也不是一个关键问题。
 
-![论证轮](images/ch15/maet_1525.png)
+![论证轮](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1525.png)
 
 图 15-25. 论证轮
 
@@ -400,7 +400,7 @@ Casper FFG 确保网络保持活跃，并且始终能够在没有任何诚实验
 
 验证者宣布他们已经从绝大多数人那里听说他们也支持这个检查点。他们再次检查以查看网络的其余部分是否确认这个绝大多数确实存在。如果是这样，验证者就可以“最终确定”检查点，如图 15-26 所示。最终确定是一个强大的步骤——这意味着没有一个诚实的验证者会恢复这个检查点。他们可能还没有在他们的本地视图中将其标记为已最终确定，但至少他们已经将其标记为已论证，并且如果不采取可惩罚的行动，就无法撤销它。
 
-![最终确定轮](images/ch15/maet_1526.png)
+![最终确定轮](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1526.png)
 
 图 15-26. 最终确定轮
 
@@ -424,7 +424,7 @@ Casper FFG 确保网络保持活跃，并且始终能够在没有任何诚实验
 
 让我们探索一个极端的场景，以更好地理解共识过程。假设我们有四个验证者，A、B、C 和 D，如图 15-27 所示。所有这些都是诚实的，但他们运营的网络可能会遇到无限期的延迟。为了这个示例的目的，假设每个块高度都有一个检查点。
 
-![四个验证者场景](images/ch15/maet_1527.png)
+![四个验证者场景](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1527.png)
 
 图 15-27. 四个验证者场景
 
@@ -434,7 +434,7 @@ Casper FFG 确保网络保持活跃，并且始终能够在没有任何诚实验
 
 A 在源头 0 和目标 1 之间有一个绝大多数链接（参见“Supermajority links”），因此它将最终确定检查点 0 并论证检查点 1。同时，B、C 和 D 在当前 epoch 中没有看到任何投票，因此他们仍然只有论证了检查点 0。他们也将在本 epoch 中投票支持一个空的检查点，即检查点 X，如图 15-28 所示。
 
-![网络延迟场景步骤 1](images/ch15/maet_1528.png)
+![网络延迟场景步骤 1](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1528.png)
 
 图 15-28. 网络延迟场景步骤 1
 
@@ -442,7 +442,7 @@ A 在源头 0 和目标 1 之间有一个绝大多数链接（参见“Supermajo
 
 这个区块包含三个投票，源头是检查点 0，目标是检查点 X；因此，在 0 和 X 之间有一个绝大多数链接，允许验证者 B、C 和 D 将检查点 0 视为已最终确定，并将检查点 X 视为已论证，如图 15-29 所示。另一方面，A 认为这个区块是无效的，因为在其本地视图中，1 已被论证，无法撤销。验证者 A 的链继续的唯一解决方案是删除其内存并与网络的其余部分重新同步。
 
-![网络延迟场景步骤 2](images/ch15/maet_1529.png)
+![网络延迟场景步骤 2](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1529.png)
 
 图 15-29. 网络延迟场景步骤 2
 
@@ -452,7 +452,7 @@ A 在源头 0 和目标 1 之间有一个绝大多数链接（参见“Supermajo
 
 这个例子表明，即使是简单的网络延迟也可能导致节点对论证和最终确定有不同的看法。然而，仅凭这一点并不能证明需要两个独立的阶段：论证，然后是最终确定。这两个阶段背后的原因是非常简单的：如果我们没有论证步骤，A 将最终确定检查点 1，这将对网络的其余部分来说是无效的，如图 15-30 所示。
 
-![没有论证步骤](images/ch15/maet_1530.png)
+![没有论证步骤](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1530.png)
 
 图 15-30. 没有论证步骤
 
@@ -464,7 +464,7 @@ A 在源头 0 和目标 1 之间有一个绝大多数链接（参见“Supermajo
 
 充分理解 Gasper 工作原理的最好方法是遵循一个真实的区块链示例，该区块链使用它来对块的历史达成共识。我们不会使用以太坊主网作为我们的示例。相反，我们将创建一个由三个验证者组成的模拟网络，以便更好地描述在共识协议的每个阶段发生的事情，正如您在图 15-31 中看到的那样。
 
-![Gasper 模拟网络](images/ch15/maet_1531.png)
+![Gasper 模拟网络](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1531.png)
 
 图 15-31. Gasper 模拟网络
 
@@ -474,13 +474,13 @@ A 在源头 0 和目标 1 之间有一个绝大多数链接（参见“Supermajo
 
 在我们的简化网络中，每个 epoch 由三个 slots 组成，如图 15-32 所示。
 
-![简化的 epoch 结构](images/ch15/maet_1532.png)
+![简化的 epoch 结构](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1532.png)
 
 图 15-32. 简化的 epoch 结构
 
 让我们从 epoch 编号 1 开始我们的示例。这不是真正的第一个 epoch；我们只是为了简单起见而称其为“epoch 1”。验证者 A 是被选择来提议第一个区块的人。我们可以将他们要提议的区块称为区块 1，如图 15-33 所示。
 
-![区块 1 提议](images/ch15/maet_1533.png)
+![区块 1 提议](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1533.png)
 
 图 15-33. 区块 1 提议
 
@@ -490,7 +490,7 @@ A 在源头 0 和目标 1 之间有一个绝大多数链接（参见“Supermajo
 
 现在，验证者 B 被选择来提议下一个 slot 中的区块——slot 2——正如您将在图 15-34 中看到的那样。为此，验证者仍然必须在他们对网络的本地视图上运行 LMD-GHOST，以获得要构建在其之上的最后一个 head block。
 
-![区块 2 提议](images/ch15/maet_1534.png)
+![区块 2 提议](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1534.png)
 
 图 15-34. 区块 2 提议
 
@@ -514,7 +514,7 @@ A 在源头 0 和目标 1 之间有一个绝大多数链接（参见“Supermajo
 
 结果是区块 2，因此验证者 C 在其之上发布区块 3，如图 15-35 所示。
 
-![区块 3 提议](images/ch15/maet_1535.png)
+![区块 3 提议](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1535.png)
 
 图 15-35. 区块 3 提议
 
@@ -524,7 +524,7 @@ A 在源头 0 和目标 1 之间有一个绝大多数链接（参见“Supermajo
 
 现在，我们回到验证者 A。他们必须提出下一个区块——slot 4——这也是新 epoch 的第一个区块——epoch 2——正如你将在图 15-36 中看到的那样。
 
-![区块 4 提议 - 新的 epoch](images/ch15/maet_1536.png)
+![区块 4 提议 - 新的 epoch](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1536.png)
 
 图 15-36. 区块 4 提议 - 新的 epoch
 
@@ -552,13 +552,13 @@ A 在源头 0 和目标 1 之间有一个绝大多数链接（参见“Supermajo
 
 Target block 很容易选择，因为它只是 epoch 的第一个区块（在一些边缘情况下，target block 可能不是 epoch 的第一个区块，但是为了简单起见，我们忽略它们）。Source block 是通过查看验证者的证明并查看是否有超过三分之二验证者投票将其作为 target block 的区块来计算的。我们没有在先前的证明中包含 source 和 target block，但是假设它们都将区块 1 作为 target block。因此，目前，我们已经证明了区块 1，因为从区块 1 到区块 4 有一个绝大多数链接。参见图 15-37。
 
-![区块 1 经过论证](images/ch15/maet_1537.png)
+![区块 1 经过论证](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1537.png)
 
 图 15-37. 区块 1 经过论证
 
 然后，这些证明将发布并与所有验证者共享，并将包含在接下来的 slotes 中（通常在紧接着的下一 slot 中）。我们可以跳过区块 5 和 6，直接进入区块 7，下一个 epoch 的第一个区块：epoch 3，如图 15-38 所示。
 
-![区块 7 提议 - epoch 3](images/ch15/maet_1538.png)
+![区块 7 提议 - epoch 3](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1538.png)
 
 图 15-38. 区块 7 提议 - epoch 3
 
@@ -582,7 +582,7 @@ Target block 很容易选择，因为它只是 epoch 的第一个区块（在一
 
 正如您所看到的，target block 现在是区块 7，而 source block 是区块 4。这是真的，因为验证者 A、B 和 C 在先前的证明中都投票选择了等于区块 4 的 target block。我们现在已经证明了区块 4，因为我们有一个从区块 4 到区块 7 的新的绝大多数链接，如图 15-39 所示。
 
-![区块 4 经过论证，区块 1 最终确定](images/ch15/maet_1539.png)
+![区块 4 经过论证，区块 1 最终确定](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1539.png)
 
 图 15-39. 区块 4 经过论证，区块 1 最终确定
 
@@ -604,7 +604,7 @@ Target block 很容易选择，因为它只是 epoch 的第一个区块（在一
 
 *时间游戏* 是一种策略，验证者尽可能长时间地等待，然后提议区块，以最大化他们的 MEV 奖励，如图 15-40 所示。这种做法涉及微妙的平衡，要求验证者推迟他们的提议以捕获更多价值，同时确保他们的区块得到足够多的证明委员会的支持，以留在规范链上。
 
-![时间游戏策略](images/ch15/maet_1540.png)
+![时间游戏策略](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1540.png)
 
 图 15-40. 时间游戏策略
 
@@ -614,7 +614,7 @@ Target block 很容易选择，因为它只是 epoch 的第一个区块（在一
 
 什么是时间游戏？这就像等待完美的时机来采取行动，旨在从中获得最大的好处。这就是一些保持网络正常运行的人试图做的事情。他们正在等待正确的时机采取行动以获得最大的回报。但是这种等待游戏可能是有风险的。如果他们的互联网速度很慢或者他们没有太多经验，他们可能会错过自己做贡献的机会。而错过太多的机会可能会使网络变得不太可靠。
 
-![时间游戏风险可视化](images/ch15/maet_1541.png)
+![时间游戏风险可视化](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1541.png)
 
 图 15-41. 时间游戏风险可视化
 
@@ -630,7 +630,7 @@ Target block 很容易选择，因为它只是 epoch 的第一个区块（在一
 
 让我们分析一个快速的示例，说明如果多数客户端存在错误会发生什么。请注意，图 15-42 中的每个区块都是一个检查点，而不是区块链中的一个区块。
 
-![多数客户端错误场景](images/ch15/maet_1542.png)
+![多数客户端错误场景](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1542.png)
 
 图 15-42. 多数客户端错误场景
 
@@ -638,7 +638,7 @@ Target block 很容易选择，因为它只是 epoch 的第一个区块（在一
 
 假设该错误已解决，并且最终确定无效 epoch 的验证者希望切换回正确的链 B，则需要采取的初步操作是证明 epoch X，如图 15-43 所示。
 
-![从错误中恢复需要证明](images/ch15/maet_1543.png)
+![从错误中恢复需要证明](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1543.png)
 
 图 15-43. 从错误中恢复需要证明
 
@@ -652,13 +652,13 @@ Target block 很容易选择，因为它只是 epoch 的第一个区块（在一
 
 当我们第一次撰写本章时，Geth 的使用百分比为 63％，正如我们先前解释的那样，这是一个问题。目前的情况更加健康，但将来仍然需要改善；截至目前，41％ 的执行客户端正在使用 Geth，而 38％ 正在使用 Nethermind，如图 15-44 所示。
 
-![当前执行客户端分布](images/ch15/maet_1544.png)
+![当前执行客户端分布](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1544.png)
 
 图 15-44. 当前执行客户端分布
 
 该问题不仅影响执行客户端，还影响共识客户端，尽管共识方面的问题已得到迅速解决，并且目前的情况相对健康和稳定，如图 15-45 所示。
 
-![当前共识客户端分布](images/ch15/maet_1545.png)
+![当前共识客户端分布](https://img.learnblockchain.cn/masterethereumbook/images/ch15/maet_1545.png)
 
 图 15-45. 当前共识客户端分布
 

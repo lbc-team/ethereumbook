@@ -84,7 +84,7 @@ Phantom 是一个只能连接到以太坊以及其他非 EVM 链的钱包。
 
 打开 Google Chrome 浏览器并导航到 [Extensions](https://oreil.ly/0rOvX)。搜索“MetaMask”并点击狐狸的徽标。你应该会看到类似于图 2-1 的内容。
 
-![MetaMask Chrome 扩展程序的详细信息页面](images/ch2/maet_0201.png)
+![MetaMask Chrome 扩展程序的详细信息页面](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0201.png)
 
 图 2-1. MetaMask Chrome 扩展程序的详细信息页面
 
@@ -104,7 +104,7 @@ Phantom 是一个只能连接到以太坊以及其他非 EVM 链的钱包。
 
 安装 MetaMask 后，你应该会在浏览器的工具栏中看到一个新图标（狐狸的头部）。点击它以开始使用。你将被要求接受条款和条件，然后通过输入密码来创建你的新以太坊钱包（参见图 2-2）。
 
-![MetaMask Chrome 扩展程序的密码页面](images/ch2/maet_0202.png)
+![MetaMask Chrome 扩展程序的密码页面](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0202.png)
 
 图 2-2. MetaMask Chrome 扩展程序的密码页面
 
@@ -114,7 +114,7 @@ Phantom 是一个只能连接到以太坊以及其他非 EVM 链的钱包。
 
 设置密码后，MetaMask 将为你生成一个钱包并向你显示一个由 12 个英语单词组成的 *助记词备份*（参见图 2-3）。如果 MetaMask 或你的计算机出现问题，这些单词可以在任何兼容的钱包中使用，以恢复对你的资金的访问。你不需要密码进行此恢复；这 12 个单词就足够了。
 
-![MetaMask 创建的钱包的助记词备份](images/ch2/maet_0203.png)
+![MetaMask 创建的钱包的助记词备份](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0203.png)
 
 图 2-3. MetaMask 创建的钱包的助记词备份
 
@@ -124,7 +124,7 @@ Phantom 是一个只能连接到以太坊以及其他非 EVM 链的钱包。
 
 确认你已安全存储助记词后，你将能够看到你的以太坊账户的详细信息，如图 2-4 所示。
 
-![MetaMask 中的以太坊账户](images/ch2/maet_0204.png)
+![MetaMask 中的以太坊账户](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0204.png)
 
 图 2-4. MetaMask 中的以太坊账户
 
@@ -170,13 +170,13 @@ Holesky 测试网是以太坊用于质押、基础设施和协议开发的高级
 
 通过点击左上角的以太坊图标将 MetaMask 切换到 Sepolia 测试网络；切换选项“显示测试网络”并点击 Sepolia，如图 2-5 所示。
 
-![MetaMask 网络](images/ch2/maet_0205.png)
+![MetaMask 网络](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0205.png)
 
 图 2-5. MetaMask 网络
 
 点击购买，然后导航到[此列表](https://oreil.ly/VE0t0)中的其中一个水龙头。一旦你决定要使用哪个水龙头——它们几乎都是等效的——你就可以在测试网络上请求 ethers，如图 2-6 所示。
 
-![MetaMask Sepolia 测试水龙头](images/ch2/maet_0206.png)
+![MetaMask Sepolia 测试水龙头](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0206.png)
 
 图 2-6. MetaMask Sepolia 测试水龙头
 
@@ -186,13 +186,13 @@ Holesky 测试网是以太坊用于质押、基础设施和协议开发的高级
 
 只需几秒钟，Sepolia 网络就会处理新的交易，你的 MetaMask 钱包将显示 0.05 ETH 的余额（这取决于水龙头愿意发送多少以太币）。现在，点击浏览器扩展程序中的第一笔交易，然后点击“在区块浏览器上查看”，如图 2-7 所示。这将导航到一个 *区块浏览器*，这是一个允许你可视化和探索区块、地址和交易的网站。
 
-![从 MetaMask 查看的交易](images/ch2/maet_0207.png)
+![从 MetaMask 查看的交易](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0207.png)
 
 图 2-7. 从 MetaMask 查看的交易
 
 MetaMask 使用 [Etherscan 区块浏览器](https://etherscan.io)，它是更流行的以太坊区块浏览器之一。包含来自 Sepolia 测试水龙头的付款的交易如图 2-8 所示。
 
-![Etherscan Sepolia 区块浏览器](images/ch2/maet_0208.png)
+![Etherscan Sepolia 区块浏览器](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0208.png)
 
 图 2-8. Etherscan Sepolia 区块浏览器
 
@@ -204,7 +204,7 @@ MetaMask 使用 [Etherscan 区块浏览器](https://etherscan.io)，它是更流
 
 一旦你从 Sepolia 测试水龙头收到了你的第一个测试 ether，你就可以通过尝试将其发送回水龙头或任何其他地址来试验发送 ether。在此示例中，我们将尝试将一些测试网 ether 发送到 Vitalik Buterin，如图 2-9 所示。
 
-![将 0.05 ether 发送到一个地址](images/ch2/maet_0209.png)
+![将 0.05 ether 发送到一个地址](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0209.png)
 
 图 2-9. 将 0.05 ether 发送到一个地址
 
@@ -224,7 +224,7 @@ MetaMask 使用 [Etherscan 区块浏览器](https://etherscan.io)，它是更流
 
 到目前为止，你已经成为使用 MetaMask 发送和接收测试以太币的专家。你的钱包已经收到并发送了付款。你可以使用 [*sepolia.etherscan.io* 区块浏览器](http://sepolia.etherscan.io)查看所有这些交易。你可以复制你的钱包地址并将其粘贴到区块浏览器的搜索框中，也可以让 MetaMask 为你打开页面。在 MetaMask 中你的帐户图标旁边，你将看到一个显示三个点的按钮。单击它以显示与帐户相关的选项菜单（参见图 2-10）。
 
-![MetaMask 帐户上下文菜单](images/ch2/maet_0210.png)
+![MetaMask 帐户上下文菜单](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0210.png)
 
 图 2-10. MetaMask 帐户上下文菜单
 
@@ -234,7 +234,7 @@ MetaMask 使用 [Etherscan 区块浏览器](https://etherscan.io)，它是更流
 
 选择“在 Etherscan 上查看帐户”以在区块浏览器中打开一个网页，显示你的帐户的交易历史记录，如图 2-11 所示。
 
-![Etherscan 上的地址交易历史记录](images/ch2/maet_0211.png)
+![Etherscan 上的地址交易历史记录](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0211.png)
 
 图 2-11. Etherscan 上的地址交易历史记录
 
@@ -370,25 +370,25 @@ Solidity 编译器作为独立的可执行文件提供，作为各种框架的�
 
 当你第一次加载 Remix 时，它将从一个名为 *Storage.sol* 的示例合约开始。我们不需要它，所以点击选项卡角上的 `x` 将其关闭，如图 2-12 所示。
 
-![关闭默认示例标签](images/ch2/maet_0212.png)
+![关闭默认示例标签](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0212.png)
 
 图 2-12. 关闭默认示例标签
 
 现在，创建一个新文件，如图 2-13 所示。将新文件命名为 *Faucet.sol*。
 
-![创建一个新合约](images/ch2/maet_0213.png)
+![创建一个新合约](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0213.png)
 
 图 2-13. 创建一个新合约
 
 打开新标签后，复制并将代码从我们的示例 *Faucet.sol* 粘贴进去，如图 2-14 所示。
 
-![将 Faucet 示例代码复制到新合约中](images/ch2/maet_0214.png)
+![将 Faucet 示例代码复制到新合约中](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0214.png)
 
 图 2-14. 将 Faucet 示例代码复制到新合约中
 
 将 *Faucet.sol* 合约加载到 Remix IDE 后，导航到 Remix 的编译部分并点击 编译 *Faucet.sol*。如果一切顺利，你将看到一个绿色框（参见图 2-15）。
 
-![Remix 成功编译 Faucet.sol 合约](images/ch2/maet_0215.png)
+![Remix 成功编译 Faucet.sol 合约](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0215.png)
 
 图 2-15. Remix 成功编译 *Faucet.sol* 合约
 
@@ -410,7 +410,7 @@ Solidity 编译器现在已将我们的 *Faucet.sol* 编译为 EVM 字节码。�
 
 你是否很高兴你使用像 Solidity 这样的高级语言而不是直接用 EVM 字节码进行编程？我们也是！Remix 将构建特殊的“创建”交易，MetaMask 会要求你批准它，如图 2-17 所示。你会注意到合约创建交易中没有以太币，但它有一些数据字节（已编译的合约），并且会消耗一些 Gwei 的 gas。单击“提交”以批准它。
 
-![MetaMask 显示合约创建交易](images/ch2/maet_0217.png)
+![MetaMask 显示合约创建交易](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0217.png)
 
 图 2-17. MetaMask 显示合约创建交易
 
@@ -418,7 +418,7 @@ Solidity 编译器现在已将我们的 *Faucet.sol* 编译为 EVM 字节码。�
 
 合约创建完成后，它会出现在“运行”选项卡的底部（参见图 2-18）。
 
-![Faucet 合约已启动！](images/ch2/maet_0218.png)
+![Faucet 合约已启动！](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0218.png)
 
 图 2-18. Faucet 合约已启动！
 
@@ -432,13 +432,13 @@ Solidity 编译器现在已将我们的 *Faucet.sol* 编译为 EVM 字节码。�
 
 我们现在有一个记录在区块链上的合约，我们可以看到它有一个以太坊地址。让我们在 [*sepolia.etherscan.io* 区块浏览器](http://sepolia.etherscan.io) 中查看它，看看合约是什么样子的。在 Remix IDE 中，通过单击其名称旁边的图标来复制合约的地址（参见图 2-19）。
 
-![从 Remix 复制合约地址](images/ch2/maet_0219.png)
+![从 Remix 复制合约地址](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0219.png)
 
 图 2-19. 从 Remix 复制合约地址
 
 保持 Remix 处于打开状态；我们稍后会回到它。现在，在浏览器中导航到 [*sepolia.etherscan.io*](http://sepolia.etherscan.io) 并将地址粘贴到搜索框中。你应该看到合约的以太坊地址历史记录，如图 2-20 所示。
 
-![在 Etherscan 区块浏览器中查看 Faucet 合约地址](images/ch2/maet_0220.png)
+![在 Etherscan 区块浏览器中查看 Faucet 合约地址](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0220.png)
 
 图 2-20. 在 Etherscan 区块浏览器中查看 Faucet 合约地址
 
@@ -448,7 +448,7 @@ Solidity 编译器现在已将我们的 *Faucet.sol* 编译为 EVM 字节码。�
 
 我们的 faucet 需要资金！我们的第一个项目是使用 MetaMask 向合约发送以太币。你的剪贴板中应该仍然有合约的地址（如果没有，请再次从 Remix 复制它）。打开 MetaMask 并向其发送 0.01 以太币，就像你向任何其他以太坊地址发送一样（参见图 2-21）。
 
-![向合约地址发送 0.01 以太币](images/ch2/maet_0221.png)
+![向合约地址发送 0.01 以太币](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0221.png)
 
 图 2-21. 向合约地址发送 0.01 以太币
 
@@ -466,7 +466,7 @@ Solidity 编译器现在已将我们的 *Faucet.sol* 编译为 EVM 字节码。�
 
 返回到 Remix 选项卡，查看“运行”选项卡上的合约。你应该看到一个标有“withdraw”的红色框，其中有一个标有“uint256 \_withdrawAmount, address \_to”的字段条目（参见图 2-22）。
 
-![Remix 中 Faucet.sol 的 withdraw 函数](images/ch2/maet_0222.png)
+![Remix 中 Faucet.sol 的 withdraw 函数](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0222.png)
 
 图 2-22. Remix 中 *Faucet.sol* 的 withdraw 函数
 
@@ -482,19 +482,19 @@ Solidity 编译器现在已将我们的 *Faucet.sol* 编译为 EVM 字节码。�
 
 将 `"1000000000000"`（带引号）输入到 `_withdrawAmount` 框中，从 MetaMask 复制粘贴你的 Account 1 地址，然后单击 transact 按钮。（你可能会看到它是 withdraw 按钮。图 2-23 显示了该函数的展开视图；如果你的视图未展开，则该按钮将被称为“withdraw”。）
 
-![在 Remix 中单击 transact 以创建提款交易](images/ch2/maet_0223.png)
+![在 Remix 中单击 transact 以创建提款交易](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0223.png)
 
 图 2-23. 在 Remix 中单击 transact 以创建提款交易
 
 MetaMask 将弹出一个交易窗口供你批准。单击“提交”以将你的提款调用发送到合约（参见图 2-24）。
 
-![MetaMask 交易调用 withdraw 函数](images/ch2/maet_0224.png)
+![MetaMask 交易调用 withdraw 函数](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0224.png)
 
 图 2-24. MetaMask 交易调用 withdraw 函数
 
 等待一分钟，然后重新加载 Etherscan 区块浏览器，以在 `Faucet` 合约地址历史记录中看到该交易（参见图 2-25）。
 
-![Etherscan 显示调用 withdraw 函数的交易](images/ch2/maet_0225.png)
+![Etherscan 显示调用 withdraw 函数的交易](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0225.png)
 
 图 2-25. Etherscan 显示调用 withdraw 函数的交易
 
@@ -506,7 +506,7 @@ MetaMask 将弹出一个交易窗口供你批准。单击“提交”以将你�
 
     _to.transfer(_withdrawAmount);
 
-![Etherscan 显示将以太币从合约中转出的内部交易](images/ch2/maet_0226.png)
+![Etherscan 显示将以太币从合约中转出的内部交易](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0226.png)
 
 图 2-26. Etherscan 显示将以太币从合约中转出的内部交易
 

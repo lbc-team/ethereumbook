@@ -116,7 +116,7 @@ f8f8a2f43c8376ccb0871305060d7b27b0554d2cc72bccf41b2705608452f315
 >
 > 以太坊使用与比特币完全相同的椭圆曲线，称为`secp256k1`。 这使得可以重用比特币中的许多椭圆曲线库和工具。
 
-![一个椭圆曲线](images/ch4/maet_0401.png)
+![一个椭圆曲线](https://img.learnblockchain.cn/masterethereumbook/images/ch4/maet_0401.png)
 
 图 4-1. 一个椭圆曲线
 
@@ -136,7 +136,7 @@ y^2 mod p = (x^3 + 7) mod p
 
 因为这个曲线定义在素数阶的有限域上，而不是在实数上，所以它看起来像一个分散在二维空间中的点阵，这使得它很难可视化。 但是，其数学原理与实数上的椭圆曲线的数学原理相同。 例如，图 4-2 显示了在小得多的素数阶 17 的有限域上的相同椭圆曲线，显示了网格上的点阵。 可以将 `secp256k1` 以太坊椭圆曲线视为一个不太可知的大网格上一个更复杂的点阵。
 
-![在有限域上的椭圆曲线](images/ch4/maet_0402.png)
+![在有限域上的椭圆曲线](https://img.learnblockchain.cn/masterethereumbook/images/ch4/maet_0402.png)
 
 图 4-2. 椭圆曲线密码学：可视化在 F(p) 上的椭圆曲线，其中 p=17
 
@@ -168,13 +168,13 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 从几何上讲，通过绘制 P1 和 P2 之间的线来计算第三个点 P3。 这条线将恰好在另一个位置与椭圆曲线相交（非常神奇）。 将此点称为 P3′ = (x, y)。 然后在 x 轴中反射以获得 P3 = (x, –y)，如图 4-3 所示。
 
-![椭圆曲线加法](images/ch4/maet_0403.png)
+![椭圆曲线加法](https://img.learnblockchain.cn/masterethereumbook/images/ch4/maet_0403.png)
 
 图 4-3. 椭圆曲线加法：在椭圆曲线上添加两个点
 
 如果 P1 和 P2 是同一个点，则 "之间" P1 和 P2 之间的线应该延伸为该点 P1 处的曲线的切线。 该切线将恰好在另一个新点与曲线相交，如图 4-4 所示。 您可以使用微积分中的技术来确定切线的斜率。 奇怪的是，这些技术有效，即使我们将注意力限制在曲线上具有两个整数坐标的点上！
 
-![椭圆曲线切线](images/ch4/maet_0404.png)
+![椭圆曲线切线](https://img.learnblockchain.cn/masterethereumbook/images/ch4/maet_0404.png)
 
 图 4-4. 椭圆曲线加法：将一个点添加到自身
 
@@ -182,7 +182,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 在某些情况下（例如，如果 P1 和 P2 具有相同的 x 值但不同的 y 值，如图 4-5 所示），该线将是完全垂直的，在这种情况下，P3 = 无穷远点。
 
-![无穷远点](images/ch4/maet_0405.png)
+![无穷远点](https://img.learnblockchain.cn/masterethereumbook/images/ch4/maet_0405.png)
 
 图 4-5. 椭圆曲线加法：导致无穷远点的特殊情况
 
@@ -587,7 +587,7 @@ e(pk, H(m)) = e(sk * g1,H(m)) = ← pk = sk * g1
 
 现在我们可以做一个快速示例来演示验证者如何在“现实生活中”使用 BLS 算法，以及签名聚合如何发挥作用。图 4-6 说明了一个场景，其中我们有三个验证者想要表达他们对区块 A 的投票。因此，他们投下他们的票，对其进行签名，并相互分享。
 
-![BLS 签名聚合示例](images/ch4/maet_0406.png)
+![BLS 签名聚合示例](https://img.learnblockchain.cn/masterethereumbook/images/ch4/maet_0406.png)
 
 图 4-6。 BLS 签名聚合：三个验证者投票和签名
 
@@ -595,13 +595,13 @@ e(pk, H(m)) = e(sk * g1,H(m)) = ← pk = sk * g1
 
 这不仅节省了空间，而且还大大减少了所有以太坊节点在验证有已签名投票时必须执行的时间和计算量，因为它们可以直接验证聚合投票，而不是对每个单独的已签名投票执行验证。 BLS 密码学的神奇之处在于，聚合结果与普通签名没有区别：这意味着验证聚合签名的有效性并不比验证单个签名的有效性更难。 因此，通过显着减少要验证的已签名投票的数量，但需要相同的计算量来验证每个已签名投票，完整节点必须执行的总计算量（因此，时间）比不使用 BLS 聚合签名的情况要低得多，如图 4-7 所示。
 
-![BLS 聚合效率](images/ch4/maet_0407.png)
+![BLS 聚合效率](https://img.learnblockchain.cn/masterethereumbook/images/ch4/maet_0407.png)
 
 图 4-7。 BLS 签名聚合减少了验证时间
 
 如果验证者不遵守规则怎么办？ 如果验证者恶意行为——例如，通过双重签名，或同时投票给两个不同的区块——协议可以检测到这种行为并相应地惩罚验证者，如图 4-8 所示。
 
-![BLS 罚没检测](images/ch4/maet_0408.png)
+![BLS 罚没检测](https://img.learnblockchain.cn/masterethereumbook/images/ch4/maet_0408.png)
 
 图 4-8。 BLS 签名支持检测恶意验证者
 
@@ -701,7 +701,7 @@ d = 3 ← 所需 Merkle 树的深度
 
 图 4-9 显示了应用于此示例的多项式承诺方案，该方案使用 Merkle 根作为核心密码学原语。
 
-![Merkle 树多项式承诺](images/ch4/maet_0409.png)
+![Merkle 树多项式承诺](https://img.learnblockchain.cn/masterethereumbook/images/ch4/maet_0409.png)
 
 图 4-9。 使用 Merkle 树的多项式承诺
 
@@ -749,7 +749,7 @@ KZG 承诺方案需要存在 *受信任的设置*。 您可以将其视为与密
 
 以太坊 KZG 受信任的设置仪式涉及超过 140,000 个不同的参与者，如图 4-10 所示。
 
-![KZG 受信任的设置仪式](images/ch4/maet_0410.png)
+![KZG 受信任的设置仪式](https://img.learnblockchain.cn/masterethereumbook/images/ch4/maet_0410.png)
 
 图 4-10。 以太坊 KZG 受信任的设置仪式的参与者
 
@@ -949,7 +949,7 @@ A = (1, 0)
 B = (2, 1)
 ```
 
-![坐标平面上的两个点](images/ch4/maet_0411.png)
+![坐标平面上的两个点](https://img.learnblockchain.cn/masterethereumbook/images/ch4/maet_0411.png)
 
 图 4-11。 两个不同的点 A 和 B
 
@@ -963,7 +963,7 @@ I(x) = x – 1
 
 图 4-12 更好地说明了这一点。
 
-![穿过两点的线](images/ch4/maet_0412.png)
+![穿过两点的线](https://img.learnblockchain.cn/masterethereumbook/images/ch4/maet_0412.png)
 
 图 4-12。 穿过点 A 和 B 的插值多项式（线）
 
@@ -1010,31 +1010,31 @@ q(s)Z(s) = p(s) – I(s)
 
 我们从证明者开始，他掌握一些数据。 他们立即将这些数据编码为多项式，如图 4-13 所示。
 
-![证明者将数据编码为多项式](images/ch4/maet_0413.png)
+![证明者将数据编码为多项式](https://img.learnblockchain.cn/masterethereumbook/images/ch4/maet_0413.png)
 
 图 4-13。 证明者将数据编码为多项式 p
 
 证明者的目标是让验证者相信他们知道某个数据，现在已编码为多项式。 但是，证明者不想透露整个数据集。 相反，他们希望验证者能够验证有关数据的特定声明。 特别是，证明者希望验证者确认多项式在特定点处评估为预期值，如图 4-14 所示。
 
-![证明者想要证明特定的计算结果](images/ch4/maet_0414.png)
+![证明者想要证明特定的计算结果](https://img.learnblockchain.cn/masterethereumbook/images/ch4/maet_0414.png)
 
 图 4-14。 证明者想要证明多项式在特定点的计算结果
 
 为了实现此目标，证明者计算多项式的 KZG 承诺并将其发送给验证者，如图 4-15 所示。
 
-![证明者计算并发送承诺](images/ch4/maet_0415.png)
+![证明者计算并发送承诺](https://img.learnblockchain.cn/masterethereumbook/images/ch4/maet_0415.png)
 
 图 4-15。 证明者计算 KZG 承诺 C 并将其发送给验证者
 
 然后，证明者需要计算他们想要向验证者证明的所有计算结果的 KZG 证明，如图 4-16 所示。
 
-![证明者计算 KZG 证明](images/ch4/maet_0416.png)
+![证明者计算 KZG 证明](https://img.learnblockchain.cn/masterethereumbook/images/ch4/maet_0416.png)
 
 图 4-16。 证明者计算多项式不同评估 的KZG 证明并将其发送给验证者
 
 现在，轮到验证者了。 为了确保证明者是诚实的，验证者需要使用证明者先前发送的信息以及可信设置来计算椭圆曲线配对检查，如图 4-17 所示。
 
-![验证者检查证明](images/ch4/maet_0417.png)
+![验证者检查证明](https://img.learnblockchain.cn/masterethereumbook/images/ch4/maet_0417.png)
 
 图 4-17。 验证者通过椭圆曲线配对运算检查评估的有效性
 

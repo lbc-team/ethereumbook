@@ -58,7 +58,7 @@ NFT 发售变成了 gas 战争，人们支付数千美元只是为了在其他�
 
 以太坊的 Layer 1 并非旨在有效处理这种程度的需求。然而，2021 年 EIP-1559 的引入通过引入可变区块大小和新的 gas 定价机制改变了费用的运作方式，从而减少了网络活动高峰期间 gas 费用的飙升。L2 解决方案日益普及，使得以太坊能够卸载其大部分计算负担，从而进一步降低 gas 费用。最近，EIP-4844（proto-danksharding）已推出，显着降低了费用，特别是对于 L2 rollup 而言，并使以太坊交易对用户来说更负担得起。尽管有这些改进，以太坊的交易成本仍然高于大多数其他区块链（见图 16-1）。
 
-![跨区块链的 gas 成本比较](images/ch16/maet_1601.png)
+![跨区块链的 gas 成本比较](https://img.learnblockchain.cn/masterethereumbook/images/ch16/maet_1601.png)
 
 图 16-1. 跨区块链的 gas 成本比较
 
@@ -76,7 +76,7 @@ NFT 发售变成了 gas 战争，人们支付数千美元只是为了在其他�
 
 客户端多样性也有帮助。虽然 Geth 在历史上一直是占主导地位的以太坊客户端（参见图 16-2），但像 Nethermind、Erigon 和 Besu 这样的替代方案引入了优化，从而提高了存储效率。例如，Erigon 专门用于更有效地处理历史数据，从而减轻了完整节点的负担。
 
-![以太坊客户端分布](images/ch16/maet_1602.png)
+![以太坊客户端分布](https://img.learnblockchain.cn/masterethereumbook/images/ch16/maet_1602.png)
 
 图 16-2. 以太坊客户端分布
 
@@ -110,7 +110,7 @@ MEV 的出现是因为交易并非总是按照提交的顺序处理。相反，�
 
 但这不仅仅是提高 gas 上限那么简单。更大的区块需要更长的时间才能在网络上传播，这使得以太坊更容易受到链分裂的影响。它们还会增加完整节点的硬件要求，从而使我们更接近中心化。因此，gas 上限的增加是逐步且谨慎的，需要在吞吐量改进和网络健康之间取得平衡（参见图 16-3）。
 
-![历史 gas 上限变化](images/ch16/maet_1603.png)
+![历史 gas 上限变化](https://img.learnblockchain.cn/masterethereumbook/images/ch16/maet_1603.png)
 
 图 16-3. 历史 gas 上限变化
 
@@ -218,7 +218,7 @@ ZK-Rollup 首先就很适合简单的任务，比如令牌传输和互换，但�
 
 *有效性证明* 不会将交易数据存储在以太坊上。相反，它们会将证明发布到以太坊，以验证 L2 链的状态，如图 16-4 所示。 从本质上讲，有效性证明是一种 rollup，它使用了其它的数据可用性解决方案，比如 Celestia, Avail, 或者 EigenLayer。
 
-![验证架构](images/ch16/maet_1604.png)
+![验证架构](https://img.learnblockchain.cn/masterethereumbook/images/ch16/maet_1604.png)
 
 图 16-4. 验证架构
 
@@ -336,7 +336,7 @@ Rollup在链上发布其交易数据的加密承诺，并同时通过数据blob�
 
 正如名称所示，Verkle 树使用 *向量承诺*：即 KZG 多项式承诺，这是一种加密承诺，允许在不显示整个数据集的情况下，有效地证明大型数据集中特定位置的数据值。与当前在 Merkle 树中使用的哈希相比，它们具有更好的扩展性和更快的计算速度，如图 16-6 所示。在 Merkle 树中，我们只有 Merkle 根（哈希），而在 Verkle 树中，我们还有向量承诺。
 
-![Merkle 树与 Verkle 树](images/ch16/maet_1606.png)
+![Merkle 树与 Verkle 树](https://img.learnblockchain.cn/masterethereumbook/images/ch16/maet_1606.png)
 
 图 16-6。Merkle 树与 Verkle 树
 
@@ -344,7 +344,7 @@ Rollup在链上发布其交易数据的加密承诺，并同时通过数据blob�
 
 Merkle 树允许以太坊节点在不下载整个区块链的情况下验证小部分数据。但是，当 Merkle 树变得非常大时，证明的大小（验证数据所需的信息）也会显着增加。这些大的证明会减慢网络速度，并且难以在以太坊继续扩展时保持效率，如图 16-7 所示。
 
-![Merkle 树证明大小](images/ch16/maet_1607.png)
+![Merkle 树证明大小](https://img.learnblockchain.cn/masterethereumbook/images/ch16/maet_1607.png)
 
 图 16-7。Merkle 树证明大小
 
@@ -352,7 +352,7 @@ Merkle 树允许以太坊节点在不下载整个区块链的情况下验证小�
 
 Verkle 树通过显着减小这些证明的大小来解决这个问题。Verkle 树不使用随着数据量增加而增大的证明，而是使用一种称为向量承诺的加密方法。向量承诺允许您使用非常短、紧凑的证明来证明大量数据。这意味着即使以太坊的区块链变得更大，证明也会保持小而高效，如图 16-8 所示。
 
-![Verkle 树证明大小](images/ch16/maet_1608.png)
+![Verkle 树证明大小](https://img.learnblockchain.cn/masterethereumbook/images/ch16/maet_1608.png)
 
 图 16-8。Verkle 树证明大小
 
@@ -370,7 +370,7 @@ Verkle 树的证明大小要小得多：
 
 Verkle 树将数据组织成（key，value）对，其中每个key是 32 字节，由 31 字节的“stem”和一个字节的“suffix”组成，如图 16-9 所示。这种 key 格式特意设计成这样，确保存储位置相近拥有相同的 stem 和不同的 suffix，使得访问“相邻”存储位置的成本更低。
 
-![Verkle 树 key 结构](images/ch16/maet_1609.png)
+![Verkle 树 key 结构](https://img.learnblockchain.cn/masterethereumbook/images/ch16/maet_1609.png)
 
 图 16-9。Verkle 树 key 结构
 

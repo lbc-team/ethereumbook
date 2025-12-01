@@ -57,7 +57,7 @@
 
 细心的读者可能已经发现这完美地适用于以太坊的哪些方面：区块执行和状态更新——换句话说，*EVM状态转换函数*。每个新区块都会通过处理其中包含的所有交易来更新当前状态。图17-1很好地展示了这一点。
 
-![EVM 状态转换函数](images/ch17/maet_1701.png)
+![EVM 状态转换函数](https://img.learnblockchain.cn/masterethereumbook/images/ch17/maet_1701.png)
 
 图17-1. EVM 状态转换函数
 
@@ -896,7 +896,7 @@ w = [0, 1, 2, 7]
 
 现在我们需要承诺所有 `w′` 的值，并将承诺发送给验证者，以便我们确保如果我们通过提供 `w′` 的假值来作弊，那么很容易发现它。图 17-2 显示了使用所有 `w′` 值作为叶子构建的梅克尔树。
 
-![梅克尔树承诺](images/ch17/maet_1702.png)
+![梅克尔树承诺](https://img.learnblockchain.cn/masterethereumbook/images/ch17/maet_1702.png)
 
 图 17-2. 使用 `w′` 值构建的梅克尔树
 
@@ -1032,7 +1032,7 @@ w = [0, 1, 2, 7]
 
 当我们创建梅克尔树时，我们不是只使用 `w′` 的每个元素的确切值的哈希作为树的叶子，而是添加一个我们不会提供给验证者的随机字符串。图 17-3 显示了使用这种新方法构建的新梅克尔树。
 
-![带有随机性的梅克尔树](images/ch17/maet_1703.png)
+![带有随机性的梅克尔树](https://img.learnblockchain.cn/masterethereumbook/images/ch17/maet_1703.png)
 
 图 17-3. 带有为零知识属性添加的随机性的梅克尔树
 
@@ -1099,7 +1099,7 @@ Fiat-Shamir 启发式是一种协议，它可以通过用密码哈希函数替�
 
 图 17-4 显示了验证者在验证零知识证明的有效性之前，确保挑战已正确计算的过程。
 
-![验证者验证过程](images/ch17/maet_1704.png)
+![验证者验证过程](https://img.learnblockchain.cn/masterethereumbook/images/ch17/maet_1704.png)
 
 图 17-4. Fiat-Shamir 启发式使协议成为非交互式的
 
@@ -1140,7 +1140,7 @@ STARK 代表“*可扩展透明的知识论证*”。特别是，*透明*指的�
 
 图 17-5 提供了一个简化的可视化，捕捉了 zk-EVM 和 zk-VM 框架的核心要素。
 
-![zk-EVM and zk-VM comparison](images/ch17/maet_1705.png)
+![zk-EVM and zk-VM comparison](https://img.learnblockchain.cn/masterethereumbook/images/ch17/maet_1705.png)
 
 图 17-5. zk-EVM 和 zk-VM 框架的比较
 

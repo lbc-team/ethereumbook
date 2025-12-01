@@ -213,7 +213,7 @@ ERC-20 允许两种不同的工作流程。第一个是使用 `transfer` 函数�
 
 第二个工作流程是使用 `approve`，然后使用 `transferFrom` 的两事务工作流程。此工作流程允许代币所有者将其控制权委托给另一个地址。它最常用于将控制权委托给合约以进行代币分发，但也可以用于交易所。例如，如果一家公司正在出售代币以进行 ICO，它们可以 `approve` 一个众筹合约地址，以分发一定数量的代币。然后，众筹合约可以将代币合约所有者的余额 `transferFrom` 到每个代币购买者，如图 10-1 所示。
 
-![The two-step approve and transferFrom workflow of ERC-20 tokens](images/ch10/maet_1001.png)
+![The two-step approve and transferFrom workflow of ERC-20 tokens](https://img.learnblockchain.cn/masterethereumbook/images/ch10/maet_1001.png)
 
 **图 10-1.** ERC-20 代币的两步 `approve` 和 `transferFrom` 工作流程
 

@@ -90,7 +90,7 @@ transaction = tx_type || tx_payload
 
 如图 6-1 所示，区块 gas 限制（几乎）总是在特定区块以固定的、四舍五入的值增加：1000 万、1250 万、1500 万和 3000 万。事实上，即使验证者（以及使用旧的 PoW 共识协议的矿工）可以在每个区块上略微调整 gas 目标，这直接转化为 gas 限制，区块 gas 限制是一个非常关键的值，每个人通常都遵循核心开发人员的建议。
 
-![区块 gas 限制随时间演变](images/ch6/maet_0601.png)
+![区块 gas 限制随时间演变](https://img.learnblockchain.cn/masterethereumbook/images/ch6/maet_0601.png)
 
 **图 6-1.** 区块 gas 限制演变
 
@@ -190,7 +190,7 @@ EIP-1559 交易是一个序列化的二进制消息，包含以下数据：
 
 底层细节非常复杂，如果您有兴趣，我们建议阅读 [EIP 官方网站](https://oreil.ly/W_28X)。但是，高级概述很简单但非常强大。EIP-7702 允许 EOA 为自己分配一个*委托指示符*。此委托指示符指向一个智能合约（位于以太坊主网上），并且当交易发送到 EOA 时，它会执行指定地址上的代码，就好像那是 EOA 的实际代码一样，如图 6-2 所示。
 
-![EIP-7702 委托指示符](images/ch6/maet_0602.png)
+![EIP-7702 委托指示符](https://img.learnblockchain.cn/masterethereumbook/images/ch6/maet_0602.png)
 
 **图 6-2.** EIP-7702 委托机制
 
@@ -267,7 +267,7 @@ $ cast balance 0x7e41354AfE84800680ceB104c5Fc99eCB98A25f0 --rpc-url https://ethe
 
 要获得一些免费的 Sepolia ETH 代币，您可以使用其中一个在线水龙头。我们将使用 Google Cloud Web3 水龙头，它提供 0.05 ETH，如图 6-3 所示。转到 [Ethereum Sepolia 水龙头](https://cloud.google.com/application/web3/faucet/ethereum/sepolia)。粘贴您的地址，然后单击“接收 0.05 Sepolia ETH”按钮。您应该很快收到 0.05 ETH。
 
-![Google Cloud Web3 水龙头界面](images/ch6/maet_0603.png)
+![Google Cloud Web3 水龙头界面](https://img.learnblockchain.cn/masterethereumbook/images/ch6/maet_0603.png)
 
 **图 6-3.** Google Cloud Web3 水龙头
 
@@ -441,7 +441,7 @@ $ cast send --account example vitalik.eth --value 0.001ether --rpc-url https://e
 
 在图 6-4 中，你可以看到发送的价值是 0.001 以太币，数据有效载荷（Etherscan 上的输入数据）为空 (`0x00`)。
 
-![只有价值的交易](images/ch6/maet_0604.png)
+![只有价值的交易](https://img.learnblockchain.cn/masterethereumbook/images/ch6/maet_0604.png)
 
 **图 6-4.** 只有价值的交易（支付）
 
@@ -453,7 +453,7 @@ $ cast send --account example vitalik.eth 0x0001 --value 0.001ether --rpc-url ht
 
 在图 6-5 中，你可以看到输入数据现在包含一些值，特别是 `0x0001`。
 
-![具有价值和数据的交易](images/ch6/maet_0605.png)
+![具有价值和数据的交易](https://img.learnblockchain.cn/masterethereumbook/images/ch6/maet_0605.png)
 
 **图 6-5.** 具有价值和数据的交易
 
@@ -465,7 +465,7 @@ $ cast send --account example vitalik.eth 0x0001 --rpc-url https://ethereum-sepo
 
 图 6-6 显示了一个确认屏幕，表明交易中发送的以太币值为零，数据有效载荷等于 `0x0001`。
 
-![只有数据的交易](images/ch6/maet_0606.png)
+![只有数据的交易](https://img.learnblockchain.cn/masterethereumbook/images/ch6/maet_0606.png)
 
 **图 6-6.** 只有数据的交易（调用）
 
@@ -477,7 +477,7 @@ $ cast send --account example vitalik.eth --rpc-url https://ethereum-sepolia-rpc
 
 图 6-7 显示了我们的交易，它发送了零以太币并包含一个空的有效载荷。
 
-![既没有价值也没有数据的交易](images/ch6/maet_0607.png)
+![既没有价值也没有数据的交易](https://img.learnblockchain.cn/masterethereumbook/images/ch6/maet_0607.png)
 
 **图 6-7.** 既没有价值也没有数据的交易
 
@@ -580,7 +580,7 @@ $ cast send --account example --rpc-url https://ethereum-sepolia-rpc.publicnode.
 
 一旦合约发布，我们就可以在 Etherscan 区块浏览器上看到它，如图 6-8 所示。
 
-![Etherscan 上的合约创建](images/ch6/maet_0608.png)
+![Etherscan 上的合约创建](https://img.learnblockchain.cn/masterethereumbook/images/ch6/maet_0608.png)
 
 **图 6-8.** Etherscan 上的合约创建交易
 
@@ -632,7 +632,7 @@ $ cast send --account example $CONTRACT_ADDRESS \
 
 过一段时间后，这两个交易都可以在 Etherscan 上看到，如图 6-9 所示。
 
-![Etherscan 上的合约交互](images/ch6/maet_0609.png)
+![Etherscan 上的合约交互](https://img.learnblockchain.cn/masterethereumbook/images/ch6/maet_0609.png)
 
 **图 6-9.** 合约资助和提款交易
 
@@ -926,7 +926,7 @@ K2 = r–1 (sR′ – zG)
 2. 将未签名的交易传输到 “气隙” 离线设备以进行交易签名（例如，通过二维码或 USB 闪存盘）。
 3. 将签名的交易（返回）传输到在线设备，以便在以太坊区块链上广播（例如，通过二维码或 USB 闪存盘）。
 
-![离线签名工作流程](images/ch6/maet_0610.png)
+![离线签名工作流程](https://img.learnblockchain.cn/masterethereumbook/images/ch6/maet_0610.png)
 
 **图 6-10.** 离线签名过程
 
@@ -1009,13 +1009,13 @@ MEV 指的是区块生产者可以通过就以下方面做出战略决策来从�
 
 用户提交了一笔购买 1000 个 xyz 代币的交易 (tx1)，如图 6-11 所示。 假设代币 xyz 的价格为 1000 美元，因此该用户将购买价值 100 万美元的代币。 这种购买压力将使代币的价格上涨到 1010 美元。
 
-![用户提交大型购买交易](images/ch6/maet_0611.png)
+![用户提交大型购买交易](https://img.learnblockchain.cn/masterethereumbook/images/ch6/maet_0611.png)
 
 **图 6-11.** MEV 干预前的用户交易
 
 但是验证者看到了通过抢跑交易 tx1 赚钱的机会。 他们创建了两笔交易：tx0 和 tx2，其中 tx0 包含 10 个 xyz 代币的买单，tx2 包含相同数量的卖单。 验证者将这些交易精确地放置在用户 tx1 之前和之后，如图 6-12 所示。 请记住，验证者可以这样做，因为他们是实际创建区块的角色，因此他们可以自由选择区块中交易的排序。
 
-![验证者夹击用户交易](images/ch6/maet_0612.png)
+![验证者夹击用户交易](https://img.learnblockchain.cn/masterethereumbook/images/ch6/maet_0612.png)
 
 **图 6-12.** 验证者的三明治攻击
 
@@ -1049,7 +1049,7 @@ MEV、提议者和构建者分离以及私有内存池已极大地改变了区�
 
 将多重签名交易作为智能合约实施的能力证明了以太坊的灵活性。 目前，Gnosis Safe 已成为创建多重签名帐户的事实标准。 这套经过实战检验的智能合约被主要协议和 DAO 广泛使用，截至 2024 年 11 月，已保护超过 60 亿美元的 ETH 和超过 740 亿美元的 ERC-20 代币，如图 6-13 所示。
 
-![Gnosis Safe 随时间推移保护的价值](images/ch6/maet_0613.png)
+![Gnosis Safe 随时间推移保护的价值](https://img.learnblockchain.cn/masterethereumbook/images/ch6/maet_0613.png)
 
 **图 6-13.** Gnosis Safe 保护数十亿价值
 
