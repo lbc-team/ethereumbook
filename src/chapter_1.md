@@ -31,7 +31,7 @@
 - 一个博弈论合理的激励方案（例如，PoW 成本加上区块奖励），以在开放环境中经济地保护状态机
 - 这些组件的一个或多个开源软件实现（“客户端”）
 
-所有或大多数这些组件通常组合在一个软件客户端中。例如，在比特币中，参考实现由 Bitcoin Core 开源项目开发，并作为比特币客户端实现。最初，以太坊在过渡到 PoS 之前也需要一个客户端。然而，以太坊现在使用两个不同的客户端：一个用于共识，另一个用于执行。以太坊不依赖于参考实现，而是依赖于参考规范：[“黄皮书”](https://oreil.ly/IJ7_B) 中详细描述的数学描述，该描述在以太坊的整个开发过程中不断更新。以太坊社区目前正在过渡到用 Python 编写的参考规范，用于[共识](https://oreil.ly/yjU6s)和[执行](https://oreil.ly/ggODg)客户端。许多客户端已经根据参考规范构建。我们将在第三章中更深入地探讨这个主题。
+所有或大多数这些组件通常组合在一个软件客户端中。例如，在比特币中，参考实现由 Bitcoin Core 开源项目开发，并作为比特币客户端实现。最初，以太坊在过渡到 PoS 之前也需要一个客户端。然而，以太坊现在使用两个不同的客户端：一个用于共识，另一个用于执行。以太坊不依赖于参考实现，而是依赖于参考规范：[“黄皮书”](https://ethereum.github.io/yellowpaper/paper.pdf) 中详细描述的数学描述，该描述在以太坊的整个开发过程中不断更新。以太坊社区目前正在过渡到用 Python 编写的参考规范，用于[共识](https://github.com/ethereum/consensus-specs)和[执行](https://github.com/ethereum/execution-specs)客户端。许多客户端已经根据参考规范构建。我们将在第三章中更深入地探讨这个主题。
 
 图 1-1 显示了区块链组件的图形表示。
 
@@ -69,7 +69,7 @@
 
 本书的两位原始作者，Andreas M. Antonopoulos 和 Gavin Wood 博士，收到了白皮书的早期草案并对其进行了评论。Antonopoulos 对这个想法很感兴趣，并向 Buterin 提出了许多关于使用单独的区块链来强制执行智能合约执行的共识规则以及图灵完备语言的含义的问题。Antonopoulos 继续非常关注以太坊的进展，但在早期阶段正在编写他的书 *Mastering Bitcoin*，直到很久以后才直接参与以太坊。然而，Wood 是最早联系 Buterin 并表示愿意用他的 C++ 编程技能提供帮助的人之一。Wood 成为以太坊的联合创始人、联合设计师和 CTO。
 
-Buterin 在他的[“以太坊协议的史前史”帖子](https://oreil.ly/kEjpX)中回忆道：
+Buterin 在他的[“以太坊协议的史前史”帖子](https://vitalik.eth.limo/general/2017/09/14/prehistory.html)中回忆道：
 
 > 这是以太坊协议完全是我自己创造的时期。从这里开始，新的参与者开始加入。到目前为止，协议方面最突出的是 Gavin Wood。
 
@@ -83,7 +83,7 @@ Wood 也可以在很大程度上被认为是将愿景从将以太坊视为构建
 
 > **注意**
 >
-> Vitalik Buterin 的文章[“以太坊协议的史前史”](https://oreil.ly/kEjpX)发表于 2017 年 9 月，提供了对以太坊最早时刻的引人入胜的第一人称视角。
+> Vitalik Buterin 的文章[“以太坊协议的史前史”](https://vitalik.eth.limo/general/2017/09/14/prehistory.html)发表于 2017 年 9 月，提供了对以太坊最早时刻的引人入胜的第一人称视角。
 
 ## 以太坊的开发阶段
 
@@ -149,7 +149,7 @@ The Splurge 包括各种次要升级和优化，以确保在实施所有重大�
 
 **P2P 网络**
 
-以太坊在 *Ethereum main network* 上运行，该网络可在 TCP 端口 30303 上寻址，并运行一个名为 [*ÐΞVp2p*](https://oreil.ly/pUfGC) 的协议。
+以太坊在 *Ethereum main network* 上运行，该网络可在 TCP 端口 30303 上寻址，并运行一个名为 [*ÐΞVp2p*](https://github.com/ethereum/devp2p) 的协议。
 
 **共识规则**
 
@@ -181,9 +181,9 @@ The Splurge 包括各种次要升级和优化，以确保在实施所有重大�
 
 这些参考资料提供了有关此处提到的技术的更多信息：
 
-- [Ethereum “Yellow Paper”](https://oreil.ly/IJ7_B)
-- [共识客户端 Python 规范](https://oreil.ly/yjU6s)
-- [执行客户端 Python 规范](https://oreil.ly/ggODg)
+- [Ethereum “Yellow Paper”](https://ethereum.github.io/yellowpaper/paper.pdf)
+- [共识客户端 Python 规范](https://github.com/ethereum/consensus-specs)
+- [执行客户端 Python 规范](https://github.com/ethereum/execution-specs)
 
 ## 以太坊与图灵完备性
 
@@ -199,7 +199,7 @@ The Splurge 包括各种次要升级和优化，以确保在实施所有重大�
 
 ## 将图灵完备性作为“特性”
 
-听说以太坊是图灵完备的，您可能会得出结论，这是一种 *特性*，而图灵不完备的系统在某种程度上缺少这种特性。相反，事实恰恰相反。图灵完备性非常容易实现；事实上，[已知最简单的图灵完备状态机](https://oreil.ly/JhL2o)具有四个状态并使用六个符号，其状态定义只有 22 条指令长。实际上，有时会发现系统“意外地是图灵完备的”（这是一个[有关此类系统的有趣参考](https://oreil.ly/7pt2q)）。
+听说以太坊是图灵完备的，您可能会得出结论，这是一种 *特性*，而图灵不完备的系统在某种程度上缺少这种特性。相反，事实恰恰相反。图灵完备性非常容易实现；事实上，[已知最简单的图灵完备状态机](https://www.sciencedirect.com/science/article/pii/S0304397596000771)具有四个状态并使用六个符号，其状态定义只有 22 条指令长。实际上，有时会发现系统“意外地是图灵完备的”（这是一个[有关此类系统的有趣参考](https://beza1e1.tuxen.de/articles/accidentally_turing_complete.html)）。
 
 但是，图灵完备性非常危险，尤其是在像公共区块链这样的开放访问系统中，因为上一节中描述的停机问题。例如，现代打印机是图灵完备的，并且可以提供要打印的文件，这些文件会使它们进入冻结状态。以太坊是图灵完备的事实意味着以太坊可以计算任何复杂度的程序。但是，这种灵活性带来了一些棘手的安全和资源管理问题。无响应的打印机可以先关闭然后再打开。这对于公共区块链是不可能的。
 

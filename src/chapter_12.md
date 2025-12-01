@@ -194,13 +194,13 @@ DApp 的前端是通过使用任何最著名的 Web2 框架创建的，例如 Re
 
 到目前为止，我们已经探讨了 DApp 背后的基本概念。现在，是时候卷起袖子，亲自构建一个 DApp 了。
 
-你可以在网上找到许多教程，帮助你从头开始在以太坊上构建你的第一个 DApp，但我们真正推荐 [SpeedRunEthereum](https://oreil.ly/Onygc)。这是快速学习并立即开始构建酷东西的最有效方法。为了增加你构建以太坊上 DApp 的知识，我们建议你完成你可以在 Speed Run Ethereum 上找到的所有挑战，并加入 [BuidlGuidl 社区](https://buidlguidl.com)。
+你可以在网上找到许多教程，帮助你从头开始在以太坊上构建你的第一个 DApp，但我们真正推荐 [SpeedRunEthereum](https://speedrunethereum.com)。这是快速学习并立即开始构建酷东西的最有效方法。为了增加你构建以太坊上 DApp 的知识，我们建议你完成你可以在 Speed Run Ethereum 上找到的所有挑战，并加入 [BuidlGuidl 社区](https://buidlguidl.com)。
 
 在本节中，我们将构建一个非常基本的去中心化应用程序，一种“Hello World”DApp。你不需要任何先前的经验；你所需要的只是一台电脑和互联网连接。
 
 ### 安装要求
 
-要遵循本教程，你需要安装 [node.js](http://node.js) 和 [yarn](https://oreil.ly/dq_hw) 在你的电脑上。有关下载和安装它们，请参阅官方网站。我们将使用 [Scaffold-ETH 2](https://scaffoldeth.io)，这是一个很酷的工具，可以让你非常快速地创建你的开发环境。
+要遵循本教程，你需要安装 [node.js](http://node.js) 和 [yarn](https://yarnpkg.com/getting-started/install) 在你的电脑上。有关下载和安装它们，请参阅官方网站。我们将使用 [Scaffold-ETH 2](https://scaffoldeth.io)，这是一个很酷的工具，可以让你非常快速地创建你的开发环境。
 
 ### 创建 DApp
 
@@ -450,7 +450,7 @@ ENS 不仅仅是将域名与以太坊地址链接起来：它还可以解析为 
 
 > **提示**
 >
-> 虽然大多数 Web 浏览器还不兼容 ENS 和 IPFS，但某些浏览器已开始添加对它们的支持。其中一个例子是 [Brave](https://oreil.ly/LlJT7)。
+> 虽然大多数 Web 浏览器还不兼容 ENS 和 IPFS，但某些浏览器已开始添加对它们的支持。其中一个例子是 [Brave](https://brave.com/blog/brave-crypto-dns-strategy/)。
 
 必须说明的是，`eth.limo` 是另一个潜在的中心化第三方，可能会在没有任何通知的情况下停止工作。如果发生这种情况，你的 DApp 仍然可以通过 IPFS 访问，但 `.eth.limo` URL 不再将用户重定向到它们。
 

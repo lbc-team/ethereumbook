@@ -74,7 +74,7 @@ Vyper 已经完全取消了修饰器。Vyper 的建议如下：如果你只是�
 
 ### 类继承 (Class Inheritance)
 
-继承允许程序员通过从现有软件库中获取预先存在的功能、属性和行为来利用预先编写的代码的力量。继承非常强大，并促进了代码的重用。Solidity 支持多重继承以及多态性，但虽然这些是面向对象编程的关键特性，但 Vyper 不支持它们。Vyper 认为继承的实现需要编码人员和审计人员在多个文件之间跳转，才能理解程序正在做什么。Vyper 还认为多重继承会使代码过于复杂而无法理解——[Solidity 文档](https://oreil.ly/bkGwS)默默地承认了这一观点，该文档给出了一个多重继承可能存在问题的例子。
+继承允许程序员通过从现有软件库中获取预先存在的功能、属性和行为来利用预先编写的代码的力量。继承非常强大，并促进了代码的重用。Solidity 支持多重继承以及多态性，但虽然这些是面向对象编程的关键特性，但 Vyper 不支持它们。Vyper 认为继承的实现需要编码人员和审计人员在多个文件之间跳转，才能理解程序正在做什么。Vyper 还认为多重继承会使代码过于复杂而无法理解——[Solidity 文档](https://docs.soliditylang.org/en/latest/contracts.html#inheritance)默默地承认了这一观点，该文档给出了一个多重继承可能存在问题的例子。
 
 ### 内联汇编 (Inline Assembly)
 
@@ -189,7 +189,7 @@ stored_data: public(uint256)
 
 > **注意**
 >
-> Vyper 带有 [内置的通用接口](https://oreil.ly/GazPW)，例如 ERC-20 和 ERC-721，允许直接与此类合约进行交互。Vyper 中的合约必须声明为全局变量。声明 ERC-20 变量的示例如下：
+> Vyper 带有 [内置的通用接口](https://github.com/vyperlang/vyper/tree/master/vyper/builtins/interfaces)，例如 ERC-20 和 ERC-721，允许直接与此类合约进行交互。Vyper 中的合约必须声明为全局变量。声明 ERC-20 变量的示例如下：
 > `from vyper.interfaces import ERC20` `token: ERC20`
 
 你还可以使用命令行编译合约。每个 Vyper 合约都保存在一个带有 *.vy* 扩展名的文件中。安装 Vyper 后，你可以通过运行以下命令来编译合约：
@@ -212,11 +212,11 @@ vyper -f abi,bytecode,interface,source_map ~/hello_world.vy
 
 现代 Vyper 还包括高级优化模式。你可以使用 `--optimize gas`（默认值）优化 Gas 效率，或使用 `--optimize codesize` 优化更小的合约大小。可以使用 `--experimental-codegen` 启用较新的实验性 Venom IR 管道，以获得更好的优化。
 
-虽然 Remix 和命令行编译器非常适合学习和实验，但处理较大项目的开发者通常需要全面的开发框架。[ApeWorx](https://oreil.ly/AJRSa)（以前称为 Ape）提供了出色的 Vyper 支持，具有自动化测试、部署脚本以及与各种网络集成等功能。[Foundry](https://oreil.ly/CWIKj) 虽然主要关注 Solidity，但也支持 Vyper 开发，并提供强大的测试和模拟功能。这些框架提供了专业的智能合约开发人员构建复杂应用程序所需的成熟开发环境。
+虽然 Remix 和命令行编译器非常适合学习和实验，但处理较大项目的开发者通常需要全面的开发框架。[ApeWorx](https://www.apeworx.io/framework/)（以前称为 Ape）提供了出色的 Vyper 支持，具有自动化测试、部署脚本以及与各种网络集成等功能。[Foundry](https://github.com/foundry-rs/foundry) 虽然主要关注 Solidity，但也支持 Vyper 开发，并提供强大的测试和模拟功能。这些框架提供了专业的智能合约开发人员构建复杂应用程序所需的成熟开发环境。
 
 ## 在编译器级别防止溢出错误 (Protecting Against Overflow Errors at the Compiler Level)
 
-在处理实际价值时，软件中的溢出错误可能是灾难性的。例如，[2018 年 4 月中旬的一笔交易](https://oreil.ly/zOy06) 显示恶意转移了超过 57,896,044,618,658,100,000,000,000,000,000,000,000,000,000,000,000,000,000,000 BEC 代币。此交易是 Beauty Chain 的 ERC-20 代币合约（*BecToken.sol*）中整数溢出问题导致的。
+在处理实际价值时，软件中的溢出错误可能是灾难性的。例如，[2018 年 4 月中旬的一笔交易](https://etherscan.io/tx/0xad89ff16fd1ebe3a0a7cf4ed282302c06626c1af33221ebe0d3a470aba4a660f) 显示恶意转移了超过 57,896,044,618,658,100,000,000,000,000,000,000,000,000,000,000,000,000,000,000 BEC 代币。此交易是 Beauty Chain 的 ERC-20 代币合约（*BecToken.sol*）中整数溢出问题导致的。
 
 Vyper 的核心功能之一一直是其内置的溢出保护，它可以缓解历史上困扰智能合约开发的溢出错误的风险。Vyper 的溢出保护方法是全面的：它包括 SafeMath 等效保护，可以处理整数算术的必要异常情况，确保加法、减法、乘法和除法等操作在默认情况下是安全的，并在发生溢出或下溢时引发异常。此外，Vyper 使用钳位来强制执行值限制，每当加载文字常量、将值传递给函数或分配变量时。
 

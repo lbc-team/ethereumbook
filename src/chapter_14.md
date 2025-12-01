@@ -448,8 +448,8 @@ address = keccak256(0xff ++ sender_address ++ salt ++ keccak256(init_code))[12:]
 
 反汇编 EVM 字节码是一种了解高级 Solidity 在 EVM 中如何运作的好方法。你可以使用一些反汇编器来执行此操作：
 
-- [**Ethersplay**](https://oreil.ly/xW6fH) 是 Binary Ninja（一个反汇编器）的 EVM 插件。顺便说一句，要使用插件，你需要购买 Binary Ninja 的完整应用程序。
-- [**Heimdall**](https://oreil.ly/klTJ3) 是一个高级 EVM 智能合约工具包，专门用于字节码分析和从未经验证的合约中提取信息。
+- [**Ethersplay**](https://github.com/crytic/ethersplay) 是 Binary Ninja（一个反汇编器）的 EVM 插件。顺便说一句，要使用插件，你需要购买 Binary Ninja 的完整应用程序。
+- [**Heimdall**](https://github.com/Jon-Becker/heimdall-rs) 是一个高级 EVM 智能合约工具包，专门用于字节码分析和从未经验证的合约中提取信息。
 
 在本节中，我们将使用 Heimdall 来生成图 14-21。在获得 `Faucet.sol` 的运行时字节码之后，我们可以将其提供给 Heimdall，以查看 EVM 指令的外观。
 
@@ -487,7 +487,7 @@ heimdall 0.8.4
 
 > **注意**  
 >
-> 有关如何安装 Heimdall 的最新信息，请参阅你可以在 [GitHub 仓库](https://oreil.ly/klTJ3) 中找到的官方文档。
+> 有关如何安装 Heimdall 的最新信息，请参阅你可以在 [GitHub 仓库](https://github.com/Jon-Becker/heimdall-rs) 中找到的官方文档。
 
 ### 使用 Heimdall 反汇编字节码
 
@@ -519,7 +519,7 @@ $ ls # 现在你应该看到该文件
 $ cat cfg.dot
 ```
 
-此命令会将文件的全部内容打印到屏幕；复制它，打开一个 [*控制流图* (CFG) 在线生成器](https://oreil.ly/swOsK)，然后将其粘贴到网页的左侧，如图 14-22 所示。
+此命令会将文件的全部内容打印到屏幕；复制它，打开一个 [*控制流图* (CFG) 在线生成器](https://dreampuf.github.io/GraphvizOnline/)，然后将其粘贴到网页的左侧，如图 14-22 所示。
 
 ![Faucet.sol 合约的控制流图 (CFG)](https://img.learnblockchain.cn/masterethereumbook/images/ch14/maet_1422.png)
 
@@ -812,7 +812,7 @@ Ethereum 鼓励删除已使用的存储变量，方法是退还合约执行期�
 - 他们可以保留 gas 费用供自己使用，而不是烧毁它们并减少 ETH 供应。
 - 必要时，他们可以创建更大的区块，捕获大量的 MEV 活动，从而为他们带来更多的费用。
 
-如果您对此感到好奇，请阅读 [James Prestwich 的文章](https://oreil.ly/EImcE)。
+如果您对此感到好奇，请阅读 [James Prestwich 的文章](https://prestwich.substack.com/p/has-anyone-checked-on-eip-1559-recently)。
 
 ## 具体实现
 
@@ -993,7 +993,7 @@ EVM 浏览所有字节码并创建一个映射，其中每个 `0x5b` 字节都�
 
 弃用功能更加困难，因为你不能依赖 EVM 的版本控制系统。因此，如果你删除一个操作码或更改它的工作方式，使用它的旧合约可能会中断，除了手动干预（通过创建一个新合约）之外，没有任何方法可以修复它。
 
-当引入 [EIP-2929](https://oreil.ly/_9kTv) 以更改状态访问操作码的 gas 计量时，一些合约中断是因为它们硬编码了要使用或期望的 gas 量。使它们再次工作的解决方案是引入 *访问列表*，你可以在其中预加载一些你确信会被交易触及的帐户和存储槽，并降低 gas 成本。
+当引入 [EIP-2929](https://eips.ethereum.org/EIPS/eip-2929) 以更改状态访问操作码的 gas 计量时，一些合约中断是因为它们硬编码了要使用或期望的 gas 量。使它们再次工作的解决方案是引入 *访问列表*，你可以在其中预加载一些你确信会被交易触及的帐户和存储槽，并降低 gas 成本。
 
 使升级更加困难的旧 EVM 的其他重要方面是 *代码内省* 和 *gas 可观察性*。由于诸如 `GAS` 甚至所有将 gas 作为输入的 `*CALL` 操作码等操作码，gas 可观察性是可能的，而由于诸如 `CODESIZE`、`CODECOPY`、`EXTCODESIZE`、`EXTCODECOPY` 和 `EXTCODEHASH` 等操作码，代码内省是可以实现的。
 
@@ -1200,7 +1200,7 @@ PUSH0 PUSH0 DATALOADN 0 PUSH0 EOFCREATE 0 STOP
 
 ## EVM 的未来
 
-除了 EOF 之外，EVM 的未来是不确定的，并且将取决于开发人员和不同项目如何使用 EVM。但是，EVM 可以在一些有趣的领域进行扩展，例如 *zk-EVM*，它将提供附加到每个区块的零知识证明，以证明其正确执行。此外，[*EVMMAX*](https://oreil.ly/ioqSx) 和 [*SIMD*](https://oreil.ly/7q0Dq) 将为 EVM 带来更多功能，使其能够更快地进行大量加密处理，这将特别有利于依赖加密的应用程序，例如隐私协议或 L2。
+除了 EOF 之外，EVM 的未来是不确定的，并且将取决于开发人员和不同项目如何使用 EVM。但是，EVM 可以在一些有趣的领域进行扩展，例如 *zk-EVM*，它将提供附加到每个区块的零知识证明，以证明其正确执行。此外，[*EVMMAX*](https://github.com/jwasinger/EIPs/blob/evmmax-2/EIPS/eip-6601.md) 和 [*SIMD*](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-616.md) 将为 EVM 带来更多功能，使其能够更快地进行大量加密处理，这将特别有利于依赖加密的应用程序，例如隐私协议或 L2。
 
 ## 结论
 

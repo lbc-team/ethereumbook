@@ -622,7 +622,7 @@ Target block 很容易选择，因为它只是 epoch 的第一个区块（在一
 
 > **注意**
 >
-> 自 2024 年我们撰写本章以来，情况发生了一些变化。目前，在 [Dencun 硬分叉](https://oreil.ly/TXJYS) 中添加了一个名为“提议者提升”的解决方案，该解决方案确实会惩罚迟到的区块提议者。提议者提升增加了区块提议者在提议区块的 slot 中的证明的权重。
+> 自 2024 年我们撰写本章以来，情况发生了一些变化。目前，在 [Dencun 硬分叉](https://github.com/ethereum/consensus-specs/blob/dev/specs/deneb/fork-choice.md) 中添加了一个名为“提议者提升”的解决方案，该解决方案确实会惩罚迟到的区块提议者。提议者提升增加了区块提议者在提议区块的 slot 中的证明的权重。
 
 ### 超多数的中心化
 
@@ -670,6 +670,6 @@ Target block 很容易选择，因为它只是 epoch 的第一个区块（在一
 
 为了进一步阅读，我们推荐：
 
-- [Gasper 论文](https://oreil.ly/1BoMt)
-- Ben Edgington 的 [升级以太坊](https://oreil.ly/Jzh-9)
-- [“去中心化好还是不好？捍卫以太坊 2.0 中的共识”](https://oreil.ly/VNC1Q)
+- [Gasper 论文](https://arxiv.org/pdf/2003.03052)
+- Ben Edgington 的 [升级以太坊](https://eth2book.info)
+- [“去中心化好还是不好？捍卫以太坊 2.0 中的共识”](https://www.mdpi.com/2813-5288/2/1/1)

@@ -4,14 +4,14 @@
 
 ## 历史
 
-*零知识证明* 在1985年由Shafi Goldwasser、Silvio Micali和Charles Rackoff发表的论文 ["交互式证明系统的知识复杂性"](https://oreil.ly/a6KH6) 中被提出，他们将零知识证明描述为一种向另一方证明你知道某些事情是真的，而不透露任何信息，除了你的声明实际上是真的之外的方法。
-尽管零知识证明是在20世纪80年代被发现的，但它们的实际用例非常有限。一切都在2011年随着 [BIT+11](https://oreil.ly/C6HvM) 论文的出现而改变，该论文介绍了 *SNARKs* (*简洁的非交互式知识论证*)，作为为任意计算创建零知识证明的理论框架。两年后，在2013年，[Pinocchio PGHR13](https://oreil.ly/4uU6x) 论文提供了第一个通用SNARK的实际实现，使SNARKs在现实世界的应用中成为可能。这是第一次可以在不必重新执行的情况下证明一个通用程序已被正确执行，并且无需透露实际的计算细节。
+*零知识证明* 在1985年由Shafi Goldwasser、Silvio Micali和Charles Rackoff发表的论文 ["交互式证明系统的知识复杂性"](https://users.cms.caltech.edu/~vidick/teaching/101_crypto/GMR85_ZeroKnowledge.pdf) 中被提出，他们将零知识证明描述为一种向另一方证明你知道某些事情是真的，而不透露任何信息，除了你的声明实际上是真的之外的方法。
+尽管零知识证明是在20世纪80年代被发现的，但它们的实际用例非常有限。一切都在2011年随着 [BIT+11](https://eprint.iacr.org/2011/443.pdf) 论文的出现而改变，该论文介绍了 *SNARKs* (*简洁的非交互式知识论证*)，作为为任意计算创建零知识证明的理论框架。两年后，在2013年，[Pinocchio PGHR13](https://eprint.iacr.org/2013/279.pdf) 论文提供了第一个通用SNARK的实际实现，使SNARKs在现实世界的应用中成为可能。这是第一次可以在不必重新执行的情况下证明一个通用程序已被正确执行，并且无需透露实际的计算细节。
 
-革命开始了。从那时起，零知识证明领域以惊人的速度发展。2016年，[Groth16算法](https://oreil.ly/rxlOL) 通过减少证明大小和验证时间，显着提高了zk-SNARKs的效率。由于其卓越的简洁性，尽管有更新的系统可用，Groth16至今仍被广泛使用。例如，去中心化混合器应用程序Tornado Cash使用它来实现链上的零知识证明。
+革命开始了。从那时起，零知识证明领域以惊人的速度发展。2016年，[Groth16算法](https://eprint.iacr.org/2016/260.pdf) 通过减少证明大小和验证时间，显着提高了zk-SNARKs的效率。由于其卓越的简洁性，尽管有更新的系统可用，Groth16至今仍被广泛使用。例如，去中心化混合器应用程序Tornado Cash使用它来实现链上的零知识证明。
 
-2017年，[Bulletproofs](https://oreil.ly/ZUeIe) 通过消除对 *可信设置* 的需求引入了一项突破性进展（在后面的章节中，我们将深入探讨可信设置的实际含义），尽管代价是更大的证明大小。紧随其后的是2018年的 [*zk-STARKs*](https://oreil.ly/TCnTT)，它不仅消除了对可信设置的需求，还提供了后量子安全性——这意味着它们的密码学基础能够抵抗来自量子计算机的攻击。前者现在被用于加密货币项目Monero中，以混淆交易金额，而后者构成了以太坊L2 Starknet的密码学基础。
+2017年，[Bulletproofs](https://web.stanford.edu/~buenz/pubs/bulletproofs.pdf) 通过消除对 *可信设置* 的需求引入了一项突破性进展（在后面的章节中，我们将深入探讨可信设置的实际含义），尽管代价是更大的证明大小。紧随其后的是2018年的 [*zk-STARKs*](https://eprint.iacr.org/2018/046.pdf)，它不仅消除了对可信设置的需求，还提供了后量子安全性——这意味着它们的密码学基础能够抵抗来自量子计算机的攻击。前者现在被用于加密货币项目Monero中，以混淆交易金额，而后者构成了以太坊L2 Starknet的密码学基础。
 
-2019年，[PLONK](https://oreil.ly/3453_) 和 [Sonic](https://oreil.ly/f6_Sq) 通过引入通用且可更新的可信设置做出了重大贡献，这使得SNARKs对于通用应用程序来说更加灵活和实用。这些创新继续影响着现代的零知识系统。
+2019年，[PLONK](https://eprint.iacr.org/2019/953.pdf) 和 [Sonic](https://eprint.iacr.org/2019/099.pdf) 通过引入通用且可更新的可信设置做出了重大贡献，这使得SNARKs对于通用应用程序来说更加灵活和实用。这些创新继续影响着现代的零知识系统。
 
 零知识证明仍在积极开发中，最近的进展带来了证明时间、递归效率和实际应用（如zk-EVM和现代zk-VM）的改进。新的结构和优化不断涌现，推动着零知识技术可能实现的边界。
 
@@ -1048,7 +1048,7 @@ w = [0, 1, 2, 7]
 
 ## Fiat-Shamir 启发式
 
-1986 年，两位著名的密码学家 Amos Fiat 和 Adi Shamir 发表了论文“[How to Prove Yourself: Practical Solutions to Identification and Signature Problems](https://oreil.ly/TGfa-)”，他们在其中发明了至今仍被广泛使用的转换协议，并以他们的名字命名：*Fiat-Shamir 启发式* 或转换。
+1986 年，两位著名的密码学家 Amos Fiat 和 Adi Shamir 发表了论文“[How to Prove Yourself: Practical Solutions to Identification and Signature Problems](https://link.springer.com/content/pdf/10.1007/3-540-47721-7_12.pdf)”，他们在其中发明了至今仍被广泛使用的转换协议，并以他们的名字命名：*Fiat-Shamir 启发式* 或转换。
 
 > **注意**
 >
@@ -1124,7 +1124,7 @@ SNARK 系统依赖于称为*可信设置*的密码秘密，以非交互方式工
 
 即使 SNARK 协议可以完美运行，但可信设置的 N 分之 1 信任假设，以及创建非常具有弹性的初始仪式以生成最终公钥的困难，始终引发了大量的讨论，并促使一些研究人员和公司寻找完全无需它的无信任零知识证明系统。此外，SNARK 系统依赖于非抗量子椭圆曲线密码学，这是人们指出的另一个关键方面。
 
-2018 年，Eli Ben-Sasson、Iddo Bentov、Yinon Horesh 和 Michael Riabzev 撰写的一篇论文，题为“[Scalable, Transparent, and Post-Quantum Secure Computational Integrity](https://oreil.ly/TCnTT)”，引入了一个新的无信任框架，用于构建通用的零知识证明系统：zk-STARK。
+2018 年，Eli Ben-Sasson、Iddo Bentov、Yinon Horesh 和 Michael Riabzev 撰写的一篇论文，题为“[Scalable, Transparent, and Post-Quantum Secure Computational Integrity](https://eprint.iacr.org/2018/046.pdf)”，引入了一个新的无信任框架，用于构建通用的零知识证明系统：zk-STARK。
 STARK 代表“*可扩展透明的知识论证*”。特别是，*透明*指的是不需要可信设置的突破性属性。它还依赖于抗冲突哈希函数而不是椭圆曲线密码学，使其甚至具有抗量子性。
 
 这些优势解释了为什么现在大多数人认为 STARK 是最现代的零知识证明系统。然而，SNARK 并不是一种过时的技术。它们在某些情况下确实具有一些优势，主要是在证明大小方面，这在带宽受限的环境（如区块链）中可能是至关重要的。此外，已经开发了几种混合方法，试图取长补短。
@@ -1136,7 +1136,7 @@ STARK 代表“*可扩展透明的知识论证*”。特别是，*透明*指的�
 我们已经解释了如何使用零知识证明系统来改进以太坊——也就是说，证明一个区块的 EVM 执行，以便完整节点不必重新执行包含在该区块中的所有交易来无信任地更新其状态。相反，他们可以只验证零知识证明，如果它是有效的，他们就知道新的最初，每个想要构建 ZK rollup 的项目都必须着手创建用于 EVM 状态转换函数的正确的零知识电路。 这就是为什么在撰写本文时（2025 年 6 月），我们有比 ZK rollup 更多的 optimistic rollup。 但由于 zk-VM 的出现，情况变化非常快。
 *Zk-VM* 极大地改变了构建 ZK rollup 以及更普遍地用于 EVM 状态转换函数的零知识证明系统的视角。 这个想法非常简单：与其为每个不同的计算创建自定义电路，以便随后应用 SNARK 或 STARK 框架，不如创建一个可以用于所有类型计算的通用电路？ 它将是一种通用零知识计算机，可以处理任何任意计算。 这种抽象层非常强大：“一个电路统治一切”。
 
-这样，你只需要专注于你想证明的计算，而 zk-VM 则处理生成证明的所有困难工作。 目前最著名的 zk-VM 是 [SP1](https://oreil.ly/kgVYY) 和 [RISC Zero](https://oreil.ly/z6v2l)。
+这样，你只需要专注于你想证明的计算，而 zk-VM 则处理生成证明的所有困难工作。 目前最著名的 zk-VM 是 [SP1](https://github.com/succinctlabs/sp1) 和 [RISC Zero](https://github.com/risc0/risc0)。
 
 图 17-5 提供了一个简化的可视化，捕捉了 zk-EVM 和 zk-VM 框架的核心要素。
 
@@ -1152,7 +1152,7 @@ STARK 代表“*可扩展透明的知识论证*”。特别是，*透明*指的�
 
 有关此主题的更多阅读材料，请参见以下内容：
 
-- [一个简单的例子](https://oreil.ly/jVNdu)
-- Ethan Buchman 的 [“你本可以发明 SNARK”](https://oreil.ly/jiaOa)
-- Maksym Petkus 的 [“为什么以及 zk-SNARK 如何工作：权威解释”](https://oreil.ly/EUUzt)
-- [RareSkills 零知识之书](https://oreil.ly/tpHrl)
+- [一个简单的例子](https://www.shirpeled.com/2018/09/a-hands-on-tutorial-for-zero-knowledge.html)
+- Ethan Buchman 的 [“你本可以发明 SNARK”](https://ebuchman.github.io/pdf/snarks.pdf)
+- Maksym Petkus 的 [“为什么以及 zk-SNARK 如何工作：权威解释”](https://arxiv.org/pdf/1906.07221)
+- [RareSkills 零知识之书](https://rareskills.io/zk-book)

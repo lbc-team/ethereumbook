@@ -116,7 +116,7 @@ Santa Rosa, CA 95401
 
 [oreilly.com/about/contact.html](https://oreilly.com/about/contact.html)
 
-我们有一个关于本书的网页，我们在其中列出勘误表和任何其他信息。您可以通过 [https://oreil.ly/MasteringEthereum2e](https://oreil.ly/MasteringEthereum2e) 访问此页面。
+我们有一个关于本书的网页，我们在其中列出勘误表和任何其他信息。您可以通过 [https://www.oreilly.com/library/view/mastering-ethereum-2nd/9781098168414/](https://www.oreilly.com/library/view/mastering-ethereum-2nd/9781098168414/) 访问此页面。
 
 有关我们的书籍和课程的新闻和信息，请访问 [https://oreilly.com](https://oreilly.com)。
 

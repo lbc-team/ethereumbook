@@ -40,11 +40,11 @@ PKC 使用唯一的密钥来保护信息。 这些密钥基于具有特殊属性
 > **注意**
 >
 > 如果您有兴趣阅读更多关于密码学以及现代密码学中使用的数学函数，请查看以下资源：
-> - [密码学](https://oreil.ly/wOT_b)
-> - [陷门函数](https://oreil.ly/WrxXr)
-> - [素数分解](https://oreil.ly/rxAnN)
-> - [离散对数](https://oreil.ly/pj8PD)
-> - [椭圆曲线密码学](https://oreil.ly/RP2QF)
+> - [密码学](https://en.wikipedia.org/wiki/Cryptography)
+> - [陷门函数](https://en.wikipedia.org/wiki/Trapdoor_function)
+> - [素数分解](https://en.wikipedia.org/wiki/Integer_factorization)
+> - [离散对数](https://en.wikipedia.org/wiki/Discrete_logarithm)
+> - [椭圆曲线密码学](https://en.wikipedia.org/wiki/Elliptic-curve_cryptography)
 
 在以太坊中，我们使用 PKC 创建我们在本章中一直在讨论的公钥 - 私钥对。 它们被认为是“一对”，因为公钥是从私钥派生的。 它们共同代表一个以太坊帐户，分别提供一个可公开访问的帐户句柄（地址）和对帐户中任何以太币以及使用智能合约时帐户需要的任何身份验证的私有控制。 私钥通过成为创建数字签名所需的唯一信息来控制访问，数字签名需要对交易进行签名才能花费帐户中的任何资金。 数字签名也用于验证合约的所有者或用户身份，我们将在第 7 章中看到。
 
@@ -226,7 +226,7 @@ K = (x, y)
 x = 6e145ccef1033dea239875dd00dfb4fee6e3348b84985c92f103444683bae07b
 y = 83b5c38e5e2b0c8529d7fa3f64d46daa1ece2d9ac14cab9477d042c84c32ccd0
 ```
-在 以太坊 中，您可能会看到公钥表示为 130 个十六进制字符（65 个字节）的序列化。 这是从行业联盟高效密码学标准 (SECG) 提出的标准序列化格式中采用的，该格式记录在 [高效密码学标准 (SEC1)](https://oreil.ly/Y_cOQ) 中。 该标准定义了可以用来识别椭圆曲线上点的四种可能的序列化前缀，如表 4-1 所示。
+在 以太坊 中，您可能会看到公钥表示为 130 个十六进制字符（65 个字节）的序列化。 这是从行业联盟高效密码学标准 (SECG) 提出的标准序列化格式中采用的，该格式记录在 [高效密码学标准 (SEC1)](https://www.secg.org/sec1-v2.pdf) 中。 该标准定义了可以用来识别椭圆曲线上点的四种可能的序列化前缀，如表 4-1 所示。
 
 **表 4-1. 序列化的椭圆曲线公钥前缀**
 
@@ -257,7 +257,7 @@ y = 83b5c38e5e2b0c8529d7fa3f64d46daa1ece2d9ac14cab9477d042c84c32ccd0
 
 OpenSSL 库提供了一套全面的基本加密功能，包括 `secp256k1` 的完整实现。 例如，为了导出一个 公钥，可以使用函数 `EC_POINT_mul`。
 
-[**libsecp256k1**](https://oreil.ly/lv84W)
+[**libsecp256k1**](https://github.com/bitcoin-core/secp256k1)
 
 Bitcoin Core 的 `libsecp256k1` 是 `secp256k1` 椭圆曲线和其他密码学原语的 C 语言实现。 它是从头开始编写的，用于替换 Bitcoin Core 软件中的 OpenSSL，并且在性能和安全性方面都被认为更优越。
 
@@ -332,7 +332,7 @@ SHA3("") = a7ffc6f8bf1ed76651c14756a061d662f580ff4de43b49fa82d80a4b80f8434a
 
 > **注意**
 >
-> 由于以太坊中使用的哈希函数 (Keccak-256) 与最终标准 (FIP-202 SHA-3) 之间的差异造成的混乱，所有代码、操作码和库中所有 `sha3` 实例都已重命名为 `keccak256`。 详见 [ERC-59](https://oreil.ly/rTHDv)。
+> 由于以太坊中使用的哈希函数 (Keccak-256) 与最终标准 (FIP-202 SHA-3) 之间的差异造成的混乱，所有代码、操作码和库中所有 `sha3` 实例都已重命名为 `keccak256`。 详见 [ERC-59](https://github.com/ethereum/EIPs/issues/59)。
 
 接下来，让我们检查 Keccak-256 在以太坊中的第一个应用，即从公钥生成以太坊地址。
 
@@ -365,7 +365,7 @@ K = 6e### 以太坊地址格式
 
 ### 带有大小写校验和的十六进制编码 (ERC-55)
 
-由于名称服务的部署速度缓慢，[ERC-55](https://oreil.ly/JfgWs) 提出了一个标准。ERC-55 通过修改十六进制地址的大小写，为以太坊地址提供了一个向后兼容的校验和。其想法是，以太坊地址不区分大小写，并且所有钱包都应该接受以大写或小写字符表示的以太坊地址，而不会在解释上产生任何差异。通过修改地址中字母字符的大小写，我们可以传递一个校验和，该校验和可用于保护地址的完整性，以防止输入或阅读错误。不支持 ERC-55 校验和的钱包只是忽略地址包含混合大小写的事实，但那些支持它的钱包可以验证它，并以 99.986% 的准确率检测错误。
+由于名称服务的部署速度缓慢，[ERC-55](https://github.com/ethereum/ercs/blob/master/ERCS/erc-55.md) 提出了一个标准。ERC-55 通过修改十六进制地址的大小写，为以太坊地址提供了一个向后兼容的校验和。其想法是，以太坊地址不区分大小写，并且所有钱包都应该接受以大写或小写字符表示的以太坊地址，而不会在解释上产生任何差异。通过修改地址中字母字符的大小写，我们可以传递一个校验和，该校验和可用于保护地址的完整性，以防止输入或阅读错误。不支持 ERC-55 校验和的钱包只是忽略地址包含混合大小写的事实，但那些支持它的钱包可以验证它，并以 99.986% 的准确率检测错误。
 
 混合大小写的编码很微妙，您可能一开始不会注意到。我们的示例地址是：
 
@@ -500,13 +500,13 @@ PoS 系统对于行为不端的区块生产者（即验证者）没有这种相�
 
 目前，以太坊 PoS 协议每秒处理大约 2,600 条消息。
 
-出于这些原因，大多数 PoS 区块链的验证者集非常小，最多只有几十个或几百个。 即使是以太坊的初始提案（参见 [EIP-1011](https://oreil.ly/pQSCp)）也以 900 个验证者为目标，并以 1,500 ETH 作为在活跃验证者集中当选的最低存款。
+出于这些原因，大多数 PoS 区块链的验证者集非常小，最多只有几十个或几百个。 即使是以太坊的初始提案（参见 [EIP-1011](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1011.md)）也以 900 个验证者为目标，并以 1,500 ETH 作为在活跃验证者集中当选的最低存款。
 
-如果以太坊基金会的研究员 Justin Drake 在 2018 年 5 月的以太坊 PoS 协议的最终规范不是在 [ethresearch 网站上发表的一篇长篇文章](https://oreil.ly/EbBib) 中提出了 BLS 签名聚合的想法。
+如果以太坊基金会的研究员 Justin Drake 在 2018 年 5 月的以太坊 PoS 协议的最终规范不是在 [ethresearch 网站上发表的一篇长篇文章](https://ethresear.ch/t/pragmatic-signature-aggregation-with-bls/2105) 中提出了 BLS 签名聚合的想法。
 
 ### BLS 数字签名
 
-BLS 签名以其作者的名字命名。 BLS 代表 Boneh–Lynn–Shacham，指的是三位密码学家 Dan Boneh、Ben Lynn 和 Hovav Shacham，他们在 2001 年的论文 ["来自 Weil 配对的短签名"](https://oreil.ly/cJn6v) 中介绍了签名方案。
+BLS 签名以其作者的名字命名。 BLS 代表 Boneh–Lynn–Shacham，指的是三位密码学家 Dan Boneh、Ben Lynn 和 Hovav Shacham，他们在 2001 年的论文 ["来自 Weil 配对的短签名"](https://www.iacr.org/archive/asiacrypt2001/22480516.pdf) 中介绍了签名方案。
 
 与 ECDSA（将在第 6 章中进一步解释）一样，BLS 签名仍然基于椭圆曲线密码学。 特别是，以太坊使用曲线 *BLS12-381*，这是 Sean Bowe 在 2017 年为 Zcash 协议工作时设计的。 它由以下函数定义：
 
@@ -549,7 +549,7 @@ e(pk, H(m)) = e(sk * g1,H(m)) = ← pk = sk * g1
 = e(g1,σ) ← σ = sk * H(m)
 ```
 
-正如 Vitalik Buterin 在 [Medium 文章](https://oreil.ly/v578s) 中指出的那样：
+正如 Vitalik Buterin 在 [Medium 文章](https://medium.com/@VitalikButerin/exploring-elliptic-curve-pairings-c73c1864e627) 中指出的那样：
 
 > 如果您将椭圆曲线点视为单向加密的数字 - `encrypt(p) = p * G = P`，其中 G 是生成器点 - 那么，传统的椭圆曲线数学让您可以检查数字的线性约束（例如，如果 `P = G * p`、`Q = G * q` 和 `R = G * r`，检查 `5 * P + 7 * Q = 11 * R` 实际上是在检查 `5 * p + 7 * q = 11 * r`），配对让您可以检查二次约束（例如，检查 `e(P, Q) * e(G, G * 5) = 1` 实际上是在检查 `p * q + 1 * 5 = 0`）。
 
@@ -739,13 +739,13 @@ d = 3 ← 所需 Merkle 树的深度
 
 ### KZG 承诺
 
-KZG 是 Kate、Zaverucha 和 Goldberg 这三个作者姓名的首字母缩写。 这些密码学家在他们 2010 年的论文 ["多项式的恒定大小承诺及其应用"](https://oreil.ly/JnEc0) 中介绍了这种承诺方案。
+KZG 是 Kate、Zaverucha 和 Goldberg 这三个作者姓名的首字母缩写。 这些密码学家在他们 2010 年的论文 ["多项式的恒定大小承诺及其应用"](https://link.springer.com/chapter/10.1007/978-3-642-17373-8_11) 中介绍了这种承诺方案。
 
 #### 受信任的设置
 
 KZG 承诺方案需要存在 *受信任的设置*。 您可以将其视为与密码学协议的所有参与者（即证明者和验证者）共享的通用知识库。 它被称为受信任的设置，因为为了生成该通用知识库，一些参与者需要生成随机数（秘密），加密它们并创建最终数据。 然后，他们必须删除秘密以确保协议保持安全。 由于需要信任这些参与者删除他们的秘密，因此整个仪式被称为受信任的设置。
 
-现代设置通常使用 [*Powers-of-Tau*](https://oreil.ly/uaS5x) 设置，该设置具有 1-of-N 信任模型。 这意味着我们只需要一个诚实的参与者才能使整个受信任的设置被认为是安全的。
+现代设置通常使用 [*Powers-of-Tau*](https://eprint.iacr.org/2022/1592.pdf) 设置，该设置具有 1-of-N 信任模型。 这意味着我们只需要一个诚实的参与者才能使整个受信任的设置被认为是安全的。
 
 以太坊 KZG 受信任的设置仪式涉及超过 140,000 个不同的参与者，如图 4-10 所示。
 

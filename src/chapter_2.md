@@ -82,7 +82,7 @@ Phantom 是一个只能连接到以太坊以及其他非 EVM 链的钱包。
 
 ## MetaMask 入门
 
-打开 Google Chrome 浏览器并导航到 [Extensions](https://oreil.ly/0rOvX)。搜索“MetaMask”并点击狐狸的徽标。你应该会看到类似于图 2-1 的内容。
+打开 Google Chrome 浏览器并导航到 [Extensions](https://chromewebstore.google.com/category/extensions)。搜索“MetaMask”并点击狐狸的徽标。你应该会看到类似于图 2-1 的内容。
 
 ![MetaMask Chrome 扩展程序的详细信息页面](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0201.png)
 
@@ -174,7 +174,7 @@ Holesky 测试网是以太坊用于质押、基础设施和协议开发的高级
 
 图 2-5. MetaMask 网络
 
-点击购买，然后导航到[此列表](https://oreil.ly/VE0t0)中的其中一个水龙头。一旦你决定要使用哪个水龙头——它们几乎都是等效的——你就可以在测试网络上请求 ethers，如图 2-6 所示。
+点击购买，然后导航到[此列表](https://faucetlink.to/sepolia)中的其中一个水龙头。一旦你决定要使用哪个水龙头——它们几乎都是等效的——你就可以在测试网络上请求 ethers，如图 2-6 所示。
 
 ![MetaMask Sepolia 测试水龙头](https://img.learnblockchain.cn/masterethereumbook/images/ch2/maet_0206.png)
 

@@ -201,10 +201,10 @@
 
 以下是我们将在本示例中使用的四个客户端的文档页面：
 
-- [Geth](https://oreil.ly/zYviP)
-- [Prysm](https://oreil.ly/9-2FC)
-- [Reth](https://oreil.ly/KDmMt)
-- [Lighthouse](https://oreil.ly/RRpAs)
+- [Geth](https://geth.ethereum.org/docs)
+- [Prysm](https://prysm.offchainlabs.com/docs/)
+- [Reth](https://reth.rs/intro.html)
+- [Lighthouse](https://lighthouse-book.sigmaprime.io/intro.html)
 
 请随时查阅这些网站以了解有关每个客户端架构的更多详细信息，以及在安装期间进行故障排除。
 
@@ -253,9 +253,9 @@ $ cd ethereum-node1
 
 首先，我们将通过从源代码构建 Geth 来安装它。Geth 是 Go 语言实现的执行规范，由以太坊基金会积极开发，因此它被认为是以太坊客户端的“官方”实现。通常，每个基于以太坊的区块链都有自己的 Geth 实现。如果您正在运行 Geth，那么您需要确保使用以下存储库链接之一获取适用于您的区块链的正确版本：
 
-- [Ethereum](https://oreil.ly/qzK-O)
-- [BNB Chain](https://oreil.ly/tGtL3)
-- [Polygon PoS](https://oreil.ly/ZWhh3)
+- [Ethereum](https://github.com/ethereum/go-ethereum)
+- [BNB Chain](https://github.com/bnb-chain/bsc)
+- [Polygon PoS](https://github.com/0xPolygon/bor)
 
 > **注意**
 >
@@ -428,7 +428,7 @@ INFO [06-08|18:09:01.637] Forkchoice requested sync to new head    number=20,048
 
 > **注意**
 >
-> 如果您想了解更多关于我们在此示例中使用的特定命令和 CLI 标志的信息，[Geth](https://oreil.ly/zYviP) 和 [Prysm](https://oreil.ly/4sn6-) 的官方文档是最好的查找位置。
+> 如果您想了解更多关于我们在此示例中使用的特定命令和 CLI 标志的信息，[Geth](https://geth.ethereum.org/docs) 和 [Prysm](https://prysm.offchainlabs.com/docs/) 的官方文档是最好的查找位置。
 
 ### Reth-Lighthouse
 
@@ -485,7 +485,7 @@ $ cd consensus
 $ brew install cmake
 ```
 
-如果您使用的是其他操作系统，您可以参考 [Lighthouse 官方文档](https://oreil.ly/vEghS)。
+如果您使用的是其他操作系统，您可以参考 [Lighthouse 官方文档](https://lighthouse-book.sigmaprime.io)。
 
 **克隆仓库**。第一步是克隆 Git 仓库以获取源代码的副本：
 
@@ -591,7 +591,7 @@ $ curl -X POST -H "Content-Type: application/json" --data \
 {"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":1}
 ```
 
-JSON-RPC 请求根据 [JSON-RPC 2.0 规范](https://oreil.ly/m0HLL) 进行格式化。每个请求包含四个元素：
+JSON-RPC 请求根据 [JSON-RPC 2.0 规范](https://www.jsonrpc.org/specification) 进行格式化。每个请求包含四个元素：
 
 **jsonrpc**
 
@@ -637,15 +637,15 @@ $ curl -X POST -H "Content-Type: application/json" --data \
 $ echo $((0x1B1717FC7))7271972807
 ```
 
-完整的 JSON-RPC API 可以在 [Ethereum wiki](https://oreil.ly/lO2Z0) 上进行研究。
+完整的 JSON-RPC API 可以在 [Ethereum wiki](https://ethereum.org/developers/docs/apis/json-rpc/) 上进行研究。
 
 > **提示**
 >
 > 在本节中，我们使用原始 curl 请求来展示以太坊 JSON-RPC 接口。在现实生活中，您可能希望通过更好、更程序化的方式来访问它。这就是库发挥作用的地方。请随意探索以下三个最著名和最常用的库：
 >
-> - [ethers.js](https://oreil.ly/JKvSJ)
+> - [ethers.js](https://github.com/ethers-io/ethers.js)
 >
-> - [web3.py](https://oreil.ly/dHSF4)
+> - [web3.py](https://github.com/ethereum/web3.py)
 >
 > - [alloy](https://alloy.rs)
 
@@ -671,7 +671,7 @@ $ echo $((0x1B1717FC7))7271972807
 
 ### 移动（智能手机）钱包
 
-大多数生产移动钱包都作为远程客户端运行，因为智能手机没有足够的资源来运行完整的以太坊客户端。轻客户端正在开发中，并且尚未普遍用于以太坊。最著名的是 [Helios](https://oreil.ly/4joTo),，它仍然是实验性软件。
+大多数生产移动钱包都作为远程客户端运行，因为智能手机没有足够的资源来运行完整的以太坊客户端。轻客户端正在开发中，并且尚未普遍用于以太坊。最著名的是 [Helios](https://github.com/a16z/helios),，它仍然是实验性软件。
 
 流行的移动钱包包括以下几种（我们仅将这些列为示例；这不是对这些钱包的认可，也不是对这些钱包的安全或功能的指示）：
 

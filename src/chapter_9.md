@@ -38,7 +38,7 @@
 
 ### 重入
 
-以太坊智能合约的一个特性是它们能够调用和利用来自其他外部合约的代码。合约通常也处理以太币，因此经常将以太币发送到各种外部用户地址。这些操作需要合约提交外部调用。这些外部调用可能会被攻击者劫持，他们可以强制合约执行进一步的代码（通过回调：可以是回退函数或一些钩子，通常是 `transfer`），包括回调到它们自身。这种攻击在 2016 年臭名昭著且仍然令人记忆犹新的 DAO 黑客事件中被使用。即使过了这么多年，[我们仍然看到很多攻击利用这个漏洞](https://oreil.ly/87VUR)，尽管它很容易被发现并且修复成本不高。
+以太坊智能合约的一个特性是它们能够调用和利用来自其他外部合约的代码。合约通常也处理以太币，因此经常将以太币发送到各种外部用户地址。这些操作需要合约提交外部调用。这些外部调用可能会被攻击者劫持，他们可以强制合约执行进一步的代码（通过回调：可以是回退函数或一些钩子，通常是 `transfer`），包括回调到它们自身。这种攻击在 2016 年臭名昭著且仍然令人记忆犹新的 DAO 黑客事件中被使用。即使过了这么多年，[我们仍然看到很多攻击利用这个漏洞](https://github.com/pcaversaccio/reentrancy-attacks)，尽管它很容易被发现并且修复成本不高。
 
 #### 漏洞
 
@@ -179,7 +179,7 @@ contract EtherStore {
 
 > **注意**
 >
-> 随着 Solidity 0.8.24 中以太坊上瞬态存储的出现，OpenZeppelin 引入了 ReentrancyGuardTransient，这是 ReentrancyGuard 的一种新变体，它利用瞬态存储来显着降低 gas 成本。由 [EIP-1153](https://oreil.ly/fRvKl) 启用的瞬态存储提供了一种更便宜的方式来存储仅在单个交易期间需要的数据，使其成为重入守卫和类似临时逻辑的理想选择。但是，ReentrancyGuardTransient 只能在 EIP-1153 可用的链上使用，因此在实施之前，请确保您的目标链支持此功能。
+> 随着 Solidity 0.8.24 中以太坊上瞬态存储的出现，OpenZeppelin 引入了 ReentrancyGuardTransient，这是 ReentrancyGuard 的一种新变体，它利用瞬态存储来显着降低 gas 成本。由 [EIP-1153](https://eips.ethereum.org/EIPS/eip-1153) 启用的瞬态存储提供了一种更便宜的方式来存储仅在单个交易期间需要的数据，使其成为重入守卫和类似临时逻辑的理想选择。但是，ReentrancyGuardTransient 只能在 EIP-1153 可用的链上使用，因此在实施之前，请确保您的目标链支持此功能。
 
 另一种方法是使用 Solidity 的内置 `transfer` 和 `send` 函数来发送以太币。这些函数仅转发有限数量的 gas（2,300 个单位），这通常不足以让接收合约执行重入调用，因此它们是防止重入的一种简单方法。但是，它们存在明显的缺点。如果接收者是一个智能合约，其回退或接收函数中包含非恶意逻辑，则转移可能会失败，从而可能锁定资金。随着 EIP-7702 的引入，这种风险变得越来越重要，EIP-7702 允许 EOA 具有附加的代码，包括回退逻辑。随着越来越多的 EOA 采用此功能，由于 gas 不足，使用 `transfer` 或 `send` 的交易更有可能在交易的常规执行期间恢复。从安全的角度来看，这种方法不是面向未来的：如果未来的硬分叉降低了某些操作的 gas 成本，则 2,300 个单位可能足以重新进入，从而打破了以前安全的假设。因此，虽然 `transfer` 和 `send` 在狭窄的情况下仍然有用，但我们需要谨慎使用它们，并且不要将它们作为我们的主要防御手段。
 
@@ -247,11 +247,11 @@ function _deposit(
 
 ### DELEGATECALL
 
-`CALL` 和 `DELEGATECALL` 操作码对于允许以太坊开发者模块化他们的代码非常有用。对合约的标准外部消息调用由 `CALL` 操作码处理，该操作码在*被调用*合约的上下文中执行代码。相比之下，`DELEGATECALL` 运行来自另一个合约的代码，但在*调用*合约的上下文中运行。这意味着存储、`msg.sender` 和 `msg.value` 都保持不变。一个有用的思考 `DELEGATECALL` 的方式是，调用合约暂时借用被调用合约的字节码，并像执行自己的字节码一样执行它。这实现了强大的模式，如代理合约和库，您可以部署一次可重用逻辑，并在多个合约中重用它。尽管这两个操作码之间的差异简单直观，但 `DELEGATECALL` 的使用可能会导致微妙和意想不到的行为，尤其是在存储布局方面。有关更多阅读，请参阅 Loi.Luu 在 [Ethereum Stack Exchange 上关于此主题的问题](https://oreil.ly/GJOUl) 和 [Solidity 文档](https://oreil.ly/gA7vg)。
+`CALL` 和 `DELEGATECALL` 操作码对于允许以太坊开发者模块化他们的代码非常有用。对合约的标准外部消息调用由 `CALL` 操作码处理，该操作码在*被调用*合约的上下文中执行代码。相比之下，`DELEGATECALL` 运行来自另一个合约的代码，但在*调用*合约的上下文中运行。这意味着存储、`msg.sender` 和 `msg.value` 都保持不变。一个有用的思考 `DELEGATECALL` 的方式是，调用合约暂时借用被调用合约的字节码，并像执行自己的字节码一样执行它。这实现了强大的模式，如代理合约和库，您可以部署一次可重用逻辑，并在多个合约中重用它。尽管这两个操作码之间的差异简单直观，但 `DELEGATECALL` 的使用可能会导致微妙和意想不到的行为，尤其是在存储布局方面。有关更多阅读，请参阅 Loi.Luu 在 [Ethereum Stack Exchange 上关于此主题的问题](https://ethereum.stackexchange.com/questions/3667/difference-between-call-callcode-and-delegatecall) 和 [Solidity 文档](https://docs.soliditylang.org/en/latest/introduction-to-smart-contracts.html#delegatecall-callcode-and-libraries)。
 
 #### 漏洞
 
-由于 `DELEGATECALL` 的上下文保存性质，构建无漏洞的自定义库并不像您想象的那么容易。库中的代码本身可以是安全且无漏洞的；但是，当它在其他应用程序的上下文中运行时，可能会出现新的漏洞。让我们看一个相当复杂的例子，使用斐波那契数列。考虑示例 9-3 中的库，它可以生成斐波那契数列和类似形式的数列。（注意：此代码已从 [*https://oreil.ly/EHjOb**https://oreil.ly/EHjOb*](https://oreil.ly/EHjOb) 修改。）
+由于 `DELEGATECALL` 的上下文保存性质，构建无漏洞的自定义库并不像您想象的那么容易。库中的代码本身可以是安全且无漏洞的；但是，当它在其他应用程序的上下文中运行时，可能会出现新的漏洞。让我们看一个相当复杂的例子，使用斐波那契数列。考虑示例 9-3 中的库，它可以生成斐波那契数列和类似形式的数列。（注意：此代码已从 [*https://github.com/LFDT-web3j/web3j/blob/main/codegen/src/test/resources/solidity/fibonacci/Fibonacci.sol**https://github.com/LFDT-web3j/web3j/blob/main/codegen/src/test/resources/solidity/fibonacci/Fibonacci.sol*](https://github.com/LFDT-web3j/web3j/blob/main/codegen/src/test/resources/solidity/fibonacci/Fibonacci.sol) 修改。）
 
 **示例 9-3. FibonacciLib：自定义库的错误实现**
 
@@ -317,13 +317,13 @@ contract FibonacciBalance {
 
 此合约允许参与者从合约中提取以太币，以太币数量等于与参与者的提取顺序相对应的斐波那契数，即，第一个参与者获得 1 个以太币，第二个参与者也获得 1 个以太币，第三个参与者获得 2 个以太币，第四个参与者获得 3 个以太币，第五个获得 5 个，依此类推（直到合约的余额小于提取的斐波那契数）。
 
-此合约中有许多元素可能需要一些解释。首先，有一个看起来很有趣的变量：`fibSig`。这保存着字符串 `"setFibonacci(uint256)"` 的 Keccak-256 哈希的前 4 个字节。这被称为[*函数选择器**函数选择器*](https://oreil.ly/u9uaH)，并放入 calldata 中以指定将调用智能合约的哪个函数。它在第 21 行的 `delegatecall` 函数中使用，以指定我们希望运行 `fibonacci(uint256)` 函数。`delegatecall` 中的第二个参数是我们传递给函数的参数。其次，我们假设 FibonacciLib 库的地址在构造函数中被正确引用。
+此合约中有许多元素可能需要一些解释。首先，有一个看起来很有趣的变量：`fibSig`。这保存着字符串 `"setFibonacci(uint256)"` 的 Keccak-256 哈希的前 4 个字节。这被称为[*函数选择器**函数选择器*](https://docs.soliditylang.org/en/latest/abi-spec.html#function-selector)，并放入 calldata 中以指定将调用智能合约的哪个函数。它在第 21 行的 `delegatecall` 函数中使用，以指定我们希望运行 `fibonacci(uint256)` 函数。`delegatecall` 中的第二个参数是我们传递给函数的参数。其次，我们假设 FibonacciLib 库的地址在构造函数中被正确引用。
 
 您能发现此合约中的任何错误吗？如果您要部署此合约，用以太币填充它并调用 `withdraw`，它可能会恢复。
 
 您可能已经注意到，状态变量 `start` 在库和主调用合约中都使用。在库合约中，`start` 用于指定斐波那契数列的开头，并设置为 `0`，而在调用合约中，它设置为 `3`。您可能还注意到，`FibonacciBalance` 合约中的回退函数允许将所有调用传递到库合约，这允许调用库合约的 `setStart` 函数。回想一下，我们保留合约的状态，因此似乎此函数允许您更改本地 `FibonacciBalance` 合约中 `start` 变量的状态。如果是这样，这将允许您提取更多的以太币，因为生成的 `calculatedFibNumber` 依赖于 `start` 变量（如库合约中所见）。实际上，`setStart` 函数不会（也不能）修改 `FibonacciBalance` 合约中的 `start` 变量。此合约中的潜在漏洞远比仅修改 `start` 变量更严重。
 
-在讨论实际问题之前，让我们快速绕道了解状态变量实际上是如何存储在合约中的。*状态*或*存储变量*（在单个交易中持续存在的变量）在合约中引入时按顺序放置到*插槽*中。（这里有一些复杂性；请参阅 [Solidity 文档](https://oreil.ly/LzV7L) 以获得更彻底的理解。）
+在讨论实际问题之前，让我们快速绕道了解状态变量实际上是如何存储在合约中的。*状态*或*存储变量*（在单个交易中持续存在的变量）在合约中引入时按顺序放置到*插槽*中。（这里有一些复杂性；请参阅 [Solidity 文档](https://docs.soliditylang.org/en/latest/) 以获得更彻底的理解。）
 
 例如，让我们看一下库合约。它有两个状态变量：`start` 和 `calculatedFibNumber`。第一个变量 `start` 存储在合约的存储中的 `slot[0]`（即，第一个插槽）。第二个变量 `calculatedFibNumber` 放置在下一个可用的存储插槽 `slot[1]` 中。函数 `setStart` 接受一个输入并将 `start` 设置为输入的内容。因此，此函数将 `slot[0]` 设置为我们在 `setStart` 函数中提供的任何输入。类似地，`setFibonacci` 函数将 `calculatedFibNumber` 设置为 `fibonacci(n)` 的结果。同样，这只是将存储 `slot[1]` 设置为 `fibonacci(n)` 的值。
 
@@ -344,7 +344,7 @@ contract Attack {
 
 > **注意**
 >
-> 利用者后来[出现在GitHub上](https://oreil.ly/VVgnm)，留下了令人难忘的评论：“我不小心杀死了它。” 他声称自己是以太坊的新手，一直在试验智能合约。
+> 利用者后来[出现在GitHub上](https://github.com/openethereum/parity-ethereum/issues/6995)，留下了令人难忘的评论：“我不小心杀死了它。” 他声称自己是以太坊的新手，一直在试验智能合约。
 
 ### 熵的错觉
 
@@ -445,7 +445,7 @@ function airdrop()
 
 #### 现实案例：Etherpot和King of the Ether
 
-[Etherpot](https://oreil.ly/_-iC-)是一个智能合约彩票，与示例9-4中的合约非常相似。 此合约的失败主要是由于不正确地使用block hash（只有最后256个block hash可用；请参阅“预定义的全局变量和函数”）。 但是，此合约也遭受了未检查的`call`值的影响。
+[Etherpot](https://web.archive.org/web/20180723043801/https:/github.com/etherpot/contract/blob/master/app/contracts/lotto.sol)是一个智能合约彩票，与示例9-4中的合约非常相似。 此合约的失败主要是由于不正确地使用block hash（只有最后256个block hash可用；请参阅“预定义的全局变量和函数”）。 但是，此合约也遭受了未检查的`call`值的影响。
 
 考虑示例9-5中的函数`cash`：同样，以下代码段已更新以反映最新Solidity版本的语法。
 
@@ -472,7 +472,7 @@ function airdrop()
 
 请注意，在第13行，未检查`send`函数的返回值，并且下一行然后设置一个布尔值，指示已将资金发送给获胜者。此错误可能允许一种状态，即获胜者没有收到他们的以太币，但合约的状态可以指示已经支付了获胜者。
 
-在[King of the Ether](https://oreil.ly/4zLMH)合约中发生了此错误的更严重版本。已经编写了针对此合约的出色的[事后分析](https://oreil.ly/U8ckx)，详细说明了如何使用未经检查的失败的`send`来攻击合约。
+在[King of the Ether](https://www.kingoftheether.com/thrones/kingoftheether/index.html)合约中发生了此错误的更严重版本。已经编写了针对此合约的出色的[事后分析](https://www.kingoftheether.com/postmortem.html)，详细说明了如何使用未经检查的失败的`send`来攻击合约。
 
 #### ERC-20 案例
 
@@ -624,7 +624,7 @@ Solidity 尚未完全支持定点数。 它们可以被声明，但不能被赋�
 
 这个简单的代币买卖合约存在一些明显的问题。 尽管买卖代币的数学计算是正确的，但缺乏浮点数会给出错误的结果。 例如，在第 8 行购买代币时，如果该值小于 1 个以太币，则初始除法将导致 0，从而使最终乘法的结果为 `0`（例如，200 wei 除以 `1e18` `weiPerEth` 等于 0）。 同样，在出售代币时，任何小于 10 的代币数量也将导致 0 个以太币。 事实上，这里的舍入总是向下舍入，因此出售 29 个代币将导致 2 个以太币（29 个代币 / 10 `tokensPerEth` = 2.9，向下舍入得到 2）。
 
-此合约的问题在于精度仅为最接近的以太币（即 1e18 wei）。 当您需要在 [ERC-20](https://oreil.ly/YzzyU) 代币中使用小数时，这可能会变得棘手，因为您需要更高的精度。 在实际情况下，精度损失可能看起来很小，但它们很容易被放大和利用。 例如，闪电贷允许攻击者以零前期成本借入大量资金，从而可以利用即使是微小的差异。
+此合约的问题在于精度仅为最接近的以太币（即 1e18 wei）。 当您需要在 [ERC-20](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md) 代币中使用小数时，这可能会变得棘手，因为您需要更高的精度。 在实际情况下，精度损失可能看起来很小，但它们很容易被放大和利用。 例如，闪电贷允许攻击者以零前期成本借入大量资金，从而可以利用即使是微小的差异。
 
 #### 预防技术
 
@@ -878,9 +878,9 @@ Sonne 制定了一个处理此问题的计划。它打算添加市场、存入�
 
 ## 合约库
 
-有很多现有代码可供重用，无论是在链上部署为可调用的库，还是在链下部署为代码模板库。在以太坊中，最广泛使用的资源是 [OpenZeppelin 套件](https://oreil.ly/OSSoV)，这是一个包含大量合约的库，范围从各种代币的实现到不同的代理架构，再到合约中常见的简单行为，例如 `Ownable`、`Pausable` 或 `ReentrancyGuard`。此存储库中的合约已经过广泛的测试，并且在某些情况下，甚至可以作为事实上的标准实现。它们可以免费使用，并且由 [OpenZeppelin](https://www.openzeppelin.com) 与不断增长的外部贡献者列表共同构建和维护。
+有很多现有代码可供重用，无论是在链上部署为可调用的库，还是在链下部署为代码模板库。在以太坊中，最广泛使用的资源是 [OpenZeppelin 套件](https://github.com/OpenZeppelin/openzeppelin-contracts/tree/master/contracts)，这是一个包含大量合约的库，范围从各种代币的实现到不同的代理架构，再到合约中常见的简单行为，例如 `Ownable`、`Pausable` 或 `ReentrancyGuard`。此存储库中的合约已经过广泛的测试，并且在某些情况下，甚至可以作为事实上的标准实现。它们可以免费使用，并且由 [OpenZeppelin](https://www.openzeppelin.com) 与不断增长的外部贡献者列表共同构建和维护。
 
-其他值得注意的合约库包括 Paradigm 的 [Solmate](https://oreil.ly/yTuU9) 和 Vectorized 的 [Solady](https://oreil.ly/zqpib)。Solmate 在设计方面更固执己见，而 Solady 主要侧重于 gas 优化。
+其他值得注意的合约库包括 Paradigm 的 [Solmate](https://github.com/transmissions11/solmate) 和 Vectorized 的 [Solady](https://github.com/Vectorized/solady)。Solmate 在设计方面更固执己见，而 Solady 主要侧重于 gas 优化。
 
 ## 附加资源
 
