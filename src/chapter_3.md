@@ -1,214 +1,216 @@
-# Chapter 3. Ethereum Nodes
+# 第 3 章. 以太坊节点
 
-An Ethereum node is a software application that implements the Ethereum specification and communicates over the P2P network with other Ethereum nodes.
+以太坊节点是一个实现以太坊规范并通过 P2P 网络与其他以太坊节点通信的软件应用程序。
 
-Initially, a node only had to run a single client to completely implement all the requirements to be part of the Ethereum ecosystem. On September 15, 2022, The Merge hard fork happened, changing the consensus protocol from a PoW-based scheme to Gasper, the new PoS-based consensus protocol. This also led to the separation of concerns—consensus and execution—and the creation of a new type of Ethereum client: a consensus client.
+最初，一个节点只需要运行一个客户端就可以完全实现成为以太坊生态系统一部分的所有要求。在 2022 年 9 月 15 日，发生了 The Merge 硬分叉，将共识协议从基于 PoW 的方案更改为 Gasper，新的基于 PoS 的共识协议。这也导致了关注点分离——共识和执行——以及一种新型以太坊客户端的创建：共识客户端。
 
-And so, at the time of writing, an Ethereum node must run two pieces of software at the same time to be compatible with the latest spec, as shown in Figure 3-1, with the definitions as follows:
+因此，在撰写本文时，一个以太坊节点必须同时运行两个软件才能与最新的规范兼容，如图 3-1 所示，定义如下：
 
-**Consensus client**
+**共识客户端**
 
-This new software is now in charge of the consensus protocol that lets all nodes agree on a single history of the blockchain.
+这个新软件现在负责共识协议，该协议使所有节点就区块链的单一历史达成一致。
 
-**Execution client**
+**执行客户端**
 
-This software focuses on receiving all the blocks and transactions happening on the network, executing them inside the EVM, and verifying their correctness.
+该软件专注于接收网络上发生的所有区块和交易，在 EVM 内部执行它们，并验证其正确性。
 
-![Figure 3-1. The architecture of an Ethereum node](./images/ch3/maet_0301.png)
+![图 3-1. 以太坊节点的架构](./images/ch3/maet_0301.png)
 
-Different Ethereum clients—both execution and consensus clients—interoperate if they comply with the reference specification and the standardized communication protocols. While these different clients are implemented by different teams and in different programming languages, they all “speak” the same protocol and follow the same rules. As such, they can all be used to operate and interact with the same Ethereum network.
+如果不同的以太坊客户端——包括执行客户端和共识客户端——符合参考规范和标准化的通信协议，它们就可以互操作。虽然这些不同的客户端由不同的团队使用不同的编程语言实现，但它们都“说”相同的协议并遵循相同的规则。因此，它们都可以用于操作和与同一个以太坊网络交互。
 
-Ethereum is an open source project, and the source code for all major clients is available under open source licenses (e.g., LGPL v3.0), free to download and use for any purpose. Open source means more than simply free to use, though. It also means that Ethereum is developed by an open community of volunteers and can be modified by anyone. More eyes mean more trustworthy code.
+以太坊是一个开源项目，所有主要客户端的源代码都可以在开源许可（例如，LGPL v3.0）下获得，可以免费下载并用于任何目的。然而，开源不仅仅意味着可以免费使用。它还意味着以太坊由一个开放的志愿者社区开发，并且可以被任何人修改。更多的眼睛意味着更可信的代码。
 
-Ethereum was originally defined by a single formal specification called the “Yellow Paper,” which was written by one of the original coauthors of this book, Gavin Wood. Even though this specification is periodically updated as major changes are made to Ethereum, there is a clear path toward two different reference implementations, one for execution clients and one for consensus clients. These reference implementations are written in Python and prioritize readability and simplicity.
+以太坊最初是由一个名为“黄皮书”的正式规范定义的，该规范由本书的原始合著者之一 Gavin Wood 编写。尽管该规范会随着以太坊的重大更改而定期更新，但对于两种不同的参考实现，即执行客户端和共识客户端，存在一条清晰的路径。这些参考实现是用 Python 编写的，并优先考虑可读性和简洁性。
 
-> **Note**  
+> **注意**
 >
-> These specs are not intended to be full-node implementations. They serve as executable pseudocode specifications.
+> 这些规范并非旨在成为完整的节点实现。它们用作可执行的伪代码规范。
 
-This is in contrast to Bitcoin, for example, which is not defined in any formal way. Where Bitcoin’s “specification” is the reference implementation Bitcoin Core, Ethereum’s execution specification is documented in a paper that combines an English and a mathematical (formal) specification. This formal specification, in addition to various Ethereum Improvement Proposals (EIPs) and the new consensus specification written in Python, defines the standard behavior of an Ethereum node.
+例如，这与比特币形成对比，比特币没有以任何正式方式定义。比特币的“规范”是参考实现 Bitcoin Core，而以太坊的执行规范记录在一篇结合了英语和数学（正式）规范的论文中。除了各种以太坊改进提案（EIP）和用 Python 编写的新共识规范之外，这个正式规范还定义了以太坊节点的标准行为。
 
-As a result of Ethereum’s clear formal specification, there are a number of independently developed yet interoperable software implementations of an Ethereum client. Ethereum has a greater diversity of implementations running on the network than any other blockchain, which is generally regarded as a good thing. Indeed, this has, for example, proven to be an excellent way of defending against attacks on the network because exploitation of a particular client’s implementation strategy simply hassles the developers while they patch the exploit, while other clients keep the network running almost unaffected.
+由于以太坊清晰的正式规范，存在许多独立开发但可互操作的以太坊客户端软件实现。以太坊在网络上运行的实现的多样性比任何其他区块链都高，这通常被认为是一件好事。事实上，例如，这已被证明是防御网络攻击的一种绝佳方法，因为利用特定客户端的实现策略只会困扰开发人员，同时他们修补漏洞，而其他客户端几乎不受影响地保持网络运行。
 
-## Ethereum Networks
+## 以太坊网络
 
-A variety of Ethereum-based networks exist that largely conform to the formal specification defined in the original Ethereum “Yellow Paper” but that may or may not interoperate with one another.
+存在各种基于以太坊的网络，它们在很大程度上符合原始以太坊“黄皮书”中定义的正式规范，但可能不会彼此互操作。
 
-Several EVM-compatible chains, such as Ethereum Classic, BNB Chain, and Polygon, share large portions of the execution spec, though many deviate in consensus and parameters. While they are mostly compatible at the protocol level, these networks often have features or attributes that require maintainers of Ethereum client software to make small changes to support each network. Because of this, not every version of Ethereum client software runs every Ethereum-based blockchain.
+几个 EVM 兼容链，如 Ethereum Classic、BNB Chain 和 Polygon，共享执行规范的大部分，尽管许多在共识和参数上有所不同。虽然它们在协议级别上大多兼容，但这些网络通常具有需要以太坊客户端软件的维护者进行少量更改以支持每个网络的功能或属性。因此，并非每个版本的以太坊客户端软件都运行每个基于以太坊的区块链。
 
-As of June 2025, there are five main implementations of the Ethereum execution protocol, written in four different languages, and five implementations of the Ethereum consensus protocol, written in five different languages:
+截至 2025 年 6 月，以四种不同语言编写的以太坊执行协议有五个主要实现，以及以五种不同语言编写的以太坊共识协议有五个实现：
 
-The execution clients are:
+执行客户端包括：
 
-- Geth, written in Go
-- Nethermind, written in C#
-- Besu, written in Java
-- Erigon, written in Go
-- Reth, written in Rust
+- Geth，用 Go 编写
+- Nethermind，用 C# 编写
+- Besu，用 Java 编写
+- Erigon，用 Go 编写
+- Reth，用 Rust 编写
 
-The consensus clients are:
+共识客户端包括：
 
-- Lighthouse, written in Rust
-- Lodestar, written in TypeScript
-- Nimbus, written in Nim
-- Prysm, written in Go
-- Teku, written in Java
+- Lighthouse，用 Rust 编写
+- Lodestar，用 TypeScript 编写
+- Nimbus，用 Nim 编写
+- Prysm，用 Go 编写
+- Teku，用 Java 编写
 
-In this section, we will look at the following two execution clients:
+在本节中，我们将研究以下两个执行客户端：
 
 **Geth**
 
-The oldest and most widely used execution client, maintained by the Ethereum Foundation
+最古老和使用最广泛的执行客户端，由以太坊基金会维护
 
 **Reth**
 
-A new Rust-based execution client created by Paradigm after Parity/OpenEthereum was discontinued
+一个新的基于 Rust 的执行客户端，由 Paradigm 在 Parity/OpenEthereum 停止后创建
 
-And we will look at the following two consensus clients:
+我们将研究以下两个共识客户端：
 
 **Prysm**
 
-The first consensus client, now maintained by Offchain Labs
+第一个共识客户端，现在由 Offchain Labs 维护
 
 **Lighthouse**
 
-The most used consensus client, maintained by Sigma Prime
+最常用的共识客户端，由 Sigma Prime 维护
 
-We’ll show how to set up a node using each client. Specifically, we’ll use the Geth-Prysm and Reth-Lighthouse combinations, and we’ll explore some of their command-line options and APIs.
+我们将展示如何使用每个客户端设置节点。具体来说，我们将使用 Geth-Prysm 和 Reth-Lighthouse 组合，并将探索它们的一些命令行选项和 API。
 
-> **Note**  
+> **注意**
 >
-> These pairs are just examples; you can choose to combine whatever execution and consensus clients you like the most to run an Ethereum node.
+> 这些对只是示例；您可以选择组合您最喜欢的任何执行和共识客户端来运行以太坊节点。
 
-## Should I Run a Full Node?
+## 我应该运行一个完整节点吗？
 
-The health, resilience, and censorship resistance of blockchains depend on them having many independently operated and geographically dispersed full nodes—that is, nodes that download the entirety of the blockchain and keep data indefinitely. Each full node can help other new nodes obtain the block data to bootstrap their operations as well as offer the operator an authoritative and independent verification of all transactions and contracts.
+区块链的健康、弹性和抗审查性取决于它们拥有许多独立运营且地理位置分散的完整节点——也就是说，下载整个区块链并无限期地保留数据的节点。每个完整节点都可以帮助其他新节点获取区块数据以引导其运营，并为运营商提供对所有交易和合约的权威且独立的验证。
 
-> **Note**
+> **注意**
 >
-> To be really precise, there is a distinction between these nodes:  
+> 为了真正精确，这些节点之间存在区别：
 >
-> **Archive nodes**  
-> Ethereum nodes that keep all data indefinitely  
+> **归档节点**
 >
-> **Full nodes**  
-> Ethereum nodes that discard historical state and receipts—usually the default option when you spin up a node
+> 无限期保留所有数据的以太坊节点
+>
+> **完整节点**
+>
+> 丢弃历史状态和收据的以太坊节点——通常是您启动节点时的默认选项
 
-However, running a full node will incur a cost in hardware resources and bandwidth. A full node must download at least 2 TB of data (as of June 2025, depending on the client configuration) and store it on a local hard drive. This data burden increases quite rapidly every day as new transactions and blocks are added. We discuss this topic in greater detail in the later section “Hardware Requirements for a Full Node”.
+然而，运行完整节点会产生硬件资源和带宽成本。一个完整节点必须下载至少 2 TB 的数据（截至 2025 年 6 月，取决于客户端配置）并将其存储在本地硬盘驱动器上。随着新的交易和区块的添加，这种数据负担每天都在迅速增加。我们将在后面的“完整节点的硬件要求”一节中更详细地讨论这个主题。
 
-A full node running on a live mainnet network is not necessary for Ethereum development. You can do almost everything you need to do with a testnet node (which connects you to one of the smaller public test blockchains), with a local private blockchain like Anvil, or with a hosted node API offered by a service provider like Infura or Alchemy.
+在实时主网上运行的完整节点对于以太坊开发来说不是必需的。您可以使用测试网节点（将您连接到较小的公共测试区块链之一）、像 Anvil 这样的本地私有区块链或由 Infura 或 Alchemy 等服务提供商托管的节点 API 来完成几乎所有您需要做的事情。
 
-You also have the option of running a remote client, which does not store a local copy of the blockchain or validate blocks and transactions. These clients offer the functionality of a wallet and can create and broadcast transactions. Remote clients can be used to connect to existing networks, such as your own full node, a public blockchain, a public or permissioned (proof-of-authority) testnet, or a private local blockchain. In practice, you will likely use a remote client, such as MetaMask, Rabby Wallet, or Coinbase Wallet, as a convenient way to switch between all the different node options.
+您还可以选择运行远程客户端，该客户端不存储区块链的本地副本或验证区块和交易。这些客户端提供钱包的功能，可以创建和广播交易。远程客户端可用于连接到现有网络，例如您自己的完整节点、公共区块链、公共或许可（权威证明）测试网或本地私有区块链。在实践中，您可能会使用远程客户端，例如 MetaMask、Rabby Wallet 或 Coinbase Wallet，作为在所有不同节点选项之间切换的便捷方式。
 
-The terms remote client and wallet are used interchangeably, although there are some differences. Usually, a remote client offers an API (such as the web3.js API) in addition to the transaction functionality of a wallet.
+术语远程客户端和钱包可以互换使用，尽管存在一些差异。通常，远程客户端除了钱包的交易功能外，还提供 API（例如 web3.js API）。
 
-Do not confuse the concept of a remote client in Ethereum with that of a light client (which is analogous to a Simplified Payment Verification [SPV] client in Bitcoin). Light clients validate block headers and use Merkle proofs to validate the inclusion of transactions in the blockchain and determine their effects, giving them a similar level of security as a full node. Conversely, Ethereum remote clients do not validate block headers or transactions. They entirely trust a full node to give them access to the blockchain and hence lose significant security and anonymity guarantees. You can mitigate these problems by using a full node you run yourself.
+不要将以太坊中的远程客户端概念与轻客户端（类似于比特币中的简易支付验证 [SPV] 客户端）混淆。轻客户端验证区块头并使用 Merkle 证明来验证交易是否包含在区块链中并确定其影响，从而使其具有与完整节点相似的安全级别。相反，以太坊远程客户端不验证区块头或交易。它们完全信任完整节点，让它们访问区块链，因此失去了重要的安全和匿名性保证。您可以通过使用自己运行的完整节点来缓解这些问题。
 
-### Full Node Advantages and Disadvantages
+### 完整节点的优点和缺点
 
-Choosing to run a full node helps with the operation of the networks you connect it to but also incurs some mild to moderate costs for you. Let’s look at some of the advantages and disadvantages.
+选择运行完整节点有助于您连接到的网络运行，但也会给您带来一些轻微到中等的成本。让我们看一下其中的一些优点和缺点。
 
-**Advantages**:
+**优点**：
 
-- Supports the resilience and censorship resistance of Ethereum-based networks
-- Authoritatively validates all transactions
-- Can interact with any contract on the public blockchain without an intermediary
-- Can directly deploy contracts into the public blockchain without an intermediary
-- Can query (read only) the blockchain status (accounts, contracts, etc.) offline
-- Can query the blockchain without letting a third party know the information you’re reading
+- 支持基于以太坊的网络的弹性和抗审查性
+- 权威地验证所有交易
+- 可以与公共区块链上的任何合约交互，无需中间人
+- 可以将合约直接部署到公共区块链中，无需中间人
+- 可以离线查询（只读）区块链状态（帐户、合约等）
+- 可以查询区块链，而无需让第三方知道您正在读取的信息
 
-**Disadvantages**:
+**缺点**：
 
-- Requires significant and growing hardware and bandwidth resources
-- May require several days to fully sync when first started
-- Must be maintained, upgraded, and kept online to remain synced
+- 需要大量且不断增长的硬件和带宽资源
+- 首次启动时可能需要几天才能完全同步
+- 必须维护、升级并保持在线才能保持同步
 
-### Public Testnet Advantages and Disadvantages
+### 公共测试网的优点和缺点
 
-Whether or not you choose to run a full node, you will probably want to run a public testnet node. Let’s look at some of the advantages and disadvantages of using a public testnet.
+无论您是否选择运行完整节点，您可能都想运行公共测试网节点。让我们看一下使用公共测试网的一些优点和缺点。
 
-**Advantages:**
+**优点：**
 
-- A testnet node needs to sync and store much less data—about 100–300 GB depending on the network (as of June 2025).
-- A testnet node can fully sync in a few hours.
-- Deploying contracts or making transactions requires test ether, which has no value and can be acquired for free from several “faucets.”
-- Testnets are public blockchains with many other users and contracts, running “live.”
+- 测试网节点需要的同步和存储的数据要少得多——根据网络的不同，大约需要 100–300 GB（截至 2025 年 6 月）。
+- 测试网节点可以在几个小时内完全同步。
+- 部署合约或进行交易需要测试以太币，它没有价值，可以从几个“水龙头”免费获得。
+- 测试网是具有许多其他用户和合约的公共区块链，正在“实时”运行。
 
-**Disadvantages:**
+**缺点：**
 
-- You can’t use “real” money on a testnet; it runs on test ether. Consequently, you can’t test security against real adversaries, as there is nothing at stake.
-- There are some aspects of a public blockchain that you cannot test realistically on a testnet. For example, transaction fees, although necessary to send transactions, are not a consideration on a testnet, since gas is free (meaning that testnet ETH doesn’t have any real economic value). Further, the testnets do not experience network congestion like the public mainnet sometimes does.
-- Some testnets are designed for specific purposes, and they could be slightly different than Ethereum mainnet.
+- 您不能在测试网上使用“真”钱；它在测试以太币上运行。因此，您无法测试针对真实对手的安全性，因为没有任何风险。
+- 公共区块链的某些方面您无法在测试网上进行逼真的测试。例如，交易费用虽然是发送交易所必需的，但在测试网上不是一个考虑因素，因为 gas 是免费的（这意味着测试网 ETH 没有任何实际经济价值）。此外，测试网不像公共主网那样有时会遇到网络拥塞。
+- 某些测试网设计用于特定目的，它们可能与以太坊主网slightly不同的。
 
-### Local Blockchain Simulation Advantages and Disadvantages
+### 本地区块链模拟的优点和缺点
 
-For many testing purposes, the best option is to launch a single-instance private blockchain. Anvil is one of the most popular local blockchain simulations that you can run and interact with without any other participants.
+对于许多测试目的，最好的选择是启动一个单实例私有区块链。Anvil 是您可以运行和交互的最流行的本地区块链模拟之一，无需任何其他参与者。
 
-**Advantages:**
+**优点：**
 
-- No syncing and almost no data on disk; you produce the first block yourself.
-- No need to obtain test ether; you “award” yourself block rewards that you can use for testing.
-- No other users, just you.
-- No other contracts, just the ones you deploy after you launch it.
+- 无需同步，磁盘上几乎没有数据；您自己生成第一个区块。
+- 无需获取测试以太币；您“奖励”自己可以用于测试的区块奖励。
+- 没有其他用户，只有您。
+- 没有其他合约，只有在启动后部署的合约。
 
-**Disadvantages:**
+**缺点：**
 
-- Having no other users means that your local chain doesn’t behave the same as a public blockchain. There’s no competition for transaction space or sequencing of transactions.
-- No block producers other than you means that block production is more predictable; therefore, you can’t test some scenarios that occur on a public blockchain. It’s worth mentioning that Anvil (and other tools like Hardhat) let you configure the block production modes to try to reproduce mainnet-like behavior, but still, it’s not the same as being on Ethereum mainnet.
-- Having no other contracts means you have to deploy everything you want to test, including dependencies and contract libraries. Luckily for you, tools like Anvil let you fork the Ethereum mainnet chain at arbitrary blocks and experiment with your smart contracts in a mainnet-like state.
+- 没有其他用户意味着您的本地链的行为与公共区块链不同。交易空间或交易排序没有竞争。
+- 除了您之外没有其他区块生产者意味着区块生产更可预测；因此，您无法测试公共区块链上发生的一些场景。值得一提的是，Anvil（以及像 Hardhat 这样的其他工具）允许您配置区块生产模式以尝试重现类似于主网的行为，但仍然与在以太坊主网上不同。
+- 没有其他合约意味着您必须部署所有要测试的内容，包括依赖项和合约库。幸运的是，像 Anvil 这样的工具允许您在任意区块分叉以太坊主网链，并在类似于主网的状态下试验您的智能合约。
 
-## Running an Ethereum Node
+## 运行以太坊节点
 
-If you have the time and resources, you should attempt to run a full node, even if only to learn more about the process. In this section, we cover how to download, compile, and run the Ethereum clients Geth-Prysm and Reth-Lighthouse. This requires some familiarity with using the command-line interface (CLI) on your operating system. It’s worth installing these clients, whether you choose to run them as full nodes, as testnet nodes, or as clients to a local private blockchain.
+如果您有时间和资源，您应该尝试运行一个完整节点，即使只是为了更多地了解该过程。在本节中，我们将介绍如何下载、编译和运行以太坊客户端 Geth-Prysm 和 Reth-Lighthouse。这需要一些熟悉在您的操作系统上使用命令行界面 (CLI) 的知识。无论您选择将这些客户端作为完整节点、测试网节点还是本地私有区块链的客户端运行，都值得安装它们。
 
-### Hardware Requirements for a Full Node
+### 完整节点的硬件要求
 
-Before we get started, you should ensure that you have a computer with sufficient resources to run an Ethereum full node. You will need at least 2 TB of disk space to store a full copy of the Ethereum blockchain. If you also want to run a full node on the Ethereum testnet, you will need at least an additional 100–400 GB. Downloading 2 TB of blockchain data can take a long time, so it’s recommended that you work on a fast internet connection.
+在我们开始之前，您应该确保您的计算机具有足够的资源来运行以太坊完整节点。您需要至少 2 TB 的磁盘空间来存储以太坊区块链的完整副本。如果您还想在以太坊测试网上运行完整节点，您将需要至少额外 100–400 GB 的空间。下载 2 TB 的区块链数据可能需要很长时间，因此建议您在快速互联网连接上工作。
 
-Syncing the Ethereum blockchain is very input/output (I/O) intensive. It is best to have a solid-state drive (SSD). If you have a mechanical hard-disk drive (HDD), you will need at least 8 GB of RAM to use as cache. Otherwise, you may discover that your system is too slow to keep up and fully sync.
+同步以太坊区块链非常消耗输入/输出 (I/O)。最好有一个固态驱动器 (SSD)。如果您有机械硬盘驱动器 (HDD)，您将需要至少 8 GB 的 RAM 用作缓存。否则，您可能会发现您的系统速度太慢而无法跟上并完全同步。
 
-Here is a summary of the minimum requirements to sync a full copy of an Ethereum-based blockchain:
+以下是同步以太坊区块链完整副本的最低要求摘要：
 
-- CPU with 2 or more cores
-- At least 2 TB free storage space
-- 8 GB RAM minimum with an SSD, or 8+ GB if you have an HDD (SSD is highly preferable)
-- 7+ Mbps download internet service
+- 具有 2 个或更多内核的 CPU
+- 至少 2 TB 的可用存储空间
+- SSD 至少 8 GB RAM，或者如果您有 HDD 则至少 8+ GB（SSD 是强烈推荐的）
+- 7+ Mbps 下载互联网服务
 
-If you want to sync in a reasonable amount of time and store all the development tools, libraries, clients, and blockchains we discuss in this book, you will want a more capable computer. Here are our recommended specifications:
+如果您想在合理的时间内同步并存储本书中讨论的所有开发工具、库、客户端和区块链，您将需要一台功能更强大的计算机。以下是我们推荐的规格：
 
-- Fast CPU with 4+ cores—a higher clock speed is more important than core count
+- 具有 4+ 个内核的快速 CPU——更高的时钟速度比内核数量更重要
 - 16+ GB RAM
-- Fast NVMe SSD with at least 2 TB free space
-- 24+ Mbps download internet service
-	
-It’s difficult to predict how fast a blockchain’s size will increase and when more disk space will be required, so it’s recommended to check the blockchain’s latest size before you start syncing.
+- 具有至少 2 TB 可用空间的快速 NVMe SSD
+- 24+ Mbps 下载互联网服务
 
-> **Note**
+很难预测区块链的大小会增加多快以及何时需要更多磁盘空间，因此建议您在开始同步之前检查区块链的最新大小。
+
+> **注意**
 >
-> The disk-size requirements listed here assume you will be running a node with default settings, where the blockchain is “pruned” of old state data. If you instead run a full “archival” node, where all state is kept on disk, it will likely require more than 2 TB (up to 12–15 TB) of disk space, depending on the client. Always consult the latest hardware requirements on the official client website before running a node.
+> 此处列出的磁盘大小要求假设您将使用默认设置运行节点，其中区块链会“修剪”旧状态数据。如果您改为运行完整的“归档”节点，其中所有状态都保存在磁盘上，则可能需要超过 2 TB（最多 12–15 TB）的磁盘空间，具体取决于客户端。在运行节点之前，请始终查阅官方客户端网站上的最新硬件要求。
 
-### Software Requirements for Building and Running a Client
+### 构建和运行客户端的软件要求
 
-This section covers Geth-Prysm and Reth-Lighthouse client software. It also assumes you are using a Unix-like command-line environment. The examples show the commands and output as they appear on macOS running the Bash shell (command-line execution environment). Instructions work unchanged on most Linux distros. Windows users can use Windows Subsystem for Linux (WSL2).
+本节介绍 Geth-Prysm 和 Reth-Lighthouse 客户端软件。它还假设您使用的是类似 Unix 的命令行环境。这些示例显示了命令和输出在运行 Bash shell（命令行执行环境）的 macOS 上的外观。这些说明在大多数 Linux 发行版上都保持不变。Windows 用户可以使用适用于 Linux 的 Windows 子系统 (WSL2)。
 
-> **Tip**
+> **提示**
 >
-> In many of the examples in this chapter, we will be using the operating system’s CLI (also known as a shell), accessed via a terminal application. The shell will display a prompt; you type a command, and the shell responds with some text and a new prompt for your next command. The prompt may look different on your system, but in the following examples, it is denoted by a $ symbol. In the examples, when you see text after a $ symbol, don’t type the $ symbol but type the command immediately following it (shown in bold), then press Enter to execute the command. In the examples, the lines below each command are the operating system’s responses to that command. When you see the next $ prefix, you’ll know it’s a new command and you should repeat the process.
+> 在本章的许多示例中，我们将使用操作系统的 CLI（也称为 shell），通过终端应用程序访问。shell 将显示一个提示符；您键入一个命令，shell 会响应一些文本和一个用于您的下一个命令的新提示符。提示符在您的系统上可能看起来不同，但在以下示例中，它由一个 $ 符号表示。在示例中，当您看到 $ 符号后的文本时，不要键入 $ 符号，而是键入紧随其后的命令（以粗体显示），然后按 Enter 键执行该命令。在示例中，每个命令下面的行是操作系统对该命令的响应。当您看到下一个 $ 前缀时，您就会知道这是一个新命令，您应该重复该过程。
 
-Before we get started, you may need to install some software. If you’ve never done any software development on the computer you are currently using, you will probably need to install some basic tools. For the examples that follow, you will need to install git, the source-code management system; golang, the Go programming language and standard libraries; and Rust, a systems programming language.
+在我们开始之前，您可能需要安装一些软件。如果您从未在当前使用的计算机上进行过任何软件开发，您可能需要安装一些基本工具。对于以下示例，您将需要安装 git（源代码管理系统）、golang（Go 编程语言和标准库）和 Rust（一种系统编程语言）。
 
-Here are the documentation pages for the four clients we’ll use in this example:
+以下是我们将在本示例中使用的四个客户端的文档页面：
 
 - [Geth](https://oreil.ly/zYviP)
 - [Prysm](https://oreil.ly/9-2FC)
 - [Reth](https://oreil.ly/KDmMt)
 - [Lighthouse](https://oreil.ly/RRpAs)
 
-Feel free to consult these websites to understand more details about each client’s architecture and for troubleshooting during installation.
+请随时查阅这些网站以了解有关每个客户端架构的更多详细信息，以及在安装期间进行故障排除。
 
-### Preparation Phase
+### 准备阶段
 
-Starting from your home directory, create a folder in your computer called *ethereum-node1* and then two subfolders within it called *execution* and *consensus*:
+从您的主目录开始，在您的计算机中创建一个名为 *ethereum-node1* 的文件夹，然后在其中创建两个子文件夹，分别名为 *execution* 和 *consensus*：
 
 ```bash
 $ mkdir ethereum-node1
@@ -217,7 +219,7 @@ $ mkdir execution
 $ mkdir consensus
 ```
 
-Now you should have a folder structure like this:
+现在您应该具有如下文件夹结构：
 
 ```bash
 ethereum-node1
@@ -225,23 +227,23 @@ ethereum-node1
 └── execution
 ```
 
-Repeat the previous step with a new folder called *ethereum-node2*:
+使用一个名为 *ethereum-node2* 的新文件夹重复上一步：
 
 ```bash
-$ cd .. # this command is used to go back to your home directory
+$ cd .. # 此命令用于返回您的主目录
 $ mkdir ethereum-node2
 $ cd ethereum-node2
 $ mkdir execution
 $ mkdir consensus
 ```
 
-In the end you should have two root folders — *ethereum-node1* and *ethereum-node2* — with two subfolders within each root folder: *execution* and *consensus*.
+最后，您应该有两个根文件夹——*ethereum-node1* 和 *ethereum-node2*——每个根文件夹内有两个子文件夹：*execution* 和 *consensus*。
 
-You will also need to install [Go](https://golang.org/) and [Rust](https://www.rust-lang.org/). You can have a look at their official websites for a guide on how to install them.
+您还需要安装 [Go](https://golang.org/) 和 [Rust](https://www.rust-lang.org/)。您可以查看他们的官方网站，了解如何安装它们的指南。
 
 ### Geth-Prysm
 
-Go into the newly created folder *ethereum-node1*:
+进入新创建的文件夹 *ethereum-node1*：
 
 ```bash
 $ cd ethereum-node1
@@ -249,24 +251,24 @@ $ cd ethereum-node1
 
 #### Geth
 
-First we’re going to install Geth by building it from the source code. Geth is a Go language implementation of the execution specs that is actively developed by the Ethereum Foundation, so it is considered the “official” implementation of the Ethereum client. Typically, every Ethereum-based blockchain will have its own Geth implementation. If you’re running Geth, then you’ll want to make sure you grab the correct version for your blockchain using one of the following repository links:
+首先，我们将通过从源代码构建 Geth 来安装它。Geth 是 Go 语言实现的执行规范，由以太坊基金会积极开发，因此它被认为是以太坊客户端的“官方”实现。通常，每个基于以太坊的区块链都有自己的 Geth 实现。如果您正在运行 Geth，那么您需要确保使用以下存储库链接之一获取适用于您的区块链的正确版本：
 
 - [Ethereum](https://oreil.ly/qzK-O)
 - [BNB Chain](https://oreil.ly/tGtL3)
 - [Polygon PoS](https://oreil.ly/ZWhh3)
 
-> **Note**
+> **注意**
 >
-> You can skip these instructions and install a precompiled binary for your platform of choice. The precompiled releases are much easier to install and can be found in the “releases” section of any of the repositories listed here. However, you may learn more by downloading and compiling the software yourself.
+> 您可以跳过这些说明并为您选择的平台安装预编译的二进制文件。预编译版本更容易安装，并且可以在此处列出的任何存储库的“releases”部分中找到。但是，您可以通过自己下载和编译软件来了解更多信息。
 
-**Cloning the repository**. The first step is to clone the Git repository to get a copy of the source code. To make a local clone of your chosen repository, use the git command as follows in the execution subfolder:
+**克隆存储库**。第一步是克隆 Git 存储库以获取源代码的副本。要制作您选择的存储库的本地副本，请在 execution 子文件夹中使用 git 命令，如下所示：
 
 ```bash
 $ cd execution
 $ git clone https://github.com/ethereum/go-ethereum.git
 ```
 
-You should see a progress report as the repository is copied to your local system:
+当存储库复制到您的本地系统时，您应该会看到一个进度报告：
 
 ```bash
 Cloning into 'go-ethereum'...
@@ -278,16 +280,17 @@ Receiving objects: 100% (130745/130745), 204.15 MiB | 6.13 MiB/s, done.
 Resolving deltas: 100% (80729/80729), done.
 ```
 
-Great! Now that you have a local copy of Geth, you can compile an executable for your platform.
+太棒了！现在您有了一个 Geth 的本地副本，您可以为您的平台编译一个可执行文件。
 
-**Building Geth from source code**. To build Geth, change to the directory where the source code was downloaded and use the make command after selecting the latest release—right now, it’s v1.14.3, but you can always check for the latest one:
+**从源代码构建 Geth**。要构建 Geth，请更改为下载源代码的目录，并在选择最新版本后使用 make 命令——现在是 v1.14.3，但您可以随时查看最新版本：
 
 ```bash
 $ cd go-ethereum
-$ git checkout v1.14.3$ make geth
+$ git checkout v1.14.3
+$ make geth
 ```
 
-If all goes well, you will see the Go compiler building each component until it produces the Geth executable:
+如果一切顺利，您将看到 Go 编译器构建每个组件，直到它生成 Geth 可执行文件：
 
 ```bash
 go run build/ci.go install ./cmd/geth
@@ -301,7 +304,7 @@ Done building.
 Run "./build/bin/geth" to launch geth.
 ```
 
-Let’s make sure Geth works without actually starting it:
+让我们确保 Geth 正常工作，而无需实际启动它：
 
 ```bash
 $ ./build/bin/geth version
@@ -314,47 +317,47 @@ Operating System: darwin
 [...]
 ```
 
-Your `geth version` command may show slightly different information, but you should see a version report much like the one shown here.
+您的 `geth version` 命令可能会显示略有不同的信息，但您应该看到与此处显示的报告非常相似的版本报告。
 
-Don’t run Geth yet because we still need to install a consensus client to let the Ethereum node sync up to the tip of the chain.
+暂时不要运行 Geth，因为我们仍然需要安装一个共识客户端，以使以太坊节点同步到链的顶端。
 
 #### Prysm
 
-Now it’s the consensus client’s turn. Prysm is a Go language implementation of the consensus specs that is actively developed by Offchain Labs. Initially, it was by far the most used consensus client after The Merge. Now, thanks to a great community effort to boost client diversity, its share of the market is greatly reduced, standing at 37%.
+现在轮到共识客户端了。Prysm 是 Go 语言实现的共识规范，由 Offchain Labs 积极开发。最初，它是 The Merge 之后使用最广泛的共识客户端。现在，由于社区为促进客户端多样性做出的巨大努力，其市场份额已大大降低，为 37%。
 
-**Installing the binary**. Prysm can be built from source code as we did for Geth, but it’s a bit more complicated. The suggested way to install it is the following method. First, go to the *consensus* folder:
+**安装二进制文件**。Prysm 可以像我们为 Geth 所做的那样从源代码构建，但这有点复杂。建议的安装方法是以下方法。首先，转到 *consensus* 文件夹：
 
 ```bash
-$ cd ../.. # this command is used to go back in the ethereum-node1 folder
+$ cd ../.. # 此命令用于返回 ethereum-node1 文件夹
 $ cd consensus
 ```
 
-Now, run the following command:
+现在，运行以下命令：
 
 ```bash
 $ curl https://raw.githubusercontent.com/prysmaticlabs/prysm/master/prysm.sh --output prysm.sh && chmod +x prysm.sh
 ```
 
-**Generating a JWT Secret**. The execution and consensus clients that made up an Ethereum node are two distinct pieces of software, but they always have to interact with each other. To achieve that, there is a sort of password that is used by both the execution and the consensus client to authenticate their connection. Now we need to generate it:
+**生成 JWT Secret**。组成以太坊节点的执行客户端和共识客户端是两个不同的软件，但它们始终必须相互交互。为实现这一点，执行客户端和共识客户端都使用一种密码来验证它们的连接。现在我们需要生成它：
 
 ```bash
 $ ./prysm.sh beacon-chain generate-auth-secret
 ```
 
-A *jwt.hex* file should appear. Let’s move it to the parent folder:
+应该会出现一个 *jwt.hex* 文件。让我们将其移动到父文件夹：
 
 ```bash
 $ mv jwt.hex ../jwt.hex
 ```
 
-#### Run the node
+#### 运行节点
 
-Now that you have both the execution and the consensus clients and you have correctly generated the JWT secret, you can spin up the clients and have an Ethereum full node running.
+现在您有了执行客户端和共识客户端，并且已正确生成 JWT secret，您可以启动客户端并运行以太坊完整节点。
 
-**Running the execution client**. First, you need to run the execution client, Geth. Navigate back to the *execution* folder and run this command:
+**运行执行客户端**。首先，您需要运行执行客户端 Geth。导航回到 *execution* 文件夹并运行此命令：
 
 ```bash
-$ cd .. # this command is used to go back in the ethereum-node1 folder
+$ cd .. # 此命令用于返回 ethereum-node1 文件夹
 $ cd execution
 $ ./go-ethereum/build/bin/geth --mainnet \
 	--http \
@@ -362,7 +365,7 @@ $ ./go-ethereum/build/bin/geth --mainnet \
 	--authrpc.jwtsecret=../jwt.hex
 ```
 
-If you see something like this, everything is running fine:
+如果您看到类似这样的内容，则一切运行正常：
 
 ```bash
 INFO [06-08|17:56:38.738] Starting Geth on Ethereum mainnet...
@@ -374,7 +377,7 @@ INFO [06-08|17:56:38.771] Allocated trie memory caches             clean=614.00M
 INFO [06-08|17:56:38.772] Using pebble as the backing database…
 ```
 
-**Running the consensus client**. Now you should run the consensus client, Prysm. Don’t close the terminal tab in which the execution client lives. Just open a new terminal window or tab and navigate to the *consensus* folder:
+**运行共识客户端**。现在您应该运行共识客户端 Prysm。不要关闭执行客户端所在的终端选项卡。只需打开一个新的终端窗口或选项卡并导航到 *consensus* 文件夹：
 
 ```bash
 $ cd ethereum-node1
@@ -387,7 +390,7 @@ $ ./prysm.sh beacon-chain \
 	--genesis-beacon-api-url=https://beaconstate.info
 ```
 
-You could be asked to accept Prysm terms and conditions. If that’s the case, type **accept**, and you should be done:
+您可能会被要求接受 Prysm 的条款和条件。如果是这种情况，请键入 **accept**，您应该就完成了：
 
 ```bash
 Prysm Terms of Use
@@ -398,9 +401,9 @@ TERMS AND CONDITIONS: https://github.com/prysmaticlabs/prysm/blob/develop/TERMS_
 Type “accept” to accept this terms and conditions [accept/decline]: (default: decline):
 ```
 
-And you’re done! You should see both the execution and consensus client start logging lots of data on the terminal.
+您就完成了！您应该看到执行客户端和共识客户端都开始在终端上记录大量数据。
 
-Execution client:
+执行客户端：
 
 ```bash
 INFO [06-08|18:08:49.039] Forkchoice requested sync to new head    number=20,048,206 hash=8df21a..4afb49 finalized=unknown
@@ -410,7 +413,7 @@ INFO [06-08|18:09:00.508] Syncing beacon headers                   downloaded=37
 INFO [06-08|18:09:01.637] Forkchoice requested sync to new head    number=20,048,207 hash=d99dab..0293c9 finalized=unknown
 ```
 
-Consensus client:
+共识客户端：
 
 ```bash
 [2024-06-08 18:09:24]  INFO blockchain: Called new payload with optimistic block payloadBlockHash=0xd44520a09a7a slot=9253245
@@ -421,21 +424,21 @@ Consensus client:
 [2024-06-08 18:09:28]  INFO sync: Subscribed to topic=/eth2/6a95a1a9/beacon_attestation_35/ssz_snappy[2024-06-08 18:09:36]  INFO blockchain: Called new payload with optimistic block payloadBlockHash=0xff879102f29e slot=9253246
 ```
 
-Now you have an Ethereum full node that is syncing up to the tip of the chain. Note that the synchronization can take a lot of time (hours or days depending on your hardware and internet connectivity).
+现在您有了一个以太坊完整节点，它正在同步到链的顶端。请注意，同步可能需要很长时间（根据您的硬件和互联网连接情况，需要数小时或数天）。
 
-> **Note**
+> **注意**
 >
-> If you want to learn more about the specific commands and CLI flags we’ve used in this example, the official docs for [Geth](https://oreil.ly/zYviP) and [Prysm](https://oreil.ly/4sn6-) are the best places to look.
+> 如果您想了解更多关于我们在此示例中使用的特定命令和 CLI 标志的信息，[Geth](https://oreil.ly/zYviP) 和 [Prysm](https://oreil.ly/4sn6-) 的官方文档是最好的查找位置。
 
 ### Reth-Lighthouse
 
-Let’s do the same thing but using two different clients: Reth as the execution client and Lighthouse as the consensus client.
+让我们做同样的事情，但使用两个不同的客户端：Reth 作为执行客户端，Lighthouse 作为共识客户端。
 
 #### Reth
 
-First, you need to install Reth. Go into the *ethereum-node2* folder and then into the execution folder.
+首先，您需要安装 Reth。进入 *ethereum-node2* 文件夹，然后进入 execution 文件夹。
 
-**Cloning the repository**. The first step is to clone the Git repository to get a copy of the source code. Go back to your home directory and type the following commands:
+**克隆存储库**。第一步是克隆 Git 存储库以获取源代码的副本。返回您的主目录并键入以下命令：
 
 ```bash
 $ cd ethereum-node2
@@ -443,22 +446,22 @@ $ cd execution
 $ git clone https://github.com/paradigmxyz/reth
 ```
 
-Great! Now that you have a local copy of Reth, you can compile an executable for your platform.
+太棒了！现在您有了一个 Reth 的本地副本，您可以为您的平台编译一个可执行文件。
 
-**Building Reth from source code**. To build Reth, you need to run the following command:
+**Reth 从源代码建设**。要构建 Reth，您需要运行以下命令：
 
 ```bash
 $ cd reth
 $ cargo install --locked --path bin/reth --bin reth
 ```
 
-It could take more than 10 minutes to complete the installation. When it’s done, you can check if Reth is correctly installed by running:
+完成安装可能需要 10 多分钟。完成后，您可以通过运行以下命令来检查 Reth 是否已正确安装：
 
 ```bash
 $ reth --version
 ```
 
-You should see something like (the version can change):
+您应该看到类似以下内容（版本可能会更改）：
 
 ```bash
 reth Version: 0.2.0-beta.6-dev
@@ -467,55 +470,55 @@ Build Timestamp: 2024-04-22T17:29:01.000000000Z
 Build Features: jemallocBuild Profile: maxperf+
 ```
 
-#### Lighthouse
+#### 灯塔（Lighthouse）
 
-Now you need to install Lighthouse, the consensus client. Go back to the *ethereum-node2* folder and dive into the *consensus* folder:
+现在您需要安装灯塔（Lighthouse），共识客户端。返回 *ethereum-node2* 文件夹并进入 *consensus* 文件夹：
 
 ```bash
-$ cd .. # this command is used to go back in the ethereum-node2 folder
+$ cd .. # 此命令用于返回 ethereum-node2 文件夹
 $ cd consensus
 ```
 
-You have to install some dependencies first. If you are on a macOS, you need to run:
+您必须先安装一些依赖项。如果您使用的是 macOS，则需要运行：
 
 ```bash
 $ brew install cmake
 ```
 
-If you’re using a different operating system, you can refer to the [Lighthouse official documentation](https://oreil.ly/vEghS).
+如果您使用的是其他操作系统，您可以参考 [Lighthouse 官方文档](https://oreil.ly/vEghS)。
 
-**Cloning the repository**. The first step is to clone the Git repository to get a copy of the source code:
+**克隆仓库**。第一步是克隆 Git 仓库以获取源代码的副本：
 
 ```bash
 $ git clone https://github.com/sigp/lighthouse.git
 ```
 
-Great! Now that you have a local copy of Lighthouse, you can compile an executable for your platform.
+太棒了！现在您拥有了 Lighthouse 的本地副本，您可以为您的平台编译可执行文件。
 
-**Building Lighthouse from source code**. To build Lighthouse, you need to run the following command:
+**从源代码构建 Lighthouse**。要构建 Lighthouse，您需要运行以下命令：
 
 ```bash
 $ cd lighthouse
-$ git checkout stable\
+$ git checkout stable
 $ make
 ```
 
-This could take more than 10 minutes to complete.
+这可能需要 10 多分钟才能完成。
 
-#### Run the node
+#### 运行节点
 
-Again, you need to run the execution client, Reth, first.
+同样，您需要先运行执行客户端 Reth。
 
-**Running the execution client**. Navigate back to the *execution* folder and run this command:
+**运行执行客户端**。导航回到 *execution* 文件夹并运行此命令：
 
 ```bash
-$ cd ../.. # this command is used to go back to the ethereum-node2 folder
-$ cp ../ethereum-node1/jwt.hex ./jwt.hex # we use the same jwt.hex file we generated before
+$ cd ../.. # 此命令用于返回 ethereum-node2 文件夹
+$ cp ../ethereum-node1/jwt.hex ./jwt.hex # 我们使用之前生成的相同 jwt.hex 文件
 $ cd execution
 $ reth node --full --http --http.api all --authrpc.jwtsecret=../jwt.hex
 ```
 
-If you see something like this, everything is running fine:
+如果您看到类似这样的内容，则一切运行正常：
 
 ```bash
 2024-06-08T16:58:43.498297Z  INFO Starting reth version="0.2.0-beta.6-dev (ac29b4b73)"
@@ -525,7 +528,7 @@ If you see something like this, everything is running fine:
 2024-06-08T16:58:43.514917Z  INFO Pre-merge hard forks (block based):…
 ```
 
-**Running the consensus client**. Now you should run the consensus client, Lighthouse. Don’t close the terminal tab in which the execution client lives. Just open a new terminal window or tab and navigate into the *consensus* folder:
+**运行共识客户端**。现在您应该运行共识客户端 Lighthouse。不要关闭执行客户端所在的终端选项卡。只需打开一个新的终端窗口或选项卡并导航到 *consensus* 文件夹：
 
 ```bash
 $ cd ethereum-node2
@@ -537,9 +540,9 @@ $ lighthouse bn \
 	--genesis-beacon-api-url=https://beaconstate.info
 ```
 
-And you’re done! You should see both the execution and consensus client start logging lots of data on the terminal.
+您就完成了！您应该看到执行客户端和共识客户端都开始在终端上记录大量数据。
 
-Execution client:
+执行客户端：
 
 ```bash
 2024-06-08T17:03:03.355648Z  INFO Received headers total=10000 from_block=18458372 to_block=18448373
@@ -548,7 +551,7 @@ Execution client:
 2024-06-08T17:03:04.913377Z  INFO Received headers total=10000 from_block=18428372 to_block=18418373
 ```
 
-Consensus client:
+共识客户端：
 
 ```bash
 Jun 08 17:03:24.929 INFO New block received                      root: 0xa49c057026cea3190df38548d49963e271ebdc4d6f93d2301adc4034d6563113, slot: 9253515
@@ -556,43 +559,23 @@ Jun 08 17:03:29.001 WARN Head is optimistic                      execution_block
 Jun 08 17:03:29.001 INFO Synced                                  slot: 9253515, block: 0xa49c…3113, epoch: 289172, finalized_epoch: 289170, finalized_root: 0xca35…2b06, exec_hash: 0x5a14…a7a5 (unverified), peers: 31, service: slot_notifier
 ```
 
-Now you have an Ethereum full node that is syncing up to the tip of the chain. Note that the synchronization can take a lot of time (hours or days depending on your hardware and internet connectivity).
+现在您有了一个以太坊完整节点，它正在同步到链的顶端。请注意，同步可能需要很长时间（根据您的硬件和互联网连接情况，需要数小时或数天）。
 
-> **Note**
+> **注意**
 >
-> If you want to learn more about the specific commands and CLI flags we’ve used in this example, the official docs for [Reth](https://reth.rs) and [Lighthouse](https://oreil.ly/vEghS) are the best places to look.
+> 如果您想了解更多关于我们在此示例中使用的特定命令和 CLI 标志的信息，[Reth](https://reth.rs) 和 [L许多基于以太坊的区块链在2016年底遭受了 DoS 攻击。受影响的区块链在进行完整同步时往往会同步缓慢。例如，在以太坊上，一个新的客户端会快速进展，直到达到区块 2,283,397。该区块于2016年9月18日被挖掘出来，标志着 DoS 攻击的开始。从该区块到区块 2,700,031（2016年11月26日），交易的验证变得极其缓慢，内存密集且 I/O 密集。这导致在2016年的当代硬件上，每个区块的验证时间超过一分钟。以太坊实施了一系列升级，使用硬分叉来解决 DoS 攻击中利用的潜在漏洞。这些升级还清理了区块链，通过移除由垃圾邮件交易创建的约2000万个空账户。
 
-The next section explains the challenges with the initial synchronization of Ethereum’s blockchain.
+如果您正在进行完整验证同步，您的客户端将会变慢，并且可能需要几天，甚至更长时间，才能验证受 DoS 攻击影响的区块。幸运的是，大多数以太坊客户端都包含一个选项，可以执行“快速”同步，跳过交易的完整验证，直到同步到区块链的顶端，然后从链的新顶端恢复完整验证。对于执行客户端，启用快速同步的选项通常是 snap sync。对于共识客户端，快速同步的选项是 checkpoint sync。
 
-> **Tip**
->
-> Do all these steps look complicated and confusing to you? But you would still like to contribute to the network and really don’t depend on any trusted third party running your own Ethereum full node?
->
-> There is a perfect solution for you: it’s the BuidlGuidl Client, a project that created a one-line command that lets you run an Ethereum node. You don’t believe it? [See it yourself](https://oreil.ly/9FKZd).
->
-> Another option is to use [Dappnode](https://dappnode.com). You can choose two different solutions:
->
-> - Buy a plug-n-play device that comes with an Ethereum full node built in.
->
-> - Install Dappnode Core software that makes it really easy to launch an Ethereum full node.
+在本教程中，我们默认使用快速同步，包括执行客户端上的 snap sync 和共识客户端上的 checkpoint sync，除了 Reth，截至2025年6月，它还不支持 snap sync。
 
-## The First Synchronization of Ethereum-Based Blockchains
+## JSON-RPC 接口
 
-Normally when syncing an Ethereum blockchain, your client will download and validate every block and every transaction since the very start—that is, from the genesis block. While it is possible to fully sync the blockchain this way, the sync will take a very long time and has high resource requirements (it will need much more RAM and will take a very long time indeed if you don’t have fast storage).
+以太坊客户端提供了一个 API 和一组 RPC 命令，这些命令被编码为 JSON。您会看到这被称为 JSON-RPC API。本质上，JSON-RPC API 是一个接口，允许我们编写程序，使用以太坊客户端作为以太坊网络和区块链的网关。
 
-Many Ethereum-based blockchains were the victims of DoS attacks at the end of 2016. Affected blockchains will tend to sync slowly when doing a full sync. For example, on Ethereum, a new client will make rapid progress until it reaches block 2,283,397. This block was mined on September 18, 2016, and marks the beginning of the DoS attacks. From this block to block 2,700,031 (November 26, 2016), the validation of transactions becomes extremely slow, memory intensive, and I/O intensive. This results in validation times exceeding one minute per block on contemporary 2016 hardware. Ethereum implemented a series of upgrades, using hard forks, to address the underlying vulnerabilities that were exploited in the DoS attacks. These upgrades also cleaned up the blockchain by removing some 20 million empty accounts created by spam transactions.
+通常，RPC 接口以 HTTP 服务的形式在端口 8545 上提供。出于安全原因，默认情况下，它被限制为仅接受来自 localhost（您自己计算机的 IP 地址，即 127.0.0.1）的连接。
 
-If you are syncing with full validation, your client will slow, and it may take several days, or perhaps even longer, to validate the blocks affected by the DoS attacks. Fortunately, most Ethereum clients include an option to perform a “fast” synchronization that skips the full validation of transactions until it has synced to the tip of the blockchain, then resumes full validation starting from the new tip of the chain. For execution clients, the option to enable fast synchronization is typically snap sync. For consensus clients, the option for fast synchronization is checkpoint sync.
-
-In this tutorial, we’ve been using by default fast synchronization both with snap sync on the execution client and checkpoint sync on the consensus client, with the exception of Reth, which doesn’t support snap sync yet (as of June 2025).
-
-## The JSON-RPC Interface
-
-Ethereum clients offer an API and a set of RPC commands, which are encoded as JSON. You will see this referred to as the JSON-RPC API. Essentially, the JSON-RPC API is an interface that allows us to write programs that use an Ethereum client as a gateway to an Ethereum network and blockchain.
-
-Usually, the RPC interface is offered as an HTTP service on port 8545. For security reasons, it is restricted by default to accept connections only from localhost (the IP address of your own computer, which is 127.0.0.1).
-
-To access the JSON-RPC API, you can use a specialized library (written in the programming language of your choice) that provides “stub” function calls corresponding to each available RPC command, or you can manually construct HTTP requests and send/receive JSON-encoded requests. You can even use a generic command-line HTTP client like curl to call the RPC interface. Let’s try that. First, ensure that you have the execution client configured and running. Then, switch to a new terminal window and type the following command:
+要访问 JSON-RPC API，您可以使用一个专门的库（用您选择的编程语言编写），该库提供与每个可用的 RPC 命令相对应的“桩（stub）”函数调用，或者您可以手动构建 HTTP 请求并发送/接收 JSON 编码的请求。您甚至可以使用像 curl 这样的通用命令行 HTTP 客户端来调用 RPC 接口。让我们尝试一下。首先，确保您已配置并运行了执行客户端。然后，切换到一个新的终端窗口并键入以下命令：
 
 ```bash
 $ curl -X POST -H "Content-Type: application/json" --data \
@@ -602,43 +585,43 @@ $ curl -X POST -H "Content-Type: application/json" --data \
 {"jsonrpc":"2.0","id":1,"result":"Geth/1.14.3-stable/darwin-arm64/go1.22.2"}
 ```
 
-In this example, we use curl to make an HTTP connection to the address *http://localhost:8545*. We are already running the execution client, which offers the JSON-RPC API as an HTTP service on port 8545. We instruct curl to use the HTTP POST method and to identify the content as type **application/json**. Finally, we pass a JSON-encoded request as the data component of our HTTP request. Most of our command line is just setting up curl to make the HTTP connection correctly. The interesting part is the actual JSON-RPC command we issue:
+在这个例子中，我们使用 curl 来建立与地址 *http://localhost:8545* 的 HTTP 连接。我们已经在运行执行客户端，它在端口 8545 上以 HTTP 服务的形式提供 JSON-RPC API。我们指示 curl 使用 HTTP POST 方法，并将内容标识为 **application/json** 类型。最后，我们将一个 JSON 编码的请求作为 HTTP 请求的数据组件传递。我们的大部分命令行只是设置 curl 以正确地建立 HTTP 连接。有趣的部分是我们发出的实际 JSON-RPC 命令：
 
 ```bash
 {"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":1}
 ```
 
-The JSON-RPC request is formatted according to the [JSON-RPC 2.0 specification](https://oreil.ly/m0HLL). Each request contains four elements:
+JSON-RPC 请求根据 [JSON-RPC 2.0 规范](https://oreil.ly/m0HLL) 进行格式化。每个请求包含四个元素：
 
 **jsonrpc**
 
-Version of the JSON-RPC protocol. This must be exactly "2.0".
+JSON-RPC 协议的版本。必须完全是 "2.0"。
 
 **method**
 
-The name of the method to be invoked.
+要调用的方法的名称。
 
 **params**
 
-A structured value that holds the parameter values to be used during the invocation of the method. This member may be omitted.
+一个结构化的值，包含在调用方法期间要使用的参数值。此成员可以省略。
 
 **id**
 
-An identifier established by the client that must contain a string, number, or NULL value if included. The server must reply with the same value in the response object if included. This member is used to correlate the context between the two objects.
+客户端建立的标识符，如果包含，则必须包含字符串、数字或 NULL 值。如果包含，服务器必须在响应对象中使用相同的值进行回复。此成员用于关联两个对象之间的上下文。
 
-> **Tip**
+> **提示**
 >
-> The id parameter is used primarily when you are making multiple requests in a single JSON-RPC call, a practice called batching. Batching is used to avoid the overhead of a new HTTP and TCP connection for every request. In the Ethereum context, for example, we would use batching if we wanted to retrieve thousands of transactions over one HTTP connection. When batching, you set a different id for each request and then match it to the id in each response from the JSON-RPC server. The easiest way to implement this is to maintain a counter and increment the value for each request.
+> id 参数主要在单个 JSON-RPC 调用中发出多个请求时使用，这种做法称为批处理。批处理用于避免为每个请求都建立新的 HTTP 和 TCP 连接的开销。例如，在以太坊上下文中，如果我们想通过一个 HTTP 连接检索数千个交易，我们将使用批处理。进行批处理时，您为每个请求设置不同的 id，然后将其与来自 JSON-RPC 服务器的每个响应中的 id 匹配。实现此目的的最简单方法是维护一个计数器，并为每个请求递增该值。
 
-The response we receive is:
+我们收到的响应是：
 
 ```bash
 {"jsonrpc":"2.0","id":1,"result":"Geth/1.14.3-stable/darwin-arm64/go1.22.2"}
 ```
 
-This tells us that the JSON-RPC API is being served by Geth client version 1.14.3-stable.
+这告诉我们 JSON-RPC API 由 Geth 客户端版本 1.14.3-stable 提供服务。
 
-Let’s try something a bit more interesting. In the next example, we ask the JSON-RPC API for the current price of gas in wei:
+让我们尝试一些更有趣的事情。在下一个示例中，我们要求 JSON-RPC API 提供当前 gas 的 wei 价格：
 
 ```bash
 $ curl -X POST -H "Content-Type: application/json" --data \
@@ -648,18 +631,17 @@ $ curl -X POST -H "Content-Type: application/json" --data \
 {"jsonrpc":"2.0","id":4213,"result":"0x1B1717FC7"}
 ```
 
-
-The response, 0x1B1717FC7, tells us that the current gas price is 7.27 gwei (gigawei or billion wei). If, like us, you don’t think in hexadecimal, you can convert it to decimal on the command line with a little Bash-fu:
+响应 0x1B1717FC7 告诉我们当前的 gas 价格是 7.27 gwei（gigawei 或十亿 wei）。如果像我们一样，您不擅长十六进制，您可以使用一点 Bash-fu 在命令行上将其转换为十进制：
 
 ```bash
 $ echo $((0x1B1717FC7))7271972807
 ```
 
-The full JSON-RPC API can be investigated on the [Ethereum wiki](https://oreil.ly/lO2Z0).
+完整的 JSON-RPC API 可以在 [Ethereum wiki](https://oreil.ly/lO2Z0) 上进行研究。
 
-> **Tip**
+> **提示**
 >
-> In this section, we used raw curl requests to show the Ethereum JSON-RPC interface. In real life, you probably want to access it through a better, more programmatic way. Here is where libraries come into play. Feel free to explore the three most famous and used ones:
+> 在本节中，我们使用原始 curl 请求来展示以太坊 JSON-RPC 接口。在现实生活中，您可能希望通过更好、更程序化的方式来访问它。这就是库发挥作用的地方。请随意探索以下三个最著名和最常用的库：
 >
 > - [ethers.js](https://oreil.ly/JKvSJ)
 >
@@ -667,89 +649,89 @@ The full JSON-RPC API can be investigated on the [Ethereum wiki](https://oreil.l
 >
 > - [alloy](https://alloy.rs)
 
-## Remote Ethereum Clients
+## 远程以太坊客户端
 
-Remote clients offer a subset of the functionality of a full client. They do not store the full Ethereum blockchain, so they are faster to set up and require far less data storage.
+远程客户端提供完整客户端功能的子集。它们不存储完整的以太坊区块链，因此设置速度更快，并且需要的数据存储量也少得多。
 
-These clients typically provide the ability to do one or more of the following:
+这些客户端通常提供以下一种或多种能力：
 
-- Manage private keys and Ethereum addresses in a wallet
-- Create, sign, and broadcast transactions
-- Interact with smart contracts using the data payload
-- Browse and interact with DApps
-- Offer links to external services, such as block explorers
-- Convert ether units and retrieve exchange rates from external sources
-- Inject a Web3 instance into the web browser as a JavaScript object
-- Use a Web3 instance provided or injected into the browser by another client
-- Access RPC services on a local or remote Ethereum node
+- 在钱包中管理私钥和以太坊地址
+- 创建、签名和广播交易
+- 使用数据有效载荷与智能合约交互
+- 浏览并与 DApp 交互
+- 提供指向外部服务的链接，例如区块浏览器
+- 转换以太币单位并从外部来源检索汇率
+- 将 Web3 实例作为 JavaScript 对象注入到 Web 浏览器中
+- 使用由另一个客户端提供或注入到浏览器中的 Web3 实例
+- 访问本地或远程以太坊节点上的 RPC 服务
 
-Remote clients commonly offer some of the functions of a full-node Ethereum client without synchronizing a local copy of the Ethereum blockchain by connecting to a full node being run elsewhere—for example, by you locally on your machine or on a web server or by a third party on its server.
+远程客户端通常提供完整节点以太坊客户端的某些功能，而无需同步以太坊区块链的本地副本，而是连接到在其他地方运行的完整节点——例如，由您本地在您的机器上或在 Web 服务器上，或由第三方在其服务器上运行。
 
-Let’s look at some of the most popular remote clients and the functions they offer.
+让我们看一下一些最流行的远程客户端及其提供的功能。
 
-### Mobile (Smartphone) Wallets
+### 移动（智能手机）钱包
 
-Most production mobile wallets operate as remote clients because smartphones do not have adequate resources to run a full Ethereum client. Light clients are in development and are not in general use for Ethereum. The most famous one is [Helios](https://oreil.ly/4joTo), which is still experimental software.
+大多数生产移动钱包都作为远程客户端运行，因为智能手机没有足够的资源来运行完整的以太坊客户端。轻客户端正在开发中，并且尚未普遍用于以太坊。最著名的是 [Helios](https://oreil.ly/4joTo),，它仍然是实验性软件。
 
-Popular mobile wallets include the following (we list these merely as examples; this is not an endorsement or an indication of the security or functionality of these wallets):
+流行的移动钱包包括以下几种（我们仅将这些列为示例；这不是对这些钱包的认可，也不是对这些钱包的安全或功能的指示）：
 
 **Coinbase Wallet**
 
-A mobile wallet that supports a bunch of different chains, such as Ethereum (and all L2s), EVM-compatible L1s, Bitcoin, Solana, Litecoin, and Dogecoin. It can also connect to a Coinbase account.
+一款移动钱包，支持多种不同的链，例如以太坊（以及所有 L2）、与 EVM 兼容的 L1、比特币、Solana、莱特币和狗狗币。它还可以连接到 Coinbase 帐户。
 
 **Phantom**
 
-Phantom is another multichain wallet that is compatible with Ethereum, Solana, Bitcoin, and Polygon.
+Phantom 是另一个多链钱包，与以太坊、Solana、比特币和 Polygon 兼容。
 
 **Trust Wallet**
 
-A mobile multichain wallet that supports more than one hundred blockchains. Trust Wallet is available for iOS and Android.
+一款移动多链钱包，支持一百多个区块链。Trust Wallet 适用于 iOS 和 Android。
 
 **Uniswap Wallet**
 
-A mobile wallet that supports only Ethereum and EVM-compatible L2s and L1s. It’s made by the Uniswap team. It’s quite new, available both for iOS and Android.
+一款移动钱包，仅支持以太坊和与 EVM 兼容的 L2 和 L1。它由 Uniswap 团队制作。它非常新，适用于 iOS 和 Android。
 
-### Browser Wallets
+### 浏览器钱包
 
-A variety of wallets and DApp browsers are available as plug-ins or extensions of web browsers like Chrome and Firefox. These are remote clients that run inside your browser. Some of the more popular ones include:
+各种钱包和 DApp 浏览器可以作为 Chrome 和 Firefox 等 Web 浏览器的插件或扩展程序使用。这些是在您的浏览器中运行的远程客户端。一些比较流行的包括：
 
 **MetaMask**
 
-// TODO: add chapter 2 reference link here
-[MetaMask](https://metamask.io), introduced in [Chapter 2](add-link), is a versatile browser-based wallet, RPC client, and basic contract explorer. It is available on Chrome, Firefox, Opera, and Brave Browser.
+// TODO: 在此处添加第2章参考链接
+[MetaMask](https://metamask.io)，在[第2章](add-link)中介绍，是一个多功能的基于浏览器的钱包、RPC 客户端和基本合约浏览器。它可在 Chrome、Firefox、Opera 和 Brave 浏览器上使用。
 
 **Phantom**
 
-Phantom also has a web browser wallet that has a very nice and clean UI.
+Phantom 也有一个 Web 浏览器钱包，它具有非常漂亮和简洁的 UI。
 
 **Rabby Wallet**
 
-Rabby is a new multichain web browser wallet that supports more than one hundred different blockchains (EVM-compatible chains).
+Rabby 是一款新的多链 Web 浏览器钱包，支持一百多个不同的区块链（与 EVM 兼容的链）。
 
 **Coinbase Wallet**
 
-Coinbase Wallet also has the web browser wallet. It has the same features as the mobile version.
+Coinbase Wallet 也有 Web 浏览器钱包。它具有与移动版本相同的功能。
 
-### Hardware Wallets
+### 硬件钱包
 
-The majority of mobile and browser wallets can be coupled with the higher security of hardware wallets: offline devices designed to never connect to the internet and built to resist tampering and other forms of physical attacks, providing a higher level of security. Several companies are building these kinds of devices, but two of the most widely used are Ledger and Trezor.
+大多数移动和浏览器钱包都可以与更高安全性的硬件钱包结合使用：离线设备旨在永不连接到互联网，并且旨在抵抗篡改和其他形式的物理攻击，从而提供更高级别的安全性。几家公司正在构建此类设备，但两种最广泛使用的是 Ledger 和 Trezor。
 
-## Conclusion
+## 结论
 
-In this chapter, we explored Ethereum clients. You downloaded, installed, and synchronized a client, becoming a participant in the Ethereum network and contributing to the health and stability of the system by replicating the blockchain on your own computer.
+在本章中，我们探讨了以太坊客户端。您下载、安装并同步了一个客户端，从而成为以太坊网络的参与者，并通过在您自己的计算机上复制区块链来为系统的健康和稳定做出贡献。
 
-In the future, new types of Ethereum clients will be available since the research and development around Ethereum is huge. Interesting areas include:
+将来，由于围绕以太坊的研究和开发非常庞大，因此将提供新型的以太坊客户端。有趣的领域包括：
 
-**History pruning**
+**历史修剪**
 
-Prune historical data to lower the storage requirement for a full node
+修剪历史数据以降低完整节点的存储需求
 
-**Verkle trees and statelessness**
+**Verkle 树和无状态性**
 
-Be able to verify a block without having the full Ethereum state
+能够验证一个区块而无需拥有完整的以太坊状态
 
 **zk-EVM**
 
-Verify the correctness of a block by verifying a zero-knowledge proof without having to reexecute all the transactions in the block
+通过验证零知识证明来验证区块的正确性，而无需重新执行区块中的所有交易
 
-We’ll explore each of these concepts in the following chapters, but first, we need to uncover the true magic that makes all this possible: cryptography.
+我们将在以下章节中探讨这些概念，但首先，我们需要揭示使这一切成为可能的真正魔力：密码学。

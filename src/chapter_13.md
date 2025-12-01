@@ -1,273 +1,273 @@
-# Chapter 13. Decentralized Finance
+# 第十三章. 去中心化金融
 
-Ethereum's smart contracts have opened up a world of possibilities beyond simple cryptocurrency transactions. *Decentralized finance* (DeFi) takes this to the next level by creating a complete financial ecosystem that operates entirely on the blockchain. Imagine traditional financial services like lending, borrowing, trading, and investing but without the need for banks, brokers, or any centralized authority. Instead, smart contracts on the Ethereum blockchain handle everything, bringing about a new era of financial autonomy and innovation.
+以太坊的智能合约开启了一个超越简单加密货币交易的世界。“去中心化金融”（DeFi）通过创建一个完全在区块链上运行的完整金融生态系统，将这一概念提升到了一个新高度。想象一下传统的金融服务，如借贷、交易和投资，但无需银行、经纪人或任何中心化机构。相反，以太坊区块链上的智能合约处理一切，从而开启了金融自治和创新的新时代。
 
-This decentralized approach democratizes access to financial services and introduces a level of transparency and security that is often missing in traditional finance. Every transaction on the blockchain is publicly recorded and immutable, allowing anyone to verify the authenticity and integrity of the data. This level of transparency reduces the risk of fraud and corruption, creating a more trustworthy financial environment.
+这种去中心化的方法使金融服务的获取民主化，并引入了传统金融中经常缺失的透明度和安全性。区块链上的每一笔交易都会被公开记录且不可更改，允许任何人验证数据的真实性和完整性。这种程度的透明度降低了欺诈和腐败的风险，创造了一个更值得信赖的金融环境。
 
-DeFi also opens opportunities for financial inclusion on a global scale. In regions where traditional banking infrastructure is underdeveloped or inaccessible, DeFi provides a viable alternative. People can participate in the global economy using just a smartphone and an internet connection. This capability can potentially uplift millions by providing access to credit, savings accounts, and investment opportunities that were previously out of reach. The programmability of Ethereum's smart contracts allows for the creation of complex financial instruments and services that are difficult or impossible to implement in the traditional financial system.
+DeFi 还为全球范围内的金融包容性创造了机会。在传统银行基础设施不发达或难以进入的地区，DeFi 提供了一种可行的替代方案。人们只需通过智能手机和互联网连接即可参与全球经济。这种能力有可能通过提供以前无法获得的信贷、储蓄账户和投资机会来提升数百万人的生活水平。以太坊智能合约的可编程性允许创建复杂的金融工具和服务，这些工具和服务在传统金融系统中难以或不可能实现。
 
-Currently, the primary users of DeFi are probably not the underbanked or unbanked populations of developing countries, but rather individuals from first-world nations looking to capitalize on the highly speculative nature of cryptocurrencies. While there will always be room for speculation, it's important to ensure that inclusive financial products are accessible to everyone worldwide.
+目前，DeFi 的主要用户可能不是发展中国家缺乏银行服务或没有银行服务的人口，而是来自第一世界国家、希望利用加密货币高度投机性本质的个人。虽然总会有投机的空间，但重要的是要确保包容性的金融产品能够为全球每个人所用。
 
-## DeFi Versus Traditional Finance
+## DeFi 与传统金融
 
-DeFi is the cryptopunk response to the traditional financial (TradFi) system, representing a field that is still evolving but has already found its niche of dedicated users and innovative builders. The distinction between DeFi and TradFi is complex. However, the most significant differences lie in the mediums of exchange and the inherent properties of the blockchain, such as openness and transparency. DeFi primarily uses cryptocurrencies, which are often decentralized to varying degrees, while TradFi relies on fiat currencies, which are always centralized to the maximum degree.
+DeFi 是对传统金融（TradFi）系统的密码朋克式回应，代表一个仍在发展但已经找到了其专属用户和创新建设者的领域。DeFi 和 TradFi 之间的区别很复杂。然而，最重要的区别在于交换媒介和区块链的固有属性，如开放性和透明度。DeFi 主要使用加密货币，这些加密货币在不同程度上通常是去中心化的，而 TradFi 依赖于法定货币，这些货币始终是最大程度的中心化的。
 
-TradFi systems often have high barriers to entry. Opening a bank account, obtaining a loan, or investing in financial markets typically requires significant documentation and compliance with various regulatory requirements. This process can exclude large segments of the global population, particularly those in underbanked regions. This can be seen in Figure 13-1.
+TradFi 系统通常具有很高的进入门槛。开设银行账户、获得贷款或投资金融市场通常需要大量的文件，并遵守各种监管要求。这一过程可能会排除全球大部分人口，特别是那些在银行服务不足的地区的人们。这可以在图 13-1 中看到。
 
-![Traditional finance versus DeFi loan requirements](images/ch13/maet_1301.png)
+![传统金融与 DeFi 贷款要求](images/ch13/maet_1301.png)
 
-Figure 13-1. Traditional finance versus DeFi loan requirements
+图 13-1. 传统金融与 DeFi 贷款要求
 
-A regular user needs many prerequisites to open a loan application, such as an ID, a provable physical address, a Social Security number, a bank account, signed documents, and a good credit score. Even with all these, the request might still be denied, and if it is approved, that will probably take a long time to happen.
+普通用户需要许多先决条件才能打开贷款申请，例如身份证、可证明的实际地址、社会安全号码、银行账户、签署的文件和良好的信用评分。即使有了所有这些，该请求仍可能被拒绝，如果获得批准，则可能需要很长时间才能发生。
 
-In DeFi, only three prerequisites are needed: a phone, an internet connection, and enough assets to overcollateralize the loan. Once these are in place, the loan is instant, decentralized, and permissionless.
+在 DeFi 中，只需要三个先决条件：一部手机、互联网连接和足够的资产来超额抵押贷款。一旦这些条件到位，贷款就是即时、去中心化和无需许可的。
 
-DeFi, by design, is more accessible. Anyone with an internet connection can interact with DeFi protocols, which opens financial services to billions of people who are excluded from the traditional system. The high accessibility of DeFi makes it difficult or impossible to apply TradFi's mechanisms for assessing creditworthiness and resolving fraud, which some view as a drawback and others as an improvement.
+DeFi，通过设计，更易于访问。任何有互联网连接的人都可以与 DeFi 协议交互，这为数十亿被排除在传统系统之外的人们提供了金融服务。DeFi 的高可访问性使得应用 TradFi 的信誉评估和欺诈解决机制变得困难或不可能，有些人认为这是一个缺点，另一些人则认为是改进。
 
-Another fascinating aspect of DeFi is its ability to create new financial instruments that are impossible within the traditional financial system. For example, flash loans allow users to borrow funds without collateral as long as the loan is repaid within the same transaction. This capability, which is unique to DeFi, opens a range of possibilities for arbitrage, collateral swaps, and other complex financial maneuvers that simply cannot be replicated in TradFi.
+DeFi 的另一个引人注目的方面是它能够创造在传统金融系统中不可能实现的新金融工具。例如，闪电贷允许用户在没有抵押品的情况下借款，只要贷款在同一笔交易中偿还即可。这种 DeFi 独有的能力为套利、抵押品互换和其他复杂的金融操作开辟了一系列可能性，这些操作在 TradFi 中根本无法复制。
 
-## DeFi Primitives
+## DeFi 原语
 
-While cryptocurrencies like Bitcoin aim to improve and decentralize the concept of money, DeFi projects build on this foundation to decentralize and improve financial services. To fully grasp the financial services offered by DeFi, it is essential to understand several key concepts.
+虽然像比特币这样的加密货币旨在改进和去中心化货币的概念，但 DeFi 项目在此基础上构建，以去中心化和改进金融服务。要充分理解 DeFi 提供的金融服务，必须了解几个关键概念。
 
-### Acceptability of Tokens in DeFi
+### DeFi 中代币的可接受性
 
-In Ethereum's DeFi ecosystem, each token operates as a distinct contract. This can cause confusion for beginners since there may be tokens with similar names and functions that are, in reality, entirely different forms of money.
+在以太坊的 DeFi 生态系统中，每个代币都作为一个独特的合约运行。这可能会给初学者带来困惑，因为可能有名称和功能相似的代币，但实际上是完全不同的货币形式。
 
-Take, for instance, the Arbitrum rollup on Ethereum, where two tokens, USDC.e and USDC, appear almost identical but differ significantly in terms of risk and acceptability. Both USDC.e and USDC aim to maintain a value pegged to one dollar. However, USDC is natively issued on the Arbitrum chain, while USDC.e is a bridged version of USDC, representing tokens that have been transferred from another chain to Arbitrum.
+例如，在以太坊上的 Arbitrum rollup 上，USDC.e 和 USDC 这两个代币看起来几乎相同，但在风险和可接受性方面存在显着差异。USDC.e 和 USDC 都旨在保持与一美元挂钩的价值。但是，USDC 是在 Arbitrum 链上原生发行的，而 USDC.e 是 USDC 的桥接版本，代表从另一个链转移到 Arbitrum 的代币。
 
-The risk profiles of these two tokens are markedly different. USDC.e carries all the inherent risks of USDC but adds the additional risk associated with the bridging process, such as the potential for smart contract vulnerabilities. Acceptability, defined by how widely a coin or token is accepted across various DeFi financial services, also varies between the two. Some protocols may only support USDC.e, others may exclusively support USDC, and some may accept both.
+这两个代币的风险特征明显不同。USDC.e 承担了 USDC 的所有固有风险，但增加了与桥接过程相关的额外风险，例如智能合约漏洞的潜在风险。可接受性，由代币或代币在各种 DeFi 金融服务中被广泛接受的程度来定义，在两者之间也有所不同。一些协议可能只支持 USDC.e，另一些协议可能只支持 USDC，还有一些协议可能两者都接受。
 
-### Decentralized Exchanges
+### 去中心化交易所
 
-A *decentralized exchange* (DEX) is a platform where you can trade cryptocurrencies directly with other users without needing a central authority or intermediary. Instead of relying on a company to facilitate the trades, DEXs use smart contracts to manage transactions automatically. This allows you to maintain control of your funds.
+“去中心化交易所”（DEX）是一个平台，您可以在没有中央机构或中介的情况下直接与其他用户交易加密货币。DEX 不依赖于公司来促进交易，而是使用智能合约来自动管理交易。这使您可以保持对资金的控制。
 
-#### The Evolution of DEXs
+#### DEX 的演变
 
-If you have ever traded on a centralized exchange, you are familiar with the order book model. In this model, buy and sell orders are listed with the prices users are willing to pay or accept. When a buy order matches a sell order, the trade is executed. The order book shows all pending orders, allowing traders to see market depth and liquidity.
+如果您曾在中心化交易所进行过交易，那么您一定很熟悉订单簿模型。在此模型中，买单和卖单会列出用户愿意支付或接受的价格。当买单与卖单匹配时，交易就会执行。订单簿显示所有挂单，允许交易者查看市场深度和流动性。
 
-On chain, this model never really caught on because blockchains are much slower and more expensive to use than traditional websites. The latency in trading on the order book and the need to pay for the transaction of every order made the user experience terrible. In 2017–2018, EtherDelta attempted to implement an on-chain order book, and a few other pure order book models were tried afterward, but they didn't gain much traction.
+在链上，这种模式从未真正流行起来，因为区块链的使用速度比传统网站慢得多，成本也高得多。在订单簿上交易的延迟以及为每笔订单交易付费的需求使得用户体验非常糟糕。在 2017-2018 年，EtherDelta 试图实现链上订单簿，之后也尝试了一些其他的纯订单簿模型，但它们并没有获得太大的发展。
 
-Bancor was the first to pioneer the *automated market maker* (AMM) model. Unlike the order book model, AMMs don't rely on buyers and sellers placing orders. Instead, they use liquidity pools, where users provide pairs of tokens.[^1] The prices are determined by a formula based on the ratio of tokens in the pool. This model allows for continuous liquidity and trading.
+Bancor 是第一个开创“自动做市商”（AMM）模型的公司。与订单簿模型不同，AMM 不依赖于买家和卖家下订单。相反，它们使用流动性池，用户在其中提供代币对。[^1] 价格由基于池中代币比例的公式确定。此模型允许持续的流动性和交易。
 
-Uniswap significantly improved and popularized the AMM model with its simple yet effective *x × y = k* formula, where the product of the quantities of the two tokens remains constant. In this formula, *x* and *y* represent the quantities of the two tokens in the pool, and *k* is a constant value. When a trade is made, the quantities of the tokens change, but the product of the two quantities remains the same, ensuring that the pool always provides liquidity. This innovation made trading more accessible and efficient on decentralized exchanges.
+[^1]: 代币可能并不总是成对出现，因为某些流动性池可以有三个或更多代币，但最常见和最简单的安排是成对出现。
 
-[^1]: The tokens might not always be in pairs because some liquidity pools can have three or more tokens, but the most common and simplest arrangement is in pairs.
+Uniswap 通过其简单而有效的 *x × y = k* 公式显着改进并普及了 AMM 模型，其中两个代币数量的乘积保持不变。在此公式中，*x* 和 *y* 表示池中两个代币的数量，*k* 是一个常数值。进行交易时，代币的数量会发生变化，但两个数量的乘积保持不变，从而确保池始终提供流动性。这种创新使去中心化交易所的交易更加便捷和高效。
 
-A DEX enables anyone to become a market maker by providing liquidity and earning fees for their contributions. As long as there is sufficient liquidity, trades can occur quickly and without the need for permission from a central authority, as can be seen in Figure 13-2.[^2]
+DEX 使任何人都可以通过提供流动性并赚取贡献费用来成为做市商。只要有足够的流动性，交易就可以快速发生，而无需中央机构的许可，如图 13-2 所示。[^2]
 
-[^2]: From Figure 13-2, it may appear that BTC is natively exchangeable on DEXs. However, this is not the case. BTC on DEXs is often represented by derivative contracts like Wrapped Bitcoin (WBTC), which are assets pegged to the price of BTC but carrying significantly more risk than native BTC on the BTC blockchain. Native assets are typically only available on their respective native chains. In this example, the BTC used in the pool is not native BTC but a derivative, similar to how stablecoins represent fiat money.
+[^2]: 从图 13-2 来看，BTC 似乎可以在 DEX 上进行原生交换。然而，事实并非如此。DEX 上的 BTC 通常由衍生品合约表示，如 Wrapped Bitcoin (WBTC)，这些资产与 BTC 的价格挂钩，但比 BTC 区块链上的原生 BTC 承担的风险要大得多。原生资产通常仅在其各自的原生链上可用。在此示例中，池中使用的 BTC 不是原生 BTC，而是衍生品，类似于稳定币代表法定货币的方式。
 
-![Decentralized exchange liquidity pool](images/ch13/maet_1302.png)
+![去中心化交易所流动性池](images/ch13/maet_1302.png)
 
-Figure 13-2. Decentralized exchange liquidity pool
+图 13-2. 去中心化交易所流动性池
 
-#### Impermanent Loss
+#### 无常损失
 
-Providing liquidity on a DEX is not risk free. Beyond smart contract hacks, there's a more subtle risk called *impermanent loss*. To understand impermanent loss, we first need to grasp the basic Uniswap V2 pool model.
+在 DEX 上提供流动性并非没有风险。除了智能合约黑客攻击之外，还有一种更微妙的风险，称为“无常损失”。要了解无常损失，我们首先需要掌握基本的 Uniswap V2 池模型。
 
-Many popular DEXs, like Uniswap V2, use the constant product formula *x × y = k*, where *x* and *y* are the quantities of two tokens in a liquidity pool and *k* is a constant. The price of a token is determined by the ratio of the tokens in the pool. For example, if a pool contains 100 USDC and 10 ETH, the price of 1 ETH is 100 ÷ 10 = 10 USDC. If the pool changes to 200 USDC and 10 ETH (due to trades), the price of 1 ETH becomes 200 ÷ 10 = 20 USDC.
+许多流行的 DEX（如 Uniswap V2）使用恒定乘积公式 *x × y = k*，其中 *x* 和 *y* 是流动性池中两个代币的数量，*k* 是一个常数。代币的价格由池中代币的比例决定。例如，如果一个池包含 100 USDC 和 10 ETH，则 1 ETH 的价格为 100 ÷ 10 = 10 USDC。如果池更改为 200 USDC 和 10 ETH（由于交易），则 1 ETH 的价格变为 200 ÷ 10 = 20 USDC。
 
-This formula is a simplified way to understand how pools work. By providing liquidity, you act as a market maker. When users buy ETH from the pool, you sell ETH and receive USDC; when they sell ETH, you buy ETH and give USDC. In return, you earn trading fees. However, this process exposes you to impermanent loss, which occurs when the price of the tokens in the pool changes compared to when you deposited them. If the price of ETH rises or falls significantly, the value of your pool holdings may be less than if you had simply held the original tokens, even though you collect fees.
+这个公式是一种简化版，用于理解池是如何运作的。通过提供流动性，您就可以充当做市商的角色。当用户从池中购买 ETH 时，您出售 ETH 并收到 USDC；当他们出售 ETH 时，您购买 ETH 并给出 USDC。作为回报，您可以赚取交易费用。但是，此过程会使您面临无常损失，当池中代币的价格与您存入时的价格相比发生变化时，就会发生无常损失。如果 ETH 的价格大幅上涨或下跌，即使您收取费用，您池中资产的价值也可能低于您仅持有原始代币时的价值。
 
-This openness also presents a significant challenge for DEXs. Since anyone can create a blockchain and launch a DEX, there are now more than one hundred DEXs (likely many more) across various blockchains. This abundance fragments liquidity, making swaps—where users exchange one cryptocurrency for another—less efficient than they would be on platforms with consolidated liquidity. This fragmentation can lead to higher *slippage*, which is the difference between the expected price of a trade and the actual price at which the trade is executed. High slippage occurs when there is insufficient liquidity, causing trades to be executed at less favorable prices than anticipated.
+这种开放性也给 DEX 带来了巨大的挑战。由于任何人都可以创建区块链并启动 DEX，因此现在各个区块链上有超过一百个 DEX（可能更多）。这种丰富性会分散流动性，使得交易——用户将一种加密货币换成另一种加密货币——比在具有合并流动性的平台上效率更低。这种分散会导致更高的“滑点”，即交易的预期价格与交易执行的实际价格之间的差额。当流动性不足时，就会发生高滑点，导致交易以不如预期的价格执行。
 
-> **Note**  
+> **注意**  
 >
-> Uniswap, which is arguably one of the most significant projects in the current DeFi landscape, was inspired by a 2016 Reddit post by Vitalik Buterin. Hayden Adams, who reportedly had no prior coding experience, took a year to develop Uniswap V1 using the Vyper programming language.
+> 可以说，Uniswap 是当前 DeFi 领域中最重要的项目之一，它受到了 Vitalik Buterin 2016 年 Reddit 帖子 的启发。据报道没有编码经验的 Hayden Adams 花了一年时间使用 Vyper 编程语言开发 Uniswap V1。
 
-### Lending Markets
+### 借贷市场
 
-A *lending market* or *money market* is a decentralized platform that facilitates the lending and borrowing of cryptocurrencies, using smart contracts to automate and secure the entire process. Unlike traditional financial systems, lending markets operate without intermediaries like banks, providing a more transparent and efficient way to handle loans.
+“借贷市场”或“货币市场”是一个去中心化平台，它促进加密货币的出借和借贷，使用智能合约来自动执行并保护整个过程。与传统的金融体系不同，借贷市场在没有银行等中介机构的情况下运作，从而提供了一种更透明和高效的方式来处理贷款。
 
-In a lending market, users who want to earn interest on their crypto assets can deposit their funds into a lending pool. These deposits contribute to the overall liquidity of the platform. Lenders earn interest on their deposits, with rates often determined algorithmically based on the supply and demand within the pool. The more demand there is for borrowing, the higher the interest rates are, incentivizing more lenders to contribute their assets to the pool.
+在借贷市场中，希望通过其加密资产赚取利息的用户可以将资金存入借贷池。这些存款有助于平台的整体流动性。贷方可以通过其存款赚取利息，利率通常根据池内的供需情况以算法方式确定。借款需求越大，利率就越高，从而激励更多的贷方将其资产 contributed 到池中。
 
-Borrowers, on the other hand, can access these funds by providing collateral, which is typically worth more than the amount they wish to borrow. This overcollateralization is critical in lending to mitigate the risk of default, primarily because most crypto assets are very volatile and could leave the lending market with bad debt[^3] if the loan were not overcollateralized. The collateral is locked in a smart contract, ensuring that if the borrower fails to repay the loan, the collateral can be liquidated to cover the outstanding amount.
+另一方面，借款人可以通过提供抵押品来获得这些资金，抵押品的价值通常高于他们希望借入的金额。这种超额抵押对于借贷至关重要，可以降低违约风险，主要是因为大多数加密资产都非常不稳定，如果贷款没有超额抵押，可能会使借贷市场陷入不良债务。[^3] 抵押品被锁定在智能合约中，确保如果借款人未能偿还贷款，则可以清算抵押品以支付未偿还的金额。
 
-[^3]: Bad debt occurs when a borrower defaults on a loan and the remaining collateral is insufficient to cover the owed amount. This can happen because of sudden market volatility or improper collateral valuation. Unlike liquidation, where collateral is sold to cover the debt, bad debt remains uncollectible, causing a loss to the lending protocol and its users.
+[^3]: 当借款人拖欠贷款且剩余的抵押品不足以支付所欠金额时，就会发生不良债务。这可能是由于市场突然波动或抵押品估值不当造成的。与清算（出售抵押品以偿还债务）不同，不良债务仍然无法追回，从而给借贷协议及其用户造成损失。
 
-This system protects lenders and ensures that the lending pool remains solvent. A simplified version of this can be seen in Figure 13-3: the lender provides liquidity and collects annual interest paid by the borrower, who withdraws the provided liquidity.
+该系统保护了贷方，并确保了借贷池保持偿付能力。图 13-3 显示了该系统的简化版本：贷方提供流动性并收取借款人支付的年利率，借款人提取所提供的流动性。
 
-![Lending market basic flow](images/ch13/maet_1303.png)
+![借贷市场基本流程](images/ch13/maet_1303.png)
 
-Figure 13-3. Lending market basic flow
+图 13-3. 借贷市场基本流程
 
-The interest rates in lending markets are dynamic, fluctuating based on market conditions. The platform's algorithms continuously adjust rates to balance the supply of available funds and the demand for loans. This creates an efficient and responsive financial ecosystem where both lenders and borrowers can benefit from fair market-driven rates.
+借贷市场的利率是动态的，根据市场情况波动。平台的算法会不断调整利率，以平衡可用资金的供应和贷款需求。这创造了一个高效且响应迅速的金融生态系统，贷方和借款人都可以从公平的市场驱动利率中受益。
 
-Collateralization ratios are another important aspect of lending markets. These ratios determine the amount of collateral needed to secure a loan. For instance, a common collateralization ratio might be 150%, meaning that to borrow $100 worth of cryptocurrency, a borrower would need to deposit at least $150 worth of collateral, as shown in Figure 13-4. This ensures that there is a buffer to absorb potential losses from price volatility.
+抵押品比率是借贷市场的另一个重要方面。这些比率决定了获得贷款所需的抵押品数量。例如，常见的抵押品比率可能是 150%，这意味着要借入价值 100 美元的加密货币，借款人需要存入至少价值 150 美元的抵押品，如图 13-4 所示。这确保了有一个缓冲来吸收价格波动可能造成的损失。
 
-![Lending market collateralization](images/ch13/maet_1304.png)
+![借贷市场抵押](images/ch13/maet_1304.png)
 
-Figure 13-4. Lending market collateralization
+图 13-4. 借贷市场抵押
 
-If the value of the collateral falls below a certain threshold, the platform's smart contracts initiate a liquidation process. This involves selling the collateral to repay the loan, thus protecting the lenders from potential losses. Liquidation mechanisms are essential for maintaining the stability and solvency of the lending pool.
+如果抵押品的价值低于某个阈值，平台的智能合约就会启动清算流程。这涉及出售抵押品以偿还贷款，从而保护贷方免受潜在损失。清算机制对于维持借贷池的稳定性和偿付能力至关重要。
 
-#### Incentives in DeFi
+#### DeFi 中的激励
 
-Most aspects of DeFi are open and rely heavily on proper incentives to function effectively. For instance, the liquidation process in most lending markets depends on users continuously monitoring for loans that can be liquidated. When they identify such loans, they proceed to liquidate them. To motivate users to perform these tasks, they receive a portion of the liquidated amount as a reward.
+DeFi 的大多数方面都是开放的，并且在很大程度上依赖于适当的激励措施才能有效运作。例如，大多数借贷市场的清算流程取决于用户持续监控可以清算的贷款。当他们发现此类贷款时，他们会继续清算这些贷款。为了激励用户执行这些任务，他们会收到部分清算金额作为奖励。
 
-This concept of incentivization is a fundamental part of blockchain and DeFi. Many mechanisms within these systems are designed around game theory principles to ensure that participants act in ways that maintain and improve the network's functionality and security. Incentives align user actions with the overall goals of the protocol, creating a self-sustaining ecosystem.
+这种激励概念是区块链和 DeFi 的一个基本组成部分。这些系统中的许多机制都是围绕博弈论原则设计的，以确保参与者以维护和改进网络功能和安全的方式行事。激励措施将用户行为与协议的总体目标对齐，从而创建一个自我维持的生态系统。
 
-As with most things in DeFi, composability is key. On their own, lending markets may not seem particularly impressive, especially since most require overcollateralization to request a loan. However, when you combine the ability to request a loan with other DeFi primitives, you unlock a powerful aggregation that can achieve a variety of outcomes.
+与 DeFi 中的大多数事物一样，可组合性是关键。就其本身而言，借贷市场似乎并不是特别令人印象深刻，尤其是因为大多数借贷市场都需要超额抵押才能申请贷款。但是，当您将申请贷款的能力与其他 DeFi 原语结合起来时，您就可以解锁强大的聚合，从而实现各种结果。
 
-For example, you can re-create a financial instrument called *shorting* by combining a lending market with a DEX. Shorting is a strategy used when you expect the price of an asset to drop. Essentially, you borrow the asset and sell it at the current price, hoping to buy it back later at a lower price, return the borrowed asset, and pocket the difference.
+例如，您可以通过将借贷市场与 DEX 结合起来，重新创建一个称为“做空”的金融工具。当您预期资产价格下跌时，就会使用做空策略。从本质上讲，您以当前价格借入资产并出售，希望以后以较低的价格买回，归还借入的资产，然后将差额收入囊中。
 
-Here's how you can achieve a short in DeFi:
+以下是如何在 DeFi 中实现做空：
 
-1. **Collateralize Asset A**: deposit Asset A as collateral in a lending market.
+1. **抵押资产 A**：将资产 A 作为抵押品存入借贷市场。
 
-2. **Take a loan for Asset B**: borrow Asset B, which you want to short.
+2. **申请资产 B 的贷款**：借入您想要做空的资产 B。
 
-3. **Sell Asset B on a DEX**: sell the borrowed Asset B on a decentralized exchange.
+3. **在 DEX 上出售资产 B**：在去中心化交易所出售借入的资产 B。
 
-By doing this, you effectively short Asset B with a leverage of 1x.[^4] If the price of Asset B drops, you can buy it back at the lower price, repay the loan, and keep the difference, as shown in Figure 13-5. This demonstrates how the composability of DeFi protocols can re-create traditional financial strategies in a decentralized environment.
+通过这样做，您可以有效地以 1 倍的杠杆做空资产 B。[^4] 如果资产 B 的价格下跌，您可以以较低的价格买回，偿还贷款，并保留差额，如图 13-5 所示。这证明了 DeFi 协议的可组合性如何在去中心化环境中重新创建传统的金融策略。
 
-[^4]: The short position's size is directly related to the borrowed amount.
+[^4]: 空头头寸的规模与借入的金额直接相关。
 
-![Shorting strategy using DeFi](images/ch13/maet_1305.png)
+![使用 DeFi 进行做空策略](images/ch13/maet_1305.png)
 
-Figure 13-5. Shorting strategy using DeFi
+图 13-5. 使用 DeFi 进行做空策略
 
-The applications for a lending market are extensive and may not be immediately apparent. You may wonder: why take an overcollateralized loan when you have the money? Why not just use your own funds? In some scenarios, that would be true. However, lending markets combined with DEXs can re-create financial instruments and even allow for "longing" an asset instead of shorting it. Another benefit of lending markets is the ability to avoid taxable events. In many jurisdictions, borrowing an asset is not considered a taxable event, whereas selling an asset is.
+借贷市场的应用非常广泛，可能不会立即显现出来。您可能会想：当您有钱的时候，为什么要获得超额抵押贷款？为什么不使用自己的资金呢？在某些情况下，这是正确的。但是，借贷市场与 DEX 结合使用可以重新创建金融工具，甚至允许“做多”资产而不是做空资产。借贷市场的另一个好处是可以避免应税事件。在许多司法管辖区，借入资产不被视为应税事件，而出售资产则是。
 
-The potential uses of lending markets are vast and go beyond the scope of this book. However, lending markets improve capital efficiency and, when combined with other protocols, provide users with significant flexibility. There are also lending markets that do not require overcollateralization, although they currently lack significant traction.
+借贷市场的潜在用途非常广泛，超出了本书的范围。但是，借贷市场提高了资本效率，并且在与其他协议结合使用时，可以为用户提供极大的灵活性。还有一些借贷市场不需要超额抵押，尽管它们目前缺乏显着的吸引力。
 
-### Oracles
+### 预言机
 
-An oracle for Ethereum, which we discussed in detail in Chapter 11, is a service that brings real-world data onto the blockchain, allowing smart contracts to interact with external information. For example, it can provide price data for cryptocurrencies, weather conditions, or sports scores, enabling smart contracts to execute based on this external data.
+我们在第 11 章中详细讨论的以太坊预言机是一种将真实世界数据引入区块链的服务，允许智能合约与外部信息交互。例如，它可以提供加密货币、天气条件或体育比赛结果的价格数据，使智能合约能够根据这些外部数据执行。
 
-Oracles are essential for many aspects of DeFi, including the security of lending markets. In these markets, the price of a token can be sourced from DEXs. However, relying solely on these exchanges can make the lending market vulnerable to flash-loan attacks. In such an attack, an attacker borrows a large sum of money, manipulates the price of a coin or token on a DEX, and exploits this price change for profit.
+预言机对于 DeFi 的许多方面至关重要，包括借贷市场的安全性。在这些市场中，代币的价格可以从 DEX 获得。但是，仅依赖这些交易所可能会使借贷市场容易受到闪电贷的攻击。在这种攻击中，攻击者会借入大量资金，操纵 DEX 上的一种代币的价格，并利用此价格变化来获利。
 
-Another vital function of oracles is their ability to bring pseudorandom numbers on chain. Since Ethereum is deterministic, every computation must produce the same result every time, enabling nodes to validate every block and transaction consistently. However, this deterministic nature means that true randomness cannot exist within Ethereum's components. For instance, if you were building a casino platform, generating random numbers would be essential. Using block timestamps, hashes, or transaction counts to create pseudorandom numbers is one method, but this approach is vulnerable to attacks since block proposers could predict or manipulate these properties in advance to exploit the casino.
+预言机的另一个重要功能是它们能够将伪随机数引入链上。由于以太坊是确定性的，因此每次计算都必须产生相同的结果，从而使节点能够一致地验证每个区块和交易。但是，这种确定性意味着真正的随机性不能存在于以太坊的组件中。例如，如果您要构建一个赌场平台，则生成随机数至关重要。使用区块时间戳、哈希或交易计数来创建伪随机数是一种方法，但这种方法容易受到攻击，因为区块提议者可以提前预测或操纵这些属性来利用赌场。
 
-Oracles let the Ethereum blockchain use external data, opening up a lot more possibilities for different applications.
+预言机允许以太坊区块链使用外部数据，从而为不同的应用程序开辟了更多的可能性。
 
-> **Tip**  
+> **提示**  
 >
-> From this description, it may seem that oracles are a central entity, making DeFi, which is supposed to be decentralized, dependent on them. However, while some aspects of DeFi do rely on oracles, the oracles themselves are often highly decentralized and do not have a single point of failure.
+> 从这个描述来看，预言机似乎是一个中央实体，使得理应去中心化的 DeFi 依赖于它们。然而，虽然 DeFi 的某些方面确实依赖于预言机，但预言机本身通常是高度去中心化的，并且没有单一的故障点。
 
-### Stablecoins
+### 稳定币
 
-*Stablecoins* are a type of cryptocurrency designed to maintain a stable value, typically pegged to a reserve asset like the US dollar, the euro, or a basket of goods. They aim to combine the benefits of cryptocurrencies, such as security and decentralization, with the stability of traditional fiat currencies.
+“稳定币”是一种旨在保持稳定价值的加密货币，通常与美元、欧元或一篮子商品等储备资产挂钩。其目的是将加密货币的优势（例如安全性、去中心化）与传统法定货币的稳定性结合起来。
 
-Stablecoins achieve their stability via different mechanisms. *Fiat-collateralized stablecoins* are backed by reserves of fiat currency held in banks or other trusted custodians. For instance, each USDC or USDT token is usually backed by an equivalent amount in US dollars (USD).
+稳定币通过不同的机制实现其稳定性。“法定货币抵押的稳定币”以银行或其他可信托管人持有的法定货币储备作为后盾。例如，每个 USDC 或 USDT 代币通常由等量的美元 (USD) 支持。
 
-*Cryptocollateralized stablecoins* take a different approach by being backed by other cryptocurrencies. Given the volatile nature of crypto assets, these stablecoins are often overcollateralized to ensure that they can maintain their peg. A well-known example is MakerDAO's DAI,[^5] where users lock up Ethereum or other cryptocurrencies as collateral to mint DAI. The overcollateralization provides a buffer against the volatility of the underlying assets.
+“加密货币抵押的稳定币” 采用不同的方法，以其他加密货币作为后盾。鉴于加密资产的波动性，这些稳定币通常是超额抵押的，以确保它们能够保持其挂钩。一个众所周知的例子是 MakerDAO 的 DAI，[^5] 用户在其中锁定以太坊或其他加密货币作为抵押品以铸造 DAI。超额抵押为抵御底层资产的波动性提供了一个缓冲。
 
-[^5]: MakerDAO is now Sky, and DAI is now USDS.
+[^5]: MakerDAO 现在是 Sky，DAI 现在是 USDS。
 
-Then there are *algorithmic stablecoins*, which do not rely on collateral but instead use algorithms and smart contracts to manage the supply of the stablecoin to keep its value stable. These stablecoins adjust the supply based on market demand, expanding or contracting to maintain the target price. TerraUSD (UST) was a notable example of an algorithmic stablecoin, although it faced significant issues, which led to its collapse.
+还有“算法稳定币”，它们不依赖于抵押品，而是使用算法和智能合约来管理稳定币的供应，以保持其价值稳定。这些稳定币根据市场需求调整供应，扩大或缩小以维持目标价格。TerraUSD (UST) 就是算法稳定币的一个著名例子，尽管它面临着重大问题，最终导致了它的崩溃。
 
-There has not been a successful and well-capitalized algorithmic stablecoin; every attempt at building one either failed catastrophically or did not find product-market fit.
+尚未出现成功且资本充足的算法稳定币；每次尝试构建算法稳定币要么以灾难性的失败告终，要么没有找到适合市场的产品。
 
-Stablecoins also contribute significantly to liquidity in DEXs. By providing a stable and predictable asset, they facilitate smoother trading and better market efficiency. Traders can easily move in and out of positions without worrying about price fluctuations, which is important for efficient market operations.
+稳定币也显着提高了 DEX 的流动性。通过提供稳定且可预测的资产，它们促进了更顺畅的交易和更好的市场效率。交易者可以轻松地进出头寸，而无需担心价格波动，这对于高效的市场运营至关重要。
 
-#### Limitations of Fiat-Collateralized Stablecoins
+#### 法定货币抵押的稳定币的局限性
 
-An interesting concept is that stablecoins like USDC or USDT, which can be redeemed for dollars on platforms like Coinbase and Bitfinex, respectively, have a limited potential for growth in terms of market cap size. *Market cap*, or market capitalization, is the total value of all the coins in circulation, calculated by multiplying the current price of the coin by the total supply.
+一个有趣的概念是，像 USDC 或 USDT 这样的稳定币（可以在 Coinbase 和 Bitfinex 等平台上分别兑换成美元）在市值规模方面的增长潜力有限。“市值”，或市场资本总额，是所有流通中的代币的总价值，计算方法是将代币的当前价格乘以总供应量。
 
-The reason for this limitation is that if the total value of the stablecoin on a particular blockchain exceeds the cost of attacking that blockchain, it creates significant incentives for malicious actors to attempt an attack. This is because the potential rewards of compromising the blockchain could outweigh the costs, making it a real and quantifiable risk.
+造成这种限制的原因是，如果特定区块链上稳定币的总价值超过了攻击该区块链的成本，就会为恶意行为者尝试攻击创造巨大的激励。这是因为破坏区块链的潜在回报可能超过成本，使其成为一种真实且可量化的风险。
 
-Fortunately, attacking a robust and secure blockchain like Ethereum is neither easy nor cheap. The high cost and the complexity of such an attack provide strong deterrents. However, it's important to always keep this concept in mind when considering the scalability and security of stablecoins on any blockchain.
+幸运的是，攻击像以太坊这样强大而安全的区块链既不容易也不便宜。这种攻击的高成本和复杂性提供了强大的威慑作用。但是，在考虑任何区块链上稳定币的可扩展性和安全性时，始终牢记这个概念非常重要。
 
-### Liquid Staking
+### 流动性质押
 
-*Liquid staking* is a mechanism that allows users to stake their cryptocurrency assets in a PoS network while retaining the liquidity of those assets. Typically, when tokens are staked, they are locked up and cannot be accessed or traded until the staking period is over. Liquid staking solves this problem by issuing a derivative token that represents the staked assets. This derivative token can be traded, transferred, or used in other DeFi protocols, enabling users to maintain liquidity while still earning staking rewards.
+“流动性质押”是一种机制，允许用户质押其 PoS 网络中的加密货币资产，同时保留这些资产的流动性。通常，当代币被质押时，它们会被锁定，并且在质押期结束之前无法访问或交易。流动性质押通过发行代表已质押资产的衍生代币来解决这个问题。这种衍生代币可以被交易、转移或在其他 DeFi 协议中使用，使用户能够在保持流动性的同时仍然可以赚取质押奖励。
 
-For example, if you stake ETH on a liquid staking platform, you might receive a derivative token like stETH. While your ETH remains staked and continues to earn rewards, the stETH token can be freely traded or used in other DeFi activities, providing the benefits of staking without losing access to your funds.
+例如，如果您在流动性质押平台上质押 ETH，您可能会收到一个类似于 stETH 的衍生代币。虽然您的 ETH 仍然被质押并继续赚取奖励，但 stETH 代币可以自由交易或用于其他 DeFi 活动，从而在不失去资金访问权的情况下提供质押的好处。
 
-> **Note**  
+> **注意**  
 >
-> A new type of derivative is emerging that is similar to liquid staking, known as *liquid restaking*. With protocols like EigenLayer, tokens are not only staked for the Ethereum chain but are also used to secure other services in a process called restaking. This new development has raised concerns about potentially overloading the Ethereum consensus mechanism.
+> 一种类似于流动性质押的新型衍生品正在涌现，称为“流动性再质押”。通过像 EigenLayer 这样的协议，代币不仅被质押在以太坊链上，而且还被用于保护其他服务，这个过程称为再质押。这种新的发展引发了对可能过度加载以太坊共识机制的担忧。
 
-The token received, such as stETH issued by Lido, acts like a stablecoin pegged to the price of ETH. This means it carries not only the typical risks associated with stablecoins, such as those pegged to the dollar, but additional risks related to slashing. Liquid staking protocols take the ETH deposited by users, create validator nodes, and earn staking rewards, which are then redistributed to the holders of the derivative token. This process introduces the risk of slashing, where part of the staked ETH could be lost if the validator nodes fail to operate correctly.
+收到的代币（例如 Lido 发行的 stETH）就像一种与 ETH 价格挂钩的稳定币。这意味着它不仅承担了与稳定币（例如与美元挂钩的稳定币）相关的典型风险，而且还存在与罚没相关的额外风险。流动性质押协议获取用户存入的 ETH，创建验证器节点，并赚取质押奖励，然后将这些奖励重新分配给衍生代币的持有者。此过程引入了罚没的风险，如果验证器节点未能正确运行，则可能会损失部分质押的 ETH。
 
-Beyond these risks, liquid staking might create systemic risks for the blockchain itself. For example, at the time of writing, Lido has 29% of all staked ETH. If this percentage increases to 33% or higher, that could pose significant problems.[^6] In June 2022, there was a vote in the Lido DAO to limit Lido's staking power and prevent it from surpassing the 33% mark to avoid potential systemic risk for Ethereum. Unfortunately, the vote did not pass.
+除了这些风险之外，流动性质押可能会给区块链本身带来系统性风险。例如，在撰写本文时，Lido 拥有所有已质押 ETH 的 29%。如果该百分比增加到 33% 或更高，可能会造成重大问题。[^6] 2022 年 6 月，Lido DAO 投票决定限制 Lido 的质押能力，并防止其超过 33% 的门槛，以避免以太坊潜在的系统性风险。不幸的是，投票没有通过。
 
-[^6]: If any staker has more than 33% of the staked ETH, they could in theory attack the chain and stop the finalization process.
+[^6]: 如果任何质押者拥有超过 33% 的已质押 ETH，他们理论上可以攻击该链并阻止最终确定过程。
 
-> **Note**  
+> **注意**  
 >
-> There was also controversy surrounding the vote since most of the opposition came from just a few wallets.
+> 这次投票也引起了争议，因为大多数反对意见仅来自少数几个钱包。
 
-### Real-World Assets
+### 现实世界资产
 
-In the context of DeFi, *real-world assets* (RWAs) refer to tangible or traditional financial assets that are tokenized and brought onto the blockchain. These can include anything from real estate and commodities to stocks, bonds, and even fine art. The tokenization of these assets involves converting their value into digital tokens that can be traded, lent, or borrowed on blockchain platforms.
+在 DeFi 的背景下，“现实世界资产”（RWA）是指被代币化并引入区块链的有形或传统金融资产。这些可以包括从房地产和商品到股票、债券，甚至是美术品等任何东西。这些资产的代币化涉及将其价值转换为可以在区块链平台上交易、借出或借入的数字代币。
 
-RWAs are somewhat controversial because they often require a custodian, which contradicts the trustless principle of blockchains. This sector is one of the last in DeFi to truly emerge, and so far, there haven't been any major issues with RWA protocols. Despite going against the core ethos of crypto, RWAs unlock numerous new possibilities.
+RWA 有些争议，因为它们通常需要托管人，这与区块链的无需信任原则相矛盾。该领域是 DeFi 中最后一个真正出现的领域之一，到目前为止，RWA 协议还没有出现任何重大问题。尽管违背了加密货币的核心精神，但 RWA 开启了许多新的可能性。
 
-One significant application of RWAs has been bringing bonds on chain, allowing users to access the relative risk-free rate. This has enabled non-US citizens to access the 5% interest rates that were available in the United States in 2023–2024. Another valuable use for RWAs is the fractionalization of tokenized assets, such as owning a fraction of real estate.
+RWA 的一个重要应用是将债券引入链上，允许用户访问相对无风险的利率。这使得非美国公民可以获得 2023-2024 年美国提供的 5% 的利率。RWA 的另一个有价值的用途是对代币化资产进行碎片化，例如拥有部分房地产。
 
-Given that this sector is still in its infancy, we have yet to uncover all its potential. However, the risks associated with custodianship are real and concerning.
+鉴于该领域仍处于起步阶段，我们尚未发现其所有潜力。但是，与托管相关的风险是真实且令人担忧的。
 
-### Bridges and Omnichain Protocols
+### 桥和全链协议
 
-As the blockchain ecosystem evolves, a wide variety of networks with unique features and benefits has developed. However, these networks often operate in isolation, which limits the seamless transfer of assets and data between them. Bridges and omnichain protocols aim to solve this problem by facilitating cross-chain interactions, ultimately creating a more interconnected blockchain ecosystem.
+随着区块链生态系统的发展，已经开发出具有独特特性和优势的各种网络。但是，这些网络通常独立运行，这限制了它们之间资产和数据的无缝传输。桥和全链协议旨在通过促进跨链交互来解决此问题，最终创建一个更互连的区块链生态系统。
 
-> **Note**  
+> **注意**
 >
-> Bridges are often very centralized because most blockchains are agnostic about the state of other chains. When transferring funds from chain A to chain B, there is typically a central authority that approves the bridging operation and unlocks the liquidity on chain B. This centralization is one of the reasons why bridges are among the most frequently hacked protocols in DeFi.
+> 桥通常非常中心化，因为大多数区块链都不知道其他链的状态。当将资金从链 A 转移到链 B 时，通常存在一个中心机构批准桥接操作并解锁链 B 上的流动性。这种中心化是桥成为 DeFi 中最常被黑客攻击的协议之一的原因。
 
-*Bridges* are specialized protocols that facilitate the transfer of assets and data between different blockchains, as shown in Figure 13-6. They act as connectors, allowing tokens and other digital assets to move from one chain to another. For instance, if you want to transfer your tokens from Ethereum to Binance Smart Chain (BSC), you would use a bridge.
+“桥”是专门的协议，用于促进不同区块链之间资产和数据的传输，如图 13-6 所示。它们充当连接器，允许代币和其他数字资产从一条链移动到另一条链。例如，如果您想将代币从以太坊转移到币安智能链 (BSC)，您将使用桥。
 
-![Bridge connecting two blockchains](images/ch13/maet_1306.png)
+![连接两个区块链的桥](images/ch13/maet_1306.png)
 
-Figure 13-6. Bridge connecting two blockchains
+图 13-6. 连接两个区块链的桥
 
-There are many different models for bridging tokens from one chain to another. Every bridge uses a specific model. The most common are as follows:
+有很多不同的模型可以将代币从一条链桥接到另一条链。每个桥都使用一个特定的模型。最常见的是以下几种：
 
-**Wrapped-token bridges (lock and mint)**
+**包装代币桥（锁定和铸造）**
 
-In this model, a bridge receives tokens on chain A, locks them in a smart contract, and mints a wrapped (or "proprietary") token on chain B. The wrapped token acts as a receipt representing the locked tokens. To retrieve the original tokens, the wrapped token is burned on chain B, unlocking the tokens on chain A.
+在此模型中，桥接收链 A 上的代币，将它们锁定在智能合约中，并在链 B 上铸造包装（或“专有”）代币。包装代币充当代表锁定代币的收据。要检索原始代币，包装代币会在链 B 上被销毁，从而解锁链 A 上的代币。
 
-For example, suppose you use the "Mastering Bridge" to transfer ETH from Ethereum to BSC. You send ETH to the bridge's smart contract on Ethereum, and the bridge mints a wrapped token, such as "MasteringETH," on BSC. To return to Ethereum, you burn MasteringETH on BSC, and the bridge releases the original ETH. These wrapped tokens often need to be swapped on a DEX to obtain the native token on chain B.
+例如，假设您使用“掌握桥”将 ETH 从以太坊转移到 BSC。您将 ETH 发送到以太坊上桥的智能合约，并且桥在 BSC 上铸造一个包装代币，例如“MasteringETH”。要返回以太坊，您在 BSC 上销毁 MasteringETH，桥会释放原始 ETH。这些包装代币通常需要在 DEX 上进行交换才能获得链 B 上的本地代币。
 
-**Mint and burn**
+**铸造和销毁**
 
-This model is commonly used by projects that control their token's minting and burning functions. Instead of locking tokens, the bridge burns tokens on chain A (reducing the supply) and mints an equivalent amount on chain B. This requires the project to have authority over the token's smart contract. For example, a project could burn ETH-based tokens on Ethereum and mint the same token on BSC, maintaining the total supply across chains.
+此模型通常由控制其代币铸造和销毁功能的项目使用。桥不是锁定代币，而是在链 A 上销毁代币（减少供应），并在链 B 上铸造等量的代币。这要求项目对代币的智能合约具有控制权。例如，一个项目可以销毁以太坊上的基于 ETH 的代币，并在 BSC 上铸造相同的代币，从而保持跨链的总供应量。
 
-**Liquidity bridges**
+**流动性桥**
 
-The most common type, liquidity bridges rely on pools of tokens on multiple chains. When you bridge a token, the bridge uses its liquidity to send you the equivalent token on the destination chain, typically for a fee. Unlike wrapped-token bridges, no new tokens are minted; the bridge already holds tokens on both chains.
+最常见的类型是流动性桥，它依赖于多个链上的代币池。当您桥接一个代币时，桥会使用其流动性在目标链上向您发送等效的代币，通常会收取费用。与包装代币桥不同，不会铸造任何新代币；桥已经在两条链上都持有代币。
 
-Following the earlier example, if you bridge ETH from Ethereum to BSC, you send ETH to the bridge on Ethereum. The bridge then releases ETH from its liquidity pool on BSC. If the bridge doesn't control minting, it must maintain sufficient liquidity on BSC to facilitate transfers. This model is popular because of its simplicity but depends on the bridge's ability to manage liquidity securely.
+按照前面的示例，如果您将 ETH 从以太坊桥接到 BSC，您会将 ETH 发送到以太坊上的桥。然后，桥从其 BSC 上的流动性池中释放 ETH。如果桥不控制铸造，它必须在 BSC 上保持足够的流动性以促进转移。此模型因其简单性而广受欢迎，但取决于桥安全管理流动性的能力。
 
-*Omnichain protocols*, discussed in Chapter 11 as cross-chain messaging protocols, extend the concept of cross-chain interactions by enabling seamless communication and interoperability across multiple blockchains simultaneously. These protocols aim to create a unified layer where different blockchains can interact without friction, allowing the transfer of assets, data, and even smart contract functionalities across chains. Figure 13-7 demonstrates a simple omnichain messaging protocol that allows users to initiate a swap on Ethereum and complete the swap, receiving the funds, on BSC.
+第 11 章中讨论的“全链协议”作为跨链消息传递协议，通过实现多个区块链之间的无缝通信和互操作性来扩展跨链交互的概念。这些协议旨在创建一个统一层，不同的区块链可以在没有摩擦的情况下进行交互，从而允许跨链传输资产、数据，甚至是智能合约功能。图 13-7 展示了一个简单的全链消息传递协议，该协议允许用户在以太坊上发起交换，并在 BSC 上完成交换并接收资金。
 
-![Omnichain protocol example](images/ch13/maet_1307.png)
+![全链协议示例](images/ch13/maet_1307.png)
 
-Figure 13-7. Omnichain protocol example
+图 13-7. 全链协议示例
 
-## (De)centralized Finance
+## (去)中心化金融
 
-Decentralization is always difficult to define, and more often than not, it's more of a way to express a desired outcome than to describe a reality. Most DeFi protocols are not truly decentralized; they often rely on addresses with significant privileges or decisions made by a core development team, creating a centralization of power within a supposedly decentralized system.
+去中心化始终难以定义，而且通常，它更多的是表达一种期望的结果，而不是描述现实。大多数 DeFi 协议并非真正去中心化； 它们通常依赖于具有重要权限的地址或核心开发团队做出的决策，从而在所谓的去中心化系统中创建了权力中心化。
 
-DeFi is still in its early stages, and it's up to early adopters to shape its future and steer it in the right direction. While decentralization is the objective, it's important to recognize that it is not always the current reality. Emerging markets like DeFi can benefit from some degree of centralization to make decisions and implement changes quickly. This centralized decision making can provide the agility needed to adapt and grow in a rapidly evolving environment.
+DeFi 仍处于早期阶段，早期采用者有责任塑造其未来并将其引向正确的方向。虽然去中心化是目标，但重要的是要认识到它并不总是当前的现实。像 DeFi 这样的新兴市场可以从一定程度的中心化中受益，以便做出决策并快速实施变更。这种集中的决策制定可以提供在快速发展的环境中适应和发展所需的敏捷性。
 
-As DeFi continues to mature, the objective should be to progressively reduce centralization and shift toward a more decentralized model. Early adopters are very significant in this transition, balancing the current need for efficiency and rapid decision making with the ultimate vision of decentralization. By understanding and addressing the inherent trade-offs, the DeFi community can guide the system's evolution to better align with its foundational principles of openness, transparency, and inclusivity.
+随着 DeFi 的不断成熟，其目标应该是逐步减少中心化，并转向更加去中心化的模型。早期采用者在这种转变中非常重要，他们需要在当前对效率和快速决策的需求与去中心化的最终愿景之间取得平衡。通过理解和解决固有的权衡，DeFi 社区可以引导系统的发展，使其更好地与其开放性、透明度和包容性的基本原则保持一致。
 
-## Risks and Challenges in DeFi
+## DeFi 中的风险和挑战
 
-DeFi comes with its own set of risks and challenges, which are often misunderstood by users, including experts. Every DeFi protocol carries specific economic risks and general smart contract risks. Additionally, depending on the degree of decentralization, there can be custodian risks or centralization problems.
+DeFi 具有自身的一系列风险和挑战，用户（包括专家）通常对这些风险和挑战存在误解。每个 DeFi 协议都带有特定的经济风险和一般的智能合约风险。此外，根据去中心化的程度，可能存在托管风险或中心化问题。
 
-Smart contract risks are easier to generalize: smart contracts can be hacked, and custodians can act maliciously or make mistakes. Economic risks are more complex and specific to each DeFi primitive or protocol. For example, the risk in a lending market is liquidation, which can sometimes occur wrongfully if the market does not use a proper oracle. The risk in providing liquidity to a DEX is impermanent loss. For stablecoins or liquid staking, the primary risk is the loss of the peg.
+智能合约风险更容易概括：智能合约可能会被黑客入侵，托管人可能会恶意行事或犯错误。经济风险更加复杂，并且特定于每个 DeFi 原语或协议。例如，借贷市场中的风险是清算，如果市场没有使用适当的预言机，有时可能会发生错误的清算。向 DEX 提供流动性的风险是无常损失。对于稳定币或流动性质押，主要风险是失去挂钩。
 
-Understanding all the risks involved with a DeFi protocol before using it is crucial. Beyond risks, DeFi faces significant challenges. Many protocols are forks of existing ones, attempting to "vampire attack" incumbents without offering real innovation. This not only fragments liquidity and users but also dilutes the overall effectiveness of the ecosystem.
+在使用 DeFi 协议之前，了解与之相关的所有风险至关重要。除了风险之外，DeFi 还面临着重大挑战。许多协议都是现有协议的分叉，试图“吸血鬼攻击”现有协议，但没有提供真正的创新。这不仅分散了流动性和用户，而且还降低了生态系统的整体有效性。
 
-Liquidity is essential for most protocols. While they may function well in a booming market, they often degrade significantly during downturns. Most DeFi protocols are not self-sufficient and tend to work only when usage is incentivized, either because users are not genuinely interested in the product or because the costs outweigh the gains.
+流动性对于大多数协议至关重要。虽然它们在蓬勃发展的市场中可能运行良好，但在经济低迷时期，它们通常会显着恶化。大多数 DeFi 协议不是自给自足的，并且往往仅在激励使用时才有效，要么是因为用户对产品不真正感兴趣，要么是因为成本超过收益。
 
-While DeFi shows some product-market fit, its future remains uncertain. It could evolve into a compelling piece of global infrastructure, which is the most likely outcome, or remain a niche market for a select group of users.
+虽然 DeFi 显示出一些适合市场的产品，但其未来仍然不确定。它可能会演变成一个引人注目的全球基础设施（这是最可能的结果），或者仍然是少数用户的利基市场。
 
-One significant challenge for DeFi is regulation. The regulatory environment varies greatly across countries and regulatory bodies, with most regulators opposing a fully decentralized system. While regulators cannot directly stop such systems—if a smart contract is immutable and deployed on chain, regulators cannot intervene directly—they can target developers and users, making it difficult for them to use these smart contracts.
+DeFi 的一个重大挑战是监管。不同国家和监管机构之间的监管环境差异很大，大多数监管机构反对完全去中心化的系统。虽然监管机构不能直接阻止此类系统——如果智能合约是不可变的并且部署在链上，监管机构不能直接干预——但他们可以针对开发人员和用户，使他们难以使用这些智能合约。
 
-A case in point is Tornado Cash, whose developer, Alexey Pertsev, was jailed for 64 months in the Netherlands. He was arrested in August 2022 on charges of money laundering, following the US Department of the Treasury's blocklisting of Tornado Cash for its alleged use by the North Korean hacking group Lazarus to launder illicit funds. The Tornado Cash protocol remains available, but its liquidity has significantly decreased, leading to a poorer user experience. Additionally, addresses using Tornado Cash are flagged on centralized exchanges, complicating its use.
+一个典型的例子是 Tornado Cash，其开发人员 Alexey Pertsev 在荷兰被判处 64 个月监禁。他于 2022 年 8 月被捕，罪名是洗钱，此前美国财政部将 Tornado Cash 列入黑名单，理由是据称朝鲜黑客组织 Lazarus 使用它来清洗非法资金。Tornado Cash 协议仍然可用，但其流动性已显着下降，导致用户体验较差。此外，使用 Tornado Cash 的地址会在中心化交易所被标记，从而使其使用变得复杂。
 
-Similar situations are occurring in other ecosystems. For example, developers of the Samourai Wallet have also faced legal actions. This pattern illustrates that while regulators cannot attack the blockchain itself, they can target its users and developers.
+类似的情况也发生在其他生态系统中。例如，Samourai Wallet 的开发人员也面临着法律诉讼。这种模式说明，虽然监管机构不能攻击区块链本身，但他们可以针对其用户和开发人员。
 
-> **Note**  
+> **注意**  
 >
-> Although the authors of this book may not have the legal expertise to fully understand the cases involving Samourai Wallet or Tornado Cash and other similar instances, we do not support legal actions taken against individuals for writing decentralized code. Code should remain free, and the creator of a tool should not be punished for its misuse by others. Hopefully, no more developers will have to face such unjust consequences.
+> 尽管本书的作者可能没有足够的法律专业知识来充分理解涉及 Samourai Wallet 或 Tornado Cash 以及其他类似情况的案件，但我们不支持对编写去中心化代码的个人采取的法律行动。代码应该保持自由，工具的创建者不应该因为他人滥用该工具而受到惩罚。希望不再有开发人员必须面对如此不公正的后果。
 
-## Conclusion
+## 结论
 
-DeFi enables users to be more flexible with their money, creating new opportunities and innovative financial primitives, such as flash loans. As an emerging market within the crypto space, DeFi is rapidly developing but has yet to find a proper market fit beyond token exchanges, stablecoins, and derivative creation.
+DeFi 户更加灵活地使用他们的资金，创造新的机会和创新的金融原语，例如闪电贷。作为加密货币领域中的一个新兴市场，DeFi 正在迅速发展，但尚未找到除代币交易、稳定币和衍生品创建之外的合适的市场。

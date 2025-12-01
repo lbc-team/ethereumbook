@@ -1,676 +1,675 @@
-# Chapter 15. Consensus
+# 第 15 章 共识
 
-Throughout this book we have talked about *consensus rules*—the rules that everyone must agree to for the system to operate in a decentralized yet deterministic manner. In computer science, the term *consensus* predates blockchains and is related to the broader problem of synchronizing state in distributed systems, such that different participants in a distributed system all (eventually) agree on a single system-wide state. This is called *reaching consensus*.
+在本书中，我们一直在讨论*共识规则*——每个人都必须同意的规则，以使系统以去中心化但确定的方式运行。在计算机科学中，*共识*一词早于区块链，并且与分布式系统中状态同步的更广泛问题相关，以便分布式系统中的不同参与者都（最终）对单一的系统范围状态达成一致。这被称为*达成共识*。
 
-When it comes to the core functions of decentralized record keeping and verification, it can become problematic to rely on trust alone to ensure that information derived from state updates is correct. This rather general challenge is particularly pronounced in decentralized networks because there is no central entity to decide what is true. The lack of a central decision-making entity is one of the main attractions of blockchain platforms because of the resulting capacity to resist censorship and the lack of dependence on authority for permission to access information. However, these benefits come at a cost: without a trusted arbitrator, any disagreements, deceptions, or differences need to be reconciled using other means. Consensus algorithms are the mechanism used to reconcile security and decentralization.
+当涉及到去中心化记录保存和验证的核心功能时，仅仅依靠信任来确保从状态更新中获取的信息是正确的可能会出现问题。这种相当普遍的挑战在去中心化网络中尤其突出，因为没有中心实体来决定什么是真实的。缺乏中心决策实体是区块链平台的主要吸引力之一，因为它具有抵抗审查的能力，并且无需依赖权威机构的许可即可访问信息。然而，这些好处是有代价的：如果没有可信的仲裁者，任何分歧、欺骗或差异都需要通过其他方式来解决。共识算法是用于协调安全性和去中心化的机制。
 
-In blockchains, consensus is a critical property of the system. Simply put, there is money at stake! So in the context of blockchains, consensus is about being able to arrive at a common state while maintaining decentralization. In other words, consensus is intended to produce a system of strict rules without rulers. There is no one person, organization, or group "in charge"; rather, power and control are diffused across a broad network of participants whose self-interest is served by following the rules and behaving honestly.
+在区块链中，共识是系统的一个关键属性。简而言之，存在金钱风险！因此，在区块链的背景下，共识是指在保持去中心化的同时能够达成共同状态。换句话说，共识旨在产生一个没有统治者的严格规则体系。没有一个人、组织或团体 "负责"；相反，权力和控制权分散在一个广泛的参与者网络中，他们的自身利益是通过遵守规则和诚实行事来实现的。
 
-The ability to come to consensus across a distributed network, under adversarial conditions, without centralizing control is the core principle of all open, public blockchains. To address this challenge and maintain the valued property of decentralization, the community continues to experiment with different models of consensus. This chapter explores these consensus models and their expected impact on smart contract blockchains such as Ethereum.
+在对抗性条件下，跨分布式网络达成共识，而无需中心化控制的能力，是所有开放、公共区块链的核心原则。为了应对这一挑战并保持去中心化的宝贵属性，社区不断尝试不同的共识模型。本章将探讨这些共识模型及其对以太坊等智能合约区块链的预期影响。
 
-> **Note**  
+> **注意**
 >
-> While consensus algorithms are an important part of how blockchains work, they operate at a foundational layer, far below the abstraction of smart contracts. In other words, most of the details of consensus are hidden from the writers of smart contracts. You don't need to know how they work to use Ethereum, any more than you need to know how routing works to use the internet.
+> 虽然共识算法是区块链工作方式的重要组成部分，但它们在基础层运行，远低于智能合约的抽象。换句话说，共识的大部分细节都对智能合约的编写者隐藏了。你不需要知道它们是如何工作的才能使用以太坊，就像你不需要知道路由是如何工作的才能使用互联网一样。
 
-## Principles of Consensus
+## 共识的原则
 
-In blockchain technology, particularly within Ethereum, understanding the principles of consensus helps us make sense of how the network maintains its integrity and operates effectively. To get a clearer picture of how it all works, let's walk through the core ideas.
+在区块链技术中，特别是以太坊中，理解共识的原则有助于我们理解网络如何维护其完整性并有效地运行。为了更清楚地了解这一切是如何运作的，让我们来看看核心思想。
 
-### Safety
+### 安全性
 
-In the context of consensus mechanisms, *safety* is about ensuring that the network consistently agrees on the blockchain's current state without error. This means avoiding problems like double-spending and transaction conflicts, maintaining consistency across the network. In a safe system, every node has an identical view of the history of the chain, effectively behaving like a centralized implementation that executes operations atomically one at a time.
+在共识机制的背景下，*安全性*是指确保网络在区块链的当前状态上始终如一地达成一致，且没有错误。这意味着避免诸如双重支付和交易冲突之类的问题，从而在整个网络中保持一致性。在一个安全的系统中，每个节点都具有相同的链历史视图，有效地表现得像一个集中式实现，一次原子地执行操作。
 
-### Finality
+### 最终性
 
-*Finality* is one of the most important safety features in Ethereum's consensus mechanism. It marks the point at which transactions are considered complete and irreversible, ensuring that once a transaction has been added to the blockchain, it cannot be altered or removed. This irreversible nature of transactions instills a high level of trust in the system, providing certainty to users that their transactions are permanently recorded.
+*最终性* 是以太坊共识机制中最重要的安全特性之一。它标志着交易被认为是完整且不可逆转的点，确保一旦交易被添加到区块链中，就不能被更改或删除。交易的这种不可逆转性在系统中建立高度的信任，为用户提供对其交易被永久记录的确定性。
 
-Basically, finality puts the idea of safety into action, turning it from just a concept into something practical. It ensures that even though different parts of the network might have their own local views, there exists a point of irrevocable agreement that makes the chain's history fixed and unchangeable.
+基本上，最终性将安全性的概念付诸行动，将其从一个概念转变为实际的东西。它确保即使网络的不同部分可能有自己的局部视图，也存在一个不可撤销的协议点，使链的历史固定且不可更改。
 
-### Liveness
+### 活跃性
 
-While safety ensures that nothing bad happens on the network, *liveness* guarantees that something good always happens, eventually. In other words, the Ethereum network will continue to process transactions and add new blocks, come what may.
+虽然安全性确保网络上不会发生任何不好的事情，但*活跃性* 保证好的事情最终总是会发生。换句话说，以太坊网络将继续处理交易并添加新区块，无论发生什么情况。
 
-From another perspective, liveness can also be understood in terms of availability. In practical terms, this means that whenever we submit a valid transaction to a node that is acting honestly within the network, we can expect the transaction to be included in a forthcoming block that contributes to the extension of the blockchain. This expectation of transaction inclusion and processing is necessary to achieve user trust and the overall efficacy of the Ethereum platform.
+从另一个角度来看，活跃性也可以从可用性的角度来理解。在实际操作中，这意味着每当我们向网络中诚实运行的节点提交有效交易时，我们都可以期望该交易被包含在即将到来的区块中，从而有助于区块链的扩展。这种对交易包含和处理的期望对于实现用户信任和以太坊平台的整体效用是必要的。
 
-### Block Trees and Forking
+### 区块树和分叉
 
-Designing a consensus protocol that is both safe and live under all circumstances is not possible—you have to favor one of the two. While the Ethereum consensus protocol offers both safety and liveness under good network conditions, it prioritizes liveness when things get chaotic. It does so through the concept of forking.
+设计一个在任何情况下既安全又活跃的共识协议是不可能的——你必须偏向其中一个。虽然以太坊共识协议在良好的网络条件下同时提供安全性和活跃性，但在情况混乱时，它会优先考虑活跃性。它通过分叉的概念来实现这一点。
 
-In a blockchain, every block (except for the special Genesis block) builds on and points to a parent block. Thus, we end up with a chain of blocks: a blockchain. On chains implementing forking consensus protocols, this linear condition is often not the case in practice: in real-world conditions, we can end up with something more like a block tree—as you can see in Figure 15-1—than a blockchain, and the goal of the consensus protocol is for all nodes on the network to agree on the same linear sequence of blocks.
+在区块链中，每个区块（除了特殊的创世区块）都建立在父区块之上并指向父区块。因此，我们最终得到一个区块链：一个区块链。在实施分叉共识协议的链上，这种线性条件在实践中通常不是这样：在现实世界的条件下，我们最终得到的东西更像是区块树——如图 15-1 所示——而不是区块链，共识协议的目标是让网络上的所有节点对相同的线性区块序列达成一致。
 
-![Block tree structure](images/ch15/maet_1501.png)
+![区块树结构](images/ch15/maet_1501.png)
 
-Figure 15-1. Block tree structure
+图 15-1. 区块树结构
 
-The various branches in the block tree are called *forks*. Forks happen naturally as a consequence of network and processing delays or client faults and malicious client behavior.
+区块树中的各种分支被称为 *分叉*。分叉自然而然地发生，因为网络和处理延迟或客户端故障和恶意客户端行为。
 
-If we were to consult nodes that are following different forks, they would give us different answers regarding the state of the system. Here lies the resilience of forking consensus protocols: instead of stopping entirely under unfavorable conditions, they fork. Eventually, we want every correct node on the network to agree on an identical linear view of history and hence a common view of the state of the system. It is the role of the protocol's *fork choice rule* to bring about this agreement: given a block tree and some decision criteria, the fork choice rule is designed to select, from all the available branches, the one that is most likely to eventually end up in the final linear, canonical chain. The downside of a forking protocol is that nodes following branches that don't end up in the canonical chain will eventually have to rewind their view of reality, reversing any recent transactions they have processed, in order to get onto the correct branch. This is called a *reorg* or *reversion* and is disruptive, so protocols aim to minimize it as much as possible.
+如果我们咨询遵循不同分叉的节点，它们会给我们关于系统状态的不同答案。这正是分叉共识协议的弹性所在：它们不会在不利条件下完全停止，而是会分叉。最终，我们希望网络上的每个正确节点都对历史记录有一个相同的线性视图，从而对系统状态有一个共同的视图。协议的 *分叉选择规则* 的作用是促成这种协议：给定一个区块树和一些决策标准，分叉选择规则旨在从所有可用的分支中选择最有可能最终出现在最终线性、规范链中的分支。分叉协议的缺点是，遵循最终没有进入规范链的分支的节点最终必须回溯它们对现实的看法，反转它们最近处理的任何交易，以便进入正确的分支。这被称为 *重组* 或 *回滚*，它具有破坏性，因此协议旨在尽可能地减少它。
 
-Now we can understand the power of finality in Ethereum consensus protocol: forking is a powerful means to liveness, but for the network to be usable, this flexibility must be balanced by some safety guarantees.
+现在我们可以理解以太坊共识协议中最终性的力量：分叉是实现活跃性的强大手段，但为了使网络可用，这种灵活性必须通过一些安全保证来平衡。
 
-## Consensus via Proof of Work
+## 通过工作量证明达成共识
 
-The creator of the original blockchain, Bitcoin, invented a consensus algorithm based on *proof of work* (PoW). Arguably, PoW is the most important invention underpinning Bitcoin. The colloquial term for PoW is *mining*, which creates a misunderstanding about the primary purpose of consensus. Often, people assume that the purpose of mining is to create new currency since the purpose of real-world mining is to extract precious metals or other resources. Rather, the real purpose of mining (and all other consensus models) is to secure the blockchain while keeping control over the system decentralized and diffused across as many participants as possible. The reward of newly minted currency is an incentive to those who contribute to the security of the system: a means to an end. In that sense, the reward is the means, and decentralized security is the end.
+最初的区块链比特币的创造者发明了一种基于*工作量证明* (PoW) 的共识算法。可以说，PoW 是支撑比特币的最重要的发明。PoW 的口语化术语是 *挖矿*，这会产生对共识的主要目的的误解。通常，人们假设挖矿的目的是创造新的货币，因为现实世界挖矿的目的是提取贵金属或其他资源。相反，挖矿（以及所有其他共识模型）的真正目的是在保持对系统控制的去中心化和尽可能多地扩散到参与者的同时，保护区块链的安全。新铸造货币的奖励是对那些为系统安全做出贡献的人的一种激励：一种达到目的的手段。从这个意义上讲，奖励是手段，而去中心化的安全性是目的。
 
-In PoW consensus, there is also a corresponding "punishment," which is the cost of energy required to participate in mining. This significant energy consumption isn't a flaw; it's key to a deliberate security and incentive design. If participants do not follow the rules and earn the reward, they risk the funds they have already spent on electricity to mine. Thus, PoW consensus is a careful balance of risk and reward that drives participants to behave honestly out of self-interest.
+在 PoW 共识中，还存在相应的 "惩罚"，即参与挖矿所需的能源成本。这种巨大的能源消耗不是缺陷，而是深思熟虑的安全和激励设计中的关键。如果参与者不遵守规则并获得奖励，他们将面临已经花费在挖矿电力上的资金的风险。因此，PoW 共识是风险和回报的仔细平衡，它驱使参与者出于自身利益而诚实地行事。
 
-Ethereum started as a PoW blockchain following Bitcoin's example, in that it used a PoW algorithm with the same basic incentive system for the same basic goal: securing the blockchain while decentralizing control. Ethereum's PoW algorithm was slightly different from Bitcoin's and was called *Ethash*.
+以太坊最初是一个 PoW 区块链，遵循比特币的例子，因为它使用了一种 PoW 算法，该算法具有相同的基本激励系统，旨在实现相同的基本目标：在去中心化控制的同时保护区块链的安全。以太坊的 PoW 算法与比特币的略有不同，被称为 *Ethash*。
 
-### Ethash: Ethereum's PoW Algorithm
+### Ethash：以太坊的 PoW 算法
 
-Before Ethereum transitioned to PoS, it relied on a PoW algorithm called Ethash. It used an evolution of the Dagger-Hashimoto algorithm, which is a combination of Vitalik Buterin's Dagger algorithm and Thaddeus Dryja's Hashimoto algorithm. Ethash is dependent on the generation and analysis of a large dataset, known as a *directed acyclic graph* (or, more simply, "the DAG"). The DAG had an initial size of about 1 GB and continued to slowly and linearly grow, being updated once every epoch (30,000 blocks, or roughly 125 hours).
+在以太坊过渡到 PoS 之前，它依赖于一种名为 Ethash 的 PoW 算法。它使用了 Dagger-Hashimoto 算法的演进版本，该算法是 Vitalik Buterin 的 Dagger 算法和 Thaddeus Dryja 的 Hashimoto 算法的组合。Ethash 依赖于大型数据集的生成和分析，该数据集被称为 *有向无环图*（或更简单地说，"DAG"）。DAG 的初始大小约为 1 GB，并继续缓慢而线性地增长，每 epoch（30,000 个区块，或大约 125 小时）更新一次。
 
-The purpose of the DAG was to make the Ethash PoW algorithm dependent on maintaining a large, frequently accessed data structure. This in turn was intended to make Ethash ASIC resistant, which means that it was more difficult to make application-specific integrated circuit (ASIC) mining equipment that is orders of magnitude faster than a fast GPU. Ethereum's founders wanted to avoid centralization in PoW mining, where those with access to specialized silicon-fabrication factories and big budgets could dominate the mining infrastructure and undermine the security of the consensus algorithm.
+DAG 的目的是使 Ethash PoW 算法依赖于维护一个大型、频繁访问的数据结构。这反过来又旨在使 Ethash 具有抗 ASIC 性，这意味着制造比快速 GPU 快几个数量级的专用集成电路 (ASIC) 挖矿设备更加困难。以太坊的创始人希望避免 PoW 挖矿的中心化，在这种中心化中，那些可以访问专用硅制造工厂和巨额预算的人可以主导挖矿基础设施并破坏共识算法的安全性。
 
-Using consumer-level GPUs to carry out the PoW on the Ethereum network meant that more people around the world could participate in the mining process. A larger number of independent miners meant that the mining power was more decentralized, which meant a situation like in Bitcoin, where much of the mining power is concentrated in the hands of a few large, industrial mining operations, could be avoided. The downside of the use of GPUs for mining was that it precipitated a worldwide shortage of GPUs in 2017, causing their price to skyrocket and an outcry from gamers. This led to purchase restrictions at retailers, limiting buyers to one or two GPUs per customer.
+使用消费级 GPU 在以太坊网络上执行 PoW 意味着世界上更多的人可以参与挖矿过程。更多的独立矿工意味着挖矿能力更加去中心化，这意味着可以避免像比特币那样的情况，在比特币中，大部分挖矿能力集中在少数大型工业挖矿运营商手中。使用 GPU 进行挖矿的缺点是，它在 2017 年引发了全球 GPU 短缺，导致其价格飞涨，并引起游戏玩家的强烈抗议。这导致零售商的购买限制，将买家限制为每位客户一两个 GPU。
 
-Until 2017, the threat of ASIC miners on the Ethereum network was largely non-existent. Using ASICs for Ethereum required the design, manufacture, and distribution of highly customized hardware. Producing them required a considerable investment of time and money. The Ethereum developers' long-expressed plans to move to a PoS consensus algorithm, now realized, likely kept ASIC suppliers from targeting the Ethereum network for a long time.
+在 2017 年之前，ASIC 矿工对以太坊网络的威胁在很大程度上是不存在的。将 ASIC 用于以太坊需要设计、制造和分发高度定制的硬件。生产它们需要大量的时间和金钱。以太坊开发者长期以来表达的迁移到 PoS 共识算法的计划，现在已经实现，这很可能使 ASIC 供应商长期以来没有将目标锁定在以太坊网络上。
 
-## Consensus via Proof of Stake
+## 通过权益证明达成共识
 
-Historically, PoW wasn't the first consensus algorithm to be proposed. Before it, many researchers explored ideas based on financial or reputational stake. Even earlier still, some of the first consensus models were permissioned: validators were selected through authority or identity, not open competition. *Practical Byzantine fault tolerance* (PBFT), for example, requires a fixed or curated set of validators, a model that still underlies many traditional distributed systems today.
+从历史上看，PoW 并不是第一个被提出的共识算法。在此之前，许多研究人员探索了基于金融或声誉权益的想法。甚至更早的时候，一些最早的共识模型是被许可的：验证者是通过权威或身份选择的，而不是公开竞争。例如，*实用拜占庭容错*（PBFT）需要一组固定的或经过策划的验证者，这种模型至今仍是许多传统分布式系统的基础。
 
-One of the major breakthroughs of PoW-based consensus was that it made participation permissionless: anyone with the available computational power could contribute and get rewarded, without needing approval to join. That was a huge win for decentralization. In a sense, PoW was invented as a permissionless alternative to the more closed models.
+基于 PoW 的共识的主要突破之一是，它使任何人都可以无许可地参与：任何具有可用计算能力的人都可以贡献并获得奖励，而无需获得加入的批准。这对去中心化来说是一个巨大的胜利。从某种意义上说，PoW 的发明是为了替代更封闭的许可模型。
 
-Following Bitcoin's success, many blockchains adopted PoW. But the explosion of research into consensus reignited interest in PoS and led to major advances. From the beginning, Ethereum's founders hoped to eventually migrate to PoS. In fact, Ethereum's original PoW chain included a built-in handicap, the so-called *difficulty bomb*, which was designed to slowly make mining harder over time, forcing the system toward the eventual transition. Ethereum's version of PoS, while permissionless, has some conceptual roots in the earlier authority-based systems: here, identity and participation come from putting down stake. But since anyone with ETH can do so, it preserves the open-access spirit of Nakamoto's design.
+继比特币的成功之后，许多区块链都采用了 PoW。但是对共识的爆炸式研究重新燃起了对 PoS 的兴趣，并导致了重大进展。从一开始，以太坊的创始人就希望最终迁移到 PoS。事实上，以太坊最初的 PoW 链包含了一个内置的障碍，即所谓的 *难度炸弹*，它旨在随着时间的推移慢慢地使挖矿变得更加困难，从而迫使系统朝着最终的过渡方向发展。以太坊的 PoS 版本虽然是无许可的，但在早期基于权威的系统中具有一些概念上的根源：在这里，身份和参与来自于投入权益。但是由于任何拥有 ETH 的人都可以这样做，因此它保留了中本聪设计的开放访问精神。
 
-In general, a PoS algorithm works as follows. The blockchain keeps track of a set of validators, and anyone who holds the blockchain's base cryptocurrency (ether, in Ethereum's case) can become a validator by sending a special type of transaction that locks up their ether into a deposit. Validators take turns proposing and voting on the next valid block, and the weight of each validator's vote depends on the size of their deposit (i.e., stake). Validators earn small rewards proportional to their stake when they participate correctly in the protocol. If they make mistakes, like publishing inaccurate or late attestations, they can incur small penalties, roughly on the same scale as the rewards. But there's a much more serious consequence called *slashing*, which happens only when a validator is provably malicious—for example, by publishing conflicting attestations or equivocating blocks. Thus, PoS forces validators to act honestly and follow the consensus rules via a system of reward and punishment. The major difference between PoS and PoW is that the punishment in PoS is intrinsic to the blockchain (e.g., loss of staked ether), whereas in PoW the punishment is extrinsic (e.g., loss of funds spent on electricity).
+一般来说，PoS 算法的工作原理如下。区块链跟踪一组验证者，任何拥有区块链的基础加密货币（以太坊中的以太币）的人都可以通过发送一种特殊的交易来锁定他们的以太币到存款中，从而成为验证者。验证者轮流提议和投票选出下一个有效区块，每个验证者的投票权重取决于其存款（即权益）的大小。当验证者正确参与协议时，他们会获得与其权益成比例的小额奖励。如果他们犯了错误，例如发布不准确或迟到的证明，他们可能会受到小额惩罚，其规模大致与奖励相同。但是，有一种更严重的后果叫做 *削减*，它只发生在验证者被证明是恶意的情况下——例如，通过发布相互冲突的证明或含糊不清的区块。因此，PoS 通过奖励和惩罚系统迫使验证者诚实行事并遵守共识规则。PoS 和 PoW 之间的主要区别在于，PoS 中的惩罚是区块链固有的（例如，损失质押的以太币），而 PoW 中的惩罚是外在的（例如，损失花费在电力上的资金）。
 
-Since Ethereum was launched in 2015, there was the intention to transition to a PoS consensus protocol. The first concrete step in that direction came on December 1, 2020, with the launch of the Beacon Chain. Initially, the Beacon Chain was an empty blockchain that let everyone become a validator by depositing 32 ETH into a specific deposit contract and handled only its internal consensus of validators and their respective balances. At that time, the Ethereum blockchain was still using Ethash as its consensus protocol.
+自 2015 年以太坊推出以来，就打算过渡到 PoS 共识协议。朝这个方向迈出的第一个具体步骤是在 2020 年 12 月 1 日推出的信标链。最初，信标链是一个空的区块链，它允许每个人通过将 32 ETH 存入特定的存款合约来成为验证者，并且仅处理其验证者及其各自余额的内部共识。当时，以太坊区块链仍然使用 Ethash 作为其共识协议。
 
-On September 15, 2022, the Merge hard fork occurred, and the Beacon Chain, with its own set of validators, extended its PoS-based consensus protocol to the Ethereum main blockchain, effectively ending the use of Ethash. However, some limitations remained, including the inability for validators to withdraw their capital and leave the validator set. These issues were fully resolved on April 12, 2023, with the Shapella update, which completed the work of transitioning Ethereum from a PoW to a PoS consensus protocol.
+2022 年 9 月 15 日，发生了合并硬分叉，信标链及其自身的一组验证者将其基于 PoS 的共识协议扩展到以太坊主区块链，从而有效地结束了 Ethash 的使用。但是，仍然存在一些限制，包括验证者无法提取其资本并离开验证者集。这些问题已于 2023 年 4 月 12 日通过 Shapella 更新完全解决，该更新完成了将以太坊从 PoW 过渡到 PoS 共识协议的工作。
 
-The PoS consensus protocol used by Ethereum is called *Gasper*. In the following sections, we will explore how it works, starting with basic terminology and progressing to the fork choice rule (LMD-GHOST) and finality gadget (Casper FFG). We will conclude with an example to clarify the theoretical concepts that we have discussed.
+以太坊使用的 PoS 共识协议称为 *Gasper*。在以下部分中，我们将探讨它是如何工作的，从基本术语开始，然后发展到分叉选择规则（LMD-GHOST）和 finality gadget (Casper FFG)。最后，我们将通过一个示例来说明我们讨论的理论概念。
 
-## PoS Terminology
+## PoS 术语
 
-In this section, we'll focus on Ethereum PoS consensus components and terminology.
+在本节中，我们将重点关注以太坊 PoS 共识组件和术语。
 
-### Nodes and Validators
+### 节点和验证者
 
-*Nodes* form the backbone of the Ethereum network. They communicate with one another and are responsible for validating consensus adherence. *Validators*, which are responsible for proposing and voting on new blocks, are attached to these nodes, but despite what the name might imply, they don't actually validate the blocks themselves. Instead, it's the node software that checks whether blocks and transactions follow the protocol rules. A single node can host multiple validators, and validator duties are carried out by running both an execution client and a consensus client. We'll see exactly what those duties are in the next sections.
+*节点* 构成了以太坊网络的主干。他们彼此通信，并负责验证对共识的遵守情况。*验证者* 负责提议和投票选出新区块，它们连接到这些节点上，但尽管名称可能暗示，但它们实际上并不验证区块本身。相反，是节点软件检查区块和交易是否遵循协议规则。单个节点可以托管多个验证者，而验证者的职责是通过运行执行客户端和共识客户端来执行的。我们将在后面的章节中看到这些职责到底是什么。
 
-One peculiar property of PoS to keep in mind is that the set of active validators is known: this will be key to achieving finality since we can identify when we have reached a majority vote of participants.
+要记住 PoS 的一个特殊属性是，活跃验证者的集合是已知的：这将是实现最终性的关键，因为我们可以确定何时已经达到了参与者的大多数投票。
 
-### Blocks and Attestations
+### 区块和证明
 
-Strict time management is an important property of Ethereum's PoS. The two key intervals in PoS are the *slot*, which is exactly 12 seconds, and the *epoch*, which spans 32 slots.
+严格的时间管理是以太坊 PoS 的一个重要属性。PoS 中的两个关键间隔是 *slot*，它正好是 12 秒，而 *epoch*，它跨越 32 个 slot。
 
-At every slot, exactly one validator is selected to propose a block. During every epoch, every validator gets to share its view of the world exactly once, in the form of an *attestation*. An attestation contains votes for the head of the chain that will be used by the LMD-GHOST protocol and votes for checkpoints that will be used by the Casper FFG protocol, where FFG stands for "Friendly Finality Gadget." Attestation sharing is bandwidth intensive, so it's distributed across each epoch instead of every block to spread the necessary workload and keep it manageable.
+在每个 slot 中，都会选择一个验证者来提议一个区块。在每个 epoch 期间，每个验证者都会以 *证明* 的形式分享他们对世界的看法一次。证明包含对链头的投票，这些投票将由 LMD-GHOST 协议使用，以及对将由 Casper FFG 协议使用的检查点的投票，其中 FFG 代表 "Friendly Finality Gadget"。证明共享是带宽密集型的，因此它分布在每个 epoch 中，而不是每个区块中，以分散必要的工作量并使其易于管理。
 
-The protocol incentivizes block and attestation production and accuracy via a system of rewards and penalties for validators, but it tolerates empty slots and attestations, which can happen for both organic (e.g., a node went offline) and profit-driven reasons. We will expand on this in the later section "Timing Games".
+该协议通过奖励和惩罚验证者的系统来激励区块和证明的生产和准确性，但它容忍空缺的 slot 和证明，这可能是出于有机原因（例如，节点离线）和利润驱动的原因。我们将在后面的 "Timing Games" 章节中对此进行扩展。
 
 ## LMD-GHOST
 
-LMD-GHOST is the main part of the Ethereum consensus protocol: it's the fork choice rule algorithm. It selects the latest block a node should consider valid in its local view of the blockchain. This block is also called the *head of the chain*.
+LMD-GHOST 是以太坊共识协议的主要部分：它是分叉选择规则算法。它选择节点在其区块链本地视图中应视为有效的最新区块。该区块也称为 *链头*。
 
-To fully understand how it works, you must know some basic concepts of the Ethereum PoS protocol. In a classic PoW-based consensus protocol, entities responsible for creating new blocks and adding them to the chain (i.e., miners) don't need to adhere to any special requirement. If they publish a block that satisfies the PoW, then it gets accepted by the whole network. In Ethereum's PoS-based consensus protocol, validators must stake a big amount of ETH as collateral—right now, at least 32 ETH—just to enter into the validators set.
+要完全理解它是如何工作的，您必须了解以太坊 PoS 协议的一些基本概念。在经典的基于 PoW 的共识协议中，负责创建新区块并将其添加到链中的实体（即矿工）不需要遵守任何特殊要求。如果他们发布一个满足 PoW 的区块，那么它就会被整个网络接受。在以太坊基于 PoS 的共识协议中，验证者必须质押大量的 ETH 作为抵押品——目前至少 32 个 ETH——才能进入验证者集合。
 
-As we have previously briefly mentioned, validators have two main duties:
+正如我们之前简要提到的那样，验证者有两个主要职责：
 
-**Block proposing**
+**区块提议**
 
-Every slot, a validator is pseudorandomly selected to create and propose the next block for the chain.
+每个 slot，都会伪随机地选择一个验证者来创建和提议链的下一个区块。
 
-**Creating attestations**
+**创建证明**
 
-Every slot, a proportion of the validators is selected to publish their votes for the block that they think is the best head of the chain. This vote is then shared to every validator in the form of an attestation.
+每个 slot，都会选择一部分验证者来发布他们对他们认为是最佳链头的区块的投票。然后，这种投票以证明的形式分享给每个验证者。
 
-When a validator votes for a certain block inside an attestation, it's actually assigning it a score. This score is exactly equal to the amount of ETH the validator has staked at the moment they've published the attestation. But there's more: this vote is not only a vote for that block but also a vote for all ancestor blocks that live in the same fork of that selected block, as you can see in Figure 15-2.
+当验证者在证明中投票支持某个区块时，他们实际上是在为其分配一个分数。该分数完全等于验证者在发布证明时质押的 ETH 金额。但还有更多：这种投票不仅是对该区块的投票，也是对位于该选定区块同一分叉中的所有祖先区块的投票，如图 15-2 所示。
 
-![Vote propagation to ancestors](images/ch15/maet_1502.png)
+![投票传播到祖先](images/ch15/maet_1502.png)
 
-Figure 15-2. Vote propagation to ancestors
+图 15-2. 投票传播到祖先
 
-You could say that a vote for a block is propagated back to all its ancestors. To make this concept even clearer, we can assign a score to all branches. A *branch* is the link that connects a block with its parent, as shown in Figure 15-3.
+您可以说对某个区块的投票会传播回其所有祖先。为了使这个概念更加清晰，我们可以为所有分支分配一个分数。*分支* 是将一个区块与其父区块连接起来的链接，如图 15-3 所示。
 
-![Branch definition](images/ch15/maet_1503.png)
+![分支定义](images/ch15/maet_1503.png)
 
-Figure 15-3. Branch definition
+图 15-3. 分支定义
 
-We define the score of a branch to be the sum of the score of the block that roots that branch (block B in Figure 15-3) plus the score of all its direct descendant branches.
+我们将分支的分数定义为以该分支为根的区块的分数（图 15-3 中的区块 B）加上其所有直接后代分支的分数之和。
 
-Figure 15-4 shows a chain of blocks where each block has a score equal to 1. The branch connecting E to D has a score exactly equal to the score of block E because there are no descendant blocks. To compute the score of branch D→C, you need to add the score of block D to the score of all descendant branches. In this case, there's only one descendant branch: branch E→D. So it's 1 (score of block D) + 1 (score of branch E→D) = 2. Then we have branch C→B: its score is 1 (score of block C) + 2 (score of branch D→C) = 3. Here, we have a small fork with block C′; we need to assign a score to branch C′→B. Its score is just 1 (score of block C′) because block C′ has no direct descendant. Finally, we have branch B→A; to compute its score, we need to sum 1 (score of block B) + 1 (score of branch C′→B) + 3 (score of branch C→B) = 5.
+图 15-4 显示了一个区块链，其中每个区块的分数等于 1。连接 E 到 D 的分支的分数完全等于区块 E 的分数，因为没有后代区块。要计算分支 D→C 的分数，您需要将区块 D 的分数添加到所有后代分支的分数。在这种情况下，只有一个后代分支：分支 E→D。所以它是 1（区块 D 的分数）+ 1（分支 E→D 的分数）= 2。然后我们有分支 C→B：它的分数是 1（区块 C 的分数）+ 2（分支 D→C 的分数）= 3。在这里，我们有一个带有区块 C' 的小分叉；我们需要为分支 C'→B 分配一个分数。它的分数只有 1（区块 C' 的分数），因为区块 C' 没有直接后代。最后，我们有分支 B→A；要计算它的分数，我们需要将 1（区块 B 的分数）+ 1（分支 C'→B 的分数）+ 3（分支 C→B 的分数）相加 = 5。
 
-![Branch score calculation example](images/ch15/maet_1504.png)
+![分支分数计算示例](images/ch15/maet_1504.png)
 
-Figure 15-4. Branch score calculation example
+图 15-4. 分支分数计算示例
 
-Figure 15-5 contains a more complex scenario with several forks where each block has a different score. Look at it and make sure you understand how the score of each branch is computed.
+图 15-5 包含一个更复杂的场景，其中有几个分叉，每个区块都有不同的分数。看看它，确保您理解了每个分支的分数是如何计算的。
 
-![Complex branch scoring](images/ch15/maet_1505.png)
+![复杂的分支评分](images/ch15/maet_1505.png)
 
-Figure 15-5. Complex branch scoring
+图 15-5. 复杂的分支评分
 
-After the last example, it should be clear that the score of a block not only influences that single block but also all its ancestors as it gets propagated back to all previous branches. The idea is that if a validator votes (in the form of an attestation) for a block to be the head of the chain, it's also considering all its ancestors valid and part of the correct chain.
+在看完上一个示例之后，应该很清楚，一个区块的分数不仅影响了该单个区块，而且还影响了它的所有祖先，因为它会传播回所有先前的分支。这个想法是，如果验证者投票（以证明的形式）支持某个区块成为链头，那么它也会认为它的所有祖先都是有效的，并且是正确链的一部分。
 
-Now, we can finally go into the details of how LMD-GHOST really works and how it selects the block to be considered the head of the chain. Let's start by analyzing its name. LMD-GHOST is made up of two acronyms: *latest message driven* and *greediest heaviest observed subtree*.
+现在，我们终于可以深入了解 LMD-GHOST 真正的工作原理以及它如何选择要视为链头的区块的细节了。让我们从分析它的名称开始。LMD-GHOST 由两个首字母缩写组成：*latest message driven* 和 *greediest heaviest observed subtree*。
 
-### Latest Message Driven
+### 最新消息驱动
 
-To assign a score to each block and branch, you need to consider only the most recent attestation of each validator. That means that if you receive two attestations from a validator V, then you don't have to count them twice; you need to check which one is the most recent and discard the other one.
+要为每个区块和分支分配一个分数，您需要只考虑每个验证者的最新证明。这意味着，如果您收到来自验证者 V 的两个证明，那么您不必对它们进行两次计数；您需要检查哪一个是最近的，并丢弃另一个。
 
-Figure 15-6 shows a validator that publishes an attestation on block B in which they share the fact that they think block B is the head of the chain. Then, at a later time during block F, the validator is selected again to post a new attestation in which they express their preference for block F as the new head of the chain. When that validator posts the new attestation at block F, other validators need to discard the old one (published during block B) and consider only the most recent.
+图 15-6 显示了一个验证者在区块 B 上发布了一个证明，其中他们分享了他们认为区块 B 是链头的事实。然后，稍后在区块 F 期间，该验证者再次被选中发布一个新的证明，其中他们表达了他们对区块 F 作为新链头的偏好。当该验证者在区块 F 上发布新的证明时，其他验证者需要丢弃旧的证明（在区块 B 期间发布），并且只考虑最新的证明。
 
-![Latest message driven example](images/ch15/maet_1506.png)
+![最新消息驱动示例](images/ch15/maet_1506.png)
 
-Figure 15-6. Latest message driven example
+图 15-6. 最新消息驱动示例
 
-### Greediest Heaviest Observed Subtree
+### 最贪婪的最重观察子树
 
-GHOST is the key aspect of the fork choice rule. The head block is the block with no further descendants that is part of the fork with the highest vote.
+GHOST 是分叉选择规则的关键方面。头区块是没有进一步后代的区块，它是具有最高投票的分叉的一部分。
 
-Let's see it in practice to better understand how LMD-GHOST works in a real scenario. Figure 15-7 represents the same scenario we used previously.
+让我们在实践中看看它，以更好地理解 LMD-GHOST 如何在实际场景中工作。图 15-7 表示我们之前使用的相同场景。
 
-![LMD-GHOST scenario](images/ch15/maet_1507.png)
+![LMD-GHOST 场景](images/ch15/maet_1507.png)
 
-Figure 15-7. LMD-GHOST scenario
+图 15-7. LMD-GHOST 场景
 
-LMD-GHOST always starts from an initial block that is considered part of the finalized chain. Initially, that's the Genesis block, but with the full PoS-based Ethereum consensus protocol, it keeps getting updated with the last justified checkpoint block—that's terminology that we'll explore in "Casper FFG: The Finality Gadget". It's not crucial if you don't know what a justified checkpoint is yet; you just need to know that there's always a starting block.
+LMD-GHOST 始终从被认为是最终链一部分的初始区块开始。最初，那是创世区块，但使用完全基于 PoS 的以太坊共识协议，它会不断地使用上一个经过验证的检查点区块进行更新——这是我们将在 "Casper FFG：最终性小工具" 中探讨的术语。如果您还不知道什么是经过验证的检查点，那并不重要；您只需要知道始终有一个起始区块。
 
-In this example, block A is the initial block. Let's assume we're a validator who needs to cast an attestation or who is selected to propose the next block. We need to run LMD-GHOST to know which block is the head of the chain so that we can publish the attestation accordingly or we can build the next block on top of the correct previous head block. We've already collected other validators' attestations up to now, only considering the most recent one for every validator, following the LMD rule of the protocol. So we have the score of all blocks, made up as the sum of the score that each validator gave to each of them.
+在此示例中，区块 A 是初始区块。假设我们是一个需要发布证明或被选中提议下一个区块的验证者。我们需要运行 LMD-GHOST 以了解哪个区块是链头，以便我们可以相应地发布证明，或者我们可以在正确的前一个头区块之上构建下一个区块。到目前为止，我们已经收集了其他验证者的证明，仅考虑每个验证者的最新证明，遵循协议的 LMD 规则。因此，我们拥有了所有区块的分数，这些分数是由每个验证者给每个区块的分数之和构成的。
 
-At this point LMD-GHOST works in two steps:
+此时，LMD-GHOST 分为两个步骤工作：
 
-1. It assigns a score to all branches, following the same methodology we explained before by propagating backward the score of each block to all previous branches. Figure 15-8 shows the final scores of all branches.
+1. 它为所有分支分配一个分数，遵循我们之前解释的相同方法，通过向后传播每个区块的分数到所有先前的分支。图 15-8 显示了所有分支的最终分数。
 
-![Branch scores computed](images/ch15/maet_1508.png)
+![计算出的分支分数](images/ch15/maet_1508.png)
 
-Figure 15-8. Branch scores computed
+图 15-8. 计算出的分支分数
 
-2. Then, starting at the initial block, the GHOST part of the protocol greedily proceeds to select the branch with the highest score until it gets to a block with no descendants. That's the head block returned by the LMD-GHOST fork choice rule.
+2. 然后，从初始区块开始，协议的 GHOST 部分贪婪地选择具有最高分数的区块，直到到达没有后代的区块。这是 LMD-GHOST 分叉选择规则返回的头区块。
 
-Let's see this running step-by-step in our example. LMD-GHOST starts at initial block A and immediately goes to block B by following branch B→A as there are no alternative branches to choose from, as shown in Figure 15-9.
+让我们在我们的示例中逐步运行此过程。LMD-GHOST 从初始区块 A 开始，立即转到区块 B，因为没有其他分支可供选择，如图 15-9 所示。
 
-![LMD-GHOST step 1](images/ch15/maet_1509.png)
+![LMD-GHOST 步骤 1](images/ch15/maet_1509.png)
 
-Figure 15-9. LMD-GHOST step 1
+图 15-9. LMD-GHOST 步骤 1
 
-Now, there are two branches to choose from:
+现在，有两个分支可供选择：
 
-- Branch C→B with a score equal to 8
-- Branch D→B with a score equal to 6
+- 分支 C→B，分数为 8
+- 分支 D→B，分数为 6
 
-GHOST greedily selects branch C→B since it's the one with the highest score, as shown in Figure 15-10. Note that it doesn't matter that block D has a higher score than block C because LMD-GHOST doesn't consider the score of a single block but rather the score of the entire fork that block lives in.
+GHOST 贪婪地选择分支 C→B，因为它具有最高分数，如图 15-10 所示。请注意，区块 D 的分数高于区块 C 并不重要，因为 LMD-GHOST 不考虑单个区块的分数，而是考虑区块所在的整个分叉的分数。
 
-![LMD-GHOST step 2](images/ch15/maet_1510.png)
+![LMD-GHOST 步骤 2](images/ch15/maet_1510.png)
 
-Figure 15-10. LMD-GHOST step 2
+图 15-10. LMD-GHOST 步骤 2
 
-We now have two different branches to choose from:
+我们现在有两个不同的分支可供选择：
 
-- Branch E→C with a score equal to 4
-- Branch F→C with a score equal to 3
+- 分支 E→C，分数为 4
+- 分支 F→C，分数为 3
 
-GHOST selects branch E→C, as shown in Figure 15-11.
+GHOST 选择分支 E→C，如图 15-11 所示。
 
-![LMD-GHOST step 3](images/ch15/maet_1511.png)
+![LMD-GHOST 步骤 3](images/ch15/maet_1511.png)
 
-Figure 15-11. LMD-GHOST step 3
+图 15-11. LMD-GHOST 步骤 3
 
-At this point, we have only one branch to choose from, branch H→E, so that's the one selected by GHOST, as shown in Figure 15-12.
+此时，我们只有一个分支可供选择，即分支 H→E，因此这是 GHOST 选择的分支，如图 15-12 所示。
 
-![LMD-GHOST step 4](images/ch15/maet_1512.png)
+![LMD-GHOST 步骤 4](images/ch15/maet_1512.png)
 
-Figure 15-12. LMD-GHOST step 4
+图 15-12. LMD-GHOST 步骤 4
 
-Block H has no descendants. LMD-GHOST stops and returns it as the new head block of the chain.
+区块 H 没有后代。LMD-GHOST 停止并将其作为链的新头区块返回。
 
-### Incentives
+### 激励措施
 
-LMD-GHOST offers a variety of explicit incentives for validators who strictly follow the rules, and punishments for those who act maliciously. In this section, we'll explore how it prevents malicious actors from breaking the rules and rewards benevolent ones.
+LMD-GHOST 为严格遵守规则的验证者提供了各种明确的激励措施，并为恶意行为者提供了惩罚。在本节中，我们将探讨它是如何阻止恶意行为者违反规则并奖励仁慈行为者的。
 
-Validators need to perform two different duties:
+验证者需要执行两个不同的职责：
 
-- Proposing blocks
-- Creating attestations
+- 提议区块
+- 创建证明
 
-For each of these, LMD-GHOST includes several ways to make sure everyone behaves according to the rules.
+对于每一个职责，LMD-GHOST 都包含多种方法来确保每个人都按照规则行事。
 
-#### Proposing blocks
+#### 提议区块
 
-When a validator is selected to propose a new block to the chain, it must create only a single valid block. By doing that, the validator earns the sum of the priority fees of all transactions included into the block they have created, plus some newly minted ETH, as you can see in Figure 15-13.
+当验证者被选择向链中提议一个新区块时，它必须只创建一个有效的区块。通过这样做，验证者将获得他们创建的区块中包含的所有交易的优先费用之和，加上一些新铸造的 ETH，如图 15-13 所示。
 
-![Block proposal reward](images/ch15/maet_1513.png)
+![区块提议奖励](images/ch15/maet_1513.png)
 
-Figure 15-13. Block proposal reward
+图 15-13. 区块提议奖励
 
-If the validator tries to cheat by creating more than one block, the protocol explicitly punishes them by slashing a proportion of their stake. In fact, to become part of the validator set, you must stake some ETH as collateral (at least 32 ETH). This stake is (also) necessary so that the protocol can punish you by slashing—that is, removing—some ETH from it, as shown in Figure 15-14.
+如果验证者试图通过创建多个区块作弊，协议会明确地通过削减一部分他们的质押来惩罚他们。事实上，要成为验证者集合的一部分，您必须质押一些 ETH 作为抵押品（至少 32 ETH）。此质押（也）是必要的，以便协议可以通过削减来惩罚您——即，从中删除一些 ETH，如图 15-14 所示。
 
-![Block proposal slashing](images/ch15/maet_1514.png)
+![区块提议削减](images/ch15/maet_1514.png)
 
-Figure 15-14. Block proposal slashing
+图 15-14. 区块提议削减
 
-> **Note**  
+> **注意**
 >
-> It's interesting to note here that the explicit punishment is a big difference between Ethereum's PoS consensus protocol and Bitcoin's PoW. Bitcoin miners get rewarded if their block becomes part of the heaviest chain. If they create more than one block for a single block number, there's no explicit punishment.
+> 这里值得注意的是，明确的惩罚是以太坊 PoS 共识协议和比特币 PoW 之间的巨大差异。如果比特币矿工的区块成为最重链的一部分，他们会获得奖励。如果他们为一个区块号创建了多个区块，则没有明确的惩罚。
 >
-> You may wonder why. It's because PoW-based systems require some work to be made to create a valid block (the PoW itself). If a miner creates more than one block, they are just wasting time and money because eventually only one block will end up in the heaviest chain, so they'll get rewarded for only one of them.
+> 您可能想知道为什么。这是因为基于 PoW 的系统需要进行一些工作才能创建一个有效的区块（PoW 本身）。如果矿工创建了多个区块，他们只是在浪费时间和金钱，因为最终只有一个区块会进入最重链，因此他们只会获得其中一个区块的奖励。
 >
-> Ethereum PoS protocol doesn't require validators to perform a PoW to create a valid block. That means that creating more than a single block is almost free for validators. That's why we need explicit punishment for anyone who tries to cheat in this way.
+> 以太坊 PoS 协议不需要验证者执行 PoW 才能创建有效的区块。这意味着创建多个区块对于验证者来说几乎是免费的。这就是为什么我们需要对任何试图以这种方式作弊的人进行明确的惩罚。
 
-#### Creating attestations
+#### 创建证明
 
-When a validator is selected to share their view of the network in the form of an attestation, they must publish only a single, valid one. By doing that, they earn a small fee (much smaller than the one earned by the block proposer), as you can see in Figure 15-15.
+当验证者被选择以证明的形式分享他们对网络的看法时，他们必须只发布一个有效的证明。通过这样做，他们会获得少量费用（远小于区块提议者获得的费用），如图 15-15 所示。
 
-![Attestation reward](images/ch15/maet_1515.png)
+![证明奖励](images/ch15/maet_1515.png)
 
-Figure 15-15. Attestation reward
+图 15-15. 证明奖励
 
-If the validator tries to cheat by creating more than a single attestation or contradictory attestations, the protocol explicitly punishes them by slashing a proportion of their stake, as shown in Figure 15-16.
+如果验证者试图通过创建多个证明或矛盾证明来作弊，协议会明确地通过削减一部分他们的质押来惩罚他们，如图 15-16 所示。
 
-![Attestation slashing](images/ch15/maet_1516.png)
+![证明削减](images/ch15/maet_1516.png)
 
-Figure 15-16. Attestation slashing
+图 15-16. 证明削减
 
-If the validator keeps behaving maliciously for quite a long time, the protocol has the power of force-ejecting them from the validator set.
+如果验证者长期以来一直表现出恶意行为，协议有权将他们强制从验证者集合中驱逐出去。
 
-## Casper FFG: The Finality Gadget
+## Casper FFG：最终性小工具
 
-Casper FFG is a kind of metaconsensus protocol. It is an overlay that can be run on top of an underlying consensus protocol in order to add finality to it.
+Casper FFG 是一种元共识协议。它是一个可以运行在底层共识协议之上的覆盖层，以便为其添加最终性。
 
-In Ethereum's PoS consensus, the underlying protocol is LMD-GHOST, which does not provide finality. Finality ensures that once blocks are confirmed in the chain, they cannot be reversed: they will be part of the chain forever. So in essence, Casper FFG functions as a finality gadget, and we use it to add finality to LMD-GHOST.
+在以太坊的 PoS 共识中，底层协议是 LMD-GHOST，它不提供最终性。最终性确保一旦区块在链中得到确认，它们就不能被撤销：它们将永远是链的一部分。因此，本质上，Casper FFG 的功能就像一个最终性小工具，我们使用它为 LMD-GHOST 添加最终性。
 
-Casper FFG takes advantage of the fact that, in a PoS protocol, we know who our participants are: the validators who manage the staked ether. This means that we can use vote counting to judge when we have seen a majority of the votes of honest validators, or more precisely, votes from validators who manage the majority of the stake. In everything that follows, every validator's vote is weighted by the value of the stake that they manage, but for simplicity, we won't spell this out every time.
+Casper FFG 利用了这样一个事实，即在 PoS 协议中，我们知道我们的参与者是谁：管理质押以太币的验证者。这意味着我们可以使用投票计数来判断我们何时已经看到了诚实验证者的大多数投票，或者更准确地说，是来自管理大部分质押的验证者的投票。在接下来的一切中，每个验证者的投票都由他们管理的质押价值加权，但为简单起见，我们不会每次都明确说明这一点。
 
-Casper FFG, like all classic Byzantine fault tolerant (BFT) protocols, can ensure finality as long as fewer than a third of validators are faulty or adversarial. Once a majority of honest validators have declared a block final, all honest validators agree, making that block irreversible. By requiring that honest validators constitute more than two thirds of the total, the system ensures that the consensus accurately represents the honest majority's view. Notably, Casper FFG distinguishes itself from traditional BFT protocols by offering economic finality (you'll find more details in "Accountable Safety and Plausible Liveness") even if more than one-third of validators are compromised.
+Casper FFG 像所有经典的拜占廷容错（BFT）协议一样，可以确保最终性，只要少于三分之一的验证者存在故障或对抗。一旦大多数诚实验证者宣布一个区块为最终区块，所有诚实验证者都会同意，使该区块不可逆转。通过要求诚实验证者占总数的超过三分之二，系统确保共识准确地代表了诚实多数的观点。值得注意的是，Casper FFG 通过提供经济最终性（您将在 “负责任的安全和合理的生活性” 中找到更多详细信息）来区分于传统的 BFT 协议，即使超过三分之一的验证者受到损害。
 
-### Epochs and Checkpoints
+### Epochs 和检查点
 
-Casper FFG ensures consensus by requiring votes from more than two thirds of validators within an epoch, dividing voting across 32 slots to manage the large validator set efficiently, as shown in Figure 15-17. An epoch is divided into 32 slots, each of which usually contains a block. The first slot of an epoch is its *checkpoint*.
+Casper FFG 通过要求一个 epoch 内超过三分之二的验证者进行投票来确保共识，将投票分散在 32 个 slot 中，以有效地管理大型验证者集合，如图 15-17 所示。一个 epoch 分为 32 个 slot，每个 slot 通常包含一个区块。一个 epoch 的第一个 slot 是它的 *检查点*。
 
-![Epochs and checkpoints](images/ch15/maet_1517.png)
+![Epochs 和检查点](images/ch15/maet_1517.png)
 
-Figure 15-17. Epochs and checkpoints
+图 15-17. Epochs 和检查点
 
-Validators vote once per epoch on a checkpoint, the first slot, to maintain a unified voting focus. This process, which incorporates both Casper FFG and LMD-GHOST votes for efficiency, aims at finalizing checkpoints, in the context of Casper FFG, not entire epochs, clarifying that finality extends to the checkpoint and its preceding content.
+验证者每个 epoch 在一个检查点（第一个 slot）上投票一次，以保持统一的投票焦点。此过程包括 Casper FFG 和 LMD-GHOST 投票以提高效率，旨在最终确定检查点，在 Casper FFG 的上下文中，而不是整个 epochs，明确了最终性扩展到检查点及其前面的内容。
 
-### Justification and Finalization
+### 正当性和最终确定
 
-Casper FFG, like traditional BFT protocols, secures network agreement in two stages. Initially, validators broadcast and gather views on a proposed checkpoint. If a significant majority agrees, the checkpoint is *justified*, signaling a tentative agreement. In the subsequent round, if validators confirm widespread support for the justified checkpoint, it achieves *finalization*, meaning it's unanimously agreed upon and irreversible. This process underlines the collaborative effort to ensure network consistency and security, aiming for checkpoints to be justified and then finalized within specific time frames and improving the reliability of the consensus mechanism.
+Casper FFG 像传统的 BFT 协议一样，分两个阶段确保网络上的协议。最初，验证者广播并收集有关提议的检查点的视图。如果绝大多数同意，则该检查点被 *证明是正当的*，表明暂时达成协议。在下一轮中，如果验证者确认对经过证明是正当的检查点的广泛支持，则它将实现 *最终确定*，这意味着它已获得一致同意并且不可逆转。此过程强调了确保网络一致性和安全性的协作努力，旨在在特定时间范围内证明和最终确定检查点，并提高共识机制的可靠性。
 
-#### Sources and targets, links and conflicts
+#### 来源和目标，链接和冲突
 
-In Casper FFG, votes comprise source and target checkpoints, representing validators' commitments to the blockchain's state at different points. These votes are cast as a linked pair, indicating a validator's current and proposed points of consensus. The source vote reflects a validator's acknowledgment of widespread support for a checkpoint, while the target vote represents a conditional commitment to a new checkpoint, dependent on similar support from others. This dual-vote system facilitates a structured progression toward finalizing blocks, ensuring network integrity and continuity.
+在 Casper FFG 中，投票包括来源和目标检查点，代表验证者在不同时间点对区块链状态的承诺。这些投票以链接对的形式进行，表示验证者当前和提议的共识点。来源投票反映了验证者对检查点广泛支持的确认，而目标投票表示对新检查点的有条件承诺，取决于其他人的类似支持。这种双重投票系统有助于朝着最终确定区块的有组织的进展，从而确保网络完整性和连续性。
 
-#### Supermajority links
+#### 超多数链接
 
-In Casper FFG, a *supermajority link* between source and target checkpoints, *s→t*, is established when more than two thirds of validators, by stake weight, endorse the same link, with their votes included in the blockchain. This mechanism ensures consensus and security by validating the sequence of checkpoints through widespread validator agreement.
+在 Casper FFG 中，来源和目标检查点之间的 *超多数链接*，*s→t*，当超过三分之二的验证者（按质押权重）认可同一链接，并且他们的投票包含在区块链中时，就会建立。该机制通过通过广泛的验证者协议验证检查点序列来确保共识和安全性。
 
-#### Justification
+#### 正当理由
 
-In Casper FFG, when a node observes a majority of validators agreeing on a transition from one checkpoint to another, it justifies the old checkpoint. This signifies that the node has seen evidence of consensus from a significant portion of the validator set, as shown in Figure 15-18, making a commitment not to revert to a previous state unless overwhelming consensus is shown for an alternative path.
+在 Casper FFG 中，当节点观察到大多数验证者同意从一个检查点过渡到另一个检查点时，它会证明旧检查点是正当的。这表明该节点已经看到了来自验证者集合的很大一部分的共识证据，如图 15-18 所示，并且承诺除非显示出对替代路径的绝大多数共识，否则不会恢复到以前的状态。
 
-![Justification process](images/ch15/maet_1518.png)
+![正当化过程](images/ch15/maet_1518.png)
 
-Figure 15-18. Justification process[^1]
+图 15-18. 正当化过程[^1]
 
-[^1]: The node has seen a supermajority link CN → CN + 1, therefore marking CN + 1 as justified. Since CN + 1 is a direct child of CN in the checkpoint tree, it also marks CN as finalized. Finalized checkpoints are cross-hatched and marked with F.
+[^1]：该节点已经看到了一个超多数链接 CN → CN + 1，因此将 CN + 1 标记为正当的。由于 CN + 1 是检查点树中 CN 的直接子项，因此它也将 CN 标记为最终确定的。最终确定的检查点是交叉阴影并标有 F。
 
-#### Finalization
+#### 最终确定
 
-When a node observes a consensus (a supermajority link) from one justified checkpoint to its direct child, it finalizes the parent checkpoint, as shown in Figure 15-19. This indicates a network-wide commitment not to revert from this point, backed by a strong majority of validator support. Finalization ensures network stability and security by making the blockchain history immutable past that checkpoint, preventing reversals without significant consequences for validators.
+当节点观察到从一个经过证明是正当的检查点到其直接子项的共识（超多数链接）时，它将最终确定父检查点，如图 15-19 所示。这表明网络范围内的承诺不会从该点恢复，并得到绝大多数验证者支持的支持。最终确定通过使区块链历史记录不可变地超出该检查点来确保网络稳定性和安全性，从而防止在没有验证者的重大后果的情况下进行逆转。
 
-![Finalization process](images/ch15/maet_1519.png)
+![最终确定过程](images/ch15/maet_1519.png)
 
-Figure 15-19. Finalization process
+图 15-19. 最终确定过程
 
-### Slashing
+### 削减
 
-Casper FFG implements a slashing mechanism to penalize validators for breaches of protocol rules with the aim of securing network consensus. This enforcement discourages actions that could otherwise undermine the blockchain's integrity, such as finalizing conflicting checkpoints. Detection of these breaches, especially complex scenarios like surround votes (see "Fork Choice Rule"), may rely on specialized external services due to their technical challenges. Slashing consequences are proportional to the misconduct's severity and overall network health, with penalties scaling based on the collective behavior within a specific time frame, which ensures fairness and accountability in validators' actions.
+Casper FFG 实施了一种削减机制，以惩罚违反协议规则的验证者，目的是确保网络共识。这种强制执行阻止了可能破坏区块链完整性的操作，例如最终确定相互冲突的检查点。由于这些漏洞的技术挑战，检测到这些漏洞（尤其是复杂的场景，例如环绕投票 （请参阅 "分叉选择规则"））可能依赖于专门的外部服务。削减的后果与不端行为的严重程度和整体网络健康状况成正比，惩罚会根据特定时间范围内集体行为进行缩放，从而确保验证者行为的公平性和责任制。
 
-### Fork Choice Rule
+### 分叉选择规则
 
-Casper FFG modifies the traditional LMD-GHOST fork choice rule, mandating that nodes prioritize the chain with the highest justified checkpoint; this checkpoint then effectively becomes the starting block for the LMD-GHOST protocol. This adaptation, which is an evolution from the LMD-GHOST protocol's approach, ensures that the network achieves finality by committing to checkpoints that have been agreed upon by a supermajority of validators. It effectively guarantees that once a checkpoint is justified, the network cannot revert beyond it, reinforcing the security and stability of the blockchain. This rule is also designed to maintain network liveness, aligning with Casper's foundational goals.
+Casper FFG 修改了传统 LMD-GHOST 分叉选择规则，规定节点优先选择具有最高证明的检查点的链；然后，此检查点有效地成为 LMD-GHOST 协议的起始区块。这种调整是从 LMD-GHOST 协议的方法演变而来的，它确保网络通过承诺由超多数验证者商定的检查点来实现最终确定。它有效地保证了一旦检查点得到证明，网络就无法恢复到该检查点之外，从而增强了区块链的安全性和稳定性。此规则还旨在保持网络的生活力，并与 Casper 的基本目标保持一致。
 
-### The Casper Commandments
+### Casper 戒律
 
-In Casper FFG, checkpoints are central to ensuring network consensus and security. They are marked by epoch numbers that increase with blockchain progression. Validators must adhere to strict voting rules: they cannot vote on different outcomes for the same checkpoint, so no double-voting, as shown in Figure 15-20. If this voting rule were not in place, a reorg would be much more likely, rendering the chain highly unstable.
+在 Casper FFG 中，检查点对于确保网络共识和安全性至关重要。它们标有随区块链进程增加的 epoch 编号。验证者必须遵守严格的投票规则：他们不能对同一检查点的不同结果进行投票，因此不能进行重复投票，如图 15-20 所示。如果不实施此投票规则，重组的可能性会大大增加，从而导致链高度不稳定。
 
-![No double-voting rule](images/ch15/maet_1520.png)
+![禁止重复投票](images/ch15/maet_1520.png)
 
-Figure 15-20. No double-voting rule
+图 15-20. 禁止重复投票
 
-Validators must also avoid creating votes that could be interpreted as contradicting previous commitments (no surround vote). Violating these principles leads to slashing, a penalty designed to maintain the integrity and accountability of the consensus mechanism, as shown in Figure 15-21.
+验证者还必须避免创建可以解释为与先前承诺相矛盾的投票（禁止环绕投票）。违反这些原则会导致削减，这是一种旨在维护共识机制的完整性和责任制的惩罚，如图 15-21 所示。
 
-![No surround vote rule](images/ch15/maet_1521.png)
+![禁止环绕投票](images/ch15/maet_1521.png)
 
-Figure 15-21. No surround vote rule
+图 15-21. 禁止环绕投票
 
-### Accountable Safety and Plausible Liveness
+### 负责任的安全和合理的生活
 
-The Casper FFG consensus protocol makes two guarantees that are analogous to, but different from, the concepts of safety and liveness in classical consensus: *accountable safety* and *plausible liveness*.
+Casper FFG 共识协议做出了两个保证，这两个保证类似于但不等同于经典共识中的安全性和生活力的概念：*负责任的安全* 和 *合理的生活*。
 
-#### Accountable safety and economic finality
+#### 负责任的安全和经济最终性
 
-Casper FFG's proof of accountable safety demonstrates that conflicting checkpoints cannot be finalized unless more than one-third of validators violate protocol rules. This system ensures that checkpoints finalized with fewer than one-third adversarial validators remain irreversible, enforcing both network security and economic penalties for dishonest behavior.
+Casper FFG 对负责任的安全的证明表明，除非超过三分之一的验证者违反协议规则，否则无法最终确定冲突的检查点。该系统确保使用少于三分之一的对抗验证者最终确定的检查点保持不可逆转，从而对不诚实行为强制执行网络安全性和经济处罚。
+经济最终性在 Casper FFG 中引入了潜在攻击者的成本，不仅通过协议规则，还通过经济上的不鼓励来加强安全性。试图通过最终确定冲突的检查点来破坏网络的验证者将面临严厉的惩罚，损失其大部分权益。这种方法通过增加一层经济后果，与传统的共识机制形成对比，确保恶意行为者最终确定一个区块的成本很高，从而增强区块链的完整性和抵御攻击的能力。
 
-Economic finality in Casper FFG introduces a cost to potential attackers, enforcing security not just through protocol rules but also through economic disincentives. Validators who attempt to undermine the network by finalizing conflicting checkpoints face severe penalties, losing a significant portion of their stakes. This approach contrasts with traditional consensus mechanisms by adding a layer of economic consequences, ensuring that finalizing a block carries a substantial cost for malicious actors and thereby enhancing the blockchain's integrity and resilience against attacks.
+#### 合理的活跃性
 
-#### Plausible liveness
+Casper FFG 确保网络保持活跃，并且始终能够在没有任何诚实验证者受到惩罚的情况下达成共识，体现了合理活跃性的概念。这意味着，如果大多数验证者是诚实的，则协议可以继续验证和最终确定新的检查点，从而避免因担心 slashing 而导致进度停止的任何死锁情况。这一原则确保了网络的弹性和持续运行，突显了 Casper 在具有挑战性的条件下保持共识的适应性。
 
-Casper FFG ensures that the network remains active and can always reach consensus without any honest validators being penalized, embodying the concept of plausible liveness. This means that, provided a supermajority of validators are honest, the protocol can continue justifying and finalizing new checkpoints, avoiding any deadlock scenarios where progress is halted because of fear of slashing. This principle ensures the network's resilience and continuous operation, underlining Casper's adaptability to maintain consensus even under challenging conditions.
+## 一个实际的例子：检查点的生命周期
 
-## A Practical Example: The Life Cycle of a Checkpoint
+让我们一起踏上以太坊 Casper FFG 机制中检查点的生命周期之旅。
 
-Let's take a journey together through the life cycle of a checkpoint in Ethereum's Casper FFG mechanism.
+以太坊验证者的社区可能非常庞大，可能涉及数十万个。一次性处理所有这些投票是不切实际的。那么我们该如何管理呢？
 
-The community of Ethereum validators can be overwhelmingly large, with potentially hundreds of thousands involved. It's not practical for all these votes to be processed at once. So how do we manage this?
+投票分散在我们称之为 epoch 的时间内，该 epoch 分为 32 个 slots，每个持续 12 秒。这样，每个验证者每个 epoch 投票一次，每个 slot 中大约有 1/32 的验证者集合进行投票。图 15-22 显示了这样一个验证者池。
 
-Votes are spread out across what we call an epoch, which is divided into 32 slots, each lasting 12 seconds. This way, each validator votes exactly once per epoch, with about 1/32 of the validator set voting in each slot. Figure 15-22 shows a pool of such validators.
+![验证者池](images/ch15/maet_1522.png)
 
-![Validator pool](images/ch15/maet_1522.png)
+图 15-22. 验证者池
 
-Figure 15-22. Validator pool
+在本例中，验证者的数量当然比实际的以太坊网络要少得多，但我们确实有 64 个节点，它们被分成 32 组。每组将在 epoch 中为一个 slot 投票，如图 15-23 所示。
 
-In this example, the number of validators is, of course, much more limited than on the real Ethereum network, but we do have 64 nodes that are divided into 32 groups. Each of the groups will vote for one slot in the epoch, as shown in Figure 15-23.
+![验证者分成组](images/ch15/maet_1523.png)
 
-![Validators divided into groups](images/ch15/maet_1523.png)
+图 15-23. 验证者分成组
 
-Figure 15-23. Validators divided into groups
+现在，他们在为什么投票？他们投票给一个检查点：具体来说，是一个 epoch 的第一个 slot[^2]。这个检查点充当了在不同时间投票的验证者的共同目标。
 
-Now, what are they voting on? They vote on a checkpoint: specifically, the very first slot of an epoch.[^2] This checkpoint acts as a common goal for validators voting at different times.
+[^2]: 检查点始终是一个 epoch 的第一个 slot，但如果检查点自己的区块丢失，它的区块哈希可能来自较早的区块。
 
-[^2]: A checkpoint is always the very first slot of an epoch, but its block hash may be from an earlier block if the checkpoint's own block is missing.
-
-> **Note**  
+> **注意**
 >
-> It's important to clarify something here: although we often talk about finalizing epochs, in technical terms we're actually finalizing checkpoints, which are these first slots. Once a checkpoint is finalized, everything up to and including that slot is set in stone, secure and unchangeable.
+> 这里有必要澄清一点：虽然我们经常谈论最终确定 epoch，但从技术角度来说，我们实际上是在最终确定检查点，也就是这些第一个 slot。一旦一个检查点被最终确定，包括该 slot 在内的所有内容都将被设定好，安全且不可更改。
 
-A representation of an epoch—in this case, epoch N—is shown in Figure 15-24. The checkpoint N is the slot 32N; once that checkpoint is finalized, slot 32N-1 and every other slot before that will be considered finalized.
+一个 epoch 的表示——在本例中是 epoch N——如图 15-24 所示。检查点 N 是 slot 32N；一旦该检查点被最终确定，slot 32N-1 以及之前的所有其他 slot 都将被视为已最终确定。
 
-![Epoch representation](images/ch15/maet_1524.png)
+![Epoch 表示](images/ch15/maet_1524.png)
 
-Figure 15-24. Epoch representation
+图 15-24. Epoch 表示
 
-The process to achieve this security is rigorous and resembles traditional BFT consensus mechanisms. In the next sections, we'll describe how it works.
+实现这种安全性的过程是严格的，类似于传统的 BFT 共识机制。在接下来的章节中，我们将描述它的工作原理。
 
-### First Round: Justification
+### 第一轮：论证
 
-Validators each broadcast their own views of the current epoch's checkpoint to the network. Then, they listen to see if a supermajority of the network agrees with their perspectives. If they do, this checkpoint is "justified." At this stage, validators believe that the majority of the network supports this checkpoint for finalization, although they are not entirely certain that everyone agrees just yet.
+验证者们各自将自己对当前 epoch 检查点的看法广播到网络。然后，他们监听以了解是否网络中的绝大多数人都同意他们的观点。如果同意，那么这个检查点就被“论证”了。在这个阶段，验证者们相信，网络中的大多数人都支持这个检查点被最终确定，尽管他们还不能完全确定所有人都同意。
 
-The key issue is that validators can't yet be sure that malicious actors on the network aren't feeding them false information about the network's state—saying one thing to them and something else to others. This is a very important point that's often overlooked. If all participants were always honest, justification would imply finalization, and the entire two-round process could be avoided.
+关键问题是，验证者们还不能确定网络中的恶意行为者是否没有向他们提供关于网络状态的虚假信息——对他们说一套，对其他人说另一套。这是一个经常被忽视的非常重要的点。如果所有参与者总是诚实的，那么论证就意味着最终确定，并且可以避免整个两轮过程。
 
-When a validator justifies a checkpoint, they have received approval from two thirds of the network for that specific checkpoint, as shown in Figure 15-25, but this first round of approval is only local to the validator itself. It's possible, especially under adversarial conditions, that not enough validators have reached a consensus. Traditional PBFT-style consensus mechanisms—like those used in Algorand, Dfinity, and Cosmos—would halt at this stage and lose liveness. Ethereum, on the other hand, keeps going. If it can't justify a checkpoint, no problem—it simply moves on and tries to justify the next one. This works because Ethereum relies on LMD-GHOST for liveness, while Casper FFG is just an overlay—a "nice to have." So if finality stalls temporarily, that's not a critical issue.
+当一个验证者论证一个检查点时，他们已经收到了来自网络中三分之二的验证者对该特定检查点的批准，如图 15-25 所示，但是这第一轮批准仅对验证者本身有效。特别是在对抗条件下，可能没有足够的验证者达成共识。传统的 PBFT 风格的共识机制——比如 Algorand、Dfinity 和 Cosmos 中使用的那些——会在这个阶段停止并失去活跃性。另一方面，以太坊会继续前进。如果它不能论证一个检查点，没问题——它只需继续前进并尝试论证下一个。这是可行的，因为以太坊依赖 LMD-GHOST 来保持活跃性，而 Casper FFG 只是一个覆盖层——一个“锦上添花”。因此，如果最终性暂时停滞，那也不是一个关键问题。
 
-![Justification round](images/ch15/maet_1525.png)
+![论证轮](images/ch15/maet_1525.png)
 
-Figure 15-25. Justification round
+图 15-25. 论证轮
 
-### Second Round: Finalization
+### 第二轮：最终确定
 
-Validators announce that they have heard from a supermajority that they also support this checkpoint. They check again to see if the rest of the network confirms that this supermajority indeed exists. If so, the validators can "finalize" the checkpoint, as shown in Figure 15-26. Finalization is a powerful step—it means that no honest validator will ever revert this checkpoint. They may not have marked it as finalized in their local view yet, but at least they've marked it as justified, and it cannot be reversed without punishable actions.
+验证者宣布他们已经从绝大多数人那里听说他们也支持这个检查点。他们再次检查以查看网络的其余部分是否确认这个绝大多数确实存在。如果是这样，验证者就可以“最终确定”检查点，如图 15-26 所示。最终确定是一个强大的步骤——这意味着没有一个诚实的验证者会恢复这个检查点。他们可能还没有在他们的本地视图中将其标记为已最终确定，但至少他们已经将其标记为已论证，并且如果不采取可惩罚的行动，就无法撤销它。
 
-![Finalization round](images/ch15/maet_1526.png)
+![最终确定轮](images/ch15/maet_1526.png)
 
-Figure 15-26. Finalization round
+图 15-26. 最终确定轮
 
-In practice, each round ideally spans one epoch, meaning it takes one epoch to justify a checkpoint and another to finalize it. That totals about 12.8 minutes. However, thanks to the pipelined design of Casper FFG, we can finalize a checkpoint every 6.4 minutes, once per epoch.
+在实践中，每一轮理想情况下跨越一个 epoch，这意味着需要一个 epoch 来论证一个检查点，另一个 epoch 来最终确定它。总共大约需要 12.8 分钟。然而，由于 Casper FFG 的流水线设计，我们可以每 6.4 分钟最终确定一个检查点，即每个 epoch 一次。
 
-> **Note**  
+> **注意**
 >
-> It's also worth noting that from an external viewpoint, we might see signs that a checkpoint will likely be finalized before the 12.8 minutes are up since votes are accumulated gradually as the epoch progresses, assuming there's no significant chain reorganization. However, the official in-protocol actions of justification and finalization occur only at the end of an epoch.
+> 值得注意的是，从外部视角来看，我们可能会看到一个检查点很可能在 12.8 分钟结束之前被最终确定的迹象，因为假设没有重大的链重组，投票会随着 epoch 的进行而逐渐累积。然而，论证和最终确定的官方协议内操作仅在 epoch 结束时发生。
 
-There are a lot of things that can go wrong during the justification and finalization of checkpoints. Let's analyze two important cases and how they are handled by this friendly finality gadget.
+在检查点的论证和最终确定过程中，有很多事情可能会出错。让我们分析两个重要的案例，以及这个友好的最终性工具如何处理它们。
 
-### Conflicting Justification
+### 冲突的论证
 
-It's insightful to think about why we need both "justified" and "finalized" statuses for checkpoints. Why isn't it sufficient to immediately finalize a checkpoint once a supermajority of two thirds has voted in favor of it?
+思考一下为什么我们需要检查点的“已论证”和“已最终确定”状态，这很有启发性。为什么一旦有三分之二的绝大多数投票赞成，就立即最终确定一个检查点是不够的？
 
-Here's the distinction: justification is about local agreement, whereas finality is about global consensus.
+这里的区别在于：论证是关于本地协议，而最终性是关于全局共识。
 
-Justifying a checkpoint means that I, as a validator, have received confirmation from two thirds of the validators that they approve the checkpoint. This approval, however, represents only my local perspective. It's possible that other validators have different information; I can't be sure. Despite this uncertainty, as an honest validator, I commit to never reversing any checkpoint that I've justified based on my local data.
+论证一个检查点意味着，作为一名验证者，我收到了来自三分之二的验证者的确认，他们批准该检查点。然而，这种批准仅代表我的本地视角。其他验证者可能掌握不同的信息；我无法确定。尽管存在这种不确定性，但作为一名诚实的验证者，我承诺永远不会撤销我已经根据我的本地数据论证过的任何检查点。
 
-Finalizing a checkpoint, on the other hand, takes this a step further. It occurs when I've received assurances from two thirds of the validators that they, too, have heard from two thirds of their peers confirming the checkpoint's validity. This means that a supermajority of the network—not just my local view—acknowledges and commits to this checkpoint. It's this broad consensus that protects the checkpoint from being reversed globally. Therefore, a finalized checkpoint is not just locally recognized; it's globally secured.
+另一方面，最终确定一个检查点，更进一步。它发生在我收到来自三分之二的验证者的保证，他们也从他们三分之二的对等方那里听到了确认检查点有效性的消息。这意味着网络的绝大多数人——不仅仅是我的本地视图——承认并承诺这个检查点。正是这种广泛的共识保护了检查点免受全局撤销。因此，一个最终确定的检查点不仅在本地被认可；它在全球范围内都是安全的。
 
-Let's explore an extreme scenario to understand the consensus process better. Suppose we have four validators, A, B, C, and D, as shown in Figure 15-27. All of them are honest, but the network they operate in can experience indefinite delays. For the sake of this example, imagine that there's a checkpoint at every block height.
+让我们探索一个极端的场景，以更好地理解共识过程。假设我们有四个验证者，A、B、C 和 D，如图 15-27 所示。所有这些都是诚实的，但他们运营的网络可能会遇到无限期的延迟。为了这个示例的目的，假设每个块高度都有一个检查点。
 
-![Four validators scenario](images/ch15/maet_1527.png)
+![四个验证者场景](images/ch15/maet_1527.png)
 
-Figure 15-27. Four validators scenario
+图 15-27. 四个验证者场景
 
-Every validator in the scenario has the block 0 and can therefore justify the checkpoint 0; so 0, the source, is justified locally for all four validators, and 1 is the target (see "Sources and targets, links and conflicts").
+场景中的每个验证者都有区块 0，因此可以论证检查点 0；因此 0，source，对所有四个验证者来说都是在本地得到论证的，而 1 是 target（参见“Sources 和 targets, links 和 conflicts”）。
 
-Now let's imagine that A is severely delayed in the network connection and that it's also chosen to propose a block. A proposes a block in epoch 2. This block contains all four votes to justify checkpoint 1, but since its network connection is severely delayed, the other validators never see it.
+现在让我们假设 A 在网络连接中严重延迟，并且它也被选择来提议一个区块。A 在 epoch 2 中提议一个区块。这个区块包含所有四个投票来论证检查点 1，但是由于其网络连接严重延迟，其他验证者永远看不到它。
 
-A has a supermajority link (see "Supermajority links") between the source 0 and the target 1, so it will finalize checkpoint 0 and justify checkpoint 1. Meanwhile, B, C, and D saw no votes in the current epoch, so they still have only justified checkpoint 0. They will also vote for an empty checkpoint in this epoch, which is checkpoint X, as shown in Figure 15-28.
+A 在源头 0 和目标 1 之间有一个绝大多数链接（参见“Supermajority links”），因此它将最终确定检查点 0 并论证检查点 1。同时，B、C 和 D 在当前 epoch 中没有看到任何投票，因此他们仍然只有论证了检查点 0。他们也将在本 epoch 中投票支持一个空的检查点，即检查点 X，如图 15-28 所示。
 
-![Network delay scenario step 1](images/ch15/maet_1528.png)
+![网络延迟场景步骤 1](images/ch15/maet_1528.png)
 
-Figure 15-28. Network delay scenario step 1
+图 15-28. 网络延迟场景步骤 1
 
-In epoch 3, one validator among B, C, and D is chosen to propose a block.
+在 epoch 3 中，B、C 和 D 中的一个验证者被选择来提议一个区块。
 
-This block contains three votes with the source as checkpoint 0 and the target as checkpoint X; therefore, there is a supermajority link between 0 and X that allows the validators B, C, and D to have checkpoint 0 as finalized and checkpoint X as justified, as shown in Figure 15-29. A, on the other hand, considers this block to be invalid, because in its local view, 1 is justified and cannot be reverted. The only solution for validator A's chain to continue is to delete its memory and resync with the rest of the network.
+这个区块包含三个投票，源头是检查点 0，目标是检查点 X；因此，在 0 和 X 之间有一个绝大多数链接，允许验证者 B、C 和 D 将检查点 0 视为已最终确定，并将检查点 X 视为已论证，如图 15-29 所示。另一方面，A 认为这个区块是无效的，因为在其本地视图中，1 已被论证，无法撤销。验证者 A 的链继续的唯一解决方案是删除其内存并与网络的其余部分重新同步。
 
-![Network delay scenario step 2](images/ch15/maet_1529.png)
+![网络延迟场景步骤 2](images/ch15/maet_1529.png)
 
-Figure 15-29. Network delay scenario step 2
+图 15-29. 网络延迟场景步骤 2
 
-> **Note**  
+> **注意**
 >
-> It is important to remember that in this example, validators B, C, and D never saw the block proposed by A. Since they did not observe block 2—the block that would have justified checkpoint 1—they cannot agree on block 1 and are therefore unable to justify checkpoint 1. As a result, they vote on an empty checkpoint instead.
+> 重要的是要记住，在本例中，验证者 B、C 和 D 从未看到 A 提议的区块。由于他们没有观察到区块 2——本应该论证检查点 1 的区块——他们无法同意区块 1，因此无法论证检查点 1。因此，他们投票支持一个空的检查点。
 
-This example demonstrates that even simple network delays can cause nodes to have differing views of justification and finalization. However, this alone doesn't justify the need for two separate phases: justification followed by finalization. The reasoning behind the two phases is very straightforward: if we didn't have a justification step, A would have finalized checkpoint 1, which would have been considered invalid by the rest of the validators, as shown in Figure 15-30.
+这个例子表明，即使是简单的网络延迟也可能导致节点对论证和最终确定有不同的看法。然而，仅凭这一点并不能证明需要两个独立的阶段：论证，然后是最终确定。这两个阶段背后的原因是非常简单的：如果我们没有论证步骤，A 将最终确定检查点 1，这将对网络的其余部分来说是无效的，如图 15-30 所示。
 
-![Without justification step](images/ch15/maet_1530.png)
+![没有论证步骤](images/ch15/maet_1530.png)
 
-Figure 15-30. Without justification step
+图 15-30. 没有论证步骤
 
-In the previous example, A had to delete its memory and resync with the rest of the network. This is because justification, as we said before, is similar to a local step and can be reverted. However, this would not have been possible if A had directly finalized checkpoint 1. Without the two phases, A would have had a finalized block reverted and B, C, and D would have been able to orphan block 1 without being slashed. The only way to guarantee safety is with a two-way commit: justification and finalization.
+在前面的示例中，A 必须删除其内存并与网络的其余部分重新同步。这是因为正如我们之前所说，论证类似于一个本地步骤，可以被撤销。但是，如果 A 直接最终确定检查点 1，这是不可能的。如果没有这两个阶段，A 将有一个已最终确定的区块被撤销，并且 B、C 和 D 将能够在没有被 slashing 的情况下孤立区块 1。保证安全的唯一方法是双向提交：论证和最终确定。
 
-## Gasper: A Real Example
+## Gasper：一个真实的例子
 
-So far, we have seen how Casper FFG and LMD-GHOST work on their own. Let's see now how they are combined into Gasper and used inside the Ethereum PoS consensus protocol.
+到目前为止，我们已经看到了 Casper FFG 和 LMD-GHOST 如何独立工作。现在让我们看看它们是如何组合成 Gasper 并在以太坊 PoS 共识协议中使用的。
 
-The best way to fully understand how Gasper works is to follow a real example of a blockchain using it to gain consensus over the history of blocks. We won't use Ethereum mainnet for our example. Instead, we'll create a mock-up network with three validators in order to better describe what is happening during each phase of the consensus protocol, as you will see in Figure 15-31.
+充分理解 Gasper 工作原理的最好方法是遵循一个真实的区块链示例，该区块链使用它来对块的历史达成共识。我们不会使用以太坊主网作为我们的示例。相反，我们将创建一个由三个验证者组成的模拟网络，以便更好地描述在共识协议的每个阶段发生的事情，正如您在图 15-31 中看到的那样。
 
-![Gasper mock network](images/ch15/maet_1531.png)
+![Gasper 模拟网络](images/ch15/maet_1531.png)
 
-Figure 15-31. Gasper mock network
+图 15-31. Gasper 模拟网络
 
-The three validators have the same number of ETH in stake, so their voting power—that is, their contribution to the score of every block in which they vote—is the same. Also, every validator publishes an attestation every block, instead of once in an epoch as in the Ethereum mainnet.
+三个验证者在 stake 中拥有相同数量的 ETH，因此他们的投票能力——也就是说，他们对他们投票的每个区块的分数的贡献——是相同的。此外，每个验证者都会发布一个证明，在每个区块中，而不是像在以太坊主网中那样在一个 epoch 中发布一次。
 
-Our goal is to see the life of a block from being published to first being justified and then finalized.
+我们的目标是从一个区块的发布到首先被论证，然后被最终确定，来观察它的生命。
 
-In our simplified network, every epoch is made of three slots, shown in Figure 15-32.
+在我们的简化网络中，每个 epoch 由三个 slots 组成，如图 15-32 所示。
 
-![Simplified epoch structure](images/ch15/maet_1532.png)
+![简化的 epoch 结构](images/ch15/maet_1532.png)
 
-Figure 15-32. Simplified epoch structure
+图 15-32. 简化的 epoch 结构
 
-Let's start our example at epoch number 1. This is not the real first epoch; we just call it "epoch 1" for simplicity. Validator A is the one selected to propose the first block. We can call the block that they are to propose block 1, as shown in Figure 15-33.
+让我们从 epoch 编号 1 开始我们的示例。这不是真正的第一个 epoch；我们只是为了简单起见而称其为“epoch 1”。验证者 A 是被选择来提议第一个区块的人。我们可以将他们要提议的区块称为区块 1，如图 15-33 所示。
 
-![Block 1 proposal](images/ch15/maet_1533.png)
+![区块 1 提议](images/ch15/maet_1533.png)
 
-Figure 15-33. Block 1 proposal
+图 15-33. 区块 1 提议
 
-Validator A publishes block 1, and immediately, that block starts propagating in the network. Shortly after the publication, validators B and C receive it and save it into their view of the network.
+验证者 A 发布区块 1，并且立即，该区块开始在网络中传播。发布后不久，验证者 B 和 C 接收到它并将其保存到他们对网络的视图中。
 
-Then, all the validators make an attestation by voting what they think is the last head block of the chain. To do that, they have to run LMD-GHOST on their local views. The result is block 1. These attestations are published and shared with all validators.
+然后，所有验证者都通过投票他们认为的链的最后一个 head block 来进行证明。为此，他们必须在本地视图上运行 LMD-GHOST。结果是区块 1。这些证明将在发布后与所有验证者共享。
 
-Now, validator B is selected to propose the block at the next slot—slot 2—as you'll see in Figure 15-34. To do that, the validator still has to run LMD-GHOST on their local view of the network to get the last head block to build on top of.
+现在，验证者 B 被选择来提议下一个 slot 中的区块——slot 2——正如您将在图 15-34 中看到的那样。为此，验证者仍然必须在他们对网络的本地视图上运行 LMD-GHOST，以获得要构建在其之上的最后一个 head block。
 
-![Block 2 proposal](images/ch15/maet_1534.png)
+![区块 2 提议](images/ch15/maet_1534.png)
 
-Figure 15-34. Block 2 proposal
+图 15-34. 区块 2 提议
 
-Here is validator B's view of the network:
+这是验证者 B 对网络的看法：
 
-- Validator A attestation: head block: block 1
-- Validator B attestation: head block: block 1
-- Validator C attestation: head block: block 1
+- 验证者 A 证明：head block：区块 1
+- 验证者 B 证明：head block：区块 1
+- 验证者 C 证明：head block：区块 1
 
-So the result of LMD-GHOST for validator B is block 1. They can now publish block 2 on top of block 1. Inside block 2, validator B saves also all the attestations they have seen that were not included in a previous block. So they save the three attestations that contain a vote for block 1.
+因此，验证者 B 的 LMD-GHOST 的结果是区块 1。他们现在可以在区块 1 之上发布区块 2。在区块 2 内部，验证者 B 还保存了他们看到的所有未包含在之前区块中的证明。因此，他们保存了包含区块 1 投票的三个证明。
 
-Block 2 propagates in the network and, shortly after its publication, validators A and C receive it. Remember that while LMD-GHOST uses both votes shared via P2P and included in blocks, Casper FFG takes into consideration only votes included into blocks. So while including LMD-GHOST votes into the block doesn't affect LMD-GHOST results if validators are already sharing them through the P2P network, it's fundamental for Casper FFG since that's the only way validators get to know them.
+区块 2 在网络中传播，并且在其发布后不久，验证者 A 和 C 接收到它。请记住，虽然 LMD-GHOST 使用通过 P2P 共享和包含在区块中的投票，但 Casper FFG 仅考虑包含在区块中的投票。因此，虽然将 LMD-GHOST 投票包含在区块中不会影响 LMD-GHOST 的结果（如果验证者已经通过 P2P 网络共享它们），但对于 Casper FFG 来说，这是至关重要的，因为这是验证者了解它们的唯一方式。
 
-Again, all validators make an attestation by voting what they think is the last head block of the chain. Since they all have block 2 in their local views, they all vote for it to be the head of the chain. Then, they publish these attestations so that all validators can see them.
+同样，所有验证者都通过投票他们认为的链的最后一个 head block 来进行证明。由于他们都在本地视图中有区块 2，因此他们都投票支持它成为链的 head。然后，他们发布这些证明，以便所有验证者都可以看到它们。
 
-Now, validator C is selected to propose the next block at slot 3. They run LMD-GHOST on top of their local view to get the head block. Here is validator C's view of the network:
+现在，验证者 C 被选择来在 slot 3 提议下一个区块。他们在本地视图之上运行 LMD-GHOST 以获取 head block。这是验证者 C 对网络的看法：
 
-- Validator A attestation: head block: block 2
-- Validator B attestation: head block: block 2
-- Validator C attestation: head block: block 2
+- 验证者 A 证明：head block：区块 2
+- 验证者 B 证明：head block：区块 2
+- 验证者 C 证明：head block：区块 2
 
-The result is block 2, so validator C publishes block 3 on top of it, shown in Figure 15-35.
+结果是区块 2，因此验证者 C 在其之上发布区块 3，如图 15-35 所示。
 
-![Block 3 proposal](images/ch15/maet_1535.png)
+![区块 3 提议](images/ch15/maet_1535.png)
 
-Figure 15-35. Block 3 proposal
+图 15-35. 区块 3 提议
 
-Inside block 3, validator C saves the three attestations voting for block 2 because they were not included in previous blocks.
+在区块 3 内部，验证者 C 保存了三个投票支持区块 2 的证明，因为它们未包含在先前的区块中。
 
-Block 3 propagates in the network and, shortly after its publication, validators A and B receive it. Then, the validators make an attestation voting for it.
+区块 3 在网络中传播，并且在其发布后不久，验证者 A 和 B 接收到它。然后，验证者对它进行证明投票。
 
-Now, we go back to validator A. They have to propose the next block—slot 4—which is also the first block of the new epoch—epoch 2—as you'll see in Figure 15-36.
+现在，我们回到验证者 A。他们必须提出下一个区块——slot 4——这也是新 epoch 的第一个区块——epoch 2——正如你将在图 15-36 中看到的那样。
 
-![Block 4 proposal - new epoch](images/ch15/maet_1536.png)
+![区块 4 提议 - 新的 epoch](images/ch15/maet_1536.png)
 
-Figure 15-36. Block 4 proposal - new epoch
+图 15-36. 区块 4 提议 - 新的 epoch
 
-Validator A runs LMD-GHOST on their local view to get the head of the chain. Here is validator A's view of the network:
+验证者 A 在他们的本地视图上运行 LMD-GHOST 以获得链的 head。这是验证者 A 对网络的看法：
 
-- Validator A attestation: head block: block 3
-- Validator B attestation: head block: block 3
-- Validator C attestation: head block: block 3
+- 验证者 A 证明：head block：区块 3
+- 验证者 B 证明：head block：区块 3
+- 验证者 C 证明：head block：区块 3
 
-The result is block 3, so validator A publishes block 4 on top of it.
+结果是区块 3，因此验证者 A 在其之上发布区块 4。
 
-Inside block 4, validator A saves the three attestations voting for block 3 because they were not included in previous blocks.
+在区块 4 内部，验证者 A 保存了三个投票支持区块 3 的证明，因为它们未包含在先前的区块中。
 
-Block 4 propagates in the network and, shortly after its publication, validators B and C receive it. The validators have to make a new attestation voting for it to be the head of the chain. But this time, something changes.
+区块 4 在网络中传播，并且，在其发布后不久，验证者 B 和 C 接收到它。验证者必须对它进行新的证明投票，以使其成为链的 head。但是这次，有一些变化。
 
-We are in a new epoch, so the validators have to update the Casper FFG part of the vote. In fact, we previously ignored that an attestation includes not only a vote for the last head block of the chain—the LMD-GHOST part of the consensus protocol—but also a vote for the Casper-FFG checkpoints. In particular, every attestation includes a source and a target vote. The source vote is the last justified checkpoint that the validator knows about, while the target vote represents what the validator thinks should become the next block to be justified.
+我们在一个新的 epoch 中，因此验证者必须更新投票的 Casper FFG 部分。事实上，我们之前忽略了证明不仅包括对链的最后一个 head block 的投票——共识协议的 LMD-GHOST 部分——还包括对 Casper-FFG 检查点的投票。特别是，每个证明都包括一个 source 和一个 target 投票。Source 投票是验证者知道的最后一个经过论证的检查点，而 target 投票代表了验证者认为应该成为下一个要论证的区块。
 
-So the attestation that validators A, B, and C make is as follows:
+因此，验证者 A、B 和 C 进行的证明如下：
 
-**Attestation**
+**证明**
 
-- Head block: block 4
-- Source block: block 1
-- Target block: block 4
+- Head block: 区块 4
+- Source block: 区块 1
+- Target block: 区块 4
 
-The target block is easy to select because it's just the first block of the epoch (there could be some edge cases where the target block is not the first one of an epoch, but we ignore them for simplicity's sake). The source block is calculated by looking at the attestations a validator has and seeing if there is a block voted to be the target block by more than two thirds of the validators. We didn't include source and target block in the previous attestations, but let's say that they all include block 1 as the target block. So right now, we have justified block 1 because there is a supermajority link from block 1 to block 4. See Figure 15-37.
+Target block 很容易选择，因为它只是 epoch 的第一个区块（在一些边缘情况下，target block 可能不是 epoch 的第一个区块，但是为了简单起见，我们忽略它们）。Source block 是通过查看验证者的证明并查看是否有超过三分之二验证者投票将其作为 target block 的区块来计算的。我们没有在先前的证明中包含 source 和 target block，但是假设它们都将区块 1 作为 target block。因此，目前，我们已经证明了区块 1，因为从区块 1 到区块 4 有一个绝大多数链接。参见图 15-37。
 
-![Block 1 justified](images/ch15/maet_1537.png)
+![区块 1 经过论证](images/ch15/maet_1537.png)
 
-Figure 15-37. Block 1 justified
+图 15-37. 区块 1 经过论证
 
-These attestations are then published and shared with all the validators and will be included in the next slots (usually in the very next slot). We can skip blocks 5 and 6 and go straight to block 7, the first block of the next epoch: epoch 3, shown in Figure 15-38.
+然后，这些证明将发布并与所有验证者共享，并将包含在接下来的 slotes 中（通常在紧接着的下一 slot 中）。我们可以跳过区块 5 和 6，直接进入区块 7，下一个 epoch 的第一个区块：epoch 3，如图 15-38 所示。
 
-![Block 7 proposal - epoch 3](images/ch15/maet_1538.png)
+![区块 7 提议 - epoch 3](images/ch15/maet_1538.png)
 
-Figure 15-38. Block 7 proposal - epoch 3
+图 15-38. 区块 7 提议 - epoch 3
 
-Again, validator A is selected to propose the block. They run LMD-GHOST on their local view. Here is validator A's view of the network:
+同样，验证者 A 被选择来提议该区块。他们在他们的本地视图上运行 LMD-GHOST。这是验证者 A 对网络的看法：
 
-- Validator A attestation: head block: block 6, source block: 1, target block: 4
-- Validator B attestation: head block: block 6, source block: 1, target block: 4
-- Validator C attestation: head block: block 6, source block: 1, target block: 4
+- 验证者 A 证明：head block：区块 6，source block：1，target block：4
+- 验证者 B 证明：head block：区块 6，source block：1，target block：4
+- 验证者 C 证明：head block：区块 6，source block：1，target block：4
 
-The result is block 6, so they publish block 7 on top of it.
+结果是区块 6，因此他们在其之上发布区块 7。
 
-Block 7 propagates in the network and, shortly after its publication, validators B and C receive it. The validators have to make a new attestation voting for it to be the head of the chain. And something changes again here.
+区块 7 在网络中传播，并且，在其发布后不久，验证者 B 和 C 接收到它。验证者必须对它进行新的证明投票，以使其成为链的 head。这里又发生了变化。
 
-We are in the next epoch—epoch 3—so the Casper-FFG part of the attestation changes again. In fact, the attestation that validators A, B, and C make is like this:
+我们处于下一个 epoch 中——epoch 3——因此证明的 Casper-FFG 部分再次发生变化。事实上，验证者 A、B 和 C 进行的证明如下所示：
 
-**Attestation**
+**证明**
 
-- Head block: block 7
-- Source block: block 4
-- Target block: block 7
+- Head block：区块 7
+- Source block：区块 4
+- Target block：区块 7
 
-As you can see, the target block is now block 7, and the source block is block 4. This is true because validators A, B, and C all voted for a target block equal to block 4 in the previous attestation. We have now justified block 4 because we have a new supermajority link from block 4 to block 7, as shown in Figure 15-39.
+正如您所看到的，target block 现在是区块 7，而 source block 是区块 4。这是真的，因为验证者 A、B 和 C 在先前的证明中都投票选择了等于区块 4 的 target block。我们现在已经证明了区块 4，因为我们有一个从区块 4 到区块 7 的新的绝大多数链接，如图 15-39 所示。
 
-![Block 4 justified, block 1 finalized](images/ch15/maet_1539.png)
+![区块 4 经过论证，区块 1 最终确定](images/ch15/maet_1539.png)
 
-Figure 15-39. Block 4 justified, block 1 finalized
+图 15-39. 区块 4 经过论证，区块 1 最终确定
 
-We have also finalized block 1 because it's a justified checkpoint whose direct child—block 4—is also justified. When a validator considers a block to be finalized, that means the validator has seen a confirmation from more than two thirds of the validators that they all have seen that that block is justified. In fact, if we take validator A—this applies to validators B and C, too—they have seen B and C's attestations where they voted for block 1 as the source block. Voting for block 1 as the source block means that B and C previously had seen a two-thirds majority of votes for block 1 as the target block. So we can be sure that, in order to revert block 1, at least one third of the validators must be slashed because they double-voted.
+我们也已经最终确定了区块 1，因为它是一个经过论证的检查点，其直接子项——区块 4——也经过了论证。当验证者认为一个区块已经最终确定时，这意味着验证者已经看到了来自超过三分之二验证者的确认，他们都看到了该区块已经被论证。事实上，如果我们以验证者 A 为例——这也适用于验证者 B 和 C——他们已经看到了 B 和 C 的证明，他们在其中投票支持区块 1 作为 source block。投票支持区块 1 作为 source block 意味着 B 和 C 先前已经看到了三分之二的大多数投票支持区块 1 作为 target block。因此，我们可以肯定的是，为了恢复区块 1，必须 slashing 至少三分之一的验证者，因为他们进行了双重投票。
 
-## Controversy and Competition
+## 争议与竞争
 
-At this point, you might be wondering why we need so many different consensus algorithms. Which one works better? The answer to this question is at the center of the most exciting area of research in distributed systems during the past decade. It all boils down to what you consider "better"—which, in the context of computer science, is about assumptions, goals, and the unavoidable trade-offs.
+此时，您可能想知道为什么我们需要这么多不同的共识算法。哪一个效果更好？这个问题的答案是过去十年中分布式系统中研究最激动人心的领域的中心。这一切都归结为您认为什么是“更好”——这在计算机科学的背景下是关于假设、目标和不可避免的权衡。
 
-It is likely that no algorithm can optimize across all dimensions of the problem of decentralized consensus. When someone suggests that one consensus algorithm is "better" than the others, you should start asking questions that clarify, better at what: immutability? Finality? Decentralization? Cost? There is no clear answer, at least not yet. Furthermore, the design of consensus algorithms is at the center of a multibillion-dollar industry and generates enormous controversy and heated arguments. In the end, there might not be a "correct" answer, just as there might be different answers for different applications.
+可能没有任何一种算法可以在去中心化共识问题的所有维度上进行优化。当有人建议一种共识算法“优于”其他算法时，您应该开始提出澄清问题：在什么方面更好：不可变性？最终性？去中心化？成本？没有明确的答案，至少目前还没有。此外，共识算法的设计是一个价值数十亿美元的行业的中心，并引发了巨大的争议和激烈的争论。最后，可能没有“正确”的答案，就像不同的应用程序可能有不同的答案一样。
 
-The entire blockchain industry is one giant experiment where these questions will be tested under adversarial conditions, with enormous monetary value at stake. In the end, history will answer the controversy.
+整个区块链行业是一个巨大的实验，在其中这些问题将在对抗性条件下进行测试，并涉及巨大的货币价值。最终，历史将回答这场争议。
 
-The controversies in a consensus protocol can be many, and coordinating the network to solve them is challenging. Aligning incentives is crucial but not always possible. We will examine two current problems of the Ethereum consensus algorithm.
+共识协议中的争议可能有很多，协调网络来解决这些问题是具有挑战性的。协调激励措施至关重要，但并非总是可能。我们将研究以太坊共识算法的两个当前问题。
 
-### Timing Games
+### 时间游戏
 
-In Ethereum's protocol, time is structured into 12-second units called slots. Each slot assigns a validator the role of proposing a block right at the start (*t* = 0). A committee of attesters is then tasked with validating this block, aiming to do so by four seconds into the slot (*t* = 4), which is considered the attestation deadline.
+在以太坊的协议中，时间被结构化为 12 秒的单元，称为 slots。每个 slot 都分配一个验证者在开始时（*t* = 0）提出区块的角色。然后，一个证明人委员会的任务是验证该区块，目标是在 slot 的四秒内（*t* = 4）完成验证，这被认为是证明的截止日期。
 
-*Timing games* are strategies where validators wait as long as possible before proposing a block to maximize their MEV rewards, as shown in Figure 15-40. This practice involves a delicate balance, requiring validators to delay their proposals to capture more value while ensuring that their block is supported by a sufficient portion of the attesting committee to remain on the canonical chain.
+*时间游戏* 是一种策略，验证者尽可能长时间地等待，然后提议区块，以最大化他们的 MEV 奖励，如图 15-40 所示。这种做法涉及微妙的平衡，要求验证者推迟他们的提议以捕获更多价值，同时确保他们的区块得到足够多的证明委员会的支持，以留在规范链上。
 
-![Timing game strategy](images/ch15/maet_1540.png)
+![时间游戏策略](images/ch15/maet_1540.png)
 
-Figure 15-40. Timing game strategy
+图 15-40. 时间游戏策略
 
-Timing games in Ethereum create a competitive landscape where gains from MEV for one validator may lead to disadvantages for others. This competition can disrupt consensus by increasing the number of missed slots and potential block reorganizations. Additionally, it motivates attesters to postpone their validations, adding layers of complexity to the process.
+以太坊中的时间游戏创造了一个竞争格局，其中一个验证者的 MEV 收益可能导致其他验证者的劣势。这种竞争可能会通过增加错过的 slots 数量和潜在的区块重组来破坏共识。此外，它还促使证明人推迟验证，从而增加了过程的复杂性。
 
-"Principles of Consensus" points out the importance of liveness for Ethereum's consensus process. However, timing games pose a threat to this critical feature by compromising the network's reliability.
+“共识原则”指出了活跃性对于以太坊共识过程的重要性。但是，时间游戏通过损害网络的可靠性来威胁此关键功能。
 
-What's a timing game? It's like waiting for the perfect moment to make a move, aiming to get the most out of it. This is what some of the people keeping the network up and running are trying to do. They're waiting for the right time to act to get the most rewards. But this waiting game can be risky. If their internet is slow or they're not too experienced, they may miss their chance to do their part. And missing too many chances could make the network less dependable.
+什么是时间游戏？这就像等待完美的时机来采取行动，旨在从中获得最大的好处。这就是一些保持网络正常运行的人试图做的事情。他们正在等待正确的时机采取行动以获得最大的回报。但是这种等待游戏可能是有风险的。如果他们的互联网速度很慢或者他们没有太多经验，他们可能会错过自己做贡献的机会。而错过太多的机会可能会使网络变得不太可靠。
 
-![Timing game risk visualization](images/ch15/maet_1541.png)
+![时间游戏风险可视化](images/ch15/maet_1541.png)
 
-Figure 15-41. Timing game risk visualization
+图 15-41. 时间游戏风险可视化
 
-Right now, this isn't a big problem. Most of the entries working as validators aren't really getting into these timing games or aren't playing them at all, as shown in Figure 15-41.
+目前，这并不是一个大问题。大多数作为验证者工作的条目并没有真正参与这些时间游戏，或者根本没有玩它们，如图 15-41 所示。
 
-> **Note**  
+> **注意**
 >
-> Since we wrote this chapter in 2024, things have changed a bit. Right now, a solution has been added in the [Dencun hard fork](https://oreil.ly/TXJYS) called "proposer boost" that does punish late block proposers. The proposer boost adds weight to the attestations of the block proposer in the slot where the block is proposed.
+> 自 2024 年我们撰写本章以来，情况发生了一些变化。目前，在 [Dencun 硬分叉](https://oreil.ly/TXJYS) 中添加了一个名为“提议者提升”的解决方案，该解决方案确实会惩罚迟到的区块提议者。提议者提升增加了区块提议者在提议区块的 slot 中的证明的权重。
 
-### Centralization of Supermajority
+### 超多数的中心化
 
-The concept of supermajority client risk in Ethereum is all about balancing the network's health and security. Ethereum decided to use multiple clients to prevent any single point of failure. This is because all software, including these clients, can have bugs. The real trouble starts when there's a consensus bug, which could lead to something serious, such as creating infinite ether out of thin air. If just one client ran the whole show and it got hit by such a bug, fixing it would be a nightmare. The network could keep running with the bug active long enough for an attacker to cause irreversible damage.
+以太坊中超多数客户端风险的概念是关于平衡网络的健康和安全。以太坊决定使用多个客户端来防止任何单一故障点。这是因为所有软件（包括这些客户端）都可能存在错误。真正的麻烦始于出现共识错误时，这可能会导致严重的后果，例如凭空创建无限的以太币。如果只有一个客户端运行整个游戏并且它受到这种错误的攻击，修复它将是一场噩梦。网络可能会在错误处于活动状态的情况下继续运行足够长的时间，以使攻击者造成不可逆转的破坏。
 
-Let's analyze a quick example of what could happen if a majority client had a bug. Note that every block in Figure 15-42 is a checkpoint and not a block in the blockchain.
+让我们分析一个快速的示例，说明如果多数客户端存在错误会发生什么。请注意，图 15-42 中的每个区块都是一个检查点，而不是区块链中的一个区块。
 
-![Majority client bug scenario](images/ch15/maet_1542.png)
+![多数客户端错误场景](images/ch15/maet_1542.png)
 
-Figure 15-42. Majority client bug scenario
+图 15-42. 多数客户端错误场景
 
-Functional clients disregard the epoch containing the invalid block (labeled "B"). The arrow pointing to block B serves to justify the invalid epoch, while the one coming from it finalizes it.
+功能正常的客户端会忽略包含无效区块（标记为“B”）的 epoch。指向区块 B 的箭头用于证明无效的 epoch，而来自它的箭头将其最终确定。
 
-Assuming the bug is resolved and the validators who finalized the invalid epoch wish to switch back to the correct chain B, a preliminary action required is the justification of epoch X, as shown in Figure 15-43.
+假设该错误已解决，并且最终确定无效 epoch 的验证者希望切换回正确的链 B，则需要采取的初步操作是证明 epoch X，如图 15-43 所示。
 
-![Recovery from bug requires justification](images/ch15/maet_1543.png)
+![从错误中恢复需要证明](images/ch15/maet_1543.png)
 
-Figure 15-43. Recovery from bug requires justification
+图 15-43. 从错误中恢复需要证明
 
-To engage in the justification of epoch X, requiring a supermajority link as shown by the dashed arrow, validators must bypass the arrow coming out of block B, which represents the finalization of the invalid epoch. Casting votes for both links could lead to penalties for these validators.
+要参与 epoch X 的证明（需要虚线箭头所示的超多数链接），验证者必须绕过来自区块 B 的箭头，该箭头表示无效 epoch 的最终确定。为两个链接投票可能会导致这些验证者受到惩罚。
 
-The multiclient approach offers a safety net. If a bug pops up in a client that less than half the network uses, the rest of the network, running other clients, simply ignores the buggy block. This keeps the network on track, minimizing disruption. But if a majority client—especially one used by more than two thirds of validators—introduces a bug, that could wrongly finalize the chain, leading to a potential split.
+多客户端方法提供了一个安全网。如果某个客户端中出现一个错误，且该客户端的使用量不到网络的一半，则运行其他客户端的网络的其余部分会简单地忽略该有缺陷的区块。这可以使网络保持正常运行，从而最大程度地减少中断。但是，如果多数客户端（尤其是被超过三分之二验证者使用的客户端）引入了一个错误，则可能会错误地最终确定链，从而导致潜在的分裂。
 
-Ethereum encourages diversifying clients because if everyone used the same client and it failed, the whole network would be at risk. The penalties for running a client that goes against the grain are there to discourage putting all our eggs in one basket. This way, if a client does have a bug, the damage is contained, affecting fewer users. If a minority client causes trouble, it's less of an issue because the majority can correct the path and continue finalizing the chain.
+以太坊鼓励多元化客户端，因为如果每个人都使用相同的客户端并且它失败了，那么整个网络都将面临风险。运行与主流背道而驰的客户端的惩罚旨在阻止我们将所有鸡蛋放在一个篮子里。这样，如果一个客户端确实存在错误，则损坏将被控制，从而影响更少的用户。如果少数客户端引起麻烦，则问题不大，因为多数可以纠正路径并继续最终确定链。
 
-The more we spread out our choices across different clients, the safer Ethereum becomes. It's not just about avoiding technical failures; it's about safeguarding Ethereum's future against any single point of failure. This diversity is our best defense against network-wide crises, ensuring that Ethereum remains robust and resilient no matter what comes its way.
+我们在不同的客户端之间分散选择越多，以太坊就越安全。这不仅是避免技术故障的问题，还在于保护以太坊的未来免受任何单一故障点的影响。这种多样性是我们应对网络范围危机的最佳防御措施，可确保以太坊无论发生什么情况都保持强大的弹性和韧性。
 
-When we first wrote this chapter, the percentage of usage for Geth was 63%, which was a problem, as we explained previously. Right now the situation is more healthy, but it will still need to improve in the future; as of now, 41% of the execution clients are using Geth and 38% are using Nethermind, as shown in Figure 15-44.
+当我们第一次撰写本章时，Geth 的使用百分比为 63％，正如我们先前解释的那样，这是一个问题。目前的情况更加健康，但将来仍然需要改善；截至目前，41％ 的执行客户端正在使用 Geth，而 38％ 正在使用 Nethermind，如图 15-44 所示。
 
-![Current execution client distribution](images/ch15/maet_1544.png)
+![当前执行客户端分布](images/ch15/maet_1544.png)
 
-Figure 15-44. Current execution client distribution
+图 15-44. 当前执行客户端分布
 
-This issue affects not only execution clients but also consensus clients, although the problem on the consensus side was quickly addressed, and the situation is now relatively healthy and stable, as shown in Figure 15-45.
+该问题不仅影响执行客户端，还影响共识客户端，尽管共识方面的问题已得到迅速解决，并且目前的情况相对健康和稳定，如图 15-45 所示。
 
-![Current consensus client distribution](images/ch15/maet_1545.png)
+![当前共识客户端分布](images/ch15/maet_1545.png)
 
-Figure 15-45. Current consensus client distribution
+图 15-45. 当前共识客户端分布
 
-## Conclusion
+## 结论
 
-The consensus algorithm is one of the most complicated (and delicate) things in Ethereum. It represents a never-ending journey of innovation and improvement, with ongoing proposals to enhance its functionality and efficiency. Features such as single-slot finality and the ability to increase the max effective balance for validators illustrate the continuous efforts to refine and optimize the system.
+共识算法是以太坊中最复杂（也最精妙）的东西之一。它代表了一个永无止境的创新和改进之旅，不断有提案来增强其功能和效率。诸如单 slot 最终确定以及增加验证者最大有效余额的功能说明了不断努力完善和优化系统。
 
-Understanding the core principles of consensus provides a solid foundation for appreciating these advancements and their impact on the robustness and scalability of the Ethereum network. As Ethereum evolves, so too will its consensus mechanisms, driving forward the capabilities of this pioneering blockchain technology.
+理解共识的核心原则为欣赏这些进步及其对以太坊网络健壮性和可扩展性的影响奠定了坚实的基础。随着以太坊的发展，它的共识机制也将随之发展，从而推动了这种开创性的区块链技术的能力。
 
-For further reading, we recommend:
+为了进一步阅读，我们推荐：
 
-- [Gasper paper](https://oreil.ly/1BoMt)
-- [Upgrading Ethereum](https://oreil.ly/Jzh-9) by Ben Edgington
-- ["Decentralization Is Good or Not? Defending Consensus in Ethereum 2.0"](https://oreil.ly/VNC1Q)
+- [Gasper 论文](https://oreil.ly/1BoMt)
+- Ben Edgington 的 [升级以太坊](https://oreil.ly/Jzh-9)
+- [“去中心化好还是不好？捍卫以太坊 2.0 中的共识”](https://oreil.ly/VNC1Q)

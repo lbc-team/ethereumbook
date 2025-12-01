@@ -1,22 +1,22 @@
-# Chapter 8. Smart Contracts and Vyper
+# 第 8 章. 智能合约和 Vyper
 
-Vyper is a well-established contract-oriented programming language for the EVM that strives to provide superior auditability by making it easier for developers to produce intelligible code. In fact, one of the principles of Vyper is to make it virtually impossible for developers to write misleading code.
+Vyper 是一种成熟的、面向合约的 EVM 编程语言，它致力于通过让开发者更容易编写可理解的代码来提供卓越的可审计性。事实上，Vyper 的一个原则是让开发者几乎不可能编写具有误导性的代码。
 
-In this chapter, we will look at common problems with smart contracts, introduce the Vyper contract programming language, and compare it to Solidity, demonstrating the differences.
+在本章中，我们将了解智能合约的常见问题，介绍 Vyper 合约编程语言，并将其与 Solidity 进行比较，展示两者之间的差异。
 
-## Vulnerabilities and Vyper
+## 漏洞和 Vyper
 
-In 2023 alone, almost $2 billion were stolen because of smart contract vulnerabilities in the Ethereum ecosystem. Vulnerabilities are introduced into smart contracts via code. It can be strongly argued that these and other vulnerabilities are not introduced intentionally, but regardless, undesirable smart contract code evidently results in the unexpected loss of funds for Ethereum users, and this is not ideal. Vyper is designed to make it easier to write secure code or, equally, to make it more difficult to accidentally write misleading or vulnerable code.
+仅在 2023 年，就有近 20 亿美元因以太坊生态系统中的智能合约漏洞而被盗。漏洞通过代码引入到智能合约中。可以有力地认为，这些和其他漏洞并非故意引入的，但无论如何，不良的智能合约代码显然会导致以太坊用户的资金意外损失，这并不理想。Vyper 旨在使编写安全代码更容易，或者同样地，使意外编写具有误导性或易受攻击的代码更加困难。
 
-## Comparison to Solidity
+## 与 Solidity 的比较
 
-One of the ways in which Vyper tries to make unsafe code harder to write is by deliberately omitting some of Solidity’s features. This design choice reflects Vyper’s roots in security-first principles and its inspiration from Python’s clarity and simplicity. It is important for those who are considering developing smart contracts in Vyper to understand what features Vyper does not have and why. In this section, we will explore those features and provide justification for why they have been omitted.
+Vyper 尝试使编写不安全代码更加困难的一种方法是有意省略 Solidity 的一些功能。这种设计选择反映了 Vyper 以安全为先的原则，以及它从 Python 的清晰性和简洁性中获得的灵感。对于那些正在考虑使用 Vyper 开发智能合约的人来说，了解 Vyper 没有哪些功能以及为什么没有这些功能非常重要。在本节中，我们将探讨这些功能，并提供省略它们的原因。
 
-Despite stripping down the feature set to reduce ambiguity, Vyper has evolved to meet the practical needs of developers and auditors. For example, the original philosophy of keeping contracts in a single file helped maximize auditability, but it eventually became a bottleneck as protocols grew larger and more complex. To address this, modern Vyper introduced a sophisticated module system that allows developers to split contracts into multiple files while maintaining strict control over state access and code reuse. This module system follows composition principles rather than traditional inheritance, striking a better balance between structure and readability. Vyper has found a growing role in high-assurance use cases such as decentralized finance (DeFi) protocols and staking systems, where developers place a strong emphasis on clarity and ease of auditing.
+尽管减少了功能集以减少歧义，但 Vyper 已经发展到可以满足开发人员和审计人员的实际需求。例如，将合约保存在单个文件中的最初理念有助于最大限度地提高可审计性，但随着协议变得越来越大和越来越复杂，它最终成为一个瓶颈。为了解决这个问题，现代 Vyper 引入了一个复杂的模块系统，该系统允许开发人员将合约拆分为多个文件，同时保持对状态访问和代码重用的严格控制。该模块系统遵循组合原则而不是传统的继承，从而在结构和可读性之间取得了更好的平衡。Vyper 在高保证用例中发挥着越来越重要的作用，例如去中心化金融 (DeFi) 协议和质押系统，在这些用例中，开发人员非常重视清晰性和易于审计。
 
-### Modifiers
+### 修饰器 (Modifiers)
 
-As we saw in Chapter 7, in Solidity you can write a function using modifiers. For example, the following function, `changeOwner`, will run the code in a modifier called `onlyBy` as part of its execution:
+正如我们在第 7 章中看到的，在 Solidity 中，你可以使用修饰器编写函数。例如，以下函数 `changeOwner` 将在执行过程中运行名为 `onlyBy` 的修饰器中的代码：
 
 ```solidity
 function changeOwner(address _newOwner)
@@ -27,7 +27,7 @@ function changeOwner(address _newOwner)
 }
 ```
 
-This modifier enforces a rule in relation to ownership. As you can see, this particular modifier acts as a mechanism to perform a precheck on behalf of the `changeOwner` function:
+此修饰器强制执行与所有权相关的规则。如你所见，此特定修饰器充当代表 `changeOwner` 函数执行预检查的机制：
 
 ```solidity
 modifier onlyBy(address _account)
@@ -37,9 +37,9 @@ modifier onlyBy(address _account)
 }
 ```
 
-But modifiers are not just there to perform checks, as shown here. In fact, as modifiers, they can significantly change a smart contract’s environment, in the context of the calling function. Put simply, modifiers are *pervasive*.
+但修饰器不仅仅用于执行检查，如这里所示。事实上，作为修饰器，它们可以在调用函数的上下文中显着改变智能合约的环境。简而言之，修饰器是*普遍存在的*。
 
-Let’s look at another Solidity-style example:
+让我们看另一个 Solidity 风格的例子：
 
 ```solidity
 enum Stages {
@@ -66,29 +66,29 @@ function a()
 }
 ```
 
-On the one hand, developers should always check any other code that their own code is calling. However, it is possible that in certain situations (such as when there are time constraints or exhaustion results in lack of concentration), a developer may overlook a single line of code. This is even more likely if the developer has to jump around inside a large file while mentally keeping track of the function call hierarchy and committing the state of smart contract variables to memory.
+一方面，开发者应该始终检查他们的代码正在调用的任何其他代码。但是，在某些情况下（例如，当存在时间限制或耗尽导致注意力不集中时），开发者可能会忽略一行代码。如果开发者必须在一个大文件中跳转，同时在精神上跟踪函数调用层次结构并将智能合约变量的状态提交到内存中，则这种情况更有可能发生。
 
-Let’s look at the preceding example in a bit more depth. Imagine that a developer is writing a public function called `a`. The developer is new to this contract and is utilizing a modifier written by someone else. At a glance, it appears that the `stageTimeConfirmation` modifier is simply performing some checks regarding the age of the contract in relation to the calling function. What the developer may *not* realize is that the modifier is also calling another function, `nextStage`. In this simplistic demonstration scenario, simply calling the public function `a` results in the smart contract’s `stage` variable moving from `SafeStage` to `DangerStage`.
+让我们更深入地看一下前面的例子。假设一个开发者正在编写一个名为 `a` 的公共函数。该开发者是此合约的新手，并且正在使用由其他人编写的修饰器。乍一看，`stageTimeConfirmation` 修饰器似乎只是在执行一些关于合约年龄与调用函数相关的检查。开发者可能*没有*意识到的是，修饰器也在调用另一个函数 `nextStage`。在这个简单的演示场景中，仅仅调用公共函数 `a` 就会导致智能合约的 `stage` 变量从 `SafeStage` 移动到 `DangerStage`。
 
-Vyper has done away with modifiers altogether. The recommendations from Vyper are as follows: if you are only performing assertions with modifiers, then simply use inline checks and asserts as part of the function; if you are modifying smart contract state and so forth, again make these changes explicitly part of the function. Doing this improves auditability and readability since the reader doesn’t have to mentally (or manually) “wrap” the modifier code around the function to see what it does.
+Vyper 已经完全取消了修饰器。Vyper 的建议如下：如果你只是使用修饰器执行断言，那么只需使用内联检查和断言作为函数的一部分；如果你要修改智能合约状态等等，再次使这些更改显式地成为函数的一部分。这样做可以提高可审计性和可读性，因为读者不必在头脑中（或手动地）将修饰器代码“包装”在函数周围才能看到它的作用。
 
-### Class Inheritance
+### 类继承 (Class Inheritance)
 
-Inheritance allows programmers to harness the power of prewritten code by acquiring preexisting functionality, properties, and behaviors from existing software libraries. Inheritance is powerful and promotes the reuse of code. Solidity supports multiple inheritance as well as polymorphism, but while these are key features of object-oriented programming, Vyper does not support them. Vyper maintains that the implementation of inheritance requires coders and auditors to jump between multiple files in order to understand what the program is doing. Vyper also takes the view that multiple inheritance can make code too complicated to understand—a view tacitly admitted by the [Solidity documentation](https://oreil.ly/bkGwS), which gives an example of how multiple inheritance can be problematic.
+继承允许程序员通过从现有软件库中获取预先存在的功能、属性和行为来利用预先编写的代码的力量。继承非常强大，并促进了代码的重用。Solidity 支持多重继承以及多态性，但虽然这些是面向对象编程的关键特性，但 Vyper 不支持它们。Vyper 认为继承的实现需要编码人员和审计人员在多个文件之间跳转，才能理解程序正在做什么。Vyper 还认为多重继承会使代码过于复杂而无法理解——[Solidity 文档](https://oreil.ly/bkGwS)默默地承认了这一观点，该文档给出了一个多重继承可能存在问题的例子。
 
-### Inline Assembly
+### 内联汇编 (Inline Assembly)
 
-Inline assembly gives developers low-level access to the EVM, allowing Solidity programs to perform operations by directly accessing EVM instructions. For example, the following assembly code adds 3 to memory location `0x80`:
+内联汇编使开发者可以低级别地访问 EVM，从而允许 Solidity 程序通过直接访问 EVM 指令来执行操作。例如，以下汇编代码将 3 添加到内存位置 `0x80`：
 
 ```
 3 0x80 mload add 0x80 mstore
 ```
 
-This would prevent the ability to search for a variable name to locate all occurrences where the variable is read or modified. Vyper considers the loss of readability to be too high a price to pay for the extra power and thus does not support inline assembly.
+这将阻止搜索变量名以查找变量被读取或修改的所有出现位置的能力。Vyper 认为可读性的丧失是为额外的功能付出的代价太高，因此不支持内联汇编。
 
-### Function Overloading
+### 函数重载 (Function Overloading)
 
-Function overloading allows developers to write multiple functions of the same name. Which function is used on a given occasion depends on the types of the arguments supplied. Take the following two functions, for example:
+函数重载允许开发者编写多个同名函数。在给定场合使用哪个函数取决于提供的参数类型。例如，以下两个函数：
 
 ```solidity
 function f(uint256 _in) public pure returns (uint256 out) {
@@ -99,142 +99,142 @@ function f(uint256 _in, bytes32 _key) public pure returns (uint256 out) {
 }
 ```
 
-The first function (named `f`) accepts an input argument of type `uint256`; the second function (also named `f`) accepts two arguments, one of type `uint256` and one of type `bytes32`. Having multiple function definitions with the same name taking different arguments can be confusing, so Vyper does not support function overloading.
+第一个函数（名为 `f`）接受一个类型为 `uint256` 的输入参数；第二个函数（也名为 `f`）接受两个参数，一个类型为 `uint256`，一个类型为 `bytes32`。具有多个具有相同名称但接受不同参数的函数定义可能会令人困惑，因此 Vyper 不支持函数重载。
 
-### Variable Typecasting
+### 变量类型转换 (Variable Typecasting)
 
-Vyper takes a very different approach to type conversion compared to Solidity, prioritizing explicit and safe type handling over convenience. The language requires all type conversions to be made explicitly using the built-in `convert()` function, which ensures that developers are always aware of when and how data types are being modified.
+与 Solidity 相比，Vyper 在类型转换方面采用了非常不同的方法，它优先考虑显式和安全的类型处理，而不是便利性。该语言要求所有类型转换都使用内置的 `convert()` 函数显式完成，这确保了开发者始终知道何时以及如何修改数据类型。
 
-We can think of type conversions in two categories: those that might lose information and those that don’t. Vyper’s `convert()` function handles both cases, but always with explicit bounds checking to prevent unexpected behavior. For example, when converting from a larger integer type to a smaller one, Vyper will revert the transaction if the value doesn’t fit within the bounds of the target type.
+我们可以将类型转换分为两类：可能会丢失信息的类型转换和不会丢失信息的类型转换。Vyper 的 `convert()` 函数处理这两种情况，但始终使用显式边界检查来防止意外行为。例如，当从较大的整数类型转换为较小的整数类型时，如果该值不适合目标类型的边界，Vyper 将回滚交易。
 
-The syntax for type conversion in Vyper is straightforward:
+Vyper 中类型转换的语法很简单：
 
 ```
-# Converting between integer types
+# 在整数类型之间转换
 small_value: uint8 = 42
-large_value: uint256 = convert(small_value, uint256)  # Safe upcast
-back_to_small: uint8 = convert(large_value, uint8)   # Bounds-checked downcast
+large_value: uint256 = convert(small_value, uint256)  # 安全向上转换
+back_to_small: uint8 = convert(large_value, uint8)   # 边界检查向下转换
 ```
 
-This explicit approach means that while Vyper code may be more verbose than Solidity when dealing with type conversions, it’s also much safer. There’s no possibility of accidentally truncating values or having unexpected overflow behavior because every conversion must be intentional and explicit. The `convert()` function will revert the transaction if the conversion would result in data loss or if the input value is outside the valid range for the target type.
+这种显式方法意味着，在处理类型转换时，虽然 Vyper 代码可能比 Solidity 更冗长，但它也更安全。不可能意外截断值或出现意外的溢出行为，因为每次转换都必须是有意且显式的。如果转换会导致数据丢失，或者如果输入值超出目标类型的有效范围，则 `convert()` 函数将回滚交易。
 
-## Decorators
+## 装饰器 (Decorators)
 
-The following decorators may be used at the start of each function:
+以下装饰器可以在每个函数的开头使用：
 
 **@internal**
 
-The `@internal` decorator makes the function inaccessible from outside the contract. This is the default function visibility, and as such, it is optional.
+`@internal` 装饰器使函数无法从合约外部访问。这是默认的函数可见性，因此是可选的。
 
 **@external**
 
-The `@external` decorator makes the function both visible and executable publicly. For example, even the Ethereum wallet will display such functions when viewing the contract.
+`@external` 装饰器使函数既可见又可公开执行。例如，即使是以太坊钱包在查看合约时也会显示此类函数。
 
 **@view**
 
-Functions with the `@view` decorator are not allowed to change state variables. In fact, the compiler will reject the entire program (with an appropriate error) if the function tries to change a state variable.
+带有 `@view` 装饰器的函数不允许更改状态变量。事实上，如果该函数尝试更改状态变量，编译器将拒绝整个程序（并显示相应的错误）。
 
 **@pure**
 
-Functions with the `@pure` decorator are not allowed to read any blockchain state or make a call to nonpure methods or to other contracts.
+带有 `@pure` 装饰器的函数不允许读取任何区块链状态或调用非纯方法或调用其他合约。
 
 **@payable**
 
-Only functions with the `@payable` decorator are allowed to transfer value.
+只有带有 `@payable` 装饰器的函数才允许转移价值。
 
 **@deploy**
 
-The `@deploy` decorator is used to mark the constructor function of a contract. This function runs exactly once when the contract is deployed to the blockchain, typically for setting up initial state variables and configuration. In Vyper, only the `__init__()` function can be marked with `@deploy`, and this decorator is required if you want to include constructor logic in your contract.
+`@deploy` 装饰器用于标记合约的构造函数。此函数在合约部署到区块链时仅运行一次，通常用于设置初始状态变量和配置。在 Vyper 中，只有 `__init__()` 函数可以用 `@deploy` 标记，如果你想在合约中包含构造函数逻辑，则必须使用此装饰器。
 
 **@raw_return**
 
-Functions with the `@raw_return` decorator return raw bytes without applying ABI encoding. This decorator is particularly useful in proxy contracts and helper contracts where you need to forward the exact output of another contract call without wrapping it in another layer of encoding. However, there are important limitations: this decorator can be used only on `@external` functions. It cannot be used in interface definitions, and when calling such functions from other contracts, you should use `raw_call` instead of interface calls since the return data may not be ABI encoded.
+带有 `@raw_return` 装饰器的函数返回原始字节，而不应用 ABI 编码。此装饰器在代理合约和辅助合约中特别有用，在这些合约中，你需要转发另一个合约调用的确切输出，而无需将其包装在另一层编码中。但是，存在重要的限制：此装饰器只能在 `@external` 函数上使用。它不能在接口定义中使用，并且从其他合约调用此类函数时，应使用 `raw_call` 而不是接口调用，因为返回数据可能未进行 ABI 编码。
 
 **@nonreentrant**
 
-The `@nonreentrant` decorator places a lock on a function, preventing reentrant calls to any function covered by the decorator. The reentrancy lock ensures that such functions cannot be entered again until they have finished executing. This decorator is used to prevent reentrancy attacks, where an external contract might call back into the protected functions, potentially causing unexpected behavior or contract exploits. Vyper also supports a pragma for nonreentrancy by default, making all external functions nonreentrant unless explicitly overridden. For example, if contract A uses this decorator for reentrancy protection and makes an external call to contract B, any attempt by contract B to call back into a protected function on contract A will cause the transaction to revert.
+`@nonreentrant` 装饰器在函数上放置一个锁，防止对装饰器覆盖的任何函数进行重入调用。重入锁确保在这些函数完成执行之前，无法再次进入这些函数。此装饰器用于防止重入攻击，在这种攻击中，外部合约可能会回调到受保护的函数中，从而可能导致意外行为或合约漏洞。Vyper 还支持默认的非重入性编译指示，使所有外部函数都具有非重入性，除非显式覆盖。例如，如果合约 A 对重入保护使用此装饰器，并对合约 B 进行外部调用，则合约 B 尝试回调到合约 A 上受保护的函数的任何尝试都将导致交易回滚。
 
-> **Note**
+> **注意**
 >
-> This nonreentrant feature in Vyper versions 0.2.15, 0.2.16, and 0.3.0 contained a critical bug that was discovered and exploited to attack the Curve protocol in mid-2023. We will dive deeper into the reentrancy vulnerability in Chapter 9.
+> Vyper 版本 0.2.15、0.2.16 和 0.3.0 中的此非重入功能包含一个严重错误，该错误已在 2023 年中期被发现并被利用来攻击 Curve 协议。我们将在第 9 章中更深入地研究重入漏洞。
 
-Vyper implements the logic of decorators explicitly. For example, the Vyper compilation process will fail if a function has both a `@payable` decorator and a `@view` decorator. This makes sense because a function that transfers value has by definition updated the state so cannot be `@view`. Each Vyper function must be decorated with either `@external` or `@internal` (but not both!).
+Vyper 显式地实现了装饰器的逻辑。例如，如果一个函数同时具有 `@payable` 装饰器和 `@view` 装饰器，则 Vyper 编译过程将会失败。这是有道理的，因为传输价值的函数已经通过定义更新了状态，因此不能是 `@view`。每个 Vyper 函数都必须用 `@external` 或 `@internal` 装饰（但不能同时装饰！）。
 
-## Function and Variable Ordering
+## 函数和变量排序 (Function and Variable Ordering)
 
-Vyper’s approach to scoping and declarations follows C99 scoping rules, which provide more flexibility than you might initially expect. While Vyper contracts must still be contained within a single file (unless you are using the module system), the strict ordering requirements that were present in earlier versions have been relaxed for module-scope declarations.
+Vyper 处理作用域和声明的方法遵循 C99 作用域规则，这些规则提供了比你最初预期的更大的灵活性。虽然 Vyper 合约仍然必须包含在单个文件中（除非你正在使用模块系统），但早期版本中存在的严格排序要求对于模块范围的声明已经放宽了。
 
-Variables and functions that are declared at the module scope (outside of any function body) are visible throughout the entire contract, even before their formal declaration. This means you can reference state variables and call functions before they appear in the file, similar to how many modern programming languages handle forward declarations.
+在模块范围内（在任何函数体之外）声明的变量和函数在整个合约中都是可见的，即使在它们的形式声明之前也是如此。这意味着你可以在文件中的状态变量和调用函数之前引用它们，类似于许多现代编程语言处理正向声明的方式。
 
-Here’s a practical example showing how scoping works in modern Vyper:
+以下是一个实际示例，展示了现代 Vyper 中作用域的工作方式：
 
 ```
-# This function can reference the state variable below
+# 此函数可以引用下面的状态变量
 @external
 def get_stored_value() -> uint256:
-    return self.stored_data  # References variable declared later
-# This function can call the function above
+    return self.stored_data  # 引用稍后声明的变量
+# 此函数可以调用上面的函数
 @external
 def check_if_positive() -> bool:
     return self.get_stored_value() > 0
-# State variable declaration - accessible by functions above
+# 状态变量声明 - 可由上述函数访问
 stored_data: public(uint256)
 ```
 
-However, within function scope, Vyper still maintains strict ordering rules. Local variables must be declared before use, and you cannot shadow the names of constants, immutable variables, or other module-level declarations with local variables. This scoping approach strikes a balance between Python’s flexibility and the needs of smart contract development, where clear visibility of state variables and function relationships is important for security auditing.
+但是，在函数范围内，Vyper 仍然保持严格的排序规则。局部变量必须在使用前声明，并且你不能使用局部变量隐藏常量、不可变变量或其他模块级别的声明的名称。这种作用域方法在 Python 的灵活性和智能合约开发的需要之间取得了平衡，在智能合约开发中，状态变量和函数关系的清晰可见性对于安全审计非常重要。
 
-## Compilation
+## 编译 (Compilation)
 
-The easiest way to experiment with Vyper is to use the [Remix online compiler](https://remix.ethereum.org), which allows you to write and then compile your smart contracts using only your web browser (you will need to activate the vyper-remix plug-in in the plug-in manager).
+试验 Vyper 最简单的方法是使用 [Remix 在线编译器](https://remix.ethereum.org)，它允许你仅使用 Web 浏览器编写然后编译智能合约（你需要激活插件管理器中的 vyper-remix 插件）。
 
-> **Note**
+> **注意**
 >
-> Vyper comes with [built-in common interfaces](https://oreil.ly/GazPW), such as ERC-20 and ERC-721, allowing interaction with such contracts out of the box. Contracts in Vyper must be declared as global variables. An example of declaring an ERC-20 variable is as follows:
+> Vyper 带有 [内置的通用接口](https://oreil.ly/GazPW)，例如 ERC-20 和 ERC-721，允许直接与此类合约进行交互。Vyper 中的合约必须声明为全局变量。声明 ERC-20 变量的示例如下：
 > `from vyper.interfaces import ERC20` `token: ERC20`
 
-You can also compile a contract using the command line. Each Vyper contract is saved in a file with the *.vy* extension. Once Vyper is installed, you can compile a contract by running the following command:
+你还可以使用命令行编译合约。每个 Vyper 合约都保存在一个带有 *.vy* 扩展名的文件中。安装 Vyper 后，你可以通过运行以下命令来编译合约：
 
 ```bash
 vyper ~/hello_world.vy
 ```
 
-The compiler offers extensive output options. To get the human-readable ABI description in JSON format, use:
+编译器提供了广泛的输出选项。要以 JSON 格式获取人类可读的 ABI 描述，请使用：
 
 ```bash
 vyper -f abi ~/hello_world.vy
 ```
 
-For development and testing, you’ll likely want additional outputs like bytecode, opcodes, or interface files. The compiler supports numerous output formats:
+对于开发和测试，你可能需要其他输出，如字节码、操作码或接口文件。编译器支持多种输出格式：
 
 ```bash
 vyper -f abi,bytecode,interface,source_map ~/hello_world.vy
 ```
 
-Modern Vyper also includes advanced optimization modes. You can optimize for gas efficiency with `--optimize gas` (the default) or for smaller contract sizes with `--optimize codesize`. The newer, experimental Venom IR pipeline can be enabled with `--experimental-codegen` for even better optimizations.
+现代 Vyper 还包括高级优化模式。你可以使用 `--optimize gas`（默认值）优化 Gas 效率，或使用 `--optimize codesize` 优化更小的合约大小。可以使用 `--experimental-codegen` 启用较新的实验性 Venom IR 管道，以获得更好的优化。
 
-While Remix and the command-line compiler are excellent for learning and experimentation, developers working on larger projects typically need comprehensive development frameworks. [ApeWorx](https://oreil.ly/AJRSa) (formerly Ape) provides excellent Vyper support with features like automated testing, deployment scripting, and integration with various networks. [Foundry](https://oreil.ly/CWIKj), while primarily focused on Solidity, also supports Vyper development and offers powerful testing and simulation capabilities. These frameworks provide the kind of mature development environment that professional smart contract developers need for building complex applications.
+虽然 Remix 和命令行编译器非常适合学习和实验，但处理较大项目的开发者通常需要全面的开发框架。[ApeWorx](https://oreil.ly/AJRSa)（以前称为 Ape）提供了出色的 Vyper 支持，具有自动化测试、部署脚本以及与各种网络集成等功能。[Foundry](https://oreil.ly/CWIKj) 虽然主要关注 Solidity，但也支持 Vyper 开发，并提供强大的测试和模拟功能。这些框架提供了专业的智能合约开发人员构建复杂应用程序所需的成熟开发环境。
 
-## Protecting Against Overflow Errors at the Compiler Level
+## 在编译器级别防止溢出错误 (Protecting Against Overflow Errors at the Compiler Level)
 
-Overflow errors in software can be catastrophic when dealing with real value. For example, one [transaction from mid-April 2018](https://oreil.ly/zOy06) shows the malicious transfer of more than 57,896,044,618,658,100,000,000,000,000,000,000,000,000, 000,000,000,000,000,000 BEC tokens. This transaction was the result of an integer-overflow issue in Beauty Chain’s ERC-20 token contract (*BecToken.sol*).
+在处理实际价值时，软件中的溢出错误可能是灾难性的。例如，[2018 年 4 月中旬的一笔交易](https://oreil.ly/zOy06) 显示恶意转移了超过 57,896,044,618,658,100,000,000,000,000,000,000,000,000,000,000,000,000,000,000 BEC 代币。此交易是 Beauty Chain 的 ERC-20 代币合约（*BecToken.sol*）中整数溢出问题导致的。
 
-One of the core features of Vyper has always been its built-in overflow protection, which mitigates the risk of the overflow errors that have historically plagued smart contract development. Vyper’s approach to overflow protection is comprehensive: it includes SafeMath-equivalent protection that handles the necessary exception cases for integer arithmetic, ensuring that operations like addition, subtraction, multiplication, and division are safe by default and throwing exceptions when an overflow or underflow occurs. Additionally, Vyper uses clamps to enforce value limits whenever a literal constant is loaded, a value is passed to a function, or a variable is assigned.
+Vyper 的核心功能之一一直是其内置的溢出保护，它可以缓解历史上困扰智能合约开发的溢出错误的风险。Vyper 的溢出保护方法是全面的：它包括 SafeMath 等效保护，可以处理整数算术的必要异常情况，确保加法、减法、乘法和除法等操作在默认情况下是安全的，并在发生溢出或下溢时引发异常。此外，Vyper 使用钳位来强制执行值限制，每当加载文字常量、将值传递给函数或分配变量时。
 
-It’s worth noting that recent versions of Solidity (0.8.0 and later) have also integrated native overflow checks at the compiler level, similar to what Vyper has provided from the beginning. This means that arithmetic operations in modern Solidity now automatically include overflow checks, significantly reducing the risk of overflow errors without requiring additional libraries like SafeMath. While this change has brought Solidity closer to Vyper’s safety-first approach, Vyper’s implementation remains more comprehensive, including the clamp operations and more consistent bounds checking throughout the language. The key difference is philosophical: Vyper was designed from the ground up with overflow protection as a core principle, while Solidity added it as an enhancement to address historical vulnerabilities. This difference in approach reflects Vyper’s broader commitment to making unsafe code harder to write by default.
+值得注意的是，最新版本的 Solidity（0.8.0 及更高版本）也集成了编译器级别的本机溢出检查，类似于 Vyper 从一开始就提供的功能。这意味着现代 Solidity 中的算术运算现在会自动包含溢出检查，从而大大降低了溢出错误的风险，而无需额外的库（如 SafeMath）。虽然此更改使 Solidity 更接近 Vyper 的安全第一方法，但 Vyper 的实现仍然更加全面，包括钳位操作和语言中更一致的边界检查。关键的区别在于哲学：Vyper 从一开始就被设计为以溢出保护为核心原则，而 Solidity 添加它是为了增强功能，以解决历史漏洞。这种方法的差异反映了 Vyper 更广泛的承诺，即默认情况下使不安全的代码更难编写。
 
-## Reading and Writing Data
+## 读取和写入数据 (Reading and Writing Data)
 
-Even though it is costly to store, read, and modify data, these storage operations are a necessary component of most smart contracts. Smart contracts can write data to two places:
+即使存储、读取和修改数据的成本很高，但这些存储操作也是大多数智能合约的必要组成部分。智能合约可以将数据写入两个位置：
 
-**Global state**
+**全局状态 (Global state)**
 
-The state variables in a given smart contract are stored in Ethereum’s global state trie; a smart contract can only store, read, and modify data in relation to that particular contract’s address (i.e., smart contracts cannot directly read or write to other smart contracts).
+给定智能合约中的状态变量存储在以太坊的全局状态 Trie 中；智能合约只能存储、读取和修改与该特定合约地址相关的数据（即，智能合约不能直接读取或写入其他智能合约）。
 
-**Logs**
+**日志 (Logs)**
 
-A smart contract can write to Ethereum’s chain data through log events. In Vyper, the syntax for declaring and using events is clean and straightforward, aligning with Vyper’s focus on code clarity.
+智能合约可以通过日志事件写入以太坊的链数据。在 Vyper 中，声明和使用事件的语法简洁明了，符合 Vyper 对代码清晰度的关注。
 
-Event declarations in Vyper look similar to struct declarations. For example, the declaration of an event called `MyLog` is written as:
+Vyper 中的事件声明类似于结构体声明。例如，名为 `MyLog` 的事件的声明编写为：
 
 ```
 event MyLog:
@@ -243,28 +243,28 @@ event MyLog:
     message: indexed(bytes[100])
 ```
 
-You can have up to four indexed arguments (these become searchable topics) and any number of nonindexed arguments that become part of the event data. Indexed arguments are useful for filtering and searching events, while nonindexed arguments can contain larger amounts of data.
+你最多可以有四个索引参数（这些参数将成为可搜索的主题）和任意数量的非索引参数，这些参数将成为事件数据的一部分。索引参数对于过滤和搜索事件很有用，而非索引参数可以包含大量数据。
 
-The execution of the log event uses the `log` statement with straightforward syntax:
+日志事件的执行使用 `log` 语句，语法简单明了：
 
 ```
 log MyLog(msg.sender, 42, b"Hello, Vyper!")
 ```
 
-You can also create events with no arguments using the `pass` statement:
+你还可以使用 `pass` 语句创建没有参数的事件：
 
 ```
 event SimpleEvent: pass
-# Later in your code:
+# 在你的代码中：
 log SimpleEvent()
 ```
 
-While smart contracts can write to Ethereum’s chain data through log events, they are unable to read the on-chain log events they’ve created. However, one of the advantages of writing to Ethereum’s chain data via log events is that logs can be discovered and read on the public chain by light clients. For example, the `logsBloom` value in a published block can indicate whether or not a log event is present. Once the existence of log events has been established, the log data can be obtained from a given transaction receipt.
+虽然智能合约可以通过日志事件写入以太坊的链数据，但它们无法读取它们创建的链上日志事件。但是，通过日志事件写入以太坊链数据的优势之一是，轻客户端可以在公共链上发现和读取日志。例如，已发布块中的 `logsBloom` 值可以指示是否存在日志事件。一旦确定了日志事件的存在，就可以从给定的交易收据中获取日志数据。
 
-## Conclusion
+## 结论 (Conclusion)
 
-Vyper is a powerful and fascinating contract-oriented programming language. Its design is biased toward “correctness,” prioritizing security and simplicity. This approach may allow programmers to write better smart contracts and avoid certain pitfalls that can cause serious vulnerabilities to arise.
+Vyper 是一种功能强大的、引人入胜的面向合约的编程语言。它的设计偏向于“正确性”，优先考虑安全性和简易性。这种方法可能允许程序员编写更好的智能合约，并避免可能导致出现严重漏洞的某些陷阱。
 
-However, it’s important to recognize that everything has trade-offs. While Vyper’s stringent design principles enhance security and code clarity, they also limit some of the flexibility that developers may find in other languages. Additionally, Vyper is not as widely used or as developed as Solidity, which means fewer resources, libraries, and tools are available for developers. This can pose challenges for those who are looking to find community support, prebuilt solutions, and comprehensive documentation.
+但是，重要的是要认识到一切都有权衡之处。虽然 Vyper 严格的设计原则增强了安全性和代码清晰度，但它们也限制了开发人员在其他语言中可能找到的一些灵活性。此外，Vyper 的使用不如 Solidity 广泛或发达，这意味着可供开发人员使用的资源、库和工具更少。这可能会给那些希望寻找社区支持、预构建解决方案和全面文档的人带来挑战。
 
-Next, we will look at smart contract security in more detail. Some of the nuances of Vyper design may become more apparent once you read about all the possible security problems that can arise in smart contracts.
+接下来，我们将更详细地了解智能合约安全性。一旦你了解了智能合约中可能出现的所有可能的安全问题后，Vyper 设计的一些细微之处可能会变得更加明显。

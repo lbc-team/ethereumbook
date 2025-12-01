@@ -1,88 +1,88 @@
-# Chapter 12. Decentralized Applications
+# 第12章. 去中心化应用
 
-In this chapter, we'll demystify DApps, explaining what they are, how they work, and how their core architecture is structured. After covering the fundamentals, we'll walk through a practical, hands-on example where you'll build your first DApp from the ground up. This includes deploying the necessary smart contracts, integrating a frontend, and preparing the entire stack for a near-production environment. By the end, you'll have both a working DApp and a solid understanding of the core concepts that underpin these innovative applications.
+在这一章中，我们将揭秘 DApp，解释它们是什么，如何工作，以及它们的核心架构是如何构建的。在介绍了基础知识之后，我们将通过一个实践性的例子，从头开始构建你的第一个 DApp。这包括部署必要的智能合约，集成前端，并为近生产环境准备整个堆栈。最后，你将拥有一个可用的 DApp，并且对这些创新应用背后的核心概念有深刻的理解。
 
-## What Is a DApp?
+## 什么是 DApp？
 
-*DApp* stands for *decentralized application*; it's a completely new paradigm shift compared to legacy applications, where you usually have the following architecture, as shown in Figure 12-1:
+*DApp* 代表 *去中心化应用*；它与传统的应用程序相比，是一个完全的范式转变，传统的应用程序通常具有以下架构，如图 12-1 所示：
 
-- A closed source code for the logic part of the app
-- A centralized database to store application data into
-- A unique frontend to let users access the app
+- 应用程序逻辑部分的闭源代码
+- 用于存储应用程序数据的中心化数据库
+- 允许用户访问应用程序的唯一前端
 
-![General architecture of a legacy application](images/ch12/maet_1201.png)
+![传统应用程序的通用架构](images/ch12/maet_1201.png)
 
-Figure 12-1. General architecture of a legacy application
+图 12-1. 传统应用程序的通用架构
 
-Think about Instagram, TikTok, your bank, or whatever applications you have on your phone right now. They probably rely on a very similar architecture. You have access to the application only if the team behind it wants you to access it; there are no alternative websites you can visit to log into your Instagram account if the official one is out of service.
+想想 Instagram、TikTok、你的银行，或者你手机上的任何应用程序。它们可能依赖于非常相似的架构。只有当其背后的团队允许你访问时，你才能访问该应用程序；如果官方网站无法使用，你无法访问其他网站来登录你的 Instagram 账户。
 
-DApps have two clear goals: don't have a single point of failure and be a product that people can still use even if the whole team disappears. Their architecture can be simplified in the following way, as shown in Figure 12-2:
+DApp 有两个明确的目标：不要有单点故障，并且即使整个团队消失，人们仍然可以使用该产品。它们的架构可以简化为以下方式，如图 12-2 所示：
 
-- Several Ethereum smart contracts form the basis of the logic part of the DApp. Most of the time, the Solidity (or Vyper) code is open source, too.
-- Smart contracts can also contain data, working as a proper database and collecting all necessary user information.
-- People can access the app via an official frontend, which is easily replaceable with an alternative one (even one that is made by the community) if the main one doesn't work for whatever reason.
+- 一些以太坊智能合约构成了 DApp 逻辑部分的基础。大多数情况下，Solidity (或 Vyper) 代码也是开源的。
+- 智能合约也可以包含数据，充当适当的数据库，并收集所有必要的用户信息。
+- 人们可以通过官方前端访问应用程序，如果主前端由于任何原因无法工作，可以很容易地用替代前端（甚至是由社区制作的）替换。
 
-![General architecture of a DApp](images/ch12/maet_1202.png)
+![DApp 的通用架构](images/ch12/maet_1202.png)
 
-Figure 12-2. General architecture of a DApp
+图 12-2. DApp 的通用架构
 
-> **Note**  
+> **注意**
 >
-> DApps can have some off-chain components with some degree of centralization, too, but usually these components are not fundamental for the core logic of the application. They may be helpful to speed up the application in the average case, but it should always be possible to fully rely on on-chain data in the worst case. This is not always true, and there are definitely some DApps that have core logic parts dependent on centralized components. They are not truly decentralized apps but are more like a hybrid form between legacy and fully decentralized applications.
+> DApp 也可以有一些具有一定程度中心化的链下组件，但通常这些组件对于应用程序的核心逻辑来说不是根本的。它们可能有助于在一般情况下加速应用程序，但在最坏的情况下，应该始终可以完全依赖链上数据。这并非总是如此，而且肯定有一些 DApp 的核心逻辑部分依赖于中心化组件。它们不是真正的去中心化应用程序，而更像是传统应用程序和完全去中心化应用程序之间的混合形式。
 
-In the next sections, we'll further explore each component of the DApp stack to better understand how they work and how they relate to one another and the Ethereum protocol.
+在接下来的章节中，我们将进一步探讨 DApp 堆栈的每个组件，以更好地理解它们是如何工作的，以及它们如何相互关联和与以太坊协议相关联。
 
-## Backend (Smart Contract)
+## 后端（智能合约）
 
-In a DApp, core business logic and data storage are encoded into smart contracts and run on the Ethereum blockchain instead of residing on a centralized server. The blockchain acts as a decentralized backend where transaction execution, state changes, and record keeping are trustlessly enforced by the network rather than a single entity.
+在 DApp 中，核心业务逻辑和数据存储被编码到智能合约中，并在以太坊区块链上运行，而不是驻留在中心化服务器上。区块链充当去中心化后端，交易执行、状态更改和记录保存由网络可信地强制执行，而不是由单个实体强制执行。
 
-Users don't need to trust any centralized team to access a DApp because they can expect the Ethereum network to always be working properly, handling all their transactions and correctly updating smart contracts' state, no matter the day or the hour.
+用户不需要信任任何中心化团队来访问 DApp，因为他们可以期望以太坊网络始终正常工作，处理他们的所有交易并正确更新智能合约的状态，无论白天或黑夜。
 
-Furthermore, this architecture introduces a very powerful property: *censorship resistance*. With traditional applications, you very often have a list of countries that are forbidden to access the app because of government laws or whatever reason. For example, as of 2025, Facebook is banned in Brazil, China, Iran, North Korea, Myanmar, Russia, Turkmenistan, and Uganda. People in those countries cannot create a profile or log into the platform.
+此外，这种架构引入了一个非常强大的属性：*抗审查性*。使用传统的应用程序，你经常会看到一个禁止访问该应用程序的国家/地区列表，因为政府法律或其他原因。例如，截至 2025 年，Facebook 在巴西、中国、伊朗、朝鲜、缅甸、俄罗斯、土库曼斯坦和乌干达被禁止。这些国家/地区的人们无法创建个人资料或登录该平台。
 
-With DApps built on Ethereum, this type of censorship is not achievable anymore. Even though it's still possible to ban an official website for a particular DApp, no one can prevent an address from interacting with some random smart contracts on chain. Anyone could jump in and create an alternative frontend for the DApp, and everybody could use it to interact with the DApp again.
+对于建立在以太坊上的 DApp，这种类型的审查制度不再能够实现。即使仍然可以禁止特定 DApp 的官方网站，但没有人可以阻止某个地址与链上的一些随机智能合约进行交互。任何人都可以加入并为 DApp 创建一个替代前端，并且每个人都可以使用它再次与 DApp 交互。
 
-### The Tornado Cash Saga
+### Tornado Cash 传奇
 
-It's worth mentioning the story of Tornado Cash here. Tornado Cash is a decentralized mixing service that enables anyone, anywhere, to mix traceable or "tainted" cryptocurrencies with others, obscuring the trail back to their original source by breaking all links between the real sender and receiver of the funds.
+值得在这里提及 Tornado Cash 的故事。Tornado Cash 是一种去中心化的混合服务，它使任何地方的任何人都可以将可追溯或“受污染”的加密货币与其他加密货币混合，通过打破资金的实际发送者和接收者之间的所有联系来掩盖其原始来源。
 
-On August 8, 2022, the US Treasury Department's Office of Foreign Assets Control blocklisted Tornado Cash, effectively prohibiting US citizens and companies from using it. The platform was accused of laundering more than $7 billion in cryptocurrencies. Two days later, on August 10, one of Tornado Cash's developers, Alexey Pertsev, was arrested in Amsterdam for only the crime of creating the platform itself. The official GitHub repository was removed, and developer accounts were suspended. As of December 2024, the official website remains inaccessible.
+2022 年 8 月 8 日，美国财政部外国资产控制办公室将 Tornado Cash 列入黑名单，实际上禁止美国公民和公司使用它。该平台被指控洗钱超过 70 亿美元的加密货币。两天后，8 月 10 日，Tornado Cash 的一名开发人员 Alexey Pertsev 在阿姆斯特丹被捕，罪名仅是创建该平台本身。官方 GitHub 存储库被删除，开发人员帐户被暂停。截至 2024 年 12 月，官方网站仍然无法访问。
 
-Given all of this, you might assume that the Tornado Cash DApp has ceased operations, but this couldn't be further from the truth. While the service has received less attention (and liquidity) since these events, the protocol remains fully functional and accessible through various IPFS-hosted gateways. In other words, anyone in the world can still use Tornado Cash as much as they could before, even without the original official website.
+鉴于所有这些，你可能会认为 Tornado Cash DApp 已停止运营，但这与事实相去甚远。虽然自这些事件以来，该服务受到的关注（和流动性）有所减少，但该协议仍然完全可以运行，并且可以通过各种 IPFS 托管的网关访问。换句话说，世界上任何人仍然可以像以前一样使用 Tornado Cash，即使没有原始的官方网站。
 
-## Data Storage
+## 数据存储
 
-Data storage refers to the solution used to save users' data. Storing and reading data into and out of smart contracts is possible, but it's an expensive operation, and it doesn't scale well; further, not everything needs to be saved on chain.
+数据存储是指用于保存用户数据的解决方案。将数据存储和读取到智能合约中是可能的，但这是一项昂贵的操作，并且无法很好地扩展；此外，并非所有内容都需要保存在链上。
 
-Usually, smart contracts store critical state information and enforce the DApp logic. Key pieces of information, such as account balances, ownership records, or results of computations, are stored directly in the smart contract. This ensures that sensitive and value-bearing data remains fully transparent, tamper resistant, and accessible to anyone with an Ethereum node.
+通常，智能合约存储关键状态信息并强制执行 DApp 逻辑。诸如帐户余额、所有权记录或计算结果等关键信息直接存储在智能合约中。这确保了敏感的和有价值的数据保持完全透明、防篡改，并且任何拥有以太坊节点的人都可以访问。
 
-All other information can be saved in a less decentralized data storage solution, such as a classical database. For example, DApp developers often use indexers for fast data query or centralized databases to store user data, so the frontend doesn't need to interact with the Ethereum chain at all.
+所有其他信息都可以保存在不太去中心化的数据存储解决方案中，例如传统的数据库。例如，DApp 开发人员通常使用索引器来快速数据查询，或者使用中心化数据库来存储用户数据，因此前端根本不需要与以太坊链交互。
 
-> **Note**  
+> **注意**
 >
-> A *blockchain indexer* is a tool that lets developers query and analyze data stored on the blockchain in a fast and efficient way. It takes transaction data, transforms it into machine- and human-readable data, and loads it into a database for easy querying.
+> *区块链索引器* 是一种工具，它允许开发人员以快速有效的方式查询和分析存储在区块链上的数据。它获取事务数据，将其转换为机器和人类可读的数据，并将其加载到数据库中以方便查询。
 >
-> In fact, you cannot directly "search" data in the blockchain. For example, let's say you'd like to know how many USDC tokens a certain account held on block 15364050. You cannot just go to the USDC smart contract and look for it because it doesn't store historical data. You could take all the transactions that happened from that block up to now, filter them, and extract all the USDC transfer information that is related to that account, and then you could finally get your answer back. As you can imagine, this is not a desirable approach to follow. This is where indexers come into play. They maintain a database-like structure that lets you immediately run a query for whatever information you need, including historical information, and get an answer back quickly.
+> 实际上，你不能直接在区块链中“搜索”数据。例如，假设你想知道某个帐户在区块 15364050 上持有多少 USDC 代币。你不能直接访问 USDC 智能合约并查找它，因为它不存储历史数据。你可以获取从该区块到现在发生的所有交易，过滤它们，并提取与该帐户相关的所有 USDC 转账信息，然后你最终可以得到你的答案。你可以想象，这不是一个理想的方法。这就是索引器发挥作用的地方。它们维护一个类似数据库的结构，允许你立即运行查询以获取所需的任何信息，包括历史信息，并快速获得答案。
 
-The idea is that you only need to store essential data and application logic on chain so that anyone can verify the DApp is working correctly; anything else can and should be left off chain.
+我们的想法是，你只需要在链上存储基本数据和应用程序逻辑，以便任何人都可以验证 DApp 是否正常工作；任何其他内容都可以而且应该留在链下。
 
 ### IPFS
 
-*IPFS* is a decentralized, content-addressable storage system that distributes stored objects among peers in a P2P network. *Content addressable* means that each piece of content (file) is hashed and the hash is used to identify that file. You can then retrieve any file from any IPFS node by requesting it by its hash.
+*IPFS* 是一种去中心化的、内容寻址的存储系统，它在 P2P 网络中的对等方之间分发存储的对象。*内容寻址* 意味着每个内容（文件）都被散列，并且该散列用于标识该文件。然后，你可以通过按其散列请求任何 IPFS 节点来检索任何文件。
 
-IPFS aims to replace HTTP as the protocol of choice for delivery of web applications. Instead of storing a web application on a single server, the files are stored on IPFS and can be retrieved from any IPFS node. Read the IPFS docs to learn more.
+IPFS 旨在取代 HTTP 作为 Web 应用程序交付的首选协议。与将 Web 应用程序存储在单个服务器上不同，这些文件存储在 IPFS 上，并且可以从任何 IPFS 节点检索。阅读 IPFS 文档以了解更多信息。
 
-### Merkle trees
+### Merkle 树
 
-An interesting and frequently used solution is to save data off chain with a Merkle tree structure and store only the Merkle root on chain. This way, you don't have to store all the data in smart contracts, which would cost you a lot of money in gas fees, but you're still able to perform some sort of validation on chain.
+一个有趣且经常使用的解决方案是以 Merkle 树结构将数据保存在链下，并且仅将 Merkle 根存储在链上。这样，你不必将所有数据存储在智能合约中，这会花费你大量的 gas 费，但你仍然能够执行某种链上验证。
 
-> **Note**  
+> **注意**
 >
-> Editor's note: the following code examples refer to "whitelist" in a very specific technical context. Though this term has problematic connotations, it is also widely used throughout the industry and its documentation. While we greatly value inclusivity, the authors have opted to keep the term as-is here for the sake of clarity in this presentation of technical concepts.
+> 编者注：以下代码示例在非常特定的技术上下文中引用“白名单”。尽管此术语具有成问题的含义，但它也已广泛应用于整个行业及其文档中。虽然我们非常重视包容性，但作者选择在此处保留该术语的现状，以使对技术概念的介绍更加清晰。
 
-The most common use case is when you create an NFT collection and you want to whitelist different addresses so that they can mint those NFTs at a lower price before the public sale is open to everyone. You have two options.
+最常见的用例是当你创建一个 NFT 集合并且想要将不同的地址列入白名单，以便他们可以在公开销售向所有人开放之前以较低的价格铸造这些 NFT 时。你有两个选项。
 
-The first is to create a storage variable inside the smart contract that maps each address to a Boolean value, which is true for all whitelisted addresses. Then, you can use this map to verify if a certain address is indeed whitelisted. The user doesn't have to provide anything when submitting the mint transaction; the contract simply checks that `msg.sender` is included in the whitelisted map, as follows:
+第一个是在智能合约中创建一个存储变量，该变量将每个地址映射到一个布尔值，该布尔值对于所有列入白名单的地址都为 true。然后，你可以使用此映射来验证某个地址是否确实已列入白名单。用户在提交 mint 交易时无需提供任何信息；合约只需检查 `msg.sender` 是否包含在白名单映射中，如下所示：
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -94,29 +94,36 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 // A simplified NFT contract with a whitelist mint function that uses a mapping to 
 // store whitelisted addresses.
+// 带有使用映射存储在白名单中的地址的白名单 mint 功能的简化 NFT 合约。
 contract MyWhitelistNFT is ERC721, Ownable {
     // ... rest of the contract
+    // ... 合约的其余部分
     
     // mapping for whitelisted addresses
+    // 用于白名单地址的映射
     mapping(address => bool) public isWhitelisted;
     
     /**
      * @notice Whitelist mint function.
+     * @notice 白名单 mint 函数。
      */
     function whitelistMint() payable {
         // ... rest of the function
+        // ... 函数的其余部分
         
         // check if the user is whitelisted.
+        // 检查用户是否在白名单中。
         require(isWhitelisted[msg.sender], "You are not whitelisted");
         
         // mint the NFT.
+        // mint NFT
         _safeMint(msg.sender, nextTokenId);
         nextTokenId++;
     }
 }
 ```
 
-The second is to create a Merkle tree off chain and store the Merkle root on chain in the contract. Then, you give each whitelisted user its Merkle proof. The user submits the Merkle proof to the contract, which verifies on chain the validity of that proof (usually through some libraries), as follows:
+第二个是创建一个链下 Merkle 树，并将 Merkle 根存储在链上的合约中。然后，你为每个列入白名单的用户提供其 Merkle 证明。用户将 Merkle 证明提交给合约，合约在链上验证该证明的有效性（通常通过某些库），如下所示：
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -129,72 +136,81 @@ import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 // A simplified NFT contract with a whitelist mint function that uses a merkle tree to 
 // store whitelisted addresses.
+// 带有使用 Merkle 树存储在白名单中的地址的白名单 mint 功能的简化 NFT 合约。
 contract MyWhitelistNFT is ERC721, Ownable {
     // ... rest of the contract
+    // ... 合约的其余部分
     
     // the merkle root of the off-chain generated Merkle Tree.
+    // 链下生成的 Merkle 树的 Merkle 根。
     bytes32 public merkleRoot;
     
     /**
      * @notice Whitelist mint function.
+     * @notice 白名单 mint 函数。
      * @dev User must provide a merkle proof to prove they are whitelisted.
+     * @dev 用户必须提供 Merkle 证明才能证明他们已列入白名单。
      * @param _merkleProof The proof that msg.sender is whitelisted.
+     * @param _merkleProof msg.sender 已列入白名单的证明。
      */
     function whitelistMint(bytes32[] calldata _merkleProof) external payable {
         // ... rest of the function
+        // ... 函数的其余部分
         
         // verify that (msg.sender) is in the merkle tree using the provided proof.
+        // 使用提供的证明验证 (msg.sender) 是否在 Merkle 树中。
         bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
         bool isValidLeaf = MerkleProof.verify(_merkleProof, merkleRoot, leaf);
         require(isValidLeaf, "Invalid Merkle Proof: Not whitelisted");
                
         // mint the NFT.
+        // mint NFT
         _safeMint(msg.sender, nextTokenId);
     }  
 }
 ```
 
-The second option is a lot cheaper and more efficient than the first, especially for large whitelists.
+第二种选择比第一种选择便宜得多，也有效得多，特别是对于大型白名单。
 
-> **Note**  
+> **注意**
 >
-> This method greatly reduces gas costs but introduces the potential risk of a dishonest whitelist creator unless the tree and proofs are auditable. Ideally, the original list used to generate the tree should be open source and accessible so that anyone can verify the validity of the resulting Merkle root.
+> 这种方法大大降低了 gas 成本，但也引入了不诚实的白名单创建者的潜在风险，除非树和证明是可审计的。理想情况下，用于生成树的原始列表应该是开源且可访问的，以便任何人都可以验证生成的 Merkle 根的有效性。
 
-## Frontend (Web User Interface)
+## 前端（Web 用户界面）
 
-The frontend of a DApp is created by using any of the most well-known Web2 frameworks, such as React, Angular, or Vue. The interaction with the Ethereum chain, if needed, is abstracted through libraries like `viem` or `ethers.js`.
+DApp 的前端是通过使用任何最著名的 Web2 框架创建的，例如 React、Angular 或 Vue。与以太坊链的交互（如果需要）通过 `viem` 或 `ethers.js` 等库进行抽象。
 
-A naive approach to building a DApp frontend is to read data only directly from the chain to update all the components. For example, if you need to display the balances of some tokens that an account holds, you could query the blockchain and get the answer back, repeating this step for every new block.
+构建 DApp 前端的一种幼稚的方法是仅直接从链中读取数据以更新所有组件。例如，如果你需要显示某个帐户持有的某些代币的余额，你可以查询区块链并获得答案，为每个新区块重复此步骤。
 
-The main problem with this naive approach is that your website becomes really slow, and it could be very frustrating for users to interact with such a frontend. This is why, as we've mentioned previously, developers often use centralized data storage components in their DApp architecture, minimizing the interaction with the chain: it makes the whole user experience better. So you usually end up with a frontend that relies on some centralized components, but you can always verify all the information by double-checking on the blockchain. Eventually, you could create your own alternative frontend for a particular DApp if you don't trust the official one or simply don't like it at all.
+这种幼稚方法的主要问题是你的网站变得非常慢，并且用户与这样的前端进行交互可能会非常令人沮丧。这就是为什么正如我们之前提到的，开发人员经常在其 DApp 架构中使用集中式数据存储组件，从而最大限度地减少与链的交互：它使整个用户体验更好。因此，你通常会得到一个依赖于某些集中式组件的前端，但你始终可以通过在区块链上仔细检查来验证所有信息。最终，如果你不信任官方前端或者根本不喜欢它，你可以为特定的 DApp 创建自己的替代前端。
 
-Figure 12-3 shows a complete (simplified) DApp architecture.
+图 12-3 显示了一个完整的（简化的）DApp 架构。
 
-![Complete DApp architecture](images/ch12/maet_1203.png)
+![完整的 DApp 架构](images/ch12/maet_1203.png)
 
-Figure 12-3. Complete DApp architecture
+图 12-3. 完整的 DApp 架构
 
-## A Basic DApp Example
+## 一个基本的 DApp 示例
 
-So far, we've explored the basic concepts behind a DApp. Now, it's time to roll up our sleeves and build a DApp ourselves.
+到目前为止，我们已经探讨了 DApp 背后的基本概念。现在，是时候卷起袖子，亲自构建一个 DApp 了。
 
-You can find lots of tutorials online to help you build your first DApp on Ethereum from scratch, but we really recommend [SpeedRunEthereum](https://oreil.ly/Onygc). It's the most effective way to learn quickly and immediately start building cool stuff. To increase your knowledge of building DApps on Ethereum, we suggest that you complete all the challenges you can find on Speed Run Ethereum and join the [BuidlGuidl community](https://buidlguidl.com).
+你可以在网上找到许多教程，帮助你从头开始在以太坊上构建你的第一个 DApp，但我们真正推荐 [SpeedRunEthereum](https://oreil.ly/Onygc)。这是快速学习并立即开始构建酷东西的最有效方法。为了增加你构建以太坊上 DApp 的知识，我们建议你完成你可以在 Speed Run Ethereum 上找到的所有挑战，并加入 [BuidlGuidl 社区](https://buidlguidl.com)。
 
-In this section, we're going to build a very basic decentralized application, a sort of "Hello World" DApp. You don't need any previous experience; all you need is a computer and an internet connection.
+在本节中，我们将构建一个非常基本的去中心化应用程序，一种“Hello World”DApp。你不需要任何先前的经验；你所需要的只是一台电脑和互联网连接。
 
-### Installation Requirements
+### 安装要求
 
-To follow this tutorial, you need to install [node.js](http://node.js) and [yarn](https://oreil.ly/dq_hw) on your computer. Refer to the official websites to download and install them. We'll use [Scaffold-ETH 2](https://scaffoldeth.io), a very cool tool that lets you create your development environment very quickly.
+要遵循本教程，你需要安装 [node.js](http://node.js) 和 [yarn](https://oreil.ly/dq_hw) 在你的电脑上。有关下载和安装它们，请参阅官方网站。我们将使用 [Scaffold-ETH 2](https://scaffoldeth.io)，这是一个很酷的工具，可以让你非常快速地创建你的开发环境。
 
-### Creating the DApp
+### 创建 DApp
 
-Let's open a terminal and run the following command:
+让我们打开一个终端并运行以下命令：
 
 ```bash
 $ npx create-eth@latest
 ```
 
-It will ask for a project name. We chose "mastering-ethereum" for this demonstration:
+它会要求一个项目名称。我们为本次演示选择了“mastering-ethereum”：
 
 ```
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 
@@ -204,104 +220,125 @@ It will ask for a project name. We chose "mastering-ethereum" for this demonstra
 ? Your project name: mastering-ethereum
 ```
 
-Then, it will ask for the Solidity framework we want to use. We'll use Hardhat here, but feel free to choose the one you are more familiar with:
+然后，它会询问我们要使用的 Solidity 框架。我们将在这里使用 Hardhat，但你可以随意选择你更熟悉的那个：
 
 ```
 ? What solidity framework do you want to use?
+? 你想使用什么 Solidity 框架？
 ❯ hardhat
    foundry
   none
 ```
 
-After a couple of seconds, you should see a "Congratulations" and some "Next steps" similar to these:
+几秒钟后，你应该会看到一个“Congratulations”和一些类似于以下的“Next steps”：
 
 ```
   Congratulations! Your project has been scaffolded! 🎉
+  恭喜！你的项目已经完成搭建！🎉
 
   Next steps:
+  下一步：
 
   cd mastering-ethereum
   
         Start the local development node
+        启动本地开发节点
   
         yarn chain
   
         In a new terminal window, deploy your contracts
+        在一个新的终端窗口中，部署你的合约
   
         yarn deploy
   
     In a new terminal window, start the frontend
+    在一个新的终端窗口中，启动前端
   
     yarn start
   
  Thanks for using Scaffold-ETH 2 🙏 , Happy Building!
+ 感谢你使用 Scaffold-ETH 2 🙏，祝你构建愉快！
 ```
 
-### Starting the Chain
+### 启动链
 
-We now have everything in place to start building our DApp. Enter the project folder:
+我们现在已经准备好一切来开始构建我们的 DApp。输入项目文件夹：
 
 ```bash
 $ cd mastering-ethereum
 ```
 
-Here, you can find an example smart contract called `YourContract.sol` if you go into `packages/hardhat/contracts`. The `contracts` folder is where you should put every smart contract you will need for your DApp project.
+在这里，如果你进入 `packages/hardhat/contracts`，你可以找到一个名为 `YourContract.sol` 的示例智能合约。`contracts` 文件夹是你应该放置你的 DApp 项目所需的所有智能合约的地方。
 
-Inside `packages/nextjs`, you will find the nextjs framework structure already in place for your DApp frontend.
+在 `packages/nextjs` 中，你将找到已经为你的 DApp 前端准备好的 nextjs 框架结构。
 
-Since this is a very basic tutorial, we won't write any contracts from scratch or modify the frontend. We'll stick with defaults to quickly show the usual workflow.
+由于这是一个非常基本的教程，我们将不从头开始编写任何合约或修改前端。我们将坚持使用默认值来快速展示通常的工作流程。
 
-First, you need to start a chain for local development. In fact, even though the final product will use smart contracts that are deployed on the Ethereum mainnet, you shouldn't use a real chain to build and test your DApp. It would be really slow and a waste of a lot of money, too. Scaffold-ETH comes with a very useful and easy command to immediately start a new chain for local development. You just need to run:
+首先，你需要启动一个链以进行本地开发。实际上，即使最终的产品将使用部署在以太坊主网上的智能合约，你也不应该使用真正的链来构建和测试你的 DApp。这会非常慢，而且会浪费很多钱。Scaffold-ETH 带有一个非常有用的且简单的命令，可以立即启动一个用于本地开发的新链。你只需要运行：
 
 ```bash
 $ yarn chain
 ```
 
-### Deploying Your Contract
+### 部署你的合约
 
-Now, you need to deploy your contract to the local chain that you set up in the previous step. Again, Scaffold-ETH has an easy command for that. Open a new terminal and type:
+现在，你需要将你的合约部署到你在上一步中设置的本地链上。同样，Scaffold-ETH 有一个简单的命令可以做到这一点。打开一个新终端并输入：
 
 ```bash
 $ yarn deploy
 ```
 
-You should see something like this:
+你应该看到类似这样的内容：
 
 ```
 Generating typings for: 2 artifacts in dir: typechain-types for target: ethers-v6
+为以下对象生成类型：目录中 2 个 artifact: typechain-types 用于目标：ethers-v6
 Successfully generated 6 typings!
+成功生成了 6 个类型！
 Compiled 2 Solidity files successfully (evm target: paris).
+成功编译了 2 个 Solidity 文件(evm target: paris)。
 deploying "YourContract" (tx: 0x8ec9ba16869588c2826118a0043f63bc679a4e947f739e8032e911475e77dcb4)...: deployed at 0x5FbDB2315678afecb367f032d93F642f64180aa3 with 532743 gas
+正在部署“YourContract”(tx: 0x8ec9ba16869588c2826118a0043f63bc679a4e947f739e8032e911475e77dcb4)...: 部署在 0x5FbDB2315678afecb367f032d93F642f64180aa3，gas 消耗为 532743
 👋  Initial greeting: Building Unstoppable Apps!!!
+👋 初始问候语：构建不可阻挡的应用程序！！！
 📝  Updated TypeScript contract definition file on ../nextjs/contracts/deployedContracts.ts
+📝 更新了../nextjs/contracts/deployedContracts.ts上的 TypeScript 合约定义文件
 ```
 
-As you can see, this command deploys the contract called `YourContract`—the example smart contract—on the local chain. In the future, when you build a new DApp, you'll need to go to `packages/hardhat/deploy` and change the `00_deploy_your_contract.ts` file so that you can deploy all the contracts you actually need.
+正如你所看到的，此命令将名为 `YourContract` 的合约（示例智能合约）部署到本地链上。将来，当你构建新的 DApp 时，你需要转到 `packages/hardhat/deploy` 并更改 `00_deploy_your_contract.ts` 文件，以便你可以部署你实际需要的所有合约。
 
-If you go back to the terminal where you previously ran the command `yarn chain`, you should have some new logs, specifically one similar to this:
+如果你回到之前运行命令 `yarn chain` 的终端，你应该有一些新的日志，特别是类似于以下的日志：
 
 ```
 eth_sendTransaction
+eth_sendTransaction
   Contract deployment: <UnrecognizedContract>
+  合约部署：<未识别的合约>
   Contract address:    0x5fbdb2315678afecb367f032d93f642f64180aa3
+  合约地址：0x5fbdb2315678afecb367f032d93f642f64180aa3
   Transaction:         0x8ec9ba16869588c2826118a0043f63bc679a4e947f739e8032e911475e77dcb4
+  交易：0x8ec9ba16869588c2826118a0043f63bc679a4e947f739e8032e911475e77dcb4
   From:                0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266
+  来自：0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266
   Value:               0 ETH
+  值：0 ETH
   Gas used:            532743 of 532743
+  Gas 使用：532743 / 532743
   Block #1:            0xa7b8e3b6f82eccb3542279573dbf8efa2b876ff00807a8619feef191007e06d9
+  区块#1：0xa7b8e3b6f82eccb3542279573dbf8efa2b876ff00807a8619feef191007e06d9
 ```
 
-Note the `Contract deployment` and the `Contract address` lines. That proves that you have successfully deployed your contract on the local chain at that particular contract address.
+请注意 `Contract deployment` 和 `Contract address` 行。这证明你已将你的合约成功地部署到本地链上的特定合约地址。
 
-### Starting the Frontend
+### 启动前端
 
-The Scaffold-ETH example comes with a basic built-in frontend so that you can immediately start interacting with your contracts with a graphical interface. Open a new terminal window and type:
+Scaffold-ETH 示例带有一个基本的内置前端，因此你可以立即开始与你的合约进行图形界面方面的交互。打开一个新终端窗口并键入：
 
 ```bash
 $ yarn start
 ```
 
-It should return something like:
+它应该返回类似以下的内容：
 
 ```
 yarn start
@@ -312,161 +349,169 @@ yarn start
  ✓ Ready in 1767ms
 ```
 
-Now copy the localhost URL, open your browser, and paste the link. You should see the frontend, as shown in Figure 12-4.
+现在复制 localhost URL，打开你的浏览器，然后粘贴链接。你应该会看到前端，如图 12-4 所示。
 
-![Scaffold-ETH frontend](images/ch12/maet_1204.png)
+![Scaffold-ETH 前端](images/ch12/maet_1204.png)
 
-Figure 12-4. Scaffold-ETH frontend
+图 12-4. Scaffold-ETH 前端
 
-### Interacting with Your Contract
+### 与你的合约交互
 
-Congratulations, you're all set up. You can now experiment and interact with your DApp. There are a couple of really useful features that you'll find fundamental for your development workflow:
+恭喜，你已经准备就绪。你现在可以试验并与你的 DApp 交互。有几个非常有用的功能，你会发现它们对你的开发工作流程至关重要：
 
 - Burner wallets
 - Debug Contracts section
 
-As you can see in Figure 12-4, in the upper-right corner, we are already connected to the website with a wallet that may look random and unfamiliar to us. That's because it's a *burner wallet*: an auto-generated address whose private key is temporarily saved in your web browser. In fact, if you try to update the page, you'll notice that your burner address doesn't change.
+正如你在图 12-4 中看到的，在右上角，我们已经通过一个钱包连接到网站，该钱包看起来对我们来说可能随机且不熟悉。这是因为这是一个 *burner wallet*：一个自动生成的地址，其私钥暂时保存在你的 Web 浏览器中。事实上，如果你尝试更新页面，你会注意到你的 burner 地址不会更改。
 
-Burner wallets are a killer feature for your development workflow since you don't have to open your Web3 wallet and connect it to the website every time. You can still do that once you're ready; you just need to click on the drop-down menu and select Disconnect; then, you can click Connect Wallet and choose your preferred wallet from the list, as shown in Figures 12-5, 12-6, and 12-7.
+Burner 钱包是你开发工作流程的一个杀手级功能，因为你无需每次都打开你的 Web3 钱包并将其连接到网站。你仍然可以在准备好后这样做：你只需单击下拉菜单并选择 Disconnect；然后，你可以单击 Connect Wallet 并从列表中选择你喜欢的钱包，如图 12-5、12-6 和 12-7 所示。
 
-![Disconnect burner wallet](images/ch12/maet_1205.png)
+![断开 burner 钱包的连接](images/ch12/maet_1205.png)
 
-Figure 12-5. Disconnect burner wallet
+图 12-5. 断开 burner 钱包的连接
 
-![Connect Wallet button](images/ch12/maet_1206.png)
+![Connect Wallet 按钮](images/ch12/maet_1206.png)
 
-Figure 12-6. Connect Wallet button
+图 12-6. Connect Wallet 按钮
 
-![Choose wallet](images/ch12/maet_1207.png)
+![选择钱包](images/ch12/maet_1207.png)
 
-Figure 12-7. Choose wallet
+图 12-7. 选择钱包
 
-The second killer feature is the Debug Contracts section. To open it, just click the Debug Contracts link at the center of the page. With the default example, you should now see something like Figure 12-8.
+第二个杀手级功能是 Debug Contracts 部分。要打开它，只需单击页面中心的 Debug Contracts 链接。使用默认示例，你现在应该看到类似图 12-8 的内容。
 
-![Debug Contracts section](images/ch12/maet_1208.png)
+![Debug Contracts 部分](images/ch12/maet_1208.png)
 
-Figure 12-8. Debug Contracts section
+图 12-8. Debug Contracts 部分
 
-Here, you can easily interact with all your contracts without having to build any kind of frontend on top of them. This is really useful during development to constantly check that your contracts work as you expect them to.
+在这里，你可以轻松地与你的所有合约进行交互，而无需在其之上构建任何类型的前端。这在开发过程中非常有用，可以不断检查你的合约是否如你所期望的那样工作。
 
-Let's do a small demonstration. First, we need to fund our burner wallet so that we can later send some transactions to interact with the deployed contract. To do that, you just need to click on the right-most button, as shown in Figure 12-9. You'll almost immediately receive some ETH, and you'll see your ETH balance increase.
+让我们做一个小演示。首先，我们需要为我们的 burner 钱包充值，以便我们稍后可以发送一些交易来与已部署的合约进行交互。为此，你只需要单击最右边的按钮，如图 12-9 所示。你几乎会立即收到一些 ETH，并且你会看到你的 ETH 余额增加。
 
-![Grab funds button](images/ch12/maet_1209.png)
+![Grab funds 按钮](images/ch12/maet_1209.png)
 
-Figure 12-9. Grab funds button
+图 12-9. Grab funds 按钮
 
-Now go to the `setGreeting` section and type `hello world` in the "_newGreeting" field and `0.1` in the "payable value" field. Then, click the asterisk you can find on the right of the "payable value" field: it will transform the ETH value into the same amount represented in wei (1 ETH = 10<sup>18</sup> wei). Finally, you can click Send to send your transaction and see how it changes the state of your contract.
+现在转到 `setGreeting` 部分，并在 "_newGreeting" 字段中键入 `hello world`，并在 "payable value" 字段中键入 `0.1`。然后，单击你可以在 "payable value" 字段右侧找到的星号：它会将 ETH 值转换为以 wei 表示的相同金额（1 ETH = 10<sup>18</sup> wei）。最后，你可以单击 Send 发送你的交易，并查看它如何更改你的合约状态。
 
-Figure 12-10 shows the state of the contract before hitting the Send button. You can see that your contract holds 0 ETH, the greeting is "Building Unstoppable Apps!!!," premium is false, and totalCounter is equal to 0.
+图 12-10 显示了点击 Send 按钮之前的合约状态。你可以看到你的合约持有 0 ETH，“greeting”是“Building Unstoppable Apps!!!”，premium 为 false，totalCounter 等于 0。
 
-![Contract state before transaction](images/ch12/maet_1210.png)
+![交易前的合约状态](images/ch12/maet_1210.png)
 
-Figure 12-10. Contract state before transaction
+图 12-10. 交易前的合约状态
 
-Figure 12-11 captures the state of the contract after sending the transaction. You can immediately see that your contract now holds 0.1 ETH, the greeting is "hello world," premium is true, and totalCounter is equal to 1.
+图 12-11 捕获了发送交易后的合约状态。你可以立即看到你的合约现在持有 0.1 ETH，“greeting”是“hello world”，premium 为 true，totalCounter 等于 1。
 
-![Contract state after transaction](images/ch12/maet_1211.png)
+![交易后的合约状态](images/ch12/maet_1211.png)
 
-Figure 12-11. Contract state after transaction
+图 12-11. 交易后的合约状态
 
-You can play around with this and see how your contract behaves based on your inputs and actions.
+你可以尝试一下，看看你的合约如何根据你的输入和操作做出反应。
 
-### Deploying to Vercel
+### 部署到 Vercel
 
-When you're satisfied with your decentralized application, you can publish it to a production environment such as Vercel. Vercel is a really useful frontend-as-a-service tool that lets you easily deploy your application to the internet. You can also attach a custom domain that you have bought so that people can reach your DApp just by typing the domain name.
+当你对你的去中心化应用程序感到满意时，你可以将其发布到生产环境，例如 Vercel。Vercel 是一种非常有用的前端即服务工具，可让你轻松地将你的应用程序部署到互联网。你还可以附加你购买的自定义域名，以便人们只需键入域名即可访问你的 DApp。
 
-Scaffold-ETH again comes to your aid by providing a single command to immediately deploy your DApp to Vercel. Open a terminal and type:
+Scaffold-ETH 通过提供一个命令来立即将你的 DApp 部署到 Vercel，再次为你提供帮助。打开一个终端并键入：
 
 ```bash
 $ yarn vercel:yolo
 ```
 
-You'll need to link your Vercel account (or create a new one if you don't have it) and choose a name for your project—that's it. After a few minutes, you'll have your entire DApp deployed to Vercel, and anyone in the world can go try it out.
+你需要链接你的 Vercel 帐户（或者创建一个新的帐户，如果你没有的话），并为你的项目选择一个名称即可。几分钟后，你就可以将整个 DApp 部署到 Vercel，并且世界上任何人都可以尝试一下。
 
-If you go to your Vercel profile, you can now see your newly created project. As shown in Figure 12-12, there is a Domains field where you can find the website domain that Vercel auto-generated for you.
+如果你转到你的 Vercel 个人资料，你现在可以看到你新创建的项目。如图 12-12 所示，有一个 Domains 字段，你可以在其中找到 Vercel 为你自动生成的网站域名。
 
-![Vercel project page](images/ch12/maet_1212.png)
+![Vercel 项目页面](images/ch12/maet_1212.png)
 
-Figure 12-12. Vercel project page
+图 12-12. Vercel 项目页面
 
-## Further Decentralizing the DApp
+## 进一步去中心化 DApp
 
-In the previous section, we deployed our DApp to Vercel. While Vercel is one of the most popular solutions for hosting DApps, it is not a decentralized service. Everything resides on its proprietary servers, which means Vercel could potentially censor any user based on its policies and track the IP addresses of everyone interacting with your DApp.
+在上一节中，我们将我们的 DApp 部署到 Vercel。虽然 Vercel 是托管 DApp 最流行的解决方案之一，但它不是一种去中心化的服务。所有内容都驻留在其专有服务器上，这意味着 Vercel 可能会根据其策略审查任何用户，并跟踪与你的 DApp 交互的每个人的 IP 地址。
 
-To further decentralize our DApp, we can host the frontend on solutions like IPFS, a global P2P network of nodes. An emerging service worth mentioning is `eth.limo`, which aims to match the user experience of mainstream websites—typically served via centralized platforms—with the robustness and decentralization provided by IPFS and similar technologies.
+为了进一步去中心化我们的 DApp，我们可以将前端托管在诸如 IPFS 之类的解决方案上，IPFS 是一个全球 P2P 节点网络。一个值得一提的新兴服务是 `eth.limo`，它旨在将主流网站的用户体验（通常通过中心化平台提供）与 IPFS 和类似技术提供的稳健性和去中心化相匹配。
 
-### Decentralized Websites
+### 去中心化网站
 
-[Eth.limo](https://eth.limo/) is the missing piece of the puzzle to create better decentralized websites—also called *DWebsites*—that can be accessed in the same way you usually would with a classic app. It's based on the ENS technology, which makes Ethereum addresses user-friendly with `.eth` domain names. Vitalik Buterin, one of the cofounders of Ethereum, uses ENS to link his wallet address—`0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045`—with the easy-to-remember name `vitalik.eth`.
+[Eth.limo](https://eth.limo/) 是创建更好的去中心化网站（也称为 *DWebsite*）的缺失环节，这些网站可以像访问经典应用程序一样访问。它基于 ENS 技术，该技术使以太坊地址可以通过 `.eth` 域名对用户友好。以太坊的联合创始人之一 Vitalik Buterin 使用 ENS 将他的钱包地址 `0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045` 与易于记忆的名称 `vitalik.eth` 链接起来。
 
-ENS goes beyond just linking a domain with an Ethereum address: it can also resolve to an IPFS website (actually the content hash), something like `bafybeif3dy…ga4zu`. The main problem related to IPFS websites is that most popular web browsers are not able to properly resolve them and show their contents to the user. This is where `eth.limo` comes into play: it operates a reverse proxy for ENS names and IPFS contents. It captures all requests to `*.eth.limo` (basically all websites ending with `.eth.limo`) and automatically resolves the IPFS contenthash of the requested ENS record, returning the corresponding static content over HTTPS. For example, when you go to [Vitalik Buterin's official blog](https://vitalik.eth.limo), this is what's happening under the hood:
+ENS 不仅仅是将域名与以太坊地址链接起来：它还可以解析为 IPFS 网站（实际上是内容哈希），例如 `bafybeif3dy…ga4zu`。与 IPFS 网站相关的主要问题是，大多数流行的 Web 浏览器无法正确解析它们并向用户显示它们的内容。这就是 `eth.limo` 发挥作用的地方：它为 ENS 名称和 IPFS 内容运行反向代理。它捕获所有对 `*.eth.limo`（基本上是所有以 `.eth.limo` 结尾的网站）的请求，并自动解析请求的 ENS 记录的 IPFS 内容哈希，并通过 HTTPS 返回相应的静态内容。例如，当你访问 [Vitalik Buterin 的官方博客](https://vitalik.eth.limo) 时，以下是底层发生的事情：
 
-1. Eth.limo sees the incoming requests to the `vitalik.eth` ENS domain.
-2. It resolves it to the IPFS contenthash (that Buterin previously set) containing the home page of his website.
-3. It returns the corresponding static content over HTTPS.
+1. Eth.limo 看到传入的对 `vitalik.eth` ENS 域名的请求。
+2. 它将其解析为 IPFS 内容哈希（Buterin 先前设置的），其中包含他网站的主页。
+3. 它通过 HTTPS 返回相应的静态内容。
 
-This way, anyone in the world with a web browser can easily access content that is stored on IPFS with zero configuration or setup needed.
+这样，世界上任何拥有 Web 浏览器的人都可以轻松访问存储在 IPFS 上的内容，而无需任何配置或设置。
 
-### Limitations
+### 局限性
 
-Even though DWebsites in general—and `eth.limo` in particular—are an evolving technology and are improving pretty fast, there are still some limitations at the time of writing this chapter (June 2025). First, IPFS can only handle static files, so it cannot perform any kind of server-side computation. Furthermore, to use `eth.limo`, you need to buy an ENS and link it to the IPFS contenthash of your frontend. And you must always use the `*.eth.limo` custom domain; you cannot cut the `.limo` final part of it, or your web browser will not be able to resolve your ENS name to the IPFS frontend for your DApp. This is probably why most DApps do not use `eth.limo`.
+即使 DWebsite 通常（尤其是 `eth.limo`）是一种不断发展的技术，并且发展很快，但在撰写本章时（2025 年 6 月）仍然存在一些局限性。首先，IPFS 只能处理静态文件，因此它无法执行任何类型的服务器端计算。此外，要使用 `eth.limo`，你需要购买一个 ENS 并将其链接到你的前端的 IPFS 内容哈希。并且你必须始终使用 `*.eth.limo` 自定义域名；你不能剪掉 `.limo` 的最后一部分，否则你的 Web 浏览器将无法将你的 ENS 名称解析为你的 DApp 的 IPFS 前端。这可能就是大多数 DApp 不使用 `eth.limo` 的原因。
 
-> **Tip**  
+> **提示**
 >
-> Although it's true that most web browsers are not compatible with ENS and IPFS yet, certain browsers are starting to add support for them. One example is [Brave](https://oreil.ly/LlJT7).
+> 虽然大多数 Web 浏览器还不兼容 ENS 和 IPFS，但某些浏览器已开始添加对它们的支持。其中一个例子是 [Brave](https://oreil.ly/LlJT7)。
 
-It must be said that `eth.limo` is another potentially centralized third party that could stop working without any notice. In case that happens, your DApps would still be reachable through IPFS, but the `.eth.limo` URL would not redirect users to them anymore.
+必须说明的是，`eth.limo` 是另一个潜在的中心化第三方，可能会在没有任何通知的情况下停止工作。如果发生这种情况，你的 DApp 仍然可以通过 IPFS 访问，但 `.eth.limo` URL 不再将用户重定向到它们。
 
-If you're interested and want to deep-dive into this solution for building fully decentralized websites, you can find a lot more details on the [official website](https://eth.limo).
+如果你有兴趣并且想深入了解这种构建完全去中心化网站的解决方案，你可以在 [官方网站](https://eth.limo) 上找到更多详细信息。
 
-### Deploying to IPFS
+### 部署到 IPFS
 
-Scaffold-ETH 2 has another easy command that lets you quickly push your DApp to IPFS. You just need to open a new terminal and type:
+Scaffold-ETH 2 具有另一个简单的命令，可以让你快速将你的 DApp 推送到 IPFS。你只需要打开一个新终端并键入：
 
 ```bash
 $ yarn ipfs
 ```
 
-And it's done! You should see something like this:
+这就完成了！你应该会看到类似以下的内容：
 
 ```
    Creating an optimized production build ...
+   正在创建优化的生产版本...
  
  ✓ Compiled successfully
+ ✓ 验证成功
  ✓ Linting and checking validity of types
+ ✓ Linting 和检查类型有效性
     
  ✓ Collecting page data
+ ✓ 收集页面数据
     
  ✓ Generating static pages (8/8)
+ ✓ 生成静态页面(8/8)
  ✓ Collecting build traces
+ ✓ 收集构建过程
     
  ✓ Finalizing page optimization
+ ✓ 完成页面优化
 
 …
 
 🚀  Upload complete! Your site is now available at: https://community.bgipfs.com/ipfs/bafybei…
+🚀 上传完成！ 你的网站现在可以访问：https://community.bgipfs.com/ipfs/bafybei…
 ```
 
-If you go to the displayed website, you should see your DApp working fine with the frontend hosted on IPFS. The string "bafy…" is the IPFS contenthash. You still need to configure `eth.limo` if you have a personal ENS and want to redirect it to this IPFS-hosted site.
+如果你访问显示的网站，你应该会看到你的 DApp 在 IPFS 上托管的前端正常工作。“bafy…”字符串是 IPFS 内容哈希。如果你有个人 ENS，并且想将其重定向到此 IPFS 托管的站点，你仍然需要配置 `eth.limo`。
 
-This is what actually happens under the hood of this `yarn ipfs` command:
+以下是此 `yarn ipfs` 命令幕后实际发生的事情：
 
-1. The frontend is built in order to have the static files ready to be uploaded to IPFS.
-2. The static files are uploaded to IPFS through the BuidlGuidl (the maintainers of Scaffold-ETH 2) IPFS community node.
-3. A URL is returned that redirects to the static files, working as a reverse proxy for the IPFS content (`community.bgipfs.com/<ipfs-content-hash>`).
+1. 构建前端以使静态文件准备好上传到 IPFS。
+2. 通过 BuidlGuidl（Scaffold-ETH 2 的维护者）IPFS 社区节点将静态文件上传到 IPFS。
+3. 返回一个 URL，该 URL 重定向到静态文件，作为 IPFS 内容的反向代理 (`community.bgipfs.com/<ipfs-content-hash>`)。
 
-See [BuidlGuidl IPFS](https://www.bgipfs.com) if you want to learn how to run your own IPFS node and pin a cluster.
+请参阅 [BuidlGuidl IPFS](https://www.bgipfs.com)，如果你想了解如何运行你自己的 IPFS 节点并固定一个集群。
 
-## From App to DApp
+## 从 App 到 DApp
 
-Over the past several sections, we have gradually built a decentralized application. We used a tool called Scaffold-ETH to facilitate our development workflow: we started a local chain, deployed our contract, and launched a local frontend to immediately begin interacting with and testing our DApp. Next, we published our DApp's frontend to Vercel to show how simple it is to deploy a DApp in a production-ready environment. Finally, we explored how to further decentralize our DApp by posting the frontend to IPFS and using solutions such as ENS and `eth.limo`, allowing anyone to access it without installing a special app.
+在过去的几节中，我们逐步构建了一个去中心化应用程序。我们使用了一个名为 Scaffold-ETH 的工具来促进我们的开发工作流程：我们启动了一个本地链，部署了我们的合约，并启动了一个本地前端，以立即开始与我们的 DApp 进行交互和测试。接下来，我们将 DApp 的前端发布到 Vercel，以展示在生产就绪环境中部署 DApp 是多么简单。最后，我们探讨了如何通过将前端发布到 IPFS 并使用诸如 ENS 和 `eth.limo` 之类的解决方案来进一步去中心化我们的 DApp，从而允许任何人无需安装特殊应用程序即可访问它。
 
-Figure 12-13 provides a concise overview of the engineering stack required to create a fully decentralized application.
+图 12-13 简要概述了创建完全去中心化应用程序所需的工程堆栈。
 
-![DApp engineering stack](images/ch12/maet_1213.png)
+![DApp 工程堆栈](images/ch12/maet_1213.png)
 
-Figure 12-13. Concise overview of the full engineering stack of a DApp
+图 12-13. DApp 完整工程堆栈的简要概述
 
-## Conclusion
+## 结论
 
-In this chapter, we've explored how to build a basic DApp from scratch using modern tools to streamline the development workflow. In the next chapter, we'll take a closer look at some of the most important DApps—and categories of DApps—on Ethereum that collectively create what is known as DeFi.
+在本章中，我们探讨了如何使用现代工具从头开始构建一个基本的 DApp，以简化开发工作流程。在下一章中，我们将更仔细地研究以太坊上一些最重要的 DApp（以及 DApp 的类别），它们共同创建了所谓的 DeFi。

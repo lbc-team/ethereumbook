@@ -1,209 +1,209 @@
-# Chapter 11. Oracles
+# 第 11 章. 预言机
 
-In this chapter, we discuss *oracles*, which are systems that can provide external data sources to Ethereum smart contracts. The term *oracle* comes from Greek mythology, where it referred to a person in communication with the gods who could see visions of the future. In the context of blockchains, an oracle is a system that can answer questions that are external to Ethereum. Ideally, oracles are systems that are trustless, meaning that they do not need to be trusted because they operate on decentralized principles.
+在这一章中，我们将讨论*预言机*，这是一种可以为以太坊智能合约提供外部数据源的系统。 *预言机*这个术语来自希腊神话，指的是与神灵交流并能看到未来景象的人。在区块链的背景下，预言机是一种可以回答以太坊外部问题的系统。理想情况下，预言机是无需信任的系统，这意味着它们不需要被信任，因为它们以去中心化的原则运作。
 
-## Why Oracles Are Needed
+## 为什么需要预言机
 
-A key component of the Ethereum platform is the EVM, with its ability to execute programs and update the state of Ethereum, constrained by consensus rules, on any node in the decentralized network. To maintain consensus, EVM execution must be totally deterministic and based only on the shared context of the Ethereum state and signed transactions. This has two particularly important consequences: the first is that there can be no intrinsic source of randomness for the EVM and smart contracts to work with, and the second is that extrinsic data can only be introduced as the data payload of a transaction.
+以太坊平台的一个关键组成部分是EVM，它能够在去中心化网络中的任何节点上执行程序、更新以太坊状态，并受到共识规则的约束。为了保持共识，EVM 的执行必须是完全确定性的，并且只能基于以太坊状态和签名交易的共享上下文。这有两个特别重要的结果：第一个是 EVM 和智能合约无法使用固有的随机性来源，第二个是外部数据只能作为交易的数据有效负载引入。
 
-Let's unpack those two consequences further. To understand the prohibition of a true random function in the EVM to provide randomness for smart contracts, consider the effect on attempts to achieve consensus after the execution of such a function: node A would execute the command and store 3 on behalf of the smart contract in its storage, while node B, executing the same smart contract, would store 7 instead. Thus, nodes A and B would come to different conclusions about what the resulting state should be, despite having run exactly the same code in the same context. Indeed, it could be that a different resulting state would be achieved every time the smart contract is evaluated. As such, there would be no way for the network, with its multitude of nodes running independently around the world, to ever come to a decentralized consensus on what the resulting state should be. In practice, it would get much worse than this example very quickly because knock-on effects, including ether transfers, would build up exponentially.
+让我们进一步分析这两个结果。为了理解 EVM 中禁止使用真正的随机函数来为智能合约提供随机性，请考虑在执行此类函数后对达成共识的尝试的影响：节点 A 将执行该命令并在其存储中代表智能合约存储 3，而节点 B 执行相同的智能合约，将存储 7。因此，尽管节点 A 和节点 B 在相同的上下文中运行了完全相同的代码，但对于结果状态应该是什么，它们会得出不同的结论。实际上，每次评估智能合约时，都可能会获得不同的结果状态。因此，对于由在世界各地独立运行的众多节点组成的网络来说，将永远无法就结果状态应该是什么达成去中心化的共识。在实践中，情况会比这个例子迅速恶化得多，因为包括以太币转移在内的连锁反应将会呈指数级增长。
 
-Note that pseudorandom functions, such as cryptographically secure hash functions (which are deterministic and therefore can be—and indeed are—part of the EVM), are not enough for many applications. Take a gambling game that simulates coin flips to resolve bet payouts, which needs to randomize heads or tails: a block proposer can gain an advantage by playing the game and only including their transactions in blocks for which they will win. So how do we get around this problem? Well, all nodes can agree on the contents of signed transactions, so extrinsic information, including sources of randomness, price information, weather forecasts, and so on, can be introduced as the data part of transactions sent to the network. However, such data simply cannot be trusted because it comes from unverifiable sources. As such, we have just deferred the problem. We use oracles to attempt to solve these problems, which we will discuss in detail in the rest of this chapter.
+请注意，伪随机函数，例如密码学安全的哈希函数（它们是确定性的，因此可以而且确实是 EVM 的一部分），对于许多应用程序来说是不够的。以一个模拟抛硬币来解决赌注支付的赌博游戏为例，该游戏需要随机化正面或反面：区块提议者可以通过玩游戏并仅将他们的交易包含在他们将获胜的区块中来获得优势。那么我们如何解决这个问题呢？好吧，所有节点都可以就签名交易的内容达成一致，因此外部信息，包括随机性来源、价格信息、天气预报等，可以作为发送到网络上的交易的数据部分引入。但是，这些数据根本无法信任，因为它来自无法验证的来源。因此，我们只是推迟了问题。我们使用预言机来尝试解决这些问题，我们将在本章的其余部分详细讨论这些问题。
 
-## Oracle Use Cases and Examples
+## 预言机用例和示例
 
-Oracles, ideally, provide a trustless (or at least near-trustless) way of getting extrinsic (i.e., "real-world" or off-chain) information, such as the results of football games, the price of gold, or truly random numbers, onto the Ethereum platform for smart contracts to use. They can also be used to relay data securely to DApp frontends directly. Oracles can therefore be thought of as a mechanism for bridging the gap between the off-chain world and smart contracts. Mostly, they are used to pass information between different blockchains, such as token prices.
+理想情况下，预言机提供了一种无需信任（或至少接近无需信任）的方式，可以将外部（即“真实世界”或链下）信息（例如足球比赛的结果、黄金价格或真正的随机数）引入以太坊平台，供智能合约使用。它们还可以用于将数据安全地直接传递到 DApp 前端。因此，预言机可以被认为是弥合链下世界和智能合约之间差距的一种机制。它们主要用于在不同的区块链之间传递信息，例如代币价格。
 
-Allowing smart contracts to enforce contractual relationships based on real-world events and data broadens their scope dramatically. However, this can also introduce external risks to Ethereum's security model. Consider a "smart will" contract that distributes assets when a person dies. This is something frequently discussed in the smart contract space and highlights the risks of a trusted oracle. If the inheritance amount controlled by such a contract is high enough, the incentive to hack[^1] the oracle and trigger distribution of assets before the owner dies is very high.
+允许智能合约根据现实世界的事件和数据来执行合同关系，可以极大地扩展其范围。但是，这也可能给以太坊的安全模型引入外部风险。考虑一个“智能遗嘱”合约，该合约在一个人死亡时分配资产。这是智能合约领域经常讨论的事情，并突出了受信任预言机的风险。如果此类合约控制的继承金额足够高，那么入侵[^1]预言机并在所有者死亡之前触发资产分配的动机非常高。
 
-[^1]: This could also mean corrupting the human operator of a centralized oracle.
+[^1]: 这也可能意味着腐蚀中心化预言机的人工操作员。
 
-Note that some oracles provide data that is particular to a specific private data source, such as academic certificates or government IDs. The source of such data, such as a university or government department, is fully trusted, and the truth of the data is subjective (truth is only determined by appeal to the authority of the source). Such data cannot therefore be provided trustlessly—that is, without trusting a source—as there is no independently verifiable objective truth. As such, we include these data sources in our definition of what counts as "oracles" because they also provide a data bridge for smart contracts. The data they provide generally takes the form of attestations, such as passports or records of achievement. Attestations will become a big part of the success of blockchain platforms in the future, particularly with regard to the related issues of verifying identity or reputation, so it is important to explore how they can be served by blockchain platforms.
+请注意，某些预言机提供特定于特定私有数据源的数据，例如学历证书或政府 ID。此类数据的来源（例如大学或政府部门）是完全值得信赖的，并且数据的真实性是主观的（真实性仅取决于对来源权威的诉诸）。因此，此类数据无法以无需信任的方式提供，即在不信任来源的情况下提供，因为没有可独立验证的客观事实。因此，我们将这些数据源纳入我们对“预言机”的定义中，因为它们也为智能合约提供了一个数据桥梁。它们提供的数据通常采用证明的形式，例如护照或成就记录。证明将在未来成为区块链平台成功的很大一部分，尤其是在验证身份或声誉的相关问题上，因此探索区块链平台如何提供证明非常重要。
 
-Some more examples of data that oracles may provide include:
+预言机可能提供的更多数据示例包括：
 
-- Random numbers or entropy from physical sources, such as quantum or thermal processes (e.g., to fairly select a winner in a lottery smart contract)
+- 来自物理来源（例如量子或热过程）的随机数或熵（例如，在彩票智能合约中公平地选择获胜者）
 
-- Parametric triggers indexed to natural hazards (e.g., triggering of catastrophe bond smart contracts, such as Richter scale measurements for an earthquake bond)
+- 索引到自然灾害的参数触发器（例如，触发巨灾债券智能合约，例如地震债券的里氏震级测量值）
 
-- Exchange rate data (e.g., for accurate pegging of cryptocurrencies to fiat currency)
+- 汇率数据（例如，用于将加密货币准确地锚定到法定货币）
 
-- Capital markets data (e.g., pricing baskets of tokenized assets or securities)
+- 资本市场数据（例如，代币化资产或证券的定价篮子）
 
-- Benchmark reference data (e.g., incorporating interest rates into smart financial derivatives)
+- 基准参考数据（例如，将利率纳入智能金融衍生品中）
 
-- Static or pseudostatic data (e.g., security identifiers, country codes, currency codes, etc.)
+- 静态或伪静态数据（例如，证券标识符、国家代码、货币代码等）
 
-- Time and interval data for event triggers grounded in precise time measurements
+- 用于基于精确时间测量的事件触发的时间和间隔数据
 
-- Weather data (e.g., insurance premium calculations based on weather forecasts)
+- 天气数据（例如，基于天气预报的保险费计算）
 
-- Political events for prediction-market resolution
+- 用于预测市场决议的政治事件
 
-- Sporting events for prediction-market resolution and fantasy sports contracts
+- 用于预测市场决议和梦幻体育合约的体育赛事
 
-- Geolocation data (e.g., as used in supply chain tracking)
+- 地理位置数据（例如，用于供应链跟踪）
 
-- Damage verification for insurance contracts
+- 保险合同的损失验证
 
-- Events occurring on other blockchains for interoperability functions
+- 用于互操作性功能的其他区块链上发生的事件
 
-- Ether market price (e.g., for fiat gas price oracles)
+- 以太币市场价格（例如，用于法币 gas 价格预言机）
 
-- Flight statistics (e.g., as used by groups and clubs for flight ticket pooling)
+- 航班统计信息（例如，由团体和俱乐部用于机票共享）
 
-In the following sections, we will examine some of the ways oracles can be implemented, including basic oracle patterns, computation oracles, decentralized oracles, and oracle client implementations in Solidity.
+在以下部分中，我们将研究预言机的一些实现方式，包括基本预言机模式、计算预言机、去中心化预言机和 Solidity 中的预言机客户端实现。
 
-## Oracle Design Patterns
+## 预言机设计模式
 
-All oracles provide a few key functions by definition. These include the ability to:
+根据定义，所有预言机都提供一些关键功能。这些功能包括：
 
-- Collect data from an off-chain source
+- 从链下来源收集数据
 
-- Transfer the data on chain with a signed message
+- 使用签名消息将数据传输到链上
 
-- Make the data available
+- 使数据可用
 
-Once the data is available in a smart contract, it can be accessed by other smart contracts via message calls that invoke a `retrieve` function of the oracle's smart contract; it can also be accessed by Ethereum nodes or network-enabled clients directly.
+一旦数据在智能合约中可用，其他智能合约可以通过消息调用预言机的智能合约的 `retrieve` 函数来访问它；以太坊节点或启用网络的客户端也可以直接访问它。
 
-The three main ways to set up an oracle can be categorized as immediate-read, publish-subscribe, and request-response.
+设置预言机的主要三种方式可以分为即时读取、发布-订阅和请求-响应。
 
-### Immediate-Read
+### 即时读取
 
-Let's start with the simplest type of oracle. Immediate-read oracles are those that provide data that is needed only for an immediate decision, such as, "What is the address for ethereumbook.info?" or "Is this person over 18?" This is illustrated in Figure 11-1.
+让我们从最简单的预言机类型开始。即时读取预言机是那些提供仅用于立即决策所需数据的预言机，例如，“ethereumbook.info 的地址是什么？”或“这个人是否已满 18 岁？”如图 11-1 所示。
 
-![Immediate-read oracle](images/ch11/maet_1101.png)
+![即时读取预言机](images/ch11/maet_1101.png)
 
-Figure 11-1. Immediate-read oracle
+图 11-1. 即时读取预言机
 
-Those who wish to query this kind of data tend to do so on a "just-in-time" basis; the lookup is done when the information is needed and possibly never again. Examples of such oracles include those that hold data about or that are issued by organizations, such as academic certificates, dial codes, institutional memberships, airport identifiers, self-sovereign IDs, and the like.
+那些希望查询此类数据的人倾向于以“适时”的方式进行查询；查找是在需要信息时完成的，可能永远不会再次完成。此类预言机的示例包括那些持有关于组织或由组织发布的数据的预言机，例如学历证书、拨号代码、机构会员资格、机场标识符、自主身份标识等。
 
-This type of oracle stores data once in its contract storage where any other smart contract can look it up using a request call to the oracle contract. It may be updated. The data in the oracle's storage is also available for direct lookup by blockchain-enabled (i.e., Ethereum client–connected) applications without having to go through the palaver and incur the gas costs of issuing a transaction. A shop that needs to check the age of a customer who wants to purchase alcohol could use an oracle in this way. This type of oracle is attractive to an organization or company that might otherwise have to run and maintain servers to answer such data requests.
+这种类型的预言机将其数据一次存储在其合约存储中，任何其他智能合约都可以使用对预言机合约的请求调用来查找它。它可以被更新。预言机存储中的数据也可供启用区块链（即连接以太坊客户端）的应用程序直接查找，而无需经历发布交易的麻烦和 Gas 成本。需要检查想要购买酒精的客户年龄的商店可以使用这种方式的预言机。这种类型的预言机对可能需要运行和维护服务器来应答此类数据请求的组织或公司很有吸引力。
 
-Note that the data stored by the oracle is likely not to be the raw data that the oracle is serving—for efficiency or privacy reasons, for example. A university might set up an oracle for the certificates of academic achievement of past students. However, storing the full details of the certificates (which could run to pages of courses taken and grades achieved) would be excessive. Instead, a hash of the certificate is sufficient. Likewise, a government might want to put citizen IDs onto the Ethereum platform where clearly the details included need to be kept private. Again, hashing the data (more carefully, in Merkle trees with salts) and only storing the root hash in the smart contract's storage would be an efficient way to organize such a service.
+请注意，预言机存储的数据可能不是预言机正在服务的数据的原始数据，例如出于效率或隐私原因。大学可能会为过去学生的学术成就证书设置一个预言机。但是，存储证书的完整详细信息（可能包含所修课程和成绩的页面）将是过多的。相反，证书的哈希就足够了。同样，政府可能希望将公民身份证放到以太坊平台上，但显然需要对包含的详细信息保密。同样，对数据进行哈希处理（更仔细地，在带有 salt 的 Merkle 树中）并且仅将根哈希存储在智能合约的存储中将是组织此类服务的一种有效方式。
 
-### Publish-Subscribe
+### 发布-订阅
 
-The next setup is publish-subscribe, where an oracle that effectively provides a broadcast service for data that is expected to change (perhaps both regularly and frequently) is either polled by a smart contract on chain or watched by an off-chain daemon for updates, as shown in Figure 11-2.
+下一个设置是发布-订阅，其中一个有效地为预期会更改（可能定期且频繁）的数据提供广播服务的预言机由链上的智能合约轮询或由链下守护程序监视更新，如图 11-2 所示。
 
-![Publish-subscribe oracle](images/ch11/maet_1102.png)
+![发布-订阅预言机](images/ch11/maet_1102.png)
 
-Figure 11-2. Publish-subscribe oracle
+图 11-2. 发布-订阅预言机
 
-> **Note**  
+> **注意**
 >
-> It is also possible to remove the off-chain daemon. The oracle can save the timestamp of the update and pass it to the smart contract when the data is being read. This way, the smart contract knows the last update of the data and can choose to use it or not.
+> 也可以删除链下守护程序。预言机可以保存更新的时间戳，并在读取数据时将其传递给智能合约。这样，智能合约就知道数据的最后更新，并且可以选择使用它或不使用它。
 
-This category has a pattern similar to RSS feeds, WebSub, and the like, where the oracle is updated with new information and a flag signals that new data is available to those who consider themselves "subscribed." Interested parties must either poll the oracle to check whether the latest information has changed or listen for updates to oracle contracts and act when they occur. Examples include price feeds, weather information, economic or social statistics, traffic data, and so on.
+此类别具有类似于 RSS feed、WebSub 等的模式，其中预言机使用新信息进行更新，并且标志表明新数据可供那些认为自己“已订阅”的人使用。感兴趣的各方必须轮询预言机以检查最新信息是否已更改，或者监听预言机合约的更新并在发生更新时采取行动。示例包括价格源、天气信息、经济或社会统计数据、交通数据等。
 
-Polling is very inefficient in the world of web servers but not so in the P2P context of blockchain platforms. Ethereum clients have to keep up with all state changes, including changes to contract storage, so polling for data changes is a local call to a synced client. Ethereum event logs make it particularly easy for applications to look out for oracle updates, so this pattern can in some ways even be considered a "push" service.
+轮询在 Web 服务器领域非常低效，但在区块链平台的 P2P 环境中则不然。以太坊客户端必须跟上所有状态更改，包括合约存储的更改，因此轮询数据更改是对同步客户端的本地调用。以太坊事件日志使应用程序特别容易查找预言机更新，因此在某些方面甚至可以将这种模式视为“推送”服务。
 
-### Request-Response
+### 请求-响应
 
-The request-response category is the most complicated: this is where the data space is too huge to be stored in a smart contract and users are expected to need only a small part of the overall dataset at a time, as shown in Figure 11-3. It is also an applicable model for data-provider businesses.
+请求-响应类别是最复杂的：这是数据空间太大而无法存储在智能合约中，并且用户预计一次只需要整体数据集的一小部分，如图 11-3 所示。它也是适用于数据提供商业务的模型。
 
-![Request-response oracle](images/ch11/maet_1103.png)
+![请求-响应预言机](images/ch11/maet_1103.png)
 
-Figure 11-3. Request-response oracle
+图 11-3. 请求-响应预言机
 
-In practical terms, such an oracle might be implemented as a system of on-chain smart contracts and off-chain infrastructure used to monitor requests and retrieve and return data. A request for data from a decentralized application would typically be an asynchronous process involving a number of steps. In this pattern, first an EOA transacts with a decentralized application, resulting in an interaction with a function defined in the oracle smart contract. This function initiates the request to the oracle, with the associated arguments detailing the data requested in addition to supplementary information that might include callback functions and scheduling parameters. Once this transaction has been validated, the oracle request can be observed as an EVM event emitted by the oracle contract or as a state change; the arguments can be retrieved and used to perform the actual query of the off-chain data source. The oracle may also require payment for processing the request, gas payment for the callback, and permissions to access the requested data. Finally, the resulting data is signed by the oracle owner, attesting to the validity of the data at a given time, and delivered in a transaction to the decentralized application that made the request—either directly or via the oracle contract, as shown in Figure 11-3. Depending on the scheduling parameters, the oracle may broadcast further transactions updating the data at regular intervals (e.g., end-of-day pricing information).
+实际上，此类预言机可以实施为链上智能合约和链下基础设施的系统，用于监控请求并检索和返回数据。来自分散式应用程序的数据请求通常是一个异步过程，涉及许多步骤。在这种模式中，首先 EOA 与分散式应用程序进行交易，从而导致与预言机智能合约中定义的函数进行交互。此函数启动对预言机的请求，并附带关联的参数，详细说明所请求的数据以及可能包括回调函数和调度参数的补充信息。一旦验证了此交易，就可以将预言机请求观察为预言机合约发出的 EVM 事件或状态更改；可以检索参数并用于执行对链下数据源的实际查询。预言机可能还需要支付处理请求的费用、回调的 Gas 费用以及访问所请求数据的权限。最后，生成的数据由预言机所有者签名，证明数据在给定时间的有效性，并通过交易传递给发出请求的分散式应用程序，可以直接传递，也可以通过预言机合约传递，如图 11-3 所示。根据调度参数，预言机可能会广播进一步的交易，以定期更新数据（例如，每日结束定价信息）。
 
-The steps for a request-response oracle can be summarized as follows:
+请求-响应预言机的步骤可以概括如下：
 
-1. Receive a query from a DApp.
+1. 接收来自 DApp 的查询。
 
-2. Parse the query.
+2. 解析查询。
 
-3. Check that payment and data access permissions are provided.
+3. 检查是否提供了付款和数据访问权限。
 
-4. Retrieve relevant data from an off-chain source (and encrypt it if necessary).
+4. 从链下源检索相关数据（并在必要时对其进行加密）。
 
-5. Sign the transaction(s) with the data included.
+5. 使用包含的数据对交易进行签名。
 
-6. Broadcast the transaction(s) to the network.
+6. 将交易广播到网络。
 
-7. Schedule any further necessary transactions, such as notifications and the like.
+7. 安排任何进一步必要的交易，例如通知等。
 
-A range of other schemes is also possible; for example, data can be requested from and returned directly by an EOA, removing the need for an oracle smart contract. Similarly, the request and response could be made to and from an Internet of Things–enabled hardware sensor. Therefore, oracles can be human, software, or hardware.
+还可以使用一系列其他方案；例如，可以从 EOA 直接请求和返回数据，而无需预言机智能合约。同样，可以向和从启用了物联网的硬件传感器发出请求和响应。因此，预言机可以是人、软件或硬件。
 
-The request-response pattern described here is commonly seen in client-server architectures. While this is a useful messaging pattern that allows applications to have a two-way conversation, it is perhaps inappropriate under certain conditions. For example, a smart bond requiring an interest rate from an oracle might have to request the data on a daily basis under a request-response[^2] pattern to ensure that the rate is always correct. Given that interest rates change infrequently, a publish-subscribe pattern may be more appropriate here—especially when taking into consideration Ethereum's limited bandwidth.
+此处描述的请求-响应模式在客户端-服务器架构中很常见。虽然这是一种有用的消息传递模式，允许应用程序进行双向对话，但在某些情况下可能不合适。例如，需要从预言机获取利率的智能债券可能需要在请求-响应[^2]模式下每天请求数据，以确保利率始终正确。考虑到利率变化不频繁，发布-订阅模式可能更适合这里，尤其是在考虑到以太坊有限的带宽时。
 
-[^2]: Due to this asynchronicity, the requesting DApp/contract needs to be designed to handle delayed responses and cannot expect data immediately in the same transaction.
+[^2]: 由于这种异步性，请求的 DApp/合约需要设计为处理延迟响应，并且不能期望在同一交易中立即获得数据。
 
-Publish-subscribe is a pattern where publishers (in this context, oracles) do not send messages directly to receivers but instead categorize published messages into distinct classes. Subscribers are able to express an interest in one or more classes and retrieve only those messages that are of interest. Under such a pattern, an oracle might write the interest rate to its own internal storage each time it changes. Multiple subscribed DApps can simply read it from the oracle contract, thereby reducing the impact on network bandwidth while minimizing storage costs.
+发布-订阅是一种模式，其中发布者（在这种情况下，预言机）不直接向接收者发送消息，而是将发布的消息分类为不同的类别。订阅者能够表达对一个或多个类别的兴趣，并且仅检索感兴趣的消息。在这种模式下，预言机每次更改利率时都可以将其写入自己的内部存储中。多个订阅的 DApp 可以简单地从预言机合约中读取它，从而减少对网络带宽的影响，同时最大限度地降低存储成本。
 
-In a broadcast or multicast pattern, an oracle would post all messages to a channel, and subscribing contracts would listen to the channel under a variety of subscription modes. For example, an oracle might publish messages to a cryptocurrency exchange rate channel. A subscribing smart contract could request the full content of the channel if it required the time series for, say, a moving average calculation; another might require only the latest rate for a spot price calculation. A broadcast pattern is appropriate where the oracle does not need to know the identity of the subscribing contract.
+在广播或多播模式下，预言机会将所有消息发布到一个通道，并且订阅合约会在各种订阅模式下侦听该通道。例如，预言机可能会将消息发布到加密货币汇率通道。如果订阅智能合约需要计算移动平均线的时间序列，则它可以请求通道的完整内容；另一个可能只需要即期价格的最新汇率。广播模式适用于预言机不需要知道订阅合约的身份的情况。
 
-## Data Authentication
+## 数据认证
 
-If we assume that the source of data being queried by a DApp is both authoritative and trustworthy (a not insignificant assumption), an outstanding question remains: given that the oracle and the request-response mechanism may be operated by distinct entities, how are we able to trust this mechanism? There is a distinct possibility that data may be tampered with in transit, so it is critical that off-chain methods are able to attest to the returned data's integrity. Two common approaches to data authentication are *authenticity proofs* and *trusted execution environments* (TEEs).
+如果我们假设 DApp 查询的数据源既权威又值得信赖（一个非常重要的假设），那么仍然存在一个悬而未决的问题：鉴于预言机和请求-响应机制可能由不同的实体操作，我们如何信任这种机制？在传输过程中，数据很有可能被篡改，因此链下方法能够证明返回数据的完整性至关重要。两种常见的数据认证方法是*真实性证明*和*可信执行环境* (TEE)。
 
-Authenticity proofs rely on cryptographic guarantees that data has not been altered on its way from the source to the blockchain. These proofs shift reliance from the transport mechanism to a verifiable attestor, such as a data provider, a secure third party, or even a decentralized network of nodes. By validating cryptographic signatures or zero-knowledge attestations on chain, a smart contract can confirm that the information it receives indeed comes from the proper authority and has not been tampered with, often without needing the original data source to implement special signing logic.
+真实性证明依赖于加密保证，即数据在从源到区块链的传输过程中没有被更改。这些证明将依赖从传输机制转移到可验证的证明者，例如数据提供者、安全第三方或甚至是去中心化的节点网络。通过验证链上的加密签名或零知识证明，智能合约可以确认其收到的信息确实来自适当的权威机构，并且没有被篡改，通常无需原始数据源实现特殊的签名逻辑。
 
-> **Note**  
+> **注意**
 >
-> One practical example would be Chainlink VRF. From the documentation on Chainlink, we can read, "For each request, Chainlink VRF generates one or more random values and cryptographic proof of how those values were determined. The proof is published and verified on-chain before any consuming applications can use it." So Chainlink VRF is able to prove how it generated the random value, and that is in fact an authenticity proof.
+> 一个实际的例子是 Chainlink VRF。从 Chainlink 上的文档中，我们可以读到，“对于每个请求，Chainlink VRF 会生成一个或多个随机值以及如何确定这些值的加密证明。在任何使用应用程序可以使用它之前，该证明会被发布并在链上进行验证。”因此，Chainlink VRF 能够证明它是如何生成随机值的，而这实际上是一个真实性证明。
 >
-> Chainlink VRF works by having a deployed smart contract request a random number from the Chainlink oracle network, providing a hint that the oracle cannot predict. Each oracle uses its private key to generate a random number off chain and then publishes the result and a corresponding cryptographic proof on chain. The smart contract can use the oracle's public key and the original hint to verify that this random output has not been manipulated. Since the proof is validated entirely on chain, an attacker cannot tamper with the result without invalidating the cryptographic checks. In the event that a node is compromised or becomes unresponsive, its failure is recorded on chain, and it is ultimately excluded from providing further randomness.
+> Chainlink VRF 的工作原理是让已部署的智能合约从 Chainlink 预言机网络请求一个随机数，并提供一个预言机无法预测的提示。每个预言机使用其私钥在链下生成一个随机数，然后将结果和相应的加密证明发布到链上。智能合约可以使用预言机的公钥和原始提示来验证此随机输出是否已被篡改。由于证明完全在链上进行验证，因此攻击者无法篡改结果而不会使加密检查失效。如果节点受到攻击或无响应，则其故障会被记录在链上，并且最终会被排除在进一步提供随机性之外。
 
-TEEs reinforce these guarantees by leveraging specialized hardware enclaves that protect and attest to code and data. When a computation runs inside such an enclave, the CPU ensures that outside processes cannot interfere with it or see the underlying data, thus preserving both integrity and confidentiality. The enclave can then provide a digitally signed "attestation" (or proof) that a particular piece of code, identified by a cryptographic hash, is running inside the secure environment. This allows smart contracts to have stronger assurances that any external data or computation hasn't been maliciously altered before arriving on chain. Secure enclaves also enable privacy features since sensitive inputs can be encrypted and processed inside the enclave without ever being revealed to the wider world.
+TEE 利用专门的硬件飞地来保护和证明代码和数据，从而加强了这些保证。当计算在此类飞地中运行时，CPU 会确保外部进程无法干扰它或查看底层数据，从而保持完整性和机密性。然后，飞地可以提供数字签名的“证明”（或证明），表明特定的代码（由加密哈希标识）正在安全环境中运行。这使得智能合约能够更强烈地保证任何外部数据或计算在到达链上之前没有被恶意更改。安全飞地还启用隐私功能，因为敏感输入可以在飞地内加密和处理，而不会暴露给更广泛的世界。
 
-In many modern oracle networks, these methods can be combined to further strengthen data authentication. Some rely on decentralized sets of independent nodes that pull and verify data from different sources, then reach consensus on the correct result. This multioperator system greatly reduces the risk that a single bad actor could compromise the data feed since nodes are incentivized and often economically bonded to remain honest. Others incorporate advanced cryptographic protocols to prove that data was sourced from a particular endpoint without exposing the underlying details, thus reducing dependence on fully centralized verifiers. Certain network operators also deploy hardware enclaves to run their data-fetching logic, ensuring that even if the host environment is compromised, the final results submitted to the blockchain remain unaltered and can be independently verified.
+在许多现代预言机网络中，这些方法可以组合起来，以进一步加强数据认证。有些依赖于去中心化的独立节点集，这些节点从不同的来源提取和验证数据，然后就正确的结果达成共识。这种多运营商系统极大地降低了单个不良行为者可能破坏数据源的风险，因为节点受到激励，并且通常在经济上绑定以保持诚实。其他节点则结合了高级加密协议来证明数据来自特定的端点，而不会暴露底层细节，从而减少了对完全中心化验证器的依赖。某些网络运营商还部署硬件飞地来运行其数据提取逻辑，确保即使主机环境受到攻击，提交给区块链的最终结果仍然未被更改，并且可以独立验证。
 
-Regardless of the specific implementation, the biggest challenge is to ensure that any data retrieved and passed into a DApp is precise and trustworthy. Authenticity proofs provide a robust way to track and verify where and how data was obtained, while TEEs offer a hardware-backed means of safeguarding the entire process of collecting and relaying off-chain information.
+无论具体实现如何，最大的挑战是确保检索并传递到 DApp 中的任何数据都是精确和值得信赖的。真实性证明提供了一种强大的方法来跟踪和验证数据的获取地点和方式，而 TEE 提供了一种硬件支持的方式来保护收集和中继链下信息的整个过程。
 
-> **Warning**  
+> **警告**
 >
-> Because TEEs are relatively new, they remain largely untested and could contain numerous undiscovered vulnerabilities, making it likely that new exploits will be discovered and compromised in the future.
+> 由于 TEE 相对较新，它们在很大程度上未经测试，并且可能包含许多未发现的漏洞，因此将来很可能会发现新的漏洞并受到破坏。
 
-## Computation Oracles
+## 计算预言机
 
-So far, we have only discussed oracles in the context of requesting and delivering data. However, oracles can also be used to perform arbitrary computation, a function that can be especially useful given Ethereum's inherent block gas limit and comparatively expensive computation costs. Rather than just relaying the results of a query, computation oracles can be used to perform computation on a set of inputs and return a calculated result that may have been infeasible to calculate on chain. For example, you could use a computation oracle to perform a computationally intensive regression calculation in order to estimate the yield of a bond contract.
+到目前为止，我们只讨论了在请求和传递数据的背景下的预言机。但是，预言机也可以用于执行任意计算，鉴于以太坊固有的区块 Gas 限制和相对昂贵的计算成本，此功能可能特别有用。计算预言机不仅可以中继查询的结果，还可以用于对一组输入执行计算，并返回可能无法在链上计算的计算结果。例如，您可以使用计算预言机执行计算密集型回归计算，以估计债券合约的收益率。
 
-Lagrange and Brevis, known as *ZK coprocessors*, enable smart contracts to run intensive computations off chain while still ensuring on-chain verification. Brevis, for example, lets DApps request complex tasks or historical data without generating an upfront zero-knowledge proof. Instead, the network posts results "optimistically," assuming they are correct. Once the results are published on chain, there is a challenge window when anyone can dispute them. If the results are challenged, the proposer must then produce a full zero-knowledge proof to validate the outcome. If no proof is provided or if the proof shows that the initial results were incorrect, challengers are rewarded, and those who submitted false results are penalized. If no challenges arise, the results are accepted as valid, dramatically cutting down on the number of zero-knowledge proofs required and reducing costs.
+Lagrange 和 Brevis，被称为 *ZK 协处理器*，使智能合约能够在链下运行密集的计算，同时仍然确保链上验证。例如，Brevis 允许 DApp 请求复杂的任务或历史数据，而无需生成预先零知识证明。相反，网络“乐观地”发布结果，假设它们是正确的。一旦结果发布到链上，就会有一个挑战窗口，在此期间任何人都可以对其提出异议。如果结果受到挑战，提议者必须生成完整的零知识证明来验证结果。如果没有提供证明，或者证明表明初始结果不正确，则挑战者会获得奖励，而提交虚假结果的人会受到处罚。如果没有出现挑战，则结果被接受为有效，从而大大减少了所需的零知识证明的数量，并降低了成本。
 
-## Decentralized Oracles
+## 去中心化预言机
 
-While centralized data or computation oracles suffice for many applications, they represent single points of failure in the Ethereum network. A number of schemes have been proposed around the idea of decentralized oracles as a means of ensuring data availability and the creation of a network of individual data providers with an on-chain data aggregation system.
+虽然中心化的数据或计算预言机足以满足许多应用程序的需求，但它们代表了以太坊网络中的单点故障。围绕去中心化预言机的想法已经提出了许多方案，作为确保数据可用性和创建具有链上数据聚合系统的各个数据提供商网络的一种手段。
 
-Chainlink has proposed a decentralized oracle network consisting of three key smart contracts—a reputation contract, an order-matching contract, and an aggregation contract—and an off-chain registry of data providers. The reputation contract is used to keep track of data providers' performance. Scores in the reputation contract are used to populate the off-chain registry. The order-matching contract selects bids from oracles using the reputation contract. It then finalizes a service-level agreement, which includes query parameters and the number of oracles required. This means that the purchaser needn't transact with the individual oracles directly. The aggregation contract collects responses (submitted using a commit-reveal scheme) from multiple oracles, calculates the final collective result of the query, and finally feeds the results back into the reputation contract.
+Chainlink 提出了一个去中心化的预言机网络，该网络由三个关键的智能合约（信誉合约、订单匹配合约和聚合合约）和一个链下数据提供商注册中心组成。信誉合约用于跟踪数据提供商的性能。信誉合约中的分数用于填充链下注册中心。订单匹配合约使用信誉合约从预言机中选择出价。然后，它最终确定服务级别协议，其中包括查询参数和所需的预言机数量。这意味着购买者无需直接与各个预言机进行交易。聚合合约从多个预言机收集响应（使用提交-揭示方案提交），计算查询的最终集体结果，最后将结果反馈到信誉合约中。
 
-One of the main challenges with such a decentralized approach is the formulation of the aggregation function. Chainlink proposes calculating a weighted response, allowing a validity score to be reported for each oracle response. Detecting an invalid score here is nontrivial since that relies on the premise that outlying data points, measured by deviations from responses provided by peers, are incorrect. Calculating a validity score based on the location of an oracle response among a distribution of responses risks penalizing correct answers over average ones. Therefore, Chainlink offers a standard set of aggregation contracts but also allows customized aggregation contracts to be specified.
+这种去中心化方法的主要挑战之一是聚合函数的公式。Chainlink 建议计算加权响应，从而可以为每个预言机响应报告有效性分数。在此处检测无效分数并非易事，因为它依赖于以下前提：通过测量与同行提供的响应的偏差来衡量的异常数据点是不正确的。根据预言机响应在响应分布中的位置计算有效性分数可能会因高于平均水平的答案而惩罚正确答案。因此，Chainlink 提供了一组标准的聚合合约，但也允许指定自定义聚合合约。
 
-A related idea is the *SchellingCoin protocol*. Here, multiple participants report values, and the median is taken as the "correct" answer. Reporters are required to provide a deposit that is redistributed in favor of values that are closer to the median, therefore incentivizing the reporting of values that are similar to others. A common value, also known as the *Schelling point*, which respondents might consider as the natural and obvious target around which to coordinate, is expected to be close to the actual value.
+一个相关的想法是 *SchellingCoin 协议*。在这里，多个参与者报告数值，并将中位数作为“正确”答案。要求报告者提供一笔存款，该存款会重新分配给更接近中位数的数值，因此激励报告与其他数值相似的数值。一个共同的值，也称为 *Schelling 点*，响应者可能会将其视为协调的自然而明显的目​​标，预计会接近实际值。
 
-## Cross-Chain Messaging Protocols
+## 跨链消息传递协议
 
-Numerous applications frequently call for data transfers and interactions among several chains, each with its own community governance, consensus rules, and token standards. Cross-chain protocols have emerged as critical tools for facilitating communication among blockchains, allowing smart contracts and decentralized applications to access a wider range of services, liquidity, and data. While oracles bridge external information into a single blockchain, cross-chain protocols extend that concept by connecting entire ecosystems.
+许多应用程序经常要求在多个链之间进行数据传输和交互，每个链都有自己的社区治理、共识规则和代币标准。跨链协议已成为促进区块链之间通信的关键工具，使智能合约和去中心化应用程序能够访问更广泛的服务、流动性和数据。虽然预言机将外部信息桥接到单个区块链中，但跨链协议通过连接整个生态系统来扩展这一概念。
 
-One way to understand cross-chain protocols is as specialized "communication layers" that connect blockchains. Instead of being used solely to ingest external data, these protocols facilitate the transfer of information between chains.
+理解跨链协议的一种方法是将其视为连接区块链的专用“通信层”。这些协议不仅用于摄取外部数据，还用于促进链间信息的传输。
 
-Among the popular cross-chain initiatives, LayerZero offers a framework for lightweight message passing across blockchains. It aims to provide a more efficient and flexible interoperability layer by focusing on the "transport" and "validation" of messages. LayerZero's design revolves around two key off-chain entities—the Oracle and the Relayer—that collaborate to verify cross-chain transactions, as illustrated in Figure 11-4.
+在流行的跨链倡议中，LayerZero 提供了一个跨区块链的轻量级消息传递框架。它旨在通过专注于消息的“传输”和“验证”来提供更高效、更灵活的互操作性层。LayerZero 的设计围绕两个关键的链下实体（预言机和中继器）展开，它们协同验证跨链交易，如图 11-4 所示。
 
-![LayerZero cross-chain architecture](images/ch11/maet_1104.png)
+![LayerZero跨链架构](images/ch11/maet_1104.png)
 
-Figure 11-4. LayerZero cross-chain architecture
+图 11-4. LayerZero 跨链架构
 
-The Oracle performs an independent query on a transaction's proof or block header, whereas the Relayer passes the proof itself. A user-configurable set of Oracles and Relayers can be used to decentralize trust. If the Oracle and Relayer provide the same data, LayerZero's smart contracts on the destination chain accept the message as valid, allowing developers to create complex interoperability solutions without relying on a single bridging provider or centralized entity.
+预言机对交易的证明或区块头执行独立的查询，而中继器传递证明本身。可以使用用户可配置的预言机和中继器集来分散信任。如果预言机和中继器提供相同的数据，则 LayerZero 在目标链上的智能合约会将消息接受为有效，从而使开发人员无需依赖单个桥接提供商或中心化实体即可创建复杂的互操作性解决方案。
 
-Another well-known project, Wormhole, originated to enable transfers primarily between Solana and Ethereum. It has since expanded to include other networks, such as Binance Smart Chain, Hyperliquid, and Avalanche. Wormhole's approach is based on a network of guardians that monitor events on a single chain and sign messages attesting to them. Once enough guardians have signed, the attestation is considered valid, allowing the corresponding event (such as a token transfer) to be recognized on the destination chain, as illustrated in Figure 11-5. This scheme can help not only with token bridging but also with more complex tasks, such as cross-chain governance proposals and NFT transfers. Wormhole seeks to reduce the risk of a single point of failure by utilizing the combined security of several guardians; however, this necessitates careful selection and upkeep of guardian sets.
+另一个著名的项目 Wormhole 最初是为了实现 Solana 和以太坊之间的传输。此后，它已扩展到包括其他网络，例如 Binance Smart Chain、Hyperliquid 和 Avalanche。Wormhole 的方法基于一个监视单个链上事件并签署证明它们的消息的守护者网络。一旦有足够的守护者签署，该证明就被认为是有效的，从而允许在目标链上识别相应的事件（例如代币传输），如图 11-5 所示。该方案不仅可以帮助代币桥接，还可以帮助更复杂的任务，例如跨链治理提案和 NFT 传输。Wormhole 力求通过利用多个守护者的组合安全性来降低单点故障的风险；但是，这需要仔细选择和维护守护者集。
 
-![Wormhole cross-chain architecture](images/ch11/maet_1105.png)
+![Wormhole跨链架构](images/ch11/maet_1105.png)
 
-Figure 11-5. Wormhole cross-chain architecture
+图 11-5. Wormhole 跨链架构
 
-Chainlink's Cross-Chain Interoperability Protocol (CCIP) builds on the organization's existing oracle network to provide a generalized framework for secure messaging and token transfers between blockchains. Its focus is on delivering a high level of trust minimization, relying on decentralized oracles to verify events across different networks. CCIP can lock or burn tokens on a source chain, then mint or unlock them on the destination chain, making it possible for DApps to extend their functionalities across multiple ecosystems. By reusing the robust infrastructure that Chainlink has developed for decentralized data feeds and verifiable randomness, CCIP offers a natural path for projects already relying on these services to expand into cross-chain operations.
+Chainlink 的跨链互操作性协议 (CCIP) 以该组织现有的预言机网络为基础，为区块链之间的安全消息传递和代币传输提供了一个通用的框架。它的重点是提供高水平的信任最小化，依靠去中心化的预言机来验证不同网络中的事件。CCIP 可以在源链上锁定或销毁代币，然后在目标链上铸造或解锁它们，从而使 DApp 可以跨多个生态系统扩展其功能。通过重用 Chainlink 为去中心化数据源和可验证的随机性开发的强大基础设施，CCIP 为已经依赖这些服务的项目提供了一条扩展到跨链操作的自然途径。
 
-> **Note**  
+> **注意**
 >
-> Circle's Cross-Chain Transfer Protocol (CCTP) is also worth mentioning. It works similarly to CCIP, but its use is primarily to bridge USDC between different chains. CCTP has been integrated by Chainlink into CCIP.
+> Circle 的跨链传输协议 (CCTP) 也值得一提。它的工作方式与 CCIP 类似，但其主要用途是在不同链之间桥接 USDC。CCTP 已被 Chainlink 集成到 CCIP 中。
 
-Alongside these protocols, an increasing number of interoperability layers and bridging solutions are available, each of which fills a slightly different niche. Projects like Polkadot and Cosmos, for instance, were built from the ground up with cross-chain capabilities, utilizing designs like parachains and hubs to promote seamless asset and data exchange. The Inter-Blockchain Communication (IBC) protocol in Cosmos uses client verification, where each connected chain stores "light clients" of other chains. Polkadot secures parachains via a shared set of validators in the Relay Chain, bundling transactions from each parachain into a unified consensus. These architectures prioritize scalability and security but introduce their own learning curves, especially for developers who are accustomed to Ethereum-like environments.
+除了这些协议之外，还有越来越多的互操作性层和桥接解决方案可供使用，每一种都满足略有不同的需求。例如，Polkadot 和 Cosmos 等项目在构建时就具有跨链功能，利用平行链和枢纽等设计来促进无缝的资产和数据交换。Cosmos 中的区块链间通信 (IBC) 协议使用客户端验证，其中每个连接的链存储其他链的“轻客户端”。Polkadot 通过中继链中的一组共享验证器来保护平行链，并将每条平行链的交易捆绑到统一的共识中。这些架构优先考虑可扩展性和安全性，但引入了它们自身的学习曲线，尤其是对于习惯于类似以太坊环境的开发人员而言。
 
-## Conclusion
+## 结论
 
-As you can see, cross-chain protocols and oracles give smart contracts an essential function by bringing outside information into the contract's execution. With that, of course, oracles also introduce a significant risk—if they are trusted sources and can be compromised, they can result in compromised execution of the smart contracts they feed. When you are considering using an oracle, you should generally be very careful about the trust model. Your smart contract may be vulnerable to potentially erroneous inputs if you presume the oracle can be relied upon. However, if the security assumptions are carefully thought out, oracles can be very helpful.
+如您所见，跨链协议和预言机通过将外部信息带入合约的执行中来赋予智能合约一项基本功能。当然，预言机也带来了巨大的风险——如果它们是受信任的来源并且可以被破坏，它们可能会导致其提供的智能合约的执行受到破坏。当您考虑使用预言机时，通常应该非常小心信任模型。如果您假定可以依赖预言机，则您的智能合约可能容易受到潜在错误输入的影响。但是，如果仔细考虑了安全假设，则预言机可能非常有用。
 
-Decentralized oracles can resolve some of these concerns and offer trustless external data for Ethereum smart contracts. Choose carefully, and you can start exploring the bridge between Ethereum and the "real world" that oracles offer.
+去中心化预言机可以解决其中一些问题，并为以太坊智能合约提供无需信任的外部数据。谨慎选择，您就可以开始探索预言机提供的以太坊和“现实世界”之间的桥梁。
 
-We also looked at how cross-chain protocols act as a bridge between Ethereum and other ecosystems, carrying over much of the potential and risk associated with oracles but expanding the range of use cases and functionalities even further.
+我们还研究了跨链协议如何充当以太坊和其他生态系统之间的桥梁，延续了与预言机相关的许多潜力和风险，但进一步扩展了用例和功能范围。

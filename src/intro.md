@@ -1,11 +1,11 @@
-# Mastering Ethereum: 2nd Edition
+# 精通以太坊：第二版
 
-This is the second edition of the book "Mastering Ethereum". You can access the book in the following ways:
+这是书籍 "精通以太坊" 的第二版。您可以通过以下方式访问本书：
 
-- [Buy the book on Amazon](https://www.amazon.com/_/dp/1098168429?smid=ATVPDKIKX0DER&_encoding=UTF8&tag=oreilly20-20)
-- [Read the online version](https://masteringethereum.xyz)
+- [在亚马逊上购买本书](https://www.amazon.com/_/dp/1098168429?smid=ATVPDKIKX0DER&_encoding=UTF8&tag=oreilly20-20)
+- [阅读在线版本](https://masteringethereum.xyz)
 
-## Authors
+## 作者
 
 - [Andreas M. Antonopoulos](https://github.com/aantonop)
 - [Gavin Wood](https://github.com/gavofyork)
@@ -13,6 +13,6 @@ This is the second edition of the book "Mastering Ethereum". You can access the 
 - [Alessandro Mazza](https://github.com/alessandromazza98)
 - [Niccolò Pozzolini](https://github.com/choco-cupcake)
 
-## License
+## 许可
 
-This work is licensed under Creative Commons. For the first 12 months after publication, it is available under the [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/) license (Attribution-NonCommercial-NoDerivatives). After that period, it becomes available under the [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) license (Attribution-ShareAlike).
+本作品采用知识共享许可。在出版后的前12个月内，它采用 [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/) 许可（署名-非商业性-禁止演绎）。在此期限之后，它将采用 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) 许可（署名-相同方式共享）。

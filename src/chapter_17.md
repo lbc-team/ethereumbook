@@ -1,123 +1,122 @@
-# Chapter 17. Zero-Knowledge Proofs
+# 第17章. 零知识证明
 
-In this chapter, we'll explore the fascinating world of *zero-knowledge cryptography* and see how it perfectly applies to the Ethereum roadmap, making it possible to really scale and accommodate mass-adoption demand for block space. Zero-knowledge technology is a very complex topic and relies on lots of mathematical rules that we won't be able to explain in detail. The goal of this chapter is to make sure you can understand why zero-knowledge cryptography offers a unique opportunity for Ethereum and fits well into the scaling roadmap. By the end of the chapter, you'll know how zero-knowledge cryptography works on a high level, what its useful properties are, and how Ethereum is going to use it to improve the protocol.
+在本章中，我们将探索 *零知识密码学* 的迷人世界，并了解它如何完美地应用于以太坊的路线图，使其能够真正扩展并满足大规模采用对区块空间的需求。零知识技术是一个非常复杂的主题，依赖于许多我们无法详细解释的数学规则。本章的目标是确保你能够理解为什么零知识密码学为以太坊提供了一个独特的机会，并且非常适合其扩展路线图。在本章结束时，你将了解零知识密码学在高级别上的工作原理，它的有用属性是什么，以及以太坊将如何使用它来改进协议。
 
-## History
+## 历史
 
-*Zero-knowledge proofs* were introduced in the paper ["The Knowledge Complexity of Interactive Proof-Systems"](https://oreil.ly/a6KH6) by Shafi Goldwasser, Silvio Micali, and Charles Rackoff in 1985, where they describe a zero-knowledge proof as a way to prove to another party that you know something is true without revealing any information besides the fact that your statement is actually true.
-Even though zero-knowledge proofs were discovered in the 1980s, their practical use cases were very limited. Everything changed in 2011 with the arrival of the [BIT+11](https://oreil.ly/C6HvM) paper that introduced *SNARKs* (*succinct noninteractive arguments of knowledge*) as a theoretical framework for creating zero-knowledge proofs for arbitrary computations. Two years later, in 2013, the [Pinocchio PGHR13](https://oreil.ly/4uU6x) paper provided the first practical implementation of a general-purpose SNARK, making SNARKs feasible for real-world applications. For the first time, it was possible to prove that a generic program had been executed correctly without having to reexecute it and without revealing the actual computation details.
+*零知识证明* 在1985年由Shafi Goldwasser、Silvio Micali和Charles Rackoff发表的论文 ["交互式证明系统的知识复杂性"](https://oreil.ly/a6KH6) 中被提出，他们将零知识证明描述为一种向另一方证明你知道某些事情是真的，而不透露任何信息，除了你的声明实际上是真的之外的方法。
+尽管零知识证明是在20世纪80年代被发现的，但它们的实际用例非常有限。一切都在2011年随着 [BIT+11](https://oreil.ly/C6HvM) 论文的出现而改变，该论文介绍了 *SNARKs* (*简洁的非交互式知识论证*)，作为为任意计算创建零知识证明的理论框架。两年后，在2013年，[Pinocchio PGHR13](https://oreil.ly/4uU6x) 论文提供了第一个通用SNARK的实际实现，使SNARKs在现实世界的应用中成为可能。这是第一次可以在不必重新执行的情况下证明一个通用程序已被正确执行，并且无需透露实际的计算细节。
 
-The revolution had started. From that moment on, the field of zero-knowledge proofs evolved at an impressively rapid pace. In 2016, the [Groth16 algorithm](https://oreil.ly/rxlOL) significantly improved the efficiency of zk-SNARKs by reducing proof size and verification time. Because of its exceptional succinctness, Groth16 remains widely used today, despite the availability of newer systems. For example, Tornado Cash, a decentralized mixer application, uses it to implement zero-knowledge proofs on chain.
+革命开始了。从那时起，零知识证明领域以惊人的速度发展。2016年，[Groth16算法](https://oreil.ly/rxlOL) 通过减少证明大小和验证时间，显着提高了zk-SNARKs的效率。由于其卓越的简洁性，尽管有更新的系统可用，Groth16至今仍被广泛使用。例如，去中心化混合器应用程序Tornado Cash使用它来实现链上的零知识证明。
 
-In 2017, [Bulletproofs](https://oreil.ly/ZUeIe) introduced a groundbreaking advancement by eliminating the need for a *trusted setup* (in later sections, we'll do a deep dive into what a trusted setup actually is), though at the cost of larger proof sizes. This was followed in 2018 by [*zk-STARKs*](https://oreil.ly/TCnTT), which not only removed the requirement for trusted setups but also provided postquantum security—meaning their cryptographic foundations are resistant to attacks from quantum computers. The former is used nowadays in the cryptocurrency project Monero to obfuscate transaction amounts, while the latter forms the cryptographic basis of Starknet, an Ethereum L2.
+2017年，[Bulletproofs](https://oreil.ly/ZUeIe) 通过消除对 *可信设置* 的需求引入了一项突破性进展（在后面的章节中，我们将深入探讨可信设置的实际含义），尽管代价是更大的证明大小。紧随其后的是2018年的 [*zk-STARKs*](https://oreil.ly/TCnTT)，它不仅消除了对可信设置的需求，还提供了后量子安全性——这意味着它们的密码学基础能够抵抗来自量子计算机的攻击。前者现在被用于加密货币项目Monero中，以混淆交易金额，而后者构成了以太坊L2 Starknet的密码学基础。
 
-In 2019, [PLONK](https://oreil.ly/3453_) and [Sonic](https://oreil.ly/f6_Sq) made significant contributions by introducing universal and updatable trusted setups, which made SNARKs more flexible and practical for general-purpose applications. These innovations continue to influence modern zero-knowledge systems.
+2019年，[PLONK](https://oreil.ly/3453_) 和 [Sonic](https://oreil.ly/f6_Sq) 通过引入通用且可更新的可信设置做出了重大贡献，这使得SNARKs对于通用应用程序来说更加灵活和实用。这些创新继续影响着现代的零知识系统。
 
-Zero-knowledge proofs remain in active development, with recent advances bringing improvements in proving time, recursion efficiency, and practical applications like zk-EVMs and modern zk-VMs. New constructions and optimizations continue to emerge regularly, pushing the boundaries of what's possible with zero-knowledge technology.
+零知识证明仍在积极开发中，最近的进展带来了证明时间、递归效率和实际应用（如zk-EVM和现代zk-VM）的改进。新的结构和优化不断涌现，推动着零知识技术可能实现的边界。
 
-That's a reality mostly thanks to the money brought by the cryptocurrency space. The Ethereum Foundation itself has contributed (and still contributes) by providing multiple grants and having dedicated teams research the topic.
+这在很大程度上要归功于加密货币领域带来的资金。以太坊基金会本身已经通过提供多项资助和设立专门的团队来研究该主题做出了贡献（并且仍在贡献）。
 
-## Definition and Properties
+## 定义和属性
 
-Now, let's be more specific and define what a zero-knowledge proof is and which properties it must have. We've already said that a zero-knowledge proof is a protocol that lets a party—usually called the *prover*, P—prove to another party—usually called the *verifier*, V—that a statement is true without revealing anything apart from the fact that that specific statement is true.
+现在，让我们更具体地定义什么是零知识证明以及它必须具备哪些属性。我们已经说过，零知识证明是一种协议，它允许一方——通常称为 *证明者* (P)—向另一方——通常称为 *验证者* (V)—证明一个陈述是真实的，而不透露任何信息，除了那个特定的陈述是真实的。
 
-Let's formalize some important definitions:
+让我们形式化一些重要的定义：
 
-**Statement**
+**陈述 (Statement)**
 
-The claim being proven. The statement is public and verifiable by anyone, and it doesn't include private information.
+待证明的声明。该陈述是公开的，可以被任何人验证，并且不包含私密信息。
 
-**Witness**
+**见证 (Witness)**
 
-The secret information that proves the statement is true. The witness is known only by the prover.
+证明该陈述为真的秘密信息。只有证明者知道该见证。
 
-**Proof**
+**证明 (Proof)**
 
-The cryptographic object that convinces a verifier that the statement is true without revealing the witness.
+一种密码学对象，它说服验证者该陈述为真，而不泄露见证。
 
-All zero-knowledge proof systems must adhere to the following three properties:
+所有零知识证明系统都必须遵守以下三个属性：
 
-**Completeness**
+**完备性 (Completeness)**
 
-If the prover P holds a true statement, then it must be able to compute a valid zero-knowledge proof by following the protocol rules. There cannot be a case where a prover is not able to produce a valid proof if it's following all the rules correctly.
+如果证明者P持有一个真实的陈述，那么它必须能够通过遵循协议规则来计算出一个有效的零知识证明。不能存在证明者在正确遵循所有规则的情况下却无法生成有效证明。
 
-**Soundness**
+**可靠性 (Soundness)**
 
-It must be infeasible for any malicious prover to forge a valid proof for a false statement. If a zero-knowledge proof is accepted by a verifier, the only way the prover must have created it is by following all the protocol rules accordingly, starting with a true statement.
+对于任何恶意的证明者来说，伪造一个虚假陈述的有效证明必须是不可行的。如果一个零知识证明被验证者接受，那么证明者创建它的唯一方式必须是通过相应地遵循所有协议规则，从一个真实的陈述开始。
 
-**Zero knowledge**
+**零知识性 (Zero knowledge)**
 
-As the name suggests, a verifier shouldn't get to know anything other than the validity of the initial statement while following the protocol.
+顾名思义，验证者在遵循协议时，除了初始陈述的有效性之外，不应该知道任何其他信息。
 
-## How Ethereum Uses Zero-Knowledge Proofs
+## 以太坊如何使用零知识证明
 
-You may wonder why this very new piece of cryptography is important for the future development and roadmap of Ethereum. The answer is actually pretty straightforward.
+你可能想知道这种非常新的密码学对于以太坊的未来发展和路线图为何如此重要。答案实际上非常简单。
 
-The real power of zero-knowledge proof systems, in the context of Ethereum, is that they enable the possibility of verifying the validity of a statement without having to perform all the computations needed to get to that final statement. First, a prover computes a certain statement and attaches a zero-knowledge proof to it; then, all verifiers can simply use the zero-knowledge protocol and trustlessly take that statement as true, without needing to do the same computation that the prover did.
+零知识证明系统在以太坊环境中的真正力量在于，它们使验证一个陈述的有效性成为可能，而无需执行获得最终陈述所需的所有计算。首先，证明者计算某个陈述，并附加一个零知识证明；然后，所有验证者都可以简单地使用零知识协议，并信任地将该陈述视为真，而无需执行与证明者相同的计算。
 
-A careful reader may have already spotted where this perfectly applies to Ethereum: block execution and state updates—in other words, the *EVM state transition function*. Every new block updates the current state by processing all transactions included into it. Figure 17-1 shows a good representation of this.
+细心的读者可能已经发现这完美地适用于以太坊的哪些方面：区块执行和状态更新——换句话说，*EVM状态转换函数*。每个新区块都会通过处理其中包含的所有交易来更新当前状态。图17-1很好地展示了这一点。
 
-![EVM state transition function](images/ch17/maet_1701.png)
+![EVM 状态转换函数](images/ch17/maet_1701.png)
 
-Figure 17-1. EVM state transition function
+图17-1. EVM 状态转换函数
 
-You can think of the EVM as a black box that takes in as input the current state of the blockchain and the new received block full of transactions, and then returns the new, updated state of the chain. Right now, when an Ethereum full node receives a new block, it reexecutes all the transactions contained in that block so that it can trustlessly update the state without having to rely on any trusted third party.
-The main issue with this approach is that block execution becomes a potential bottleneck because it's very load intensive. You end up having to balance the hardware requirements that a full node must adhere to in order to work fine and be up to date with the tip of the chain with the level of decentralization that you want to have in the network. The more you want to scale by pushing the requirements of a full node higher, the more you compromise decentralization because less sophisticated actors cannot economically sustain running a full node anymore. And vice versa: the lower you keep hardware requirements so that anyone can run a node, the more you're limited in terms of maximal throughput that your blockchain can handle. Ethereum has always preferred the decentralization branch of this trade-off, keeping hardware requirements low enough to allow for solo stakers and full node runners to exist.
+你可以将EVM视为一个黑盒子，它将区块链的当前状态和包含大量交易的新接收区块作为输入，然后返回链的新更新的状态。目前，当以太坊全节点收到一个新区块时，它会重新执行该区块中包含的所有交易，以便它可以信任地更新状态，而无需依赖任何受信任的第三方。
+这种方法的主要问题是区块执行成为潜在的瓶颈，因为它非常耗费资源。你最终需要在全节点必须遵守的硬件要求之间进行平衡，以使其能够正常工作并与链的顶端保持同步，同时还要与你希望在网络中拥有的去中心化程度相平衡。你越是希望通过提高全节点的要求来扩展，你就越会损害去中心化，因为不那么成熟的参与者无法在经济上维持运行一个全节点。反之亦然：你越是降低硬件要求，以便任何人都可以运行节点，你就越会受到区块链可以处理的最大吞吐量的限制。以太坊一直倾向于这种权衡的去中心化分支，保持较低的硬件要求，以允许独立质押者和全节点运行者存在。
 
-Here is where zero-knowledge proof systems come into play. What if there is a way for a full node to trustlessly update its state without having to execute any transaction—basically not having to perform the heavy computation of the EVM state transition function? This idea can be summarized in the following example:
+这就是零知识证明系统发挥作用的地方。如果有一种方法可以让全节点在无需执行任何交易的情况下信任地更新其状态——基本上无需执行EVM状态转换函数的繁重计算，那会怎么样？这个想法可以概括为以下示例：
 
-1. Some actors perform the actual EVM computation by executing all transactions included into a new block and producing the updated state of the chain.
-2. These actors create a zero-knowledge proof that attests to the validity of the state and share it, together with the new updated state, to all full nodes.
-3. When all other full nodes receive the new state of the chain and the zero-knowledge proof, they just verify the validity of the proof, and if it's valid, they can trustlessly update their own states of the chain with the new state they have just received.
+1. 一些参与者通过执行包含在每个新区块中的所有交易并生成链的更新状态来执行实际的EVM计算。
+2. 这些参与者创建一个零知识证明来证明状态的有效性，并将它和新的更新状态一起分享给所有全节点。
+3. 当所有其他全节点收到链的新状态和零知识证明时，他们只需验证证明的有效性，如果有效，他们就可以信任地使用他们刚刚收到的新状态来更新他们自己的链状态。
 
-This way, you still need to have nodes—probably maintained by heavily financed companies—that do need to execute all transactions, but all other nodes can be cheap since they only need to verify a proof. You can bump hardware requirements really high for the first type of nodes so that you can handle a much bigger throughput and still have a high level of decentralization thanks to the "magic" of zero-knowledge proofs.
+这样，你仍然需要有节点——可能由资金雄厚的公司维护——确实需要执行所有交易，但是所有其他节点都可以很廉价，因为它们只需要验证一个证明。你可以将第一种节点的硬件要求提高到非常高的水平，以便你可以处理更大的吞吐量，并且仍然可以通过零知识证明的“魔力”来保持高水平的去中心化。
 
-As of now, we have always assumed that generating a zero-knowledge proof and verifying it is fast and straightforward. In fact, the previous steps only make sense if verifying a zero-knowledge proof is faster than reexecuting all of the transactions contained in an average Ethereum block. And it turns out that today, it's quite hard to achieve such a property. But that's an optimization problem: it's just a matter of when, not if. We'll soon reach the point where it will be feasible to generate and verify a zero-knowledge proof for an Ethereum block in real time. Ethproofs is a very cool website to follow if you're interested in the development of this topic.
+到目前为止，我们一直假设生成和验证零知识证明是快速而直接的。事实上，如果验证零知识证明比重新执行一个普通以太坊区块中包含的所有交易更快，那么前面的步骤才有意义。但事实证明，今天很难实现这样的属性。但这只是一个优化问题：这只是一个时间问题，而不是是否可行的问题。我们很快就会达到可以实时生成和验证以太坊区块的零知识证明的程度。如果你对这个主题的发展感兴趣，Ethproofs 是一个非常酷的网站可以关注。
 
-## L2s Also Benefit from ZK
+## L2 也能从 ZK 中受益
 
-The Ethereum mainnet is not the only thing that benefits from zero-knowledge proof technology. In fact, as you may have already read in Chapter 16, there is a category of rollups called *ZK rollups*. As the name suggests, they use zero-knowledge proof systems to prove the EVM execution so that they can post state updates of their chains, attached with a zero-knowledge proof that ensures that the new state has been computed correctly.
+以太坊主网并不是唯一从零知识证明技术中受益的东西。事实上，正如你可能已经在第16章中读到的那样，有一类 Rollup 称为 *ZK rollups*。顾名思义，它们使用零知识证明系统来证明EVM的执行，以便它们可以发布其链的状态更新，并附带一个零知识证明，以确保新状态已被正确计算。
 
-You may wonder how ZK rollups are able to use zero-knowledge technology if, as we previously said, it's currently not possible to achieve real-time proving for average Ethereum blocks. The answer is that they don't; they don't even need to do real-time proving for each block of the L2. Usually, they post an aggregate zero-knowledge proof once every hour or so that proves that all the state updates that happened between the last one and the most recent one have been executed correctly.
+你可能想知道，如果正如我们之前所说的那样，目前无法实现平均以太坊区块的实时证明，那么ZK rollup是如何使用零知识技术的。答案是它们并没有做到；它们甚至不需要为L2的每个区块做实时证明。通常，它们每小时左右发布一次聚合的零知识证明，以证明自上次零知识证明后发生的所有状态更新都已正确执行。
 
-The time elapsed between every zero-knowledge proof only affects the time to finality of the rollup itself. If a proof is posted once every hour, that means that on average, you need to wait 30 minutes to be able to consider your transaction really finalized (on the L1).
+每个零知识证明之间经过的时间只会影响汇总本身的最终确定时间。如果每小时发布一次证明，这意味着平均而言，你需要等待30分钟才能认为你的交易真正最终确定（在L1上）。
 
-## A Small Example
+## 一个小例子
 
-To become more familiar with how zero-knowledge proof systems work, let's start with a simple and small example: the *partition problem*. This is a well-known problem that consists of the task of "deciding whether a given multiset S of positive integers can be partitioned into two subsets S1 and S2 such that the sum of the numbers in S1 equals the sum of the numbers in S2."
+为了更熟悉零知识证明系统的工作方式，让我们从一个简单的小例子开始：*划分问题*。这是一个众所周知的问题，包括“确定给定的正整数多重集S是否可以划分为两个子集S1和S2，使得S1中的数字之和等于S2中的数字之和”的任务。
 
-> **Note**  
+> **注意**
 >
-> The partition problem is a decision problem, whereas Ethereum relies on zero-knowledge proofs to verify computation traces. Although Ethereum's primary use case for zero-knowledge proofs is execution-trace verification, working through the partition problem is still an excellent way to build your intuition about how zero-knowledge proof systems work.
+> 划分问题是一个决策问题，而以太坊依靠零知识证明来验证计算轨迹。尽管以太坊对零知识证明的主要用例是执行轨迹验证，但解决划分问题仍然是建立你对零知识证明系统如何工作的直觉的绝佳方法。
 
+如果我们有 S = [1, 1, 5, 7]，我们可以通过将其划分为 S1 = [1, 1, 5] 和 S2 = [7] 来满足问题。但是，并非总是可以为此问题生成正确的解决方案。实际上，如果 S = [1, 1, 5, 8]，则不可能将其划分为总和相同的两个子集。
 
-If we have S = [1, 1, 5, 7], we can satisfy the problem by partitioning it into S1 = [1, 1, 5] and S2 = [7]. But it's not always possible to generate a correct solution to this problem; in fact, if S = [1, 1, 5, 8], then it's impossible to partition it into two subsets that sum up to the same number.
+划分问题是 NP 完全问题，这意味着不存在可以在多项式时间内解决它的算法——也就是说，在短时间内提供解决方案（如果有）或证明该解决方案存在。
 
-The partition problem is NP-complete, meaning that an algorithm doesn't exist that can solve it in polynomial time—that is, providing a solution if there is one or proving the solution doesn't exist in a small amount of time.
+### 让我们证明它
 
-### Let's Prove It
+划分问题的结构完美地适用于我们目前所看到的零知识证明系统的属性。事实上，由于很难找到解决方案，因此将寻找解决方案的计算能力委托给配备超级计算机的富有的证明者，然后使用零知识技术来证明它找到了有效的解决方案而无需其他每个人都执行相同的繁重计算，但实际上也没有透露该解决方案，这可能很有趣。
 
-The structure of the partition problem perfectly applies to the properties of zero-knowledge proof systems we have seen so far. In fact, since it's hard to find a solution, it could be interesting to delegate the computational power of finding it to a rich prover, equipped with a supercomputer, and then use zero-knowledge technology to prove that it found a valid solution without having everyone else perform the same heavy computation but also without actually revealing that solution.
-
-To make the partition problem suitable for zero-knowledge proof systems, we need to tweak it a little bit. Suppose we have a list `s` of positive integers. We'll say that another list `a` is a *satisfying assignment* if:
+为了使划分问题适合零知识证明系统，我们需要稍微调整一下。假设我们有一个正整数列表 `s`。如果满足以下条件，我们将说另一个列表 `a` 是一个 *满足赋值*：
 
 1. `len(s) == len(a)`
-2. All elements of `a` are 1 or –1
-3. The dot product between `s` and `a` is 0
+2. `a` 的所有元素都是 1 或 –1
+3. `s` 和 `a` 之间的点积为 0
 
-Note that this construction is completely analogous to the partition problem. If we take our previous initial list S = [1, 1, 5, 7], then the satisfying assignment `a` is equal to:
+请注意，此构造与划分问题完全类似。如果我们采用先前初始列表 S = [1, 1, 5, 7]，则满足赋值 `a` 等于：
 
 ```
 a = [1, 1, 1, –1]
 ```
 
-You can manually check that all three conditions are true:
+你可以手动检查所有三个条件是否为真：
 
 1. `len(s) = 4 == len(a) = 4`
-2. All elements of `a` are 1 or –1
-3. Dot product: 1 × 1 + 1 × 1 + 1 × 5 + (–1) × 7 = 1 + 1 + 5 – 7 = 0
+2. `a` 的所有元素都是 1 或 –1
+3. 点积：1 × 1 + 1 × 1 + 1 × 5 + (–1) × 7 = 1 + 1 + 5 – 7 = 0
 
-The *dot product* between two lists of equal length is computed by multiplying each member of the first list with the corresponding element of the second one and then summing all the results. More technically, if we have lists `s = [s0, s1, s2, sn]` and `a = [a0, a1, a2, an]` of equal length `n`, the dot product is calculated as follows:
+两个长度相等的列表之间的 *点积* 是通过将第一个列表的每个成员乘以第二个列表的相应元素，然后将所有结果相加来计算的。更技术地讲，如果我们有长度相等的 `n` 的列表 `s = [s0, s1, s2, sn]` 和 `a = [a0, a1, a2, an]`，则点积计算如下：
 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mi mathcolor="#000000">s</mi>
@@ -234,29 +233,29 @@ The *dot product* between two lists of equal length is computed by multiplying e
   </msub>
 </math>
 
-Of course, we could immediately provide `a` to the verifier, and they could easily check that it is a valid solution, but that would violate the zero-knowledge assumption of not revealing the solution.
+当然，我们可以立即将`a`提供给验证者，他们可以很容易地检查它是否是有效的解决方案，但这将违反不透露解决方案的零知识假设。
 
-Let's start generating a different list `w` by creating the *partial-sum list*—that is, `w[i]` is equal to the partial dot product between `s` and `a` up to `i`. In the context of zero-knowledge proof systems, `w` is also called the *witness*. Following our example, we can compute `w`:
+让我们通过创建 *部分和列表* 来开始生成一个不同的列表`w`——也就是说，`w[i]`等于`s`和`a`到`i`的部分点积。在零知识证明系统的上下文中，`w` 也称为 *见证*。按照我们的例子，我们可以计算 `w`：
 
 ```
 w = [1, 2, 7, 0]
 ```
 
-Note that if `a` is a valid satisfying assignment, then `w` always ends with a 0.
+请注意，如果`a` 是有效的满足赋值，那么`w` 总是以 0 结尾。
 
-To make the proof system work better, let's apply a small modification to the proof `p` we have built so far. In particular, we'll put the last item of the list `w` in the first position, so our previous `w` now becomes:
+为了使证明系统更好地工作，让我们对我们到目前为止构建的证明`p`进行一些小的修改。特别是，我们将列表`w`的最后一个项目放在第一个位置，所以我们之前的`w`现在变为：
 
 ```
 w = [0, 1, 2, 7]
 ```
 
-Sweet! This list `w` has a very cool property:
+太棒了！这个列表 `w` 有一个非常酷的属性：
 
 ```
 |s[i]| = |w[i + 1] – w[i]|
 ```
 
-You can check the validity of this statement yourself:
+你可以自己检查此语句的有效性：
 
 ```
 |s[0]| = |w[0 + 1] – w[0]| = |w[1] – w[0]| = |1 – 0| = |1| = 1
@@ -265,25 +264,25 @@ You can check the validity of this statement yourself:
 |s[3]| = |w[3 + 1] – w[3]| = |w[4] – w[3]| = |w[0] – w[3]| = |0 – 7| = |–7| = 7
 ```
 
-Note that to compute `s[3]`, we would need to access `w[4]`, which does not exist since `w` has only four items (and we start indexing from zero). Still, there is a very easy solution: you just need to go back to the first element of `w` as if `w` were cyclical.
+请注意，要计算 `s[3]`，我们需要访问 `w[4]`，因为 `w` 只有四个项目（并且我们从零开始索引），所以它不存在。但是，有一个非常简单的解决方案：你只需要回到 `w` 的第一个元素，就像 `w` 是循环的一样。
 
-A verifier could ask for two consecutive elements of `w` and check that the previous relation holds. Remember that the verifier has access to `s` because that is publicly available; it represents the input of this problem but has no access to `a`, the satisfying assignment, which represents the solution. If the equation holds, it means the prover knows a satisfying assignment `a` for this problem.
+验证者可以要求 `w` 的两个连续元素，并检查先前的关系是否成立。请记住，验证者可以访问 `s`，因为它是公开可用的。它表示此问题的输入，但无权访问 `a`，而 `a` 代表问题的解决方案。如果该等式成立，则意味着证明者知道此问题的满足赋值 `a`。
 
-### Issues
+### 问题
 
-What we have built so far is a very naive proof system. In fact, there are three big issues with it:
+到目前为止，我们所构建的是一个非常简单的证明系统。事实上，它有三个大问题：
 
-1. Previously, we said that once the verifier has asked for two consecutive elements of `w` and the equation holds true, then they have verified that the prover knows a solution to this problem. This is not true. With only one query, the verifier cannot be completely sure; they have to make several queries of consecutive elements of `w` before being sure of it with a really high probability.
-2. While it's true that the verifier can indeed verify that the prover has a solution to the problem, this proof system relies on the integrity of the prover. What if the prover is malevolent and lies? When the verifier asks for two consecutive elements of `w`, the prover could provide two random numbers that still satisfy the equation.
-3. Furthermore, this proof system is not zero knowledge. In fact, by asking for consecutive elements of `w`, the verifier gets to know a lot about the satisfying assignment `a`. The verifier knows how `w` has been constructed, so the more they know about `w`, the more they know about the solution `a`.
+1. 先前，我们说过，一旦验证者要求两个连续的 `w` 元素，并且等式成立，则验证者已经验证了证明者知道此问题的解决方案。这不是真的。仅进行一次查询，验证者不能完全确定；他们必须对 `w` 的连续元素进行多次查询，才能以非常高的概率确定这一点。
+2. 验证者确实可以验证证明者对此问题有解决方案，但此证明系统依赖于证明者的完整性。如果证明者是恶意的并且撒谎怎么办？当验证者要求两个连续的 `w` 元素时，证明者可以提供仍然满足该等式的两个随机数。
+3. 此外，该证明系统不是零知识的。事实上，通过要求 `w` 的连续元素，验证者可以了解关于满足赋值 `a` 的很多信息。验证者知道 `w` 是如何构建的，因此他们对 `w` 了解得越多，他们对解决方案 `a` 了解得就越多。
 
-Let's address these issues now and try to build a better proof system.
+现在让我们解决这些问题，并尝试构建一个更好的证明系统。
 
-### Zero Knowledge
+### 零知识
 
-Let's add zero knowledge to the system. The main issue with the protocol we've built so far is that we send the real values of `w` to the verifier, and that lets the verifier understand a lot of information about `a`. To see this in practice, let's do two simple steps of interaction between prover and verifier.
+让我们向系统添加零知识。到目前为止，我们构建的协议的主要问题是我们将 `w` 的真实值发送给验证者，这使验证者能够理解关于 `a` 的大量信息。为了在实践中看到这一点，让我们在证明者和验证者之间进行两个简单的交互步骤。
 
-The verifier asks for `w[1]` and `w[2]` and checks that `|w[2] – w[1]| = |s[1]|`, so the prover provides `w[1] = 1` and `w[2] = 2`, and the verifier can confirm that the equation holds true:
+验证者要求 `w[1]` 和 `w[2]` 并检查 `|w[2] – w[1]| = |s[1]|`，因此证明者提供 `w[1] = 1` 和 `w[2] = 2`，并且验证者可以确认等式成立：
 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mfenced open="|" close="" separators="|">
@@ -328,7 +327,7 @@ The verifier asks for `w[1]` and `w[2]` and checks that `|w[2] – w[1]| = |s[1]
   </mfenced>
 </math>
 
-Then, the verifier asks for another query: `w[2]` and `w[3]`. The prover provides `w[2] = 2` and `w[3] = 7`, and the verifier checks the equation:
+然后，验证者要求进行另一个查询：`w[2]` 和 `w[3]`。证明者提供 `w[2] = 2` 和 `w[3] = 7`，并且验证者检查等式：
 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mfenced open="|" close="" separators="|">
@@ -373,7 +372,7 @@ Then, the verifier asks for another query: `w[2]` and `w[3]`. The prover provide
   </mfenced>
 </math>
 
-With these two interactions, the verifier gets to know three elements of w:
+通过这两个交互，验证者可以了解 w 的三个元素：
 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mtable>
@@ -413,17 +412,17 @@ With these two interactions, the verifier gets to know three elements of w:
   </mtable>
 </math>
 
-Since the verifier already knows `s = [1, 1, 5, 7]` and knows how `w` has been computed, they can derive that the initial part of the solution `a` is equal to `[1, 1, 1]` because that's the only way to get `w[3] = 7`, `w[2] = 2`, and `w[1] = 1`.
+由于验证者已经知道 `s = [1, 1, 5, 7]` 并且知道 `w` 是如何计算的，他们可以得出解决方案 `a` 的初始部分等于 `[1, 1, 1]`，因为这是获得 `w[3] = 7`、`w[2] = 2` 和 `w[1] = 1` 的唯一方法。
 
-We need to find a way to mask the real values of `w` but still manage to satisfy the relation between the new `w` and the input list `s`. To achieve that, we need to add some level of randomness in a very specific way.
+我们需要找到一种方法来掩盖 `w` 的真实值，但仍然能够满足新的 `w` 和输入列表 `s` 之间的关系。为了达到这个目标，我们需要以非常具体的方式添加一些随机性。
 
-First, instead of `a`, we flip a coin, and if it's heads, we leave it as it is; otherwise, we change the signs for all elements, so all 1s becomes –1s, and vice versa. Note that this change doesn't break the three main properties of the satisfying assignment `a` for the problem.
+首先，我们掷硬币而不是 `a`，如果正面朝上，我们就保持原样；否则，我们更改所有元素的符号，因此所有 1 都变为 –1，反之亦然。请注意，此更改不会破坏使赋值 `a` 满足问题的那三个主要属性。
 
-Then, we get a new random integer value `r`. We calculate `w` in the same way as before, but we add `r` to every element of it. Even this change doesn't break the key relation between `s` and `w`.
+然后，我们获得一个新的随机整数值 `r`。我们以与之前相同的方式计算 `w`，但是我们将 `r` 添加到其每个元素。即使此更改也不会破坏 `s` 和 `w` 之间的关键关系。
 
-Every time the verifier asks for a new query, we have to flip a coin and compute a different random value `r`. This way, while the verifier is still able to verify the validity of the equation, they are not able to understand anything about `a` because all `w` values will look random to them.
+每次验证者要求进行新的查询时，我们都必须掷硬币并计算不同的随机值 `r`。这样，尽管验证者仍然能够验证等式的有效性，但他们无法了解关于 `a` 的任何信息，因为所有 `w` 值对他们来说都是随机的。
 
-Let's do a small demonstration. Remember, the prover (us, in this example) starts with both `s` and `a`:
+让我们做一个小演示。请记住，证明者（在本例中为我们）从 `s` 和 `a` 开始：
 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mtable>
@@ -436,7 +435,7 @@ Let's do a small demonstration. Remember, the prover (us, in this example) start
         <mn mathcolor="#000000">1</mn>
         <mo mathcolor="#000000">,</mo>
         <mn mathcolor="#000000">1</mn>
-        <mo mathcolor="#000000">,</mo>
+        <mo mathcolor="#000000">,</mo
         <mn mathcolor="#000000">5</mn>
         <mo mathcolor="#000000">,</mo>
         <mn mathcolor="#000000">7</mn>
@@ -463,9 +462,9 @@ Let's do a small demonstration. Remember, the prover (us, in this example) start
   </mtable>
 </math>
 
-Now, the verifier asks for `w[1]` and `w[2]` to check that `|w[2] – w[1]| = |s[1]|`.
+现在，验证者要求 `w[1]` 和 `w[2]` 来检查 `|w[2] – w[1]| = |s[1]|`。
 
-First, we need to flip a coin to eventually change all values of `a`. It's tails, so we need to flip all signs, and `a` becomes:
+首先，我们需要掷硬币以最终更改 `a` 的所有值。这是反面，因此我们需要翻转所有符号，并且 `a` 变为：
 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mi mathcolor="#000000">a</mi>
@@ -485,7 +484,7 @@ First, we need to flip a coin to eventually change all values of `a`. It's tails
   <mo stretchy="false" mathcolor="#000000">]</mo>
 </math>
 
-Then, we compute a random value `r = 4`. We calculate `w` and add `r` to each element:
+然后，我们计算一个随机值 `r = 4`。我们计算 `w` 并将 `r` 添加到每个元素：
 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mtable>
@@ -528,8 +527,7 @@ Then, we compute a random value `r = 4`. We calculate `w` and add `r` to each el
     </mtr>
   </mtable>
 </math>
-
-And we provide <math xmlns="http://www.w3.org/1998/Math/MathML">
+我们提供 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <msup>
     <mrow>
       <mi mathcolor="#000000">w</mi>
@@ -543,7 +541,7 @@ And we provide <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mo stretchy="false" mathcolor="#000000">]</mo>
   <mo mathcolor="#000000">=</mo>
   <mn mathcolor="#000000">3</mn>
-</math> and <math xmlns="http://www.w3.org/1998/Math/MathML">
+</math> 和 <math xmlns="http://www.w3.org/Math/MathML">
   <msup>
     <mrow>
       <mi mathcolor="#000000">w</mi>
@@ -557,9 +555,9 @@ And we provide <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mo stretchy="false" mathcolor="#000000">]</mo>
   <mo mathcolor="#000000">=</mo>
   <mn mathcolor="#000000">2</mn>
-</math>.
+</math>。
 
-The verifier can still confirm the validity of the equation:
+验证者仍然可以确认等式的有效性：
 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mfenced open="|" close="|" separators="|">
@@ -621,16 +619,16 @@ The verifier can still confirm the validity of the equation:
   </mfenced>
 </math>
 
-Now, the verifier runs another query, asking for `w[2]` and `w[3]`. Again, we need to flip a coin to eventually change all values of `a`. This time, it's heads, so we don't change signs:
+现在，验证者运行另一个查询，请求 `w[2]` 和 `w[3]`。同样，我们需要抛硬币来最终改变 `a` 的所有值。这次是正面，所以我们不改变符号：
 
-Then, we compute a random value `r = 1`. We calculate `w` and add `r` to each element:
+然后，我们计算一个随机值 `r = 1`。我们计算 `w` 并将 `r` 添加到每个元素：
 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mi mathcolor="#000000">a</mi>
   <mo mathcolor="#000000">=</mo>
   <mo stretchy="false" mathcolor="#000000">[</mo>
   <mn mathcolor="#000000">1</mn>
-  <mo mathcolor="#000000">,</mo>
+  <mo mathcolor="#000000">,</mo
   <mn mathcolor="#000000">1</mn>
   <mo mathcolor="#000000">,</mo>
   <mn mathcolor="#000000">1</mn>
@@ -640,7 +638,7 @@ Then, we compute a random value `r = 1`. We calculate `w` and add `r` to each el
   <mo stretchy="false" mathcolor="#000000">]</mo>
 </math>
 
-And we provide <math xmlns="http://www.w3.org/1998/Math/MathML">
+我们提供 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <msup>
     <mrow>
       <mi mathcolor="#000000">w</mi>
@@ -654,7 +652,7 @@ And we provide <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mo stretchy="false" mathcolor="#000000">]</mo>
   <mo mathcolor="#000000">=</mo>
   <mn mathcolor="#000000">3</mn>
-</math> and <math xmlns="http://www.w3.org/1998/Math/MathML">
+</math> 和 <math xmlns="http://www.w3.org/Math/MathML">
   <msup>
     <mrow>
       <mi mathcolor="#000000">w</mi>
@@ -668,8 +666,8 @@ And we provide <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mo stretchy="false" mathcolor="#000000">]</mo>
   <mo mathcolor="#000000">=</mo>
   <mn mathcolor="#000000">8</mn>
-</math>.
-The verifier can still confirm the validity of the equation:
+</math>。
+验证者仍然可以确认等式的有效性：
 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mfenced open="|" close="|" separators="|">
@@ -730,7 +728,7 @@ The verifier can still confirm the validity of the equation:
   </mfenced>
 </math>
 
-But now, the verifier cannot understand much about the satisfying assignment a. In fact, they now have the following information:
+但是现在，验证者对满足条件的赋值 a 了解不多。事实上，他们现在有以下信息：
 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mtable>
@@ -809,19 +807,19 @@ But now, the verifier cannot understand much about the satisfying assignment a. 
   </mtable>
 </math>
 
-The `w` values on the different queries look random to them, and they are not able to reconstruct the assignment `a`.
+不同查询中的 `w` 值对他们来说看起来是随机的，并且他们无法重构赋值 `a`。
 
-Nice! We managed to add zero knowledge to the proof system. Let's now address a malevolent prover.
+很好！我们设法将零知识添加到证明系统中。现在让我们解决一个恶意的证明者。
 
-### Prover Commitment
+### 证明者承诺
 
-The problem we need to address is that the prover can lie to the verifier, providing completely made-up numbers instead of the real values of the computed witness `w`. This is really bad because the prover would be able to provide a valid proof of a false statement—that is, even though the prover doesn't actually have a satisfying assignment `a`, they are able to potentially trick the verifier into believing that they do.
+我们需要解决的问题是，证明者可以对验证者撒谎，提供完全虚构的数字，而不是计算出的见证 `w` 的真实值。这非常糟糕，因为证明者将能够提供虚假陈述的有效证明——也就是说，即使证明者实际上没有满足条件的赋值 `a`，他们也可能欺骗验证者相信他们有。
 
-We need to find a way to make sure the prover cannot lie without being caught. Essentially, we need the prover to do a *commitment* of all `w` values before providing them to the verifier.
+我们需要找到一种方法来确保证明者不会在不被抓住的情况下撒谎。从本质上讲，我们需要证明者在向验证者提供所有 `w` 值之前对它们进行*承诺*。
 
-This is where Merkle trees help us again. We introduced them in Chapter 14, so we won't go into much detail on how they work here.
+这就是梅克尔树再次帮助我们的地方。我们在第 14 章中介绍了它们，因此我们不会在此处详细介绍它们的工作原理。
 
-Let's do a new example to see the new construction in practice. We (the prover) have:
+让我们做一个新的例子，看看实践中的新构造。我们（证明者）有：
 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mtable>
@@ -863,7 +861,7 @@ Let's do a new example to see the new construction in practice. We (the prover) 
   </mtable>
 </math>
 
-We flip a coin, and it's heads, so we don't need to change all the signs of the assignment `a`. We then compute `w` as the dot product between `a` and `s` (with a swap between the first and last elements):
+我们掷硬币，结果是正面，所以我们不需要改变赋值 `a` 的所有符号。然后我们计算 `w` 作为 `a` 和 `s` 之间的点积（第一个和最后一个元素之间交换）：
 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mi mathcolor="#000000">w</mi>
@@ -879,7 +877,7 @@ We flip a coin, and it's heads, so we don't need to change all the signs of the 
   <mo stretchy="false" mathcolor="#000000">]</mo>
 </math>
 
-We compute a random value `r = 8` and we add it to each element of `w`:
+我们计算一个随机值 `r = 8`，并将其添加到 `w` 的每个元素：
 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mi mathcolor="#000000">w</mi>
@@ -896,15 +894,15 @@ We compute a random value `r = 8` and we add it to each element of `w`:
   <mo stretchy="false" mathcolor="#000000">]</mo>
 </math>
 
-Now we need to commit to all values of `w′` and send the commitment to the verifier so that we ensure that if we ever cheat by providing fake values of `w′`, then it's trivial to spot it. Figure 17-2 shows the Merkle tree built using all `w′` values as leaves.
+现在我们需要承诺所有 `w′` 的值，并将承诺发送给验证者，以便我们确保如果我们通过提供 `w′` 的假值来作弊，那么很容易发现它。图 17-2 显示了使用所有 `w′` 值作为叶子构建的梅克尔树。
 
-![Merkle tree commitment](images/ch17/maet_1702.png)
+![梅克尔树承诺](images/ch17/maet_1702.png)
 
-Figure 17-2. Merkle tree built using `w′` values
+图 17-2. 使用 `w′` 值构建的梅克尔树
 
-The Merkle root is the final commitment that is sent to the verifier.
+梅克尔根是发送给验证者的最终承诺。
 
-At this point, the verifier starts asking for the first query: <math xmlns="http://www.w3.org/1998/Math/MathML">
+此时，验证者开始请求第一个查询：<math xmlns="http://www.w3.org/1998/Math/MathML">
   <msup>
     <mrow>
       <mi mathcolor="#000000">w</mi>
@@ -916,7 +914,7 @@ At this point, the verifier starts asking for the first query: <math xmlns="http
   <mo stretchy="false" mathcolor="#000000">[</mo>
   <mn mathcolor="#000000">1</mn>
   <mo stretchy="false" mathcolor="#000000">]</mo>
-</math> and <math xmlns="http://www.w3.org/1998/Math/MathML">
+</math> 和 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <msup>
     <mrow>
       <mi mathcolor="#000000">w</mi>
@@ -928,7 +926,7 @@ At this point, the verifier starts asking for the first query: <math xmlns="http
   <mo stretchy="false" mathcolor="#000000">[</mo>
   <mn mathcolor="#000000">2</mn>
   <mo stretchy="false" mathcolor="#000000">]</mo>
-</math>. We can provide <math xmlns="http://www.w3.org/1998/Math/MathML">
+</math>。我们可以向验证者提供 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <msup>
     <mrow>
       <mi mathcolor="#000000">w</mi>
@@ -942,7 +940,7 @@ At this point, the verifier starts asking for the first query: <math xmlns="http
   <mo stretchy="false" mathcolor="#000000">]</mo>
   <mo mathcolor="#000000">=</mo>
   <mn mathcolor="#000000">9</mn>
-</math> and <math xmlns="http://www.w3.org/1998/Math/MathML">
+</math> 和 <math xmlns="http://www.w3.org/Math/MathML">
   <msup>
     <mrow>
       <mi mathcolor="#000000">w</mi>
@@ -956,7 +954,7 @@ At this point, the verifier starts asking for the first query: <math xmlns="http
   <mo stretchy="false" mathcolor="#000000">]</mo>
   <mo mathcolor="#000000">=</mo>
   <mn mathcolor="#000000">10</mn>
-</math> to the verifier, and they can check:
+</math>，他们可以检查：
 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mfenced open="|" close="|" separators="|">
@@ -1017,154 +1015,144 @@ At this point, the verifier starts asking for the first query: <math xmlns="http
   </mfenced>
 </math>
 
-Now, the verifier needs to make sure that we didn't cheat, so they also ask the prover for the *verification path*, which contains all the data they need to re-create the Merkle tree on its own in order to check that the Merkle root is the same as the commitment we sent. If that's the case, then they are sure we didn't cheat; otherwise, they immediately know we did cheat.
+现在，验证者需要确保我们没有作弊，所以他们还要求证明者提供*验证路径*，其中包含他们需要自行重新创建梅克尔树的所有数据，以便检查梅克尔根是否与我们发送的承诺相同。如果是这种情况，那么他们确信我们没有作弊；否则，他们立即知道我们作弊了。
 
-Specifically, the verification path for this query contains:
+具体来说，此查询的验证路径包含：
 
-- Hash 8
-- Hash 15
+- 哈希 8
+- 哈希 15
 
-This way, the verifier can re-create the Merkle tree up to the root and verify the commitment. So, we send hash 8 and hash 15 to the verifier, the verifier checks the validity of the commitment, and finally, this query is over.
+这样，验证者可以重新创建梅克尔树直到根，并验证承诺。因此，我们将哈希 8 和哈希 15 发送给验证者，验证者检查承诺的有效性，最后，此查询结束。
 
-You may have spotted a new issue, though. In fact, due to the verification-path requirement, we ended up sending some additional data about `w′`: hash 8 and hash 15. While it's true that it should be computationally infeasible to revert a hash function—that is, to get the actual values 8 and 15 from their hashes—a malevolent verifier could try a brute-force attack and may succeed in finding out a part of the Merkle tree that we didn't intend to reveal. Luckily for us, there is a simple and nice tweak that solves this problem.
+但是，您可能已经发现了一个新问题。事实上，由于验证路径的要求，我们最终发送了一些关于 `w′` 的额外数据：哈希 8 和哈希 15。虽然反转哈希函数在计算上应该是不可行的——也就是说，从它们的哈希值中获取实际值 8 和 15——一个恶意的验证者可以尝试暴力攻击，并可能成功找出我们不打算泄露的梅克尔树的一部分。幸运的是，我们有一个简单而巧妙的调整可以解决这个问题。
 
-### Adding Randomness to the Commitment
+### 向承诺添加随机性
 
-The idea is analogous to what we have previously done to add the zero-knowledge property to our proof system. This time, we need to add randomness to the commitment so that we don't reveal any information about `w` (or `w′`) in the verification path.
+这个想法类似于我们之前为我们的证明系统添加零知识属性所做的事情。这一次，我们需要向承诺添加随机性，以便我们不在验证路径中泄露关于 `w`（或 `w′`）的任何信息。
 
-When we create the Merkle tree, instead of using only the hash of the exact value of each element of `w′` for the leaves of the tree, we add a random string that we won't provide to the verifier. Figure 17-3 shows the new Merkle tree built with this new methodology.
+当我们创建梅克尔树时，我们不是只使用 `w′` 的每个元素的确切值的哈希作为树的叶子，而是添加一个我们不会提供给验证者的随机字符串。图 17-3 显示了使用这种新方法构建的新梅克尔树。
 
-![Merkle tree with randomness](images/ch17/maet_1703.png)
+![带有随机性的梅克尔树](images/ch17/maet_1703.png)
 
-Figure 17-3. Merkle tree with added randomness for zero-knowledge property
+图 17-3. 带有为零知识属性添加的随机性的梅克尔树
 
-For this example, we used the string "eth" to mask each item of the witness `w′`. Note that if you don't have this secret string, it's impossible to decode the actual values. Now, when we send hash* 8 and hash* 15 to the verifier in the verification path, they really have no clue about the concrete `w′` values behind the hash. Even if they try to brute-force attack, they don't know the secret string we used to hide the `w′` items even further.
+在此示例中，我们使用字符串“eth”来掩盖见证 `w′` 的每个项目。请注意，如果您没有这个秘密字符串，则不可能解码实际值。现在，当我们在验证路径中将哈希* 8 和哈希* 15 发送给验证者时，他们真的不知道哈希背后的具体 `w′` 值。即使他们尝试暴力攻击，他们也不知道我们用来进一步隐藏 `w′` 项的秘密字符串。
 
-### Conclusion? Or Not…
+### 结论？或者不是……
 
-We did it! We managed to create a (very naive and basic) zero-knowledge proof system for our initial partition problem!
+我们做到了！我们设法为我们最初的划分问题创建了一个（非常幼稚和基本的）零知识证明系统！
 
-You may still think: "That's a great proof system, but it still requires a lot of interaction between the prover and the verifier. They need to be online at the same time to make sure the protocol succeeds. Is there a way to fix it and transform this interactive zero-knowledge proof system into a noninteractive zero-knowledge proof system?"
+您可能仍然认为：“这是一个很棒的证明系统，但它仍然需要在证明者和验证者之间进行大量交互。他们需要同时在线以确保协议成功。有没有办法修复它并将这个交互式零知识证明系统转换为非交互式零知识证明系统？”
 
-And you would be so right. It's true that our system requires interaction between prover and verifier to work correctly, and that's really annoying for most use cases. We are lucky again (so much luck here, eh?). There is a scientific paper that could help us.
+而且你说的完全正确。我们的系统确实需要在证明者和验证者之间进行交互才能正常工作，这对大多数用例来说真的很烦人。我们再次很幸运（这里有很多运气，对吧？）。有一篇科学论文可以帮助我们。
 
-## Fiat-Shamir Heuristic
+## Fiat-Shamir 启发式
 
-In 1986, two well-known cryptographers, Amos Fiat and Adi Shamir, published the paper ["How to Prove Yourself: Practical Solutions to Identification and Signature Problems"](https://oreil.ly/TGfa-), in which they invented the transformation protocol that is still widely used today and has their name: the *Fiat-Shamir heuristic* or transformation.
+1986 年，两位著名的密码学家 Amos Fiat 和 Adi Shamir 发表了论文“[How to Prove Yourself: Practical Solutions to Identification and Signature Problems](https://oreil.ly/TGfa-)”，他们在其中发明了至今仍被广泛使用的转换协议，并以他们的名字命名：*Fiat-Shamir 启发式* 或转换。
 
-> **Note**  
+> **注意**
 >
-> Adi Shamir is a real legend in cryptography: he's the S in the RSA algorithm, one of the first and most widely used public key cryptosystems. Amos Fiat was his colleague at the Weizmann Institute of Science in Israel.
+> Adi Shamir 是密码学领域真正的传奇人物：他是 RSA 算法中的 S，RSA 算法是最早也是最广泛使用的公钥密码系统之一。Amos Fiat 是他在以色列魏茨曼科学研究所的同事。
 
+Fiat-Shamir 启发式是一种协议，它可以通过用密码哈希函数替换验证者的随机挑战，将交互式零知识证明系统转换为非交互式系统。
 
-The Fiat-Shamir heuristic is a protocol that can transform an interactive zero-knowledge proof system into a noninteractive one by replacing the verifier's random challenges with a cryptographic hash function.
+如果您考虑一下验证者在我们迄今为止构建的系统中必须做的事情，您会注意到它本质上是在给证明者一些随机数——查询——证明者必须使用这些随机数来生成相应的证明。
 
-If you think about what the verifier has to do in the system we have built so far, you will notice that it's essentially giving the prover some random numbers—the queries—that the prover has to use to generate the correspondent proof.
+请记住，我们过去常说，“现在验证者请求 `w[1]` 和 `w[2]`。” 这可以转化为验证者给证明者数字 1 和 2，以为 `w[1]` 和 `w[2]` 创建证明。
 
-Remember, we used to say, "Now the verifier asks for `w[1]` and `w[2]`." This can be translated into the verifier giving the prover the numbers 1 and 2 to create the proof for `w[1]` and `w[2]`.
+我们可以通过以下方式总结原始的交互式协议，跳过证明者创建见证 `w` 并将其调整为 `w′` 的部分：
 
-We can summarize the original interactive protocol in the following way, skipping the part where the prover creates the witness `w` and tweaks it into `w′`:
+1. 证明者生成对 `w′` 的承诺并将其发送给验证者。
+2. 验证者发送一个随机挑战——一个查询。
+3. 证明者发送对挑战的响应——一个证明。
+4. 验证者验证证明的有效性。
+对于验证者提出的每个不同的查询，都会重复此过程。并且一切运行良好，因为证明者事先不知道验证者将要提出哪些查询——它们对证明者来说是随机的。因此，如果我们找到一种方法使证明者本身以随机但可预测的方式生成所有查询，我们就可以将整个过程转换为非交互式协议。
 
-1. The prover generates a commitment to `w′` and sends it to the verifier.
-2. The verifier sends a random challenge—a query.
-3. The prover sends a response to the challenge—a proof.
-4. The verifier verifies the validity of the proof.
-This process is repeated for every different query the verifier asks. And it all works fine because the prover doesn't know in advance which queries the verifier is going to ask—they're random to the prover. So if we find a way to make the prover itself generate all the queries in a random but predictable way, we are able to transform the entire process into a noninteractive protocol.
+在他们 1986 年的论文中，Fiat 和 Shamir 建议使用哈希函数作为“随机预言机”来模拟验证者的随机挑战。让我们做一个快速示例，仅包含两轮协议。
 
-In their 1986 paper, Fiat and Shamir propose using a hash function to act as a "random oracle" that simulates the verifier's random challenges. Let's do a quick example with only two rounds of the protocol.
+在第一轮中：
 
-In the first round:
-
-1. The prover generates a commitment.
-2. The prover takes the commitment and the public inputs of the problem, and concatenates and hashes them. The result is going to be the first challenge:
+1. 证明者生成承诺。
+2. 证明者获取承诺和问题的公共输入，并将它们连接并进行哈希处理。结果将是第一个挑战：
 
     ```
     challenge = hash(commitment || public inputs)
     ```
 
-3. The prover computes a response to the challenge—a proof.
+3. 证明者计算对挑战的响应——证明。
 
-In the second round:
+在第二轮中：
 
-1. The prover generates a new commitment.
-2. The prover takes the new commitment and everything computed so far in the protocol (the old commitment, the proof, and the public inputs), and concatenates and hashes them. The result is going to be the new challenge:
+1. 证明者生成新的承诺。
+2. 证明者获取新的承诺以及协议中到目前为止计算的所有内容（旧承诺、证明和公共输入），并将它们连接并进行哈希处理。结果将是新的挑战：
 
     ```
     new challenge = hash(commitment || proof || new_commitment || public inputs)
     ```
 
-3. The prover computes a response to the new challenge—a new proof.
+3. 证明者计算对新挑战的响应——新的证明。
 
-At this point, the prover can send the entire transcript of the protocol to the verifier. The verifier needs to:
+此时，证明者可以将协议的整个记录发送给验证者。验证者需要：
 
-1. Make sure that all challenges have been computed correctly by using the hash function and all valid inputs. This is to ensure that the prover didn't try to cheat with made-up challenges.
-2. Verify the validity of all the proofs in the same way they did before in the interactive protocol. This is to ensure that the prover actually knows a solution to the initial problem.
+1. 通过使用哈希函数和所有有效输入来确保所有挑战都已正确计算。这是为了确保证明者没有尝试使用虚构的挑战进行欺骗。
+2. 以与之前在交互式协议中相同的方式验证所有证明的有效性。这是为了确保证明者实际上知道初始问题的解决方案。
 
-Figure 17-4 shows the process of the verifier making sure that the challenge has been computed correctly before verifying the validity of the zero-knowledge proof.
+图 17-4 显示了验证者在验证零知识证明的有效性之前，确保挑战已正确计算的过程。
 
-![Verifier verification process](images/ch17/maet_1704.png)
+![验证者验证过程](images/ch17/maet_1704.png)
 
-Figure 17-4. Fiat-Shamir heuristic makes the protocol noninteractive
+图 17-4. Fiat-Shamir 启发式使协议成为非交互式的
 
-And that's it! Thanks to the Fiat-Shamir heuristic, we now have a noninteractive zero-knowledge proof system. The cool feature that comes for free is that a prover is now able to generate a valid proof that anyone can verify. So we need only one honest party that verifies the proof to detect if the prover is trying to cheat or not.
+就是这样！感谢 Fiat-Shamir 启发式，我们现在有了一个非交互式零知识证明系统。免费提供的很酷的功能是证明者现在能够生成任何人都可以验证的有效证明。因此，我们只需要一个诚实的参与者来验证证明，以检测证明者是否试图作弊。
 
-### Conclusion?
+### 结论？
 
-In this section, we built our first noninteractive zero-knowledge proof system for the partition problem. Modern zero-knowledge architectures are much more complex, and this book is definitely not going to explain all of that (even though you can find some very good papers at the end of the chapter for further reading). Still, what we've discussed thus far is the basis of all new zero-knowledge technology. If you understand that, you can fall into the zero-knowledge rabbit hole and start exploring all the nitty-gritty details behind it.
+在本节中，我们为划分问题构建了我们的第一个非交互式零知识证明系统。现代零知识架构要复杂得多，本书肯定不会解释所有这些（即使您可以在本章末尾找到一些非常好的论文供进一步阅读）。尽管如此，我们到目前为止所讨论的内容是所有新零知识技术的基础。如果您理解了这一点，您就可以陷入零知识的兔子洞，并开始探索其背后的所有细枝末节。
 
-In the next section, we'll look at two of the most widely used real frameworks for building a zero-knowledge proof system: SNARK and STARK.
+在下一节中，我们将研究两个最广泛使用的用于构建零知识证明系统的真实框架：SNARK 和 STARK。
 
-## SNARK Versus STARK
+## SNARK vs STARK
 
-Previously, we were able to create a zero-knowledge proof system for our initial partition problem. That's a good start. Now, what if we want to create a zero-knowledge proof system for a completely different computation? Can we reuse the same architecture that we built before for the partition problem?
+之前，我们能够为我们最初的划分问题创建一个零知识证明系统。这是一个好的开始。现在，如果我们想为完全不同的计算创建一个零知识证明系统怎么办？我们可以重用我们以前为划分问题构建的相同架构吗？
 
-It turns out that we can't: the commitment `w` and its properties—for example, `|s[i]| = |w[i+1] – w[i]|`—are too specific to the partition problem to be applied to other problems. However, this isn't a big drawback: we can use what we learned from building this zero-knowledge proof system to develop a more general approach.
-And here's where SNARK comes onto the scene. As we already discussed in "History", SNARK was introduced in 2011 in the BIT+11 paper as a general framework for building zero-knowledge proofs for arbitrary computations. Only two years later, the Pinocchio paper created the first implementation that was usable in real-world applications.
+事实证明我们不能：承诺 `w` 及其属性——例如，`|s[i]| = |w[i+1] – w[i]|`——对于划分问题来说太具体了，无法应用于其他问题。但是，这并不是一个很大的缺点：我们可以利用我们从构建此零知识证明系统中学到的知识来开发一种更通用的方法。
+这就是 SNARK 登场的地方。正如我们已经在“历史”中讨论过的，SNARK 在 2011 年的 BIT+11 论文中作为一种通用框架引入，用于为任意计算构建零知识证明。仅仅两年后，Pinocchio 论文创建了第一个可在实际应用程序中使用的实现。
 
-SNARK systems rely on a cryptographic secret called *trusted setup* to work in a noninteractive way. You can see it as a common knowledge base shared with all the participants of a cryptographic protocol: a sort of initialization phase where you need to generate some secrets and use them to compute some other values—proving and verification keys—that are going to be needed for the correct execution of the SNARK protocol.
+SNARK 系统依赖于称为*可信设置*的密码秘密，以非交互方式工作。您可以将其视为与密码协议的所有参与者共享的通用知识库：一种初始化阶段，您需要在其中生成一些秘密并使用它们来计算一些其他值——证明和验证密钥——这些密钥对于 SNARK 协议的正确执行是必需的。
 
-Usually, the trusted setup is obtained through the use of *multiparty computation*: lots of actors each generate a different secret (also called *toxic waste*), compute the proving and verification keys, and delete their initial secrets. Then, those keys are added together to obtain two final keys that will be used in the SNARK protocol. The main benefit of this is that you need only a single benevolent entity to delete its toxic waste to be sure that anyone cannot cheat and the trusted setup has been generated in a tamper-proof way. In Chapter 4, we covered this in the discussion on KZG commitments.
+通常，可信设置是通过使用*多方计算*获得的：许多参与者各自生成不同的秘密（也称为*有毒废物*），计算证明和验证密钥，并删除其初始秘密。然后，将这些密钥加在一起以获得两个最终密钥，这些密钥将在 SNARK 协议中使用。这的主要好处是，您只需要一个仁慈的实体来删除其有毒废物，以确保任何人都无法作弊，并且可信设置是以防篡改的方式生成的。在第 4 章中，我们在讨论 KZG 承诺时对此进行了介绍。
 
-Even though SNARK protocols work perfectly fine, the 1-of-N trust assumption of the trusted setup, together with the difficulty of creating a very resilient initial ceremony to generate the final public keys, has always created lots of discussion and brought several researchers and companies to look into trustless zero-knowledge proof systems that could work completely without it. Furthermore, SNARK systems rely on elliptic curve cryptography that is not quantum resistant, another critical aspect that people pointed out.
+即使 SNARK 协议可以完美运行，但可信设置的 N 分之 1 信任假设，以及创建非常具有弹性的初始仪式以生成最终公钥的困难，始终引发了大量的讨论，并促使一些研究人员和公司寻找完全无需它的无信任零知识证明系统。此外，SNARK 系统依赖于非抗量子椭圆曲线密码学，这是人们指出的另一个关键方面。
 
-In 2018, a paper written by Eli Ben-Sasson, Iddo Bentov, Yinon Horesh, and Michael Riabzev called ["Scalable, Transparent, and Post-Quantum Secure Computational Integrity"](https://oreil.ly/TCnTT) introduced a new trustless framework for building general zero-knowledge proof systems: zk-STARK.
-STARK stands for "*scalable transparent argument of knowledge*." In particular, *transparent* refers to the groundbreaking property of not needing a trusted setup. It also relies on collision-resistant hash functions instead of elliptic curve cryptography, making it even quantum resistant.
+2018 年，Eli Ben-Sasson、Iddo Bentov、Yinon Horesh 和 Michael Riabzev 撰写的一篇论文，题为“[Scalable, Transparent, and Post-Quantum Secure Computational Integrity](https://oreil.ly/TCnTT)”，引入了一个新的无信任框架，用于构建通用的零知识证明系统：zk-STARK。
+STARK 代表“*可扩展透明的知识论证*”。特别是，*透明*指的是不需要可信设置的突破性属性。它还依赖于抗冲突哈希函数而不是椭圆曲线密码学，使其甚至具有抗量子性。
 
-These advantages explain why most people now consider STARK to be the most modern zero-knowledge proof system. However, SNARKs are not an obsolete technology. They do have some advantages in certain contexts, mostly in the proof size, which can be fundamental in bandwidth-constrained environments such as blockchains. Moreover, several mixed approaches have been developed that try to take the best from both worlds.
+这些优势解释了为什么现在大多数人认为 STARK 是最现代的零知识证明系统。然而，SNARK 并不是一种过时的技术。它们在某些情况下确实具有一些优势，主要是在证明大小方面，这在带宽受限的环境（如区块链）中可能是至关重要的。此外，已经开发了几种混合方法，试图取长补短。
 
-## Zk-EVM and zk-VM
+## Zk-EVM 和 zk-VM
 
-Now that we've done a technical deep dive into how zero-knowledge proof systems work, we can finally go back to Ethereum and see how the tech has evolved in recent years.
+现在我们已经深入了解了零知识证明系统的工作原理，我们终于可以回到以太坊，看看这项技术近年来是如何发展的。
 
-We've already explained how we can use zero-knowledge proof systems to improve Ethereum—that is, prove the EVM execution of a block so that full nodes don't have to reexecute all transactions included into that block to trustlessly update their states. Instead, they can just verify a zero-knowledge proof, and if it's valid, they know the new state has been computed correctly. We also saw a basic example of how to create a zero-knowledge proof system for a very specific computation—the partition problem—and then we introduced SNARK and STARK frameworks, which let us generalize the architecture and apply it to any arbitrary computation.
-So we can immediately wonder: can we use a SNARK or STARK zero-knowledge proof system to correctly prove the EVM block execution? Yes, we definitely can, but there are a couple of choices we have to make.
+我们已经解释了如何使用零知识证明系统来改进以太坊——也就是说，证明一个区块的 EVM 执行，以便完整节点不必重新执行包含在该区块中的所有交易来无信任地更新其状态。相反，他们可以只验证零知识证明，如果它是有效的，他们就知道新的最初，每个想要构建 ZK rollup 的项目都必须着手创建用于 EVM 状态转换函数的正确的零知识电路。 这就是为什么在撰写本文时（2025 年 6 月），我们有比 ZK rollup 更多的 optimistic rollup。 但由于 zk-VM 的出现，情况变化非常快。
+*Zk-VM* 极大地改变了构建 ZK rollup 以及更普遍地用于 EVM 状态转换函数的零知识证明系统的视角。 这个想法非常简单：与其为每个不同的计算创建自定义电路，以便随后应用 SNARK 或 STARK 框架，不如创建一个可以用于所有类型计算的通用电路？ 它将是一种通用零知识计算机，可以处理任何任意计算。 这种抽象层非常强大：“一个电路统治一切”。
 
-In the partition-problem example, we had to slightly transform the initial proposition—that is, whether you can divide a set of integers into two subsets so that the sum of the numbers in the two subsets is equal—into something that was easier to prove with the system that we later built—that is, we added the satisfying assignment `a` and three constraints that it must satisfy to be valid. The transformation is necessary in order to be able to tackle the problem in a mathematical way. And it applies to SNARK and STARK frameworks.
+这样，你只需要专注于你想证明的计算，而 zk-VM 则处理生成证明的所有困难工作。 目前最著名的 zk-VM 是 [SP1](https://oreil.ly/kgVYY) 和 [RISC Zero](https://oreil.ly/z6v2l)。
 
-In fact, even though it's true that you can zero-knowledge prove any arbitrary computation using a SNARK or STARK framework, you first need to transform the computation into a form that the framework is able to correctly digest and process, usually called a *circuit*. It turns out that's a very hard task. In particular, it's really error prone to transform a complex computation such as the EVM state transition function into a zero-knowledge circuit, and it's also difficult to debug if there are any errors or problems. If the circuit is not correct or there are bugs, then you cannot trust the zero-knowledge proof that is later generated because it doesn't reflect the actual computation that has been done, so it could even be possible to generate a valid zero-knowledge proof for a fake statement—that is, saying that the new EVM state is "state1" while the correct one should be "state2."
-
-An EVM implementation that also includes a zero-knowledge proof-generation system is called a *zk-EVM*. You can find a concrete zk-EVM in the ZKsync repository.
-
-Initially, every project that wanted to build a ZK rollup had to tackle the hard work of creating the correct zero-knowledge circuit for the EVM state transition function. This is why at the time of writing (June 2025), we have far more optimistic rollups than ZK rollups. But things are changing really fast, thanks to the arrival of zk-VMs.
-*Zk-VMs* drastically change the perspective of building a ZK rollup and, more generally, a zero-knowledge proof system for the EVM state transition function. The idea is quite straightforward: instead of having to create a custom circuit for every different computation in order to then apply a SNARK or STARK framework, what if we could create a universal circuit that can be used for all kinds of computations? It would be a sort of general-purpose zero-knowledge computer that could handle any arbitrary computation. This layer of abstraction is really powerful: "one circuit to rule them all."
-
-This way, you only need to focus on the computation you want to prove, and the zk-VM handles all the hard work of generating a proof. The most famous zk-VMs right now are [SP1](https://oreil.ly/kgVYY) and [RISC Zero](https://oreil.ly/z6v2l).
-
-Figure 17-5 offers a streamlined visualization that captures the core elements of both zk-EVM and zk-VM frameworks.
+图 17-5 提供了一个简化的可视化，捕捉了 zk-EVM 和 zk-VM 框架的核心要素。
 
 ![zk-EVM and zk-VM comparison](images/ch17/maet_1705.png)
 
-Figure 17-5. Comparison of zk-EVM and zk-VM frameworks
+图 17-5. zk-EVM 和 zk-VM 框架的比较
 
-## Conclusion
+## 结论
 
-In this final chapter, we explored the basics of zero-knowledge technology: from its invention in 1985 to the groundbreaking innovations of the Bit+11 and Pinocchio papers that truly brought it to real-world applications, particularly in the blockchain world. We used the small partition problem as an example to gain intuition on how these complex systems work under the hood, and we later examined more generalized approaches, such as SNARK and STARK frameworks, that make it possible to apply a standard methodology to build a zero-knowledge proof system for any arbitrary computation. Finally, we introduced a very recent development: zk-VMs, which are quickly revolutionizing the sector thanks to their significant advantage of having a single circuit capable of handling arbitrary computations, which eliminates the need for developers to spend time creating custom circuits tied to specific computations they want to prove.
+在最后一章中，我们探讨了零知识技术的基础知识：从 1985 年的首次发明到 Bit+11 和 Pinocchio 论文的开创性创新，这些创新真正将其应用于实际应用，尤其是在区块链领域。 我们以小分区问题为例，了解这些复杂系统如何在底层工作，后来我们研究了更通用的方法，例如 SNARK 和 STARK 框架，这些框架使得可以应用标准方法来为任何任意计算构建零知识证明系统。 最后，我们介绍了一个非常新的发展：zk-VM，由于它们具有能够处理任意计算的单个电路的显着优势，因此无需开发人员花费时间创建与他们想要证明的特定计算相关的自定义电路，因此它们正在迅速彻底改变该领域。
 
-The future of Ethereum will undoubtedly intersect with zero-knowledge technology, both at the L2 level and directly on the L1 level. The concrete solution that will ultimately prevail remains unknown; perhaps it will be a combination of different approaches to ensure greater resilience against bugs or failures. Only time will tell...
+以太坊的未来无疑将与零知识技术相交，无论是在 L2 级别还是直接在 L1 级别。 最终将占上风的具体解决方案仍然未知； 也许这将是不同方法的组合，以确保对错误或故障具有更大的弹性。 只有时间会证明一切……
 
-For further reading on this subject, please see the following:
+有关此主题的更多阅读材料，请参见以下内容：
 
-- [A simple example](https://oreil.ly/jVNdu)
-- ["You Could Have Invented SNARKs"](https://oreil.ly/jiaOa) by Ethan Buchman
-- ["Why and How zk-SNARK Works: Definitive Explanation"](https://oreil.ly/EUUzt) by Maksym Petkus
-- [The RareSkills Book of Zero Knowledge](https://oreil.ly/tpHrl)
+- [一个简单的例子](https://oreil.ly/jVNdu)
+- Ethan Buchman 的 [“你本可以发明 SNARK”](https://oreil.ly/jiaOa)
+- Maksym Petkus 的 [“为什么以及 zk-SNARK 如何工作：权威解释”](https://oreil.ly/EUUzt)
+- [RareSkills 零知识之书](https://oreil.ly/tpHrl)

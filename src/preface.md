@@ -1,104 +1,104 @@
-# Preface
+# 前言
 
-This book is a collaboration between me (Carlo Parisi, aka Blackie), Alessandro Mazza, and Niccolò Pozzolini. The first edition, which of course heavily influenced our work, was written between 2016 and 2019 by Andreas M. Antonopoulos and Dr. Gavin Wood.
+本书是我（Carlo Parisi，又名 Blackie）、Alessandro Mazza 和 Niccolò Pozzolini 共同合作完成的。第一版由 Andreas M. Antonopoulos 和 Gavin Wood 博士于 2016 年至 2019 年间撰写，当然，它对我们的工作产生了重大影响。
 
-In November 2023, a series of very fortunate coincidences brought Andreas and me together in Glasgow. There, after a few beers and a few autographs, I asked him if he had any intention of writing a second edition of *Mastering Ethereum*. This was because, even though the first edition is a masterpiece, it hasn't aged well; it was published in 2019, back when Ethereum was still using proof of work and had a very different roadmap.
+2023 年 11 月，一系列非常幸运的巧合将 Andreas 和我在格拉斯哥联系在一起。在那里，在喝了几杯啤酒和签了几个名后，我问他是否有意撰写第二版《精通以太坊》。这是因为，即使第一版是杰作，但它并没有很好地适应时代；它于 2019 年出版，当时以太坊仍在采用工作量证明，并且有着截然不同的路线图。
 
-Andreas's response was that he wasn't planning to write a second edition, but our conversation ended up sparking the idea that led me to take on this project. Less than a day after our meeting in Glasgow, I was talking with O'Reilly about the possibility of writing a second edition.
+Andreas 的回答是他没有计划撰写第二版，但我们的谈话最终激发了一个想法，促使我承担了这个项目。在格拉斯哥会面后不到一天，我就在与 O'Reilly 讨论撰写第二版的可能性。
 
-I immediately knew this would be a big and important task. While I was honored by the opportunity, I was also afraid I might not be able to do a good enough job. I've been a fan of Andreas's work for years; he's the reason I was able to understand Bitcoin as deeply as I did back in 2014–2015, so I knew I needed help.
+我立刻意识到这将是一项重要而艰巨的任务。虽然我很荣幸能获得这个机会，但也担心自己可能无法胜任。多年来，我一直是 Andreas 作品的粉丝；他是我在 2014 年至 2015 年间能够如此深刻地理解比特币的原因，所以我知道我需要帮助。
 
-The first person who came to mind was Alessandro. He was involved in the project within the first few hours. As soon as the opportunity became real, I texted and asked if he wanted to join me. He instantly and happily said yes (without knowing any of the conditions or even whether it was a paid job).
+我首先想到的人是 Alessandro。他在最初的几个小时内就参与了这个项目。机会一旦变得真实，我就发短信问他是否愿意加入我。他立刻愉快地答应了（甚至不知道任何条件，也不知道是否有报酬）。
 
-Niccolò was a bit harder to convince. It took a full month of rejections to get him on board. Luckily, I'm very stubborn and wasn't willing to take no for an answer. After one month, he finally agreed. With that, our full team was ready, and the *Mastering Ethereum: Second Edition* project was officially launched.
+说服 Niccolò 稍微难一些。我花了整整一个月的时间才说服他加入。幸运的是，我非常固执，不愿接受拒绝。一个月后，他终于同意了。至此，我们的完整团队已经准备就绪，《精通以太坊：第二版》项目正式启动。
 
-I hope that every reader of this book gains at least a bit of knowledge from it. *Mastering Ethereum* was a book that taught me—and thousands of others—so much, and we worked hard to maintain that same level of quality. It took two years of research and writing to complete, and I'd be lying if I said it was easy.
+我希望本书的每一位读者都能从中获得至少一点知识。《精通以太坊》这本书教会了我——以及成千上万的其他人——很多东西，我们努力保持同样的质量水平。我们花了两年时间进行研究和写作才完成，如果我说这很容易，那就是在撒谎。
 
-We're also very proud to be an all-Italian team on this project. Hopefully, that brings some pride to the Italian crypto community as well.
+我们也很自豪能成为这个项目中的全意大利团队。希望这也能给意大利加密货币社区带来一些自豪感。
 
-## How to Use This Book
+## 如何使用本书
 
-The book is intended to serve both as a reference manual and as a cover-to-cover exploration of Ethereum. The first two chapters offer a gentle introduction, suitable for novice users, and the examples in those chapters can be completed by anyone with a bit of technical skill. Those two chapters will give you a good grasp of the basics and allow you to use the fundamental tools of Ethereum. Parts of Chapter 3 and beyond are intended for programmers and include many technical topics and programming examples, but they still should be understandable by anyone, for the most part.
+本书既可用作参考手册，也可用作对以太坊的全面探索。前两章提供了一个温和的介绍，适合新手用户，并且这些章节中的示例可以由任何具有一定技术技能的人完成。这两章将使您很好地掌握基础知识，并允许您使用以太坊的基本工具。第 3 章及以后的部分是为程序员准备的，包括许多技术主题和编程示例，但它们在很大程度上仍然应该易于任何人理解。
 
-To serve as both a reference manual and a cover-to-cover narrative about Ethereum, the book inevitably contains some duplication. Some topics, such as gas, have to be introduced early enough for the rest of the topics to make sense but are also examined in depth in their own sections.
+为了既作为参考手册，又作为关于以太坊的全面叙述，本书不可避免地包含一些重复。有些主题，例如 gas，必须尽早介绍，以便其余主题有意义，但也会在它们自己的部分中进行深入研究。
 
-Finally, the book's index allows readers to find very specific topics and the relevant sections with ease, by keyword.
+最后，本书的索引允许读者通过关键字轻松地找到非常具体的主题和相关的部分。
 
-## Intended Audience
+## 目标读者
 
-This book is mostly intended for everyone. This book will teach you how smart contract blockchains work, how to use them, and how to develop smart contracts and decentralized applications with them. The first few chapters are also suitable as an in-depth introduction to Ethereum for beginners.
+这本书主要面向所有人。本书将教您智能合约区块链如何工作，如何使用它们，以及如何使用它们开发智能合约和去中心化应用程序。前几章也适合作为对以太坊的深入介绍，面向初学者。
 
-## Code Examples
+## 代码示例
 
-The examples are illustrated in Solidity, Vyper, and JavaScript, using the command line of a Unix-like operating system. All the code snippets can be replicated on most operating systems with a minimal installation of compilers, interpreters, and libraries for the corresponding languages. Where necessary, we provide basic installation instructions and step-by-step examples of the output of those instructions.
+这些示例使用 Solidity、Vyper 和 JavaScript 说明，并使用类似 Unix 的操作系统的命令行。所有代码片段都可以在大多数操作系统上复制，只需最少的编译器、解释器和相应语言的库的安装。在必要时，我们提供基本的安装说明和这些说明输出的逐步示例。
 
-All the code snippets use real values and calculations where possible, so you can build from example to example and see the same results in any code you write to calculate the same values. For example, the private keys and corresponding public keys and addresses are all real. The sample transactions, contracts, blocks, and blockchain references have all been introduced to the actual Ethereum blockchain and are part of the public ledger, so you can review them.
+所有代码片段都尽可能使用真实值和计算，因此您可以从一个示例构建到另一个示例，并在您编写的任何代码中看到相同的结果来计算相同的值。例如，私钥以及相应的公钥和地址都是真实的。示例交易、合约、区块和区块链引用都已引入到实际的以太坊区块链中，并且是公共账本的一部分，因此您可以查看它们。
 
-## Ethereum Addresses and Transactions in this Book
+## 本书中的以太坊地址和交易
 
-The Ethereum addresses, transactions, keys, QR codes, and blockchain data used in this book are, for the most part, real. That means you can browse the blockchain, look at the transactions offered as examples, retrieve them with your own scripts or programs, and so forth.
+本书中使用的以太坊地址、交易、密钥、QR 码和区块链数据在很大程度上都是真实的。这意味着您可以浏览区块链，查看作为示例提供的交易，使用您自己的脚本或程序检索它们，等等。
 
-However, note that the private keys used to construct the addresses printed in this book have been "burned." This means that if you send money to any of these addresses, the money will be either lost forever or (more likely) appropriated, since anyone who reads the book can take it using the private keys printed herein.
+但是，请注意，用于构建本书中打印的地址的私钥已被“烧毁”。这意味着如果您将钱发送到这些地址中的任何一个，这些钱将永远丢失或（更有可能）被盗用，因为任何阅读本书的人都可以使用此处打印的私钥来获取它。
 
-> **Warning**  
+> **警告**
 >
-> Do not send money to any of the addresses in this book. Your money will be taken by another reader or lost forever.
+> 不要将钱发送到本书中的任何地址。您的钱将被其他读者拿走或永远丢失。
 
-## Conventions Used in This Book
+## 本书使用的约定
 
-The following typographical conventions are used in this book:
+本书使用以下印刷约定：
 
-*Italic*
+*斜体*
 
-Indicates new terms, URLs, email addresses, filenames, and file extensions.
+表示新术语、URL、电子邮件地址、文件名和文件扩展名。
 
-`Constant width`
+`等宽字体`
 
-Used for program listings, as well as within paragraphs to refer to program elements such as variable or function names, databases, data types, environment variables, statements, and keywords.
+用于程序列表，以及在段落中引用程序元素，例如变量或函数名称、数据库、数据类型、环境变量、语句和关键字。
 
-**`Constant width bold`**
+**`等宽字体粗体`**
 
-Shows commands or other text that should be typed literally by the user.
+显示用户应按字面键入的命令或其他文本。
 
-*`Constant width italic`*
+*`等宽字体斜体`*
 
-Shows text that should be replaced with user-supplied values or by values determined by context.
+显示应替换为用户提供的值或由上下文确定的值的文本。
 
-> **Tip**  
+> **提示**
 >
-> This element signifies a tip or suggestion.
+> 此元素表示提示或建议。
 
-> **Note**  
+> **注意**
 >
-> This element signifies a general note.
+> 此元素表示一般说明。
 
-> **Warning**  
+> **警告**
 >
-> This element indicates a warning or caution.
+> 此元素表示警告或注意事项。
 
-## Using Code Examples
+## 使用代码示例
 
-In our commitment to collaboration, we worked with O'Reilly Media to make this book available under a Creative Commons license.
+为了履行我们对协作的承诺，我们与 O'Reilly Media 合作，以 Creative Commons 许可提供本书。
 
-If you have a technical question or a problem using the code examples, please send an email to <support@oreilly.com>.
+如果您在使用代码示例时遇到技术问题或问题，请发送电子邮件至 <support@oreilly.com>。
 
-This book is here to help you get your job done. In general, if example code is offered with this book, you may use it in your programs and documentation. You do not need to contact us for permission unless you're reproducing a significant portion of the code. For example, writing a program that uses several chunks of code from this book does not require permission. Selling or distributing examples from O'Reilly books does require permission. Answering a question by citing this book and quoting example code does not require permission. Incorporating a significant amount of example code from this book into your product's documentation does require permission.
+本书旨在帮助您完成工作。通常，如果本书提供了示例代码，您可以在您的程序和文档中使用它。除非您要复制大部分代码，否则无需联系我们获得许可。例如，编写一个使用本书中几个代码块的程序不需要许可。出售或分发 O'Reilly 书籍中的示例需要许可。通过引用本书并引用示例代码来回答问题不需要许可。将本书中的大量示例代码纳入您产品的文档中需要许可。
 
-We appreciate, but generally do not require, attribution. An attribution usually includes the title, author, publisher, and ISBN. For example: "*Mastering Ethereum*, 2nd ed., by Andreas M. Antonopoulos, Gavin Wood, Carlo Parisi, Alessandro Mazza, and Niccolò Pozzolini (O'Reilly). Copyright 2026 Carlo Parisi, Alessandro Mazza, and Niccolò Pozzolini, 978-1-098-16842-1."
+我们感谢但不通常要求署名。署名通常包括标题、作者、出版商和 ISBN。例如：“*精通以太坊*，第 2 版，Andreas M. Antonopoulos、Gavin Wood、Carlo Parisi、Alessandro Mazza 和 Niccolò Pozzolini（O'Reilly）。版权所有 2026 Carlo Parisi、Alessandro Mazza 和 Niccolò Pozzolini，978-1-098-16842-1。”
 
-If you feel your use of code examples falls outside fair use or the permission given above, feel free to contact us at permissions@oreilly.com.
+如果您觉得您对代码示例的使用超出了合理使用范围或上述许可范围，请随时通过 permissions@oreilly.com 联系我们。
 
-## O'Reilly Online Learning
+## O'Reilly 在线学习
 
-> **Note**  
+> **注意**
 >
-> For more than 40 years, O'Reilly Media has provided technology and business training, knowledge, and insight to help companies succeed.
+> 40 多年来，O'Reilly Media 一直提供技术和业务培训、知识和见解，以帮助公司取得成功。
 
-Our unique network of experts and innovators share their knowledge and expertise through books, articles, and our online learning platform. O'Reilly's online learning platform gives you on-demand access to live training courses, in-depth learning paths, interactive coding environments, and a vast collection of text and video from O'Reilly and 200+ other publishers. For more information, visit [oreilly.com](https://oreilly.com).
+我们独特的专家和创新者网络通过书籍、文章和我们的在线学习平台分享他们的知识和专业知识。O'Reilly 的在线学习平台让您可以按需访问实时培训课程、深入的学习路径、交互式编码环境，以及来自 O'Reilly 和 200 多家其他出版商的大量文本和视频。有关更多信息，请访问 [oreilly.com](https://oreilly.com)。
 
-## How to Contact Us
+## 如何联系我们
 
-Please address comments and questions concerning this book to the publisher:
+请将有关本书的意见和问题发送给出版商：
 
 O'Reilly Media, Inc.
 
@@ -106,97 +106,97 @@ O'Reilly Media, Inc.
 
 Santa Rosa, CA 95401
 
-800-889-8969 (in the United States or Canada)
+800-889-8969（在美国或加拿大）
 
-707-827-7019 (international or local)
+707-827-7019（国际或本地）
 
-707-829-0104 (fax)
+707-829-0104（传真）
 
 <support@oreilly.com>
 
 [oreilly.com/about/contact.html](https://oreilly.com/about/contact.html)
 
-We have a web page for this book, where we list errata and any additional information. You can access this page at [https://oreil.ly/MasteringEthereum2e](https://oreil.ly/MasteringEthereum2e).
+我们有一个关于本书的网页，我们在其中列出勘误表和任何其他信息。您可以通过 [https://oreil.ly/MasteringEthereum2e](https://oreil.ly/MasteringEthereum2e) 访问此页面。
 
-For news and information about our books and courses, visit [https://oreilly.com](https://oreilly.com).
+有关我们的书籍和课程的新闻和信息，请访问 [https://oreilly.com](https://oreilly.com)。
 
-Find us on [LinkedIn](https://linkedin.com/company/oreilly-media)
+在 [LinkedIn](https://linkedin.com/company/oreilly-media) 上找到我们
 
-Watch us on [YouTube](https://youtube.com/oreillymedia)
+在 [YouTube](https://youtube.com/oreillymedia) 上观看我们
 
-## Contacting Carlo
+## 联系 Carlo
 
-Subscribe to Carlo's channel on [YouTube](https://www.youtube.com/@BlackieCrypto)
+订阅 Carlo 在 [YouTube](https://www.youtube.com/@BlackieCrypto) 上的频道
 
-Follow Carlo on [Twitter/X]( https://x.com/ManInBlackie)
+在 [Twitter/X](https://x.com/ManInBlackie) 上关注 Carlo
 
-Connect with Carlo on [LinkedIn](https://www.linkedin.com/in/carloparisis)
+在 [LinkedIn](https://www.linkedin.com/in/carloparisis) 上与 Carlo 联系
 
-Email: <carlo.parisi01234@gmail.com>
+电子邮件：<carlo.parisi01234@gmail.com>
 
-## Contacting Alessandro
+## 联系 Alessandro
 
-Follow Alessandro on [GitHub](https://github.com/alessandromazza98)
+在 [GitHub](https://github.com/alessandromazza98) 上关注 Alessandro
 
-Connect with Alessandro on [LinkedIn](https://www.linkedin.com/in/alessandro-mazza-a8b181320)
+在 [LinkedIn](https://www.linkedin.com/in/alessandro-mazza-a8b181320) 上与 Alessandro 联系
 
-Follow Alessandro on [Twitter/X (Italian profile)](https://x.com/crypto_ita2)
+在 [Twitter/X (意大利语个人资料)](https://x.com/crypto_ita2) 上关注 Alessandro
 
-Follow Alessandro on [Twitter/X (English profile)](https://x.com/alemaz98)
+在 [Twitter/X (英语个人资料)](https://x.com/alemaz98) 上关注 Alessandro
 
-Subscribe to Alessandro's [YouTube channel](https://www.youtube.com/@alessandro-mazza)
+订阅 Alessandro 的 [YouTube 频道](https://www.youtube.com/@alessandro-mazza)
 
-## Contacting Niccolò
+## 联系 Niccolò
 
-Follow Niccolò on [Twitter/X](https://x.com/idrocortisone)
+在 [Twitter/X](https://x.com/idrocortisone) 上关注 Niccolò
 
-Connect with Niccolò on [LinkedIn](https://www.linkedin.com/in/niccolo-pozzolini)
+在 [LinkedIn](https://www.linkedin.com/in/niccolo-pozzolini) 上与 Niccolò 联系
 
-## Acknowledgments by Carlo
+## Carlo 的致谢
 
-I owe a lot of what has happened in my career and personal life to Andreas's work. Thanks to the first edition of *Mastering Bitcoin*, I was able, back in 2014 and 2015, to truly understand the potential of Bitcoin. Because of that, I decided to pursue a career in crypto. At the time, there weren't many complete resources available, so *Mastering Bitcoin* was an incredible gift to the entire community. I wouldn't have the career I have today and probably my life would be very different if it weren't for that incredible work. The same goes for *Mastering Ethereum*. For this reason, Andreas, thank you so much.
+我的职业生涯和个人生活中的许多成就都归功于 Andreas 的工作。感谢第一版《精通比特币》，早在 2014 年和 2015 年，我就能够真正理解比特币的潜力。正因为如此，我决定从事加密货币事业。当时，没有太多完整的资源可用，《精通比特币》对整个社区来说是一份令人难以置信的礼物。如果没有那项令人难以置信的工作，我今天就不会拥有现在的职业生涯，我的生活可能会大不相同。《精通以太坊》也是如此。因此，Andreas，非常感谢你。
 
-Thank you to Nicola Luigi Guglielmo Di Nanna, my high school computer science professor. Without you, I probably would not have discovered my passion for programming and, subsequently, for blockchains. They say a good professor can change a student's life; you certainly did. Thank you for sharing your passion for computer science and for being such an inspiring role model.
+感谢我的高中计算机科学教授 Nicola Luigi Guglielmo Di Nanna。没有你，我可能不会发现我对编程的热情，也可能不会发现我对区块链的热情。人们说一位好教授可以改变学生的生活；你确实做到了。感谢你分享你对计算机科学的热情，并成为如此鼓舞人心的榜样。
 
-Thank you also to Alessandro and Niccolò, who helped so much in writing this book, and to all of our incredible tech reviewers.
+还要感谢 Alessandro 和 Niccolò，他们在本书的写作中提供了很多帮助，以及我们所有出色的技术审阅者。
 
-Thank you to Michelle Smith and Shira Evans from O'Reilly, who supported us every step of the way.
+感谢 O'Reilly 的 Michelle Smith 和 Shira Evans，他们一路支持我们。
 
-Thank you to the Italian community, particularly my own community on Discord, YouTube, and Twitter, which gave me the confidence to take on this and many other projects.
+感谢意大利社区，特别是我在 Discord、YouTube 和 Twitter 上的社区，他们给了我信心来承担这个和许多其他项目。
 
-Thank you to the amazing Ethereum community. We wouldn't have been able to do as much research—or write as deeply—without your ongoing support and contributions.
+感谢令人惊叹的以太坊社区。如果没有你们持续的支持和贡献，我们就无法进行如此多的研究或写出如此深刻的内容。
 
-And last but not least, thank you to my wonderful family, who supported me in everything I did and allowed me to freely explore my passions and interests.
+最后但并非最不重要的是，感谢我出色的家人，他们支持我所做的一切，并允许我自由地探索我的热情和兴趣。
 
-## Acknowledgments by Alessandro
+## Alessandro 的致谢
 
-There are so many things I'm grateful for. First of all, I'd like to thank Carlo for reaching out to me and giving me the amazing opportunity to write this book. I still remember the first time we met in person, in Catanzaro, Italy.
+有很多事情让我心存感激。首先，我要感谢 Carlo 联系我，给了我撰写本书的绝佳机会。我还记得我们第一次在线下见面，在意大利的卡坦扎罗。
 
-Thank you to my university professor, Dr. Luca Giuzzi, for allowing me to dedicate my thesis to Bitcoin and the Schnorr digital signature algorithm. That was the beginning of my career in the cryptocurrency space.
+感谢我的大学教授 Luca Giuzzi 博士，他允许我将我的论文献给比特币和 Schnorr 数字签名算法。那是我在加密货币领域职业生涯的开始。
 
-A heartfelt thank you to my Italian community, who gave me confidence and indirectly brought me to where I am today. I probably wouldn't have met Carlo if it weren't for their support.
+衷心感谢我的意大利社区，他们给了我信心，并间接把我带到了今天的位置。如果没有他们的支持，我可能就不会遇到 Carlo。
 
-Thank you to O'Reilly, and in particular to Shira Evans and Michelle Smith, who guided us throughout this journey. Their meticulous coordination and support, along with the help of all the reviewers, made this book possible.
+感谢 O'Reilly，特别是 Shira Evans 和 Michelle Smith，他们在这段旅程中指导我们。他们细致的协调和支持，以及所有审阅者的帮助，使本书成为可能。
 
-Finally, I want to thank my family and my girlfriend, Alessandra, for always supporting and loving me.
+最后，我要感谢我的家人和我的女朋友 Alessandra，他们一直支持和爱我。
 
-## Acknowledgments by Niccolò
+## Niccolò 的致谢
 
-I want to thank Carlo for giving me the chance to write this book with him. Over the past two years, we've worked on many projects together and shared plenty of laughs, trips abroad, and now this book. Working with you has made this journey both fun and rewarding.
+我要感谢 Carlo 让我有机会与他一起撰写本书。在过去的两年里，我们一起完成了许多项目，一起分享了许多欢笑、出国旅行，现在还有这本书。与你一起工作让这段旅程既有趣又充满回报。
 
-I'm grateful to Andreas and Gavin for creating the first version of *Mastering Ethereum*. Their book opened my eyes to the world of blockchain and has done the same for so many others. Their work helped build and grow this amazing blockchain community that we're all part of today.
+我很感谢 Andreas 和 Gavin 创建了第一版《精通以太坊》。他们的书让我看到了区块链的世界，并为其他许多人也带来了同样的体验。他们的工作帮助建立和发展了我们今天都是其中一员的这个令人惊叹的区块链社区。
 
-A big thank you to Michelle Smith and Shira Evans from O'Reilly for supporting us from start to finish. You helped us with all the paperwork, kept us on schedule, and guided us through the whole process of making this book a reality.
+非常感谢 O'Reilly 的 Michelle Smith 和 Shira Evans，感谢你们从头到尾对我们的支持。你们帮助处理了所有的文书工作，让我们按计划进行，并指导我们完成了使本书成为现实的整个过程。
 
-To my family, my friends, and my girlfriend, Giuditta, I can't thank you enough for always being there for me. During the many months of writing, you put up with my busy schedule and stress. You listened when I needed to talk through ideas, you understood when I couldn't make it to gatherings because of deadlines, and you kept encouraging me when things got tough. Your constant support gave me the strength and focus to keep going. The book you're holding isn't just my work; it exists because of the love and support you've always shown me.
+对于我的家人、我的朋友和我的女朋友 Giuditta，我再怎么感谢你们也不为过。在写作的几个月里，你们容忍了我繁忙的日程和压力。当我想讨论想法时，你们倾听着；当因为截止日期而无法参加聚会时，你们理解我；当事情变得艰难时，你们不断鼓励我。你们持续的支持给了我继续前进的力量和专注力。你手中的这本书不仅仅是我的作品；它的存在是因为你们一直以来对我的爱和支持。
 
-## Contributions
+## 贡献
 
-We'd all like to thank our tech reviewers:
+我们都想感谢我们的技术审阅者：
 
 - Ben Edgington
 - Caleb Lent
 - Brian Wu
 - Gonçalo Magalhães
 
-They have helped us immensely in improving the quality of the book. Thank you so much to our wonderful tech reviewers.
+他们极大地帮助我们提高了本书的质量。非常感谢我们出色的技术审阅者。

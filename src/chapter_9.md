@@ -1,52 +1,52 @@
-# Chapter 9. Smart Contract Security
+# 第 9 章. 智能合约安全
 
-Security is one of the most important considerations when writing smart contracts. In the field of smart contract programming, mistakes are costly and easily exploited. In this chapter, we will look at security best practices and design patterns as well as *security antipatterns*, which are practices and patterns that can introduce vulnerabilities into smart contracts.
+安全是编写智能合约时最重要的考虑因素之一。在智能合约编程领域，错误代价高昂且容易被利用。在本章中，我们将探讨安全最佳实践和设计模式以及*安全反模式*，这些实践和模式可能会将漏洞引入智能合约中。
 
-As with other programs, a smart contract will execute exactly what is written, which is not always what the programmer intended. Furthermore, all smart contracts are public, and any user can interact with them simply by creating a transaction. Any vulnerability can be exploited, and losses are almost always impossible to recover. It is therefore critical to follow best practices and use well-tested design patterns.
+与其他程序一样，智能合约将完全按照编写的内容执行，但这并不总是程序员想要的结果。此外，所有智能合约都是公开的，任何用户都可以通过创建交易来与它们交互。任何漏洞都可能被利用，而且损失几乎总是无法弥补的。因此，遵循最佳实践并使用经过充分测试的设计模式至关重要。
 
-Think of robust development as the first layer in a “Swiss cheese model” of security. Each layer of protection acts like a slice of Swiss cheese: none is flawless on its own, but together they create a stronger defense. The very first layer is following solid development practices: using reliable design patterns, writing clear and intentional code, and actively avoiding known pitfalls. This foundational layer gives us the best start in securing our contracts from vulnerabilities. Beyond this, other layers like testing, code reviews, and bug bounties add extra protection, but it all begins with our development practices.
+将稳健的开发视为安全“瑞士奶酪模型”中的第一层。每一层保护都像一片瑞士奶酪：单独来看都不完美，但结合在一起可以形成更强大的防御。最首要的一层是遵循可靠的开发实践：使用可靠的设计模式、编写清晰且有目的的代码，并积极避免已知的陷阱。这个基础层为我们安全地保护合约免受漏洞攻击提供了最佳开端。除此之外，测试、代码审查和漏洞赏金等其他层增加了额外的保护，但这一切都始于我们的开发实践。
 
-## Security Best Practices
+## 安全最佳实践
 
-*Defensive programming* is a style of programming that is particularly well suited to smart contracts. It emphasizes the following, all of which are best practices:
+*防御性编程*是一种特别适合智能合约的编程风格。它强调以下几点，所有这些都是最佳实践：
 
-**Minimalism/simplicity**
+**最小化/简洁**
 
-Before even writing code, it’s worth stepping back to question whether every component is really needed. Can the design be simplified? Are certain data structures introducing unnecessary surface area? Once the architecture is settled, we should still go back through the code with a critical eye, looking for opportunities to reduce lines, eliminate edge cases, or drop nonessential features. Simpler contracts are easier to reason about, test, and audit. And while some DeFi protocols legitimately grow into a few thousand lines, it’s still worth being skeptical when someone boasts about the size of their codebase. More code often means more bugs, not more value.
+甚至在编写代码之前，都值得退一步思考是否真的需要每个组件。设计可以简化吗？某些数据结构是否引入了不必要的攻击面？一旦架构确定下来，我们仍然应该带着批判的眼光检查代码，寻找减少行数、消除边缘情况或删除非必要功能的机会。更简单的合约更容易推理、测试和审计。虽然一些 DeFi 协议确实会增长到几千行代码，但当有人吹嘘其代码库的大小的时候，仍然值得怀疑。更多的代码通常意味着更多的错误，而不是更多的价值。
 
-**Code reuse**
+**代码重用**
 
-Try not to reinvent the wheel. If a library or contract already exists that does most of what you need, reuse it. [OpenZeppelin](https://www.openzeppelin.com), for instance, offers a suite of contracts that are widely adopted, thoroughly tested, and continuously reviewed by the community. Within your own code, follow the DRY principle: don’t repeat yourself. If you see any snippet of code repeated more than once, ask yourself whether it could be written as a function or library and reused. Code that has been battle-tested across many deployments is almost always more secure than something you’ve just written, no matter how confident you feel about it. Beware of “not invented here” syndrome, where you are tempted to “improve” a feature or component by building it from scratch. The security risk is often greater than the improvement value. Reuse isn’t laziness. It’s smart, defensive engineering.
+尽量不要重复发明轮子。如果已经存在一个库或合约可以完成您需要的大部分工作，请重用它。例如，[OpenZeppelin](https://www.openzeppelin.com) 提供了一套被广泛采用、经过全面测试并持续被社区审查的合约。在您自己的代码中，遵循 DRY 原则：不要重复自己。如果您看到任何代码片段重复出现多次，请问自己是否可以将其编写为函数或库并重复使用。在许多部署中经过实战测试的代码几乎总是比您刚刚编写的代码更安全，无论您对它有多么自信。警惕“非我发明”综合征，在这种情况下，您可能会试图通过从头开始构建某个特性或组件来“改进”它。安全风险通常大于改进的价值。重用不是懒惰。这是一种明智的防御性工程。
 
-**Code quality**
+**代码质量**
 
-Smart contract code is unforgiving. Every bug can lead to monetary loss. You should not treat smart contract programming the same way you do general-purpose programming. Writing a DApp in Solidity is not like creating a web widget in JavaScript. Rather, you should apply rigorous engineering and software development methodologies as you would in aerospace engineering or any similarly unforgiving discipline. Once you “launch” your code, there is little you can do to fix any problems. And even if the code is upgradable, you often have very little time to respond if anything goes wrong. If someone spots a bug in your project before you do, the exploit will likely unfold in a single transaction or just a few, meaning the damage is done within seconds, long before you can intervene.
+智能合约代码是无情的。每个错误都可能导致金钱损失。您不应该像对待通用编程那样对待智能合约编程。用 Solidity 编写 DApp 与用 JavaScript 创建 Web 小部件不同。相反，您应该像在航空航天工程或任何类似无情的学科中那样，应用严格的工程和软件开发方法。一旦您“启动”了您的代码，您几乎无法修复任何问题。即使代码是可升级的，如果出现任何问题，您通常也没有多少时间做出响应。如果有人在您之前发现了您项目中的错误，漏洞利用可能会在单个交易或几个交易中展开，这意味着损害会在几秒钟内完成，远在您可以干预之前。
 
-**Readability/auditability**
+**可读性/可审计性**
 
-Your code should be clear and easy to comprehend. The easier it is to read, the easier it is to audit. Smart contracts are public: everyone can read the bytecode, and anyone skilled enough can reverse-engineer it. Therefore, it is beneficial to develop your work in public, using collaborative and open source methodologies, to draw upon the collective wisdom of the developer community and benefit from the highest common denominator of open source development. You should write code that is well documented and easy to read, following the style and naming conventions that are part of the Ethereum community.
+您的代码应该清晰易懂。越容易阅读，就越容易审计。智能合约是公开的：每个人都可以读取字节码，任何有足够技能的人都可以对其进行逆向工程。因此，最好以公开的方式开发您的工作，使用协作和开源方法，以利用开发者社区的集体智慧，并从开源开发的最高公分母中受益。您应该编写有良好文档记录且易于阅读的代码，遵循以太坊社区的一部分的风格和命名约定。
 
-**Test coverage**
+**测试覆盖率**
 
-Test everything you can. Smart contracts run in a public execution environment, where anyone can execute them with whatever input they want. You should never assume that input, such as function arguments, is well formed or properly bounded or that it has a benign purpose. Test all arguments to make sure they are within expected ranges and are properly formatted before allowing execution of your code to continue.
+测试所有你能测试的东西。智能合约在公共执行环境中运行，任何人都可以使用他们想要的任何输入来执行它们。您永远不应假设输入（例如函数参数）格式良好或边界正确，或者具有良性目的。测试所有参数，确保它们在预期范围内并且格式正确，然后再允许继续执行您的代码。
 
-## Security Risks and Antipatterns
+## 安全风险和反模式
 
-As a smart contract programmer, you should be familiar with the most common security risks, so you can detect and avoid the programming patterns that leave your contracts exposed to these risks. In the next several sections, we will look at different security risks, examples of how vulnerabilities can arise, and countermeasures or preventative solutions that can be used to address them.
+作为一名智能合约程序员，您应该熟悉最常见的安全风险，以便检测和避免使您的合约暴露于这些风险的编程模式。在接下来的几个章节中，我们将研究不同的安全风险、漏洞如何产生的示例，以及可用于解决这些问题的对策或预防性解决方案。
 
-The following antipatterns are often combined to execute an exploit, much like in Web2 security. Real-world exploits are usually more complex than the examples in this chapter.
+以下反模式通常被组合起来以执行漏洞利用，就像在 Web2 安全中一样。现实世界中的漏洞利用通常比本章中的示例更复杂。
 
-### Reentrancy
+### 重入
 
-One of the features of Ethereum smart contracts is their ability to call and utilize code from other external contracts. Contracts also typically handle ether and as such, often send ether to various external user addresses. These operations require the contracts to submit external calls. These external calls can be hijacked by attackers, who can force the contracts to execute further code (through a callback: either a fallback function or some hook, usually `transfer`), including calls back into themselves. Attacks of this kind were used in the infamous and still remembered DAO hack from 2016. Even after all these years, [we’re still seeing a lot of attacks exploiting this vulnerability](https://oreil.ly/87VUR), even though it’s pretty straightforward to spot and inexpensive to fix.
+以太坊智能合约的一个特性是它们能够调用和利用来自其他外部合约的代码。合约通常也处理以太币，因此经常将以太币发送到各种外部用户地址。这些操作需要合约提交外部调用。这些外部调用可能会被攻击者劫持，他们可以强制合约执行进一步的代码（通过回调：可以是回退函数或一些钩子，通常是 `transfer`），包括回调到它们自身。这种攻击在 2016 年臭名昭著且仍然令人记忆犹新的 DAO 黑客事件中被使用。即使过了这么多年，[我们仍然看到很多攻击利用这个漏洞](https://oreil.ly/87VUR)，尽管它很容易被发现并且修复成本不高。
 
-#### The vulnerability
+#### 漏洞
 
-This type of attack happens when an attacker manages to take control during the execution of another contract before that contract has finished updating its state. Since the contract is still in the middle of its process, it has not yet updated its state (e.g., critical variables). The attacker can then “reenter” the contract at this vulnerable moment, taking advantage of the inconsistent state to trigger actions that weren’t intended or expected. This reentry allows the attacker to bypass safeguards, manipulate data, or drain funds, all because the contract hasn’t fully settled into a safe, consistent state yet.
+当攻击者在另一个合约完成更新其状态之前设法控制该合约的执行时，就会发生这种类型的攻击。由于合约仍处于其过程的中间，它尚未更新其状态（例如，关键变量）。然后，攻击者可以在这个脆弱的时刻“重新进入”合约，利用不一致的状态来触发未预期或不期望的操作。这种重新进入允许攻击者绕过保护措施、操纵数据或耗尽资金，所有这些都是因为合约尚未完全稳定到安全、一致的状态。
 
-Reentrancy can be tricky to grasp without a practical example. Take a look at the simple vulnerable contract in Example 9-1, which acts as an Ethereum vault that allows depositors to withdraw only 1 ether per week.
+如果没有实际的例子，重入可能很难掌握。请看示例 9-1 中这个简单的易受攻击的合约，它充当以太坊金库，允许存款人每周只提取 1 个以太币。
 
-**Example 9-1. EtherStore: a contract vulnerable to reentrancy**
+**示例 9-1. EtherStore：一个容易受到重入攻击的合约**
 
 ```solidity
 1 contract EtherStore {
@@ -72,27 +72,27 @@ Reentrancy can be tricky to grasp without a practical example. Take a look at th
 21 }
 ```
 
-This contract has two public functions, `depositFunds` and `withdrawFunds`. The `depositFunds` function simply increments the sender’s balance. The `withdrawFunds` function allows the sender to withdraw their balance. This function is intended to succeed only if a withdrawal has not occurred in the last week.
+此合约有两个公共函数 `depositFunds` 和 `withdrawFunds`。`depositFunds` 函数简单地增加发送者的余额。`withdrawFunds` 函数允许发送者提取他们的余额。只有在过去一周没有发生提款的情况下，此函数才能成功执行。
 
-The vulnerability is in line 17, where the contract sends the user their requested amount of ether. Consider an attacker who has created the contract in Example 9-2.
+漏洞位于第 17 行，合约在此处将用户请求的以太币数量发送给他们。考虑一个攻击者创建了示例 9-2 中的合约。
 
-**Example 9-2. Attack.sol: a contract used to exploit the reentrancy vulnerability in the EtherStore contract**
+**示例 9-2. Attack.sol：一个用于利用 EtherStore 合约中的重入漏洞的合约**
 
 ```solidity
 1 contract Attack {
 2  EtherStore public etherStore;
 3
-4  // initialize the etherStore variable with the contract address
+4  // 使用合约地址初始化 etherStore 变量
 5  constructor(address _etherStoreAddress) {
 6      etherStore = EtherStore(_etherStoreAddress);
 7  }
 8
 9  function attackEtherStore() public payable {
-10      // attack to the nearest ether
+10      // 攻击到最接近的以太币
 11      require(msg.value >= 1 ether, "no bal");
-12      // send eth to the depositFunds() function
+12      // 将 eth 发送到 depositFunds() 函数
 13      etherStore.depositFunds{value: 1 ether}();
-14      // start the magic
+14      // 开始魔法
 15      etherStore.withdrawFunds();
 16  }
 17
@@ -100,59 +100,60 @@ The vulnerability is in line 17, where the contract sends the user their request
 19      payable(msg.sender).transfer(address(this).balance);
 20  }
 21
-22  // receive function - the fallback() function would have worked out too
+22  // 接收函数 - fallback() 函数也可以工作
 23  receive() external payable {
 24      if (address(etherStore).balance >= 1 ether) {
-25          // reentrant call to victim contract
+25          // 对受害者合约的重入调用
 26          etherStore.withdrawFunds();
 27      }
 28  }
 29 }
 ```
 
-How might the exploit occur? First, the attacker would create the malicious contract (let’s say at the address `0x0...123`) with the `EtherStore`’s contract address as the sole constructor parameter. This would initialize and point the public variable `etherStore` to the contract to be attacked.
+漏洞是如何发生的？首先，攻击者会创建恶意合约（假设地址为 `0x0...123`），并将 `EtherStore` 的合约地址作为唯一的构造函数参数。这将初始化公共变量 `etherStore` 并将其指向要攻击的合约。
 
-The attacker would then call the `attackEtherStore` function, with some amount of ether greater than or equal to 1—let’s assume 1 ether for the time being. In this example, we will also assume a number of other users have deposited ether into this contract, so its current balance is 10 ether. The following will then occur:
+然后，攻击者将调用 `attackEtherStore` 函数，其以太币数量大于或等于 1——暂时假设为 1 个以太币。在此示例中，我们还将假设许多其他用户已将以太币存入此合约，因此其当前余额为 10 个以太币。然后将发生以下情况：
 
-- *Attack.sol*, line 13: The `depositFunds` function of the `EtherStore` contract will be called with a `msg.value` of `1 ether` (and a lot of gas). The sender (`msg.sender`) will be the malicious contract (`0x0...123`). Thus, `balances[0x0..123] = 1 ether`.
-- *Attack.sol*, line 15: The malicious contract will then call the `withdrawFunds` function of the `EtherStore` contract. This will pass the requirement (line 11 of the `EtherStore` contract) as no previous withdrawals have been made.
-- *EtherStore.sol*, line 16: The contract will send `1 ether` back to the malicious contract.
-- *Attack.sol*, line 23: The payment to the malicious contract will then execute the `receive` function.
-- *Attack.sol*, line 24: The total balance of the `EtherStore` contract was 10 ether and is now 9 ether, so this `if` statement passes.
-- *Attack.sol*, line 26: The fallback function calls the `EtherStore` `withdrawFunds` function again and *reenters* the `EtherStore` contract.
-- *EtherStore.sol*, line 10: In this second call to `withdrawFunds`, the attacking contract’s balance is still 1 ether as line 18 has not yet been executed. Thus, we still have `balances[0x0..123] = 1 ether`. This is also the case for the `lastWithdrawTime` variable. Again, we pass the requirement.
-- *EtherStore.sol*, line 16: The attacking contract withdraws another `1 ether`.
-- Reenter the EtherStore contract until it is no longer the case that `EtherStore.balance >= 1`, as dictated by line 24 in *Attack.sol*.
-- *Attack.sol*, line 24: Once there is less than 1 ether left in the `EtherStore` contract, this `if` statement will fail. This will then allow lines 17–19 of the `EtherStore` contract to be executed (for each call to the `withdrawFunds` function).
-- *EtherStore.sol*, lines 18 and 19: The `balances` and `lastWithdrawTime` mappings will be set, and the execution will end.
+- *Attack.sol*，第 13 行：将使用 `msg.value` 为 `1 ether`（以及大量的 gas）调用 `EtherStore` 合约的 `depositFunds` 函数。发送者 (`msg.sender`) 将是恶意合约 (`0x0...123`)。因此，`balances[0x0..123] = 1 ether`。
+- *Attack.sol*，第 15 行：恶意合约将调用 `EtherStore` 合约的 `withdrawFunds` 函数。这将通过要求（`EtherStore` 合约的第 11 行），因为之前没有进行过提款。
+- *EtherStore.sol*，第 16 行：合约将 `1 ether` 发送回恶意合约。
+- *Attack.sol*，第 23 行：对恶意合约的付款将执行 `receive` 函数。
+- *Attack.sol*，第 24 行：`EtherStore` 合约的总余额为 10 个以太币，现在为 9 个以太币，因此此 `if` 语句通过。
+- *Attack.sol*，第 26 行：回退函数再次调用 `EtherStore` 的 `withdrawFunds` 函数并*重新进入* `EtherStore` 合约。
+- *EtherStore.sol*，第 10 行：在第二次调用 `withdrawFunds` 时，攻击合约的余额仍然是 1 个以太币，因为第 18 行尚未执行。因此，我们仍然有 `balances[0x0..123] = 1 ether`。`lastWithdrawTime` 变量也是如此。同样，我们通过了要求。
+- *EtherStore.sol*，第 16 行：攻击合约提取了另一个 `1 ether`。
+- 重新进入 EtherStore 合约，直到不再有 `EtherStore.balance >= 1` 的情况，如 *Attack.sol* 中的第 24 行所述。
+- *Attack.sol*，第 24 行：一旦 `EtherStore` 合约中剩余的以太币少于 1 个，此 `if` 语句将失败。然后，这将允许执行 `EtherStore` 合约的第 17-19 行（对于每次调用 `withdrawFunds` 函数）。
+- *EtherStore.sol*，第 18 行和 19 行：将设置 `balances` 和 `lastWithdrawTime` 映射，并且执行将结束。
 
-The final result is that the attacker has withdrawn all ether from the `EtherStore` contract in a single transaction.
+最终结果是，攻击者在单个交易中从 `EtherStore` 合约中提取了所有以太币。
 
-While native ether transfers intercepted by fallback functions are a common vector for reentrancy attacks, they are not the only mechanism that can introduce this risk. Several token standards, like ERC-721 and ERC-777, include callback mechanisms that can also enable reentrancy attacks. For instance, ERC-721’s `safeTransfer` function ensures that token transfers to contracts call the recipient’s `onERC721Received` function. Similarly, ERC-777 tokens allow hooks to be invoked via the `tokensReceived` function during transfers.
+虽然回退函数拦截的本地以太币转移是重入攻击的常见媒介，但它们并不是唯一可以引入这种风险的机制。一些代币标准，如 ERC-721 和 ERC-777，包括也可以启用重入攻击的回调机制。例如，ERC-721 的 `safeTransfer` 函数确保代币转移到合约会调用接收方的 `onERC721Received` 函数。类似地，ERC-777 代币允许在转移期间通过 `tokensReceived` 函数调用钩子。
 
-#### Beyond the Classic Reentrancy Pattern
-Reentrancy attacks aren’t limited to a single function or contract. While classic reentrancy involves reentering the same function before it finishes, there are variations that are harder to spot, such as cross-function reentrancy, cross-contract reentrancy, and, the trickiest of all, read-only reentrancy.
-Read-only reentrancy takes advantage of contracts that depend on view functions of other contracts. These functions don’t modify state but return data that other contracts rely on, often without reentrancy protection. The problem occurs when a reentrant call lets an attacker temporarily put the target contract into an inconsistent state, allowing them to use another contract (the victim) to query this unstable state through a view function.
-Let’s look at how it plays out:
-1. The attacker’s contract interacts with a vulnerable contract—let’s call it Contract A—which can be reentered. This contract holds data that other protocols rely on.
-2. Contract A triggers a callback to the attacker’s contract, allowing the attacker’s contract logic to run.
-3. While still in the fallback, the attacker’s contract calls a different protocol, Contract B, which is connected to Contract A and depends on the data it provides.
-4. Contract B, unaware of any issues, reads data from Contract A. However, the state of Contract A is outdated because it hasn’t finished updating yet.
-By the time this cycle ends, the attacker has already exploited Contract B by leveraging the outdated data from Contract A and then lets the callback and original call in Contract A complete as normal. The process is illustrated in Figure 9-1.
-Figure 9-1. Read-only reentrancy
+#### 超越经典重入模式
 
-![Read-only reentrancy](images/ch9/maet_0901.png)
+重入攻击不限于单个函数或合约。虽然经典重入涉及在同一函数完成之前重新进入该函数，但有些变体更难发现，例如跨函数重入、跨合约重入，以及最棘手的只读重入。
+只读重入利用了依赖于其他合约的 view 函数的合约。这些函数不修改状态，但返回其他合约依赖的数据，通常没有重入保护。当重入调用允许攻击者暂时将目标合约置于不一致状态时，问题就出现了，允许他们使用另一个合约（受害者）通过 view 函数查询这种不稳定状态。
+让我们看看它是如何运作的：
+1. 攻击者的合约与易受攻击的合约（我们称之为合约 A）交互，该合约可以被重入。此合约保存其他协议依赖的数据。
+2. 合约 A 触发对攻击者合约的回调，允许攻击者合约逻辑运行。
+3. 在回退中，攻击者的合约调用不同的协议，合约 B，该合约连接到合约 A 并依赖于它提供的数据。
+4. 合约 B 没有意识到任何问题，从合约 A 读取数据。但是，合约 A 的状态已过时，因为它尚未完成更新。
+在这个周期结束时，攻击者已经利用了合约 B，利用了合约 A 的过时数据，然后让合约 A 中的回调和原始调用正常完成。该过程如图 9-1 所示。
+图 9-1. 只读重入
 
-**Figure 1-1.** Read-only reentrancy
+![只读重入](images/ch9/maet_0901.png)
 
-The key here is that Contract B trusts the data from Contract A, but Contract A’s state hasn’t caught up, allowing the attacker to exploit the lag. This type of attack is harder to defend against because developers often don’t protect view functions with reentrancy locks, thinking they are safe since they don’t modify state.
-Read-only reentrancy teaches us that even read-only functions can be dangerous when they’re relied upon by external contracts.
+**图 1-1.** 只读重入
 
-#### Preventative techniques
+这里的关键是合约 B 信任来自合约 A 的数据，但合约 A 的状态尚未赶上，允许攻击者利用这种延迟。这种类型的攻击更难防御，因为开发者通常不会用重入锁保护 view 函数，认为它们是安全的，因为它们不修改状态。
+只读重入告诉我们，即使只读函数，当它们被外部合约依赖时，也可能是危险的。
 
-The first best practice to follow in order to prevent reentrancy issues is sticking to the check-effect-interaction pattern when writing smart contracts. This pattern is about ensuring that all changes to state variables happen before interacting with external contracts. For instance, in the *EtherStore.sol* contract, the lines that modify state variables should appear before any external calls. The goal is to ensure that any piece of code interacting with external addresses is the last thing executed in the function. This prevents external contracts from interfering with the internal state upon reentering because the necessary updates have already been made.
+#### 预防技术
 
-Another useful technique is applying a reentrancy lock. A *reentrancy lock* is a simple state variable that “locks” the contract while it’s executing a function, preventing other external calls from interrupting. This can be implemented with a modifier like this:
+为了防止重入问题，首先要遵循的最佳实践是在编写智能合约时坚持 check-effect-interaction 模式。这种模式是关于确保在与外部合约交互之前发生对状态变量的所有更改。例如，在 *EtherStore.sol* 合约中，修改状态变量的行应该出现在任何外部调用之前。目标是确保与外部地址交互的任何代码都是函数中执行的最后一件事。这可以防止外部合约在重新进入时干扰内部状态，因为必要的更新已经完成。
+
+另一个有用的技术是应用重入锁。*重入锁*是一个简单的状态变量，它在合约执行函数时“锁定”合约，防止其他外部调用中断。这可以使用如下所示的修饰符来实现：
 
 ```solidity
 contract EtherStore {
@@ -174,23 +175,23 @@ contract EtherStore {
 }
 ```
 
-In this example, the `nonReentrant` modifier uses the lock variable to prevent the `withdrawFunds` function from being reentered while it’s still running. The `nonReentrant` modifier locks the contract when it starts and unlocks it once the function finishes. However, we shouldn’t reinvent the wheel. Instead of crafting our own reentrancy locks, it’s better to rely on well-tested libraries like OpenZeppelin’s ReentrancyGuard. These libraries provide secure, gas-optimized solutions.
+在此示例中，`nonReentrant` 修饰符使用锁变量来防止 `withdrawFunds` 函数在仍在运行时被重新进入。`nonReentrant` 修饰符在函数开始时锁定合约，并在函数完成后解锁合约。但是，我们不应该重新发明轮子。与其制作我们自己的重入锁，不如依赖像 OpenZeppelin 的 ReentrancyGuard 这样的经过充分测试的库。这些库提供安全、gas 优化的解决方案。
 
-> **Note**
+> **注意**
 >
-> With the advent of transient storage on Ethereum in Solidity 0.8.24, OpenZeppelin has introduced ReentrancyGuardTransient, a new variant of ReentrancyGuard that leverages transient storage for significantly lower gas costs. Transient storage, enabled by [EIP-1153](https://oreil.ly/fRvKl), provides a cheaper way to store data that’s needed only for the duration of a single transaction, making it ideal for reentrancy guards and similar temporary logic. However, ReentrancyGuardTransient can be used only on chains where EIP-1153 is available, so make sure your target chain supports this feature before implementing it.
+> 随着 Solidity 0.8.24 中以太坊上瞬态存储的出现，OpenZeppelin 引入了 ReentrancyGuardTransient，这是 ReentrancyGuard 的一种新变体，它利用瞬态存储来显着降低 gas 成本。由 [EIP-1153](https://oreil.ly/fRvKl) 启用的瞬态存储提供了一种更便宜的方式来存储仅在单个交易期间需要的数据，使其成为重入守卫和类似临时逻辑的理想选择。但是，ReentrancyGuardTransient 只能在 EIP-1153 可用的链上使用，因此在实施之前，请确保您的目标链支持此功能。
 
-One more approach is to use Solidity’s built-in `transfer` and `send` functions to send ether. These functions forward only a limited amount of gas (2,300 units), which typically is not enough for the receiving contract to execute a reentrant call, so they are a simple way to guard against reentrancy. However, they come with notable drawbacks. If the recipient is a smart contract with nonmalicious logic in its fallback or receive function, the transfer might fail, potentially locking funds. This risk is becoming more relevant with the introduction of EIP-7702, which allows EOAs to have attached code, including fallback logic. As more EOAs adopt this capability, transactions using `transfer` or `send` are more likely to revert during regular execution of the transactions due to insufficient gas. And from a security perspective, this approach isn’t future proof: if a future hard fork reduces the gas cost of certain operations, 2,300 units might become sufficient to reenter, breaking assumptions that were previously safe. So, while `transfer` and `send` can still be helpful in narrow cases, we need to use them with caution and not rely on them as our primary defense.
+另一种方法是使用 Solidity 的内置 `transfer` 和 `send` 函数来发送以太币。这些函数仅转发有限数量的 gas（2,300 个单位），这通常不足以让接收合约执行重入调用，因此它们是防止重入的一种简单方法。但是，它们存在明显的缺点。如果接收者是一个智能合约，其回退或接收函数中包含非恶意逻辑，则转移可能会失败，从而可能锁定资金。随着 EIP-7702 的引入，这种风险变得越来越重要，EIP-7702 允许 EOA 具有附加的代码，包括回退逻辑。随着越来越多的 EOA 采用此功能，由于 gas 不足，使用 `transfer` 或 `send` 的交易更有可能在交易的常规执行期间恢复。从安全的角度来看，这种方法不是面向未来的：如果未来的硬分叉降低了某些操作的 gas 成本，则 2,300 个单位可能足以重新进入，从而打破了以前安全的假设。因此，虽然 `transfer` 和 `send` 在狭窄的情况下仍然有用，但我们需要谨慎使用它们，并且不要将它们作为我们的主要防御手段。
 
-Read-only and cross-contract reentrancy deserve special attention: these exploits can be tricky because they might involve two separate protocols, making coordinated prevention a challenge. When our project relies on external protocols for data, we need to dig into how the combined logic works. Even if each project is secure on its own, vulnerabilities can pop up during integration.
+只读重入和跨合约重入值得特别关注：这些利用可能很棘手，因为它们可能涉及两个单独的协议，使得协调预防成为一项挑战。当我们的项目依赖于外部协议获取数据时，我们需要深入研究组合逻辑的工作方式。即使每个项目本身都是安全的，漏洞也可能在集成过程中出现。
 
-#### Real-world example: The DAO attack
+#### 现实世界的例子：The DAO 攻击
 
-Reentrancy played a major role in the DAO attack that occurred in 2016 and was one of the major hacks during the early development of Ethereum. At the time, the contract held more than $150 million, 15% of the circulating supply of ether. To revert the effects of the hack, the Ethereum community ultimately opted for a hard fork that split the Ethereum blockchain. As a result, Ethereum Classic (ETC) continued as the original chain, while the forked version with updated rules to reverse the hack became the Ethereum we know today.
+重入在 2016 年发生的 DAO 攻击中发挥了重要作用，并且是以太坊早期开发过程中的主要黑客攻击之一。当时，该合约持有超过 1.5 亿美元，占以太币流通供应量的 15%。为了恢复黑客攻击的影响，以太坊社区最终选择了一个硬分叉，分裂了以太坊区块链。结果，以太坊经典 (ETC) 作为原始链继续存在，而使用更新的规则来扭转黑客攻击的分叉版本成为我们今天所知的以太坊。
 
-#### Real-world example: Libertify
+#### 现实世界的例子：Libertify
 
-A recent exploit where reentrancy was the sole attack vector is the July 2023 case involving Libertify, a DeFi protocol that was breached for $400,000. Let’s check the code of the exploited function and see how it happened:
+最近一个重入是唯一的攻击向量的漏洞利用是 2023 年 7 月发生的 Libertify 事件，这是一个被盗取了 40 万美元的 DeFi 协议。让我们检查一下被利用的函数的代码，看看它是如何发生的：
 
 ```solidity
 function _deposit(
@@ -206,7 +207,7 @@ function _deposit(
     uint256 swapAmount = 0;
     if (BASIS_POINT_MAX > invariant) {
         swapAmount = assetsToToken1(assets);
-        returnAmount = userSwap( // External call
+        returnAmount = userSwap( // 外部调用
             data,
             address(this),
             swapAmount,
@@ -214,7 +215,7 @@ function _deposit(
             address(other)
         );
     }
-    uint256 supply = totalSupply(); // State update
+    uint256 supply = totalSupply(); // 状态更新
     if (0 < supply) {
         uint256 valueToken0 = getValueInNumeraire(
             asset,
@@ -242,26 +243,26 @@ function _deposit(
 }
 ```
 
-This is a classic example of a reentrancy issue—you don’t see one this straightforward very often these days! The core problem here was the lack of reentrancy protection. The `userSwap()` function allowed the attacker to reenter the `deposit()` function before the original call updated `totalSupply`. This meant the attacker could mint more shares than they were actually owed, exploiting the contract for a profit.
+这是一个重入问题的经典例子——现在你很少看到这么直接的例子了！这里的核心问题是缺乏重入保护。`userSwap()` 函数允许攻击者在原始调用更新 `totalSupply` 之前重新进入 `deposit()` 函数。这意味着攻击者可以比实际应得的铸造更多的份额，从而利用合约获利。
 
 ### DELEGATECALL
 
-The `CALL` and `DELEGATECALL` opcodes are useful for allowing Ethereum developers to modularize their code. Standard external message calls to contracts are handled by the `CALL` opcode, which executes the code in the context of the *called* contract. In contrast, `DELEGATECALL` runs the code from another contract, but in the context of the *calling* contract. That means the storage, `msg.sender`, and `msg.value` all remain unchanged. A helpful way to think about `DELEGATECALL` is that the calling contract is temporarily borrowing the bytecode of the called contract and executing it as if it were its own. This enables powerful patterns like proxy contracts and libraries, where you deploy reusable logic once and reuse it across many contracts. Although the differences between these two opcodes are simple and intuitive, the use of `DELEGATECALL` can lead to subtle and unexpected behavior, especially when it comes to storage layout. For further reading, see Loi.Luu’s [Ethereum Stack Exchange question on this topic](https://oreil.ly/GJOUl) and the [Solidity docs](https://oreil.ly/gA7vg).
+`CALL` 和 `DELEGATECALL` 操作码对于允许以太坊开发者模块化他们的代码非常有用。对合约的标准外部消息调用由 `CALL` 操作码处理，该操作码在*被调用*合约的上下文中执行代码。相比之下，`DELEGATECALL` 运行来自另一个合约的代码，但在*调用*合约的上下文中运行。这意味着存储、`msg.sender` 和 `msg.value` 都保持不变。一个有用的思考 `DELEGATECALL` 的方式是，调用合约暂时借用被调用合约的字节码，并像执行自己的字节码一样执行它。这实现了强大的模式，如代理合约和库，您可以部署一次可重用逻辑，并在多个合约中重用它。尽管这两个操作码之间的差异简单直观，但 `DELEGATECALL` 的使用可能会导致微妙和意想不到的行为，尤其是在存储布局方面。有关更多阅读，请参阅 Loi.Luu 在 [Ethereum Stack Exchange 上关于此主题的问题](https://oreil.ly/GJOUl) 和 [Solidity 文档](https://oreil.ly/gA7vg)。
 
-#### The vulnerability
+#### 漏洞
 
-As a result of the context-preserving nature of `DELEGATECALL`, building vulnerability-free custom libraries is not as easy as you might think. The code in libraries themselves can be secure and vulnerability free; however, when it is run in the context of another application, new vulnerabilities can arise. Let’s see a fairly complex example of this, using Fibonacci numbers. Consider the library in Example 9-3, which can generate the Fibonacci sequence and sequences of similar form. (Note: this code was modified from [*https://oreil.ly/EHjOb**https://oreil.ly/EHjOb*](https://oreil.ly/EHjOb).)
+由于 `DELEGATECALL` 的上下文保存性质，构建无漏洞的自定义库并不像您想象的那么容易。库中的代码本身可以是安全且无漏洞的；但是，当它在其他应用程序的上下文中运行时，可能会出现新的漏洞。让我们看一个相当复杂的例子，使用斐波那契数列。考虑示例 9-3 中的库，它可以生成斐波那契数列和类似形式的数列。（注意：此代码已从 [*https://oreil.ly/EHjOb**https://oreil.ly/EHjOb*](https://oreil.ly/EHjOb) 修改。）
 
-**Example 9-3. FibonacciLib: a faulty implementation of a custom library**
+**示例 9-3. FibonacciLib：自定义库的错误实现**
 
 ```solidity
-1 // library contract - calculates Fibonacci-like numbers
+1 // 库合约 - 计算类似于斐波那契数列的数字
 2 contract FibonacciLib {
-3     // initializing the standard Fibonacci sequence
+3     // 初始化标准斐波那契数列
 4     uint256 public start;
 5     uint256 public calculatedFibNumber;
 6
-7     // modify the zeroth number in the sequence
+7     // 修改序列中的第零个数字
 8     function setStart(uint256 _start) public {
 9         start = _start;
 10     }
@@ -278,35 +279,35 @@ As a result of the context-preserving nature of `DELEGATECALL`, building vulnera
 21 }
 ```
 
-This library provides a function that can generate the *n*th Fibonacci number in the sequence. It allows users to change the starting number of the sequence (`start`) and calculate the *n*th Fibonacci-like numbers in this new sequence.
+此库提供了一个函数，可以生成序列中的第 *n* 个斐波那契数。它允许用户更改序列的起始编号 (`start`) 并计算此新序列中的第 *n* 个斐波那契数。
 
-Let us now consider a contract that utilizes this library:
+现在让我们考虑一个使用此库的合约：
 
 ```solidity
 contract FibonacciBalance {
     address public fibonacciLibrary;
-    // the current Fibonacci number to withdraw
+    // 要提取的当前斐波那契数
     uint256 public calculatedFibNumber;
-    // the starting Fibonacci sequence number
+    // 起始斐波那契数列数
     uint256 public start = 3;
     uint256 public withdrawalCounter;
-    // the Fibonacci function selector
+    // 斐波那契函数选择器
     bytes4 constant fibSig = bytes4(keccak256("setFibonacci(uint256)"));
-    // constructor - loads the contract with ether
+    // 构造函数 - 用以太币加载合约
     constructor(address _fibonacciLibrary) payable {
         fibonacciLibrary = _fibonacciLibrary;
     }
     function withdraw() public {
         withdrawalCounter += 1;
-        // calculate the Fibonacci number for the current withdrawal user-
-        // this sets calculatedFibNumber
+        // 计算当前提款user-的斐波那契数
+        // 这将设置 calculatedFibNumber
         (bool success, ) = fibonacciLibrary.delegatecall(
             abi.encodeWithSelector(fibSig, withdrawalCounter)
         );
         require(success, "Delegatecall failed");
         payable(msg.sender).transfer(calculatedFibNumber * 1 ether);
     }
-    // allow users to call Fibonacci library functions
+    // 允许用户调用斐波那契库函数
     fallback() external {
         (bool success, ) = fibonacciLibrary.delegatecall(msg.data);
         require(success, "Delegatecall failed");
@@ -314,144 +315,66 @@ contract FibonacciBalance {
 }
 ```
 
-This contract allows a participant to withdraw ether from the contract, with the amount of ether being equal to the Fibonacci number corresponding to the participant’s withdrawal order—that is, the first participant gets 1 ether, the second also gets 1, the third gets 2, the fourth gets 3, the fifth 5, and so on (until the balance of the contract is less than the Fibonacci number being withdrawn).
+此合约允许参与者从合约中提取以太币，以太币数量等于与参与者的提取顺序相对应的斐波那契数，即，第一个参与者获得 1 个以太币，第二个参与者也获得 1 个以太币，第三个参与者获得 2 个以太币，第四个参与者获得 3 个以太币，第五个获得 5 个，依此类推（直到合约的余额小于提取的斐波那契数）。
 
-There are a number of elements in this contract that may require some explanation. First, there is an interesting-looking variable: `fibSig`. This holds the first 4 bytes of the Keccak-256 hash of the string `"setFibonacci(uint256)"`. This is known as the [*function selector**function selector*](https://oreil.ly/u9uaH) and is put into calldata to specify which function of a smart contract will be called. It is used in the `delegatecall` function on line 21 to specify that we wish to run the `fibonacci(uint256)` function. The second argument in `delegatecall` is the parameter we are passing to the function. Second, we assume that the address for the FibonacciLib library is correctly referenced in the constructor.
+此合约中有许多元素可能需要一些解释。首先，有一个看起来很有趣的变量：`fibSig`。这保存着字符串 `"setFibonacci(uint256)"` 的 Keccak-256 哈希的前 4 个字节。这被称为[*函数选择器**函数选择器*](https://oreil.ly/u9uaH)，并放入 calldata 中以指定将调用智能合约的哪个函数。它在第 21 行的 `delegatecall` 函数中使用，以指定我们希望运行 `fibonacci(uint256)` 函数。`delegatecall` 中的第二个参数是我们传递给函数的参数。其次，我们假设 FibonacciLib 库的地址在构造函数中被正确引用。
 
-Can you spot any errors in this contract? If you were to deploy this contract, fill it with ether, and call `withdraw`, it would likely revert.
+您能发现此合约中的任何错误吗？如果您要部署此合约，用以太币填充它并调用 `withdraw`，它可能会恢复。
 
-You may have noticed that the state variable `start` is used in both the library and the main calling contract. In the library contract, `start` is used to specify the beginning of the Fibonacci sequence and is set to `0`, whereas it is set to `3` in the calling contract. You may also have noticed that the fallback function in the `FibonacciBalance` contract allows all calls to be passed to the library contract, which allows for the `setStart` function of the library contract to be called. Recalling that we preserve the state of the contract, it may seem that this function would allow you to change the state of the `start` variable in the local `FibonacciBalance` contract. If so, this would allow you to withdraw more ether since the resulting `calculatedFibNumber` is dependent on the `start` variable (as seen in the library contract). In actual fact, the `setStart` function does not (and cannot) modify the `start` variable in the `FibonacciBalance` contract. The underlying vulnerability in this contract is significantly worse than just modifying the `start` variable.
+您可能已经注意到，状态变量 `start` 在库和主调用合约中都使用。在库合约中，`start` 用于指定斐波那契数列的开头，并设置为 `0`，而在调用合约中，它设置为 `3`。您可能还注意到，`FibonacciBalance` 合约中的回退函数允许将所有调用传递到库合约，这允许调用库合约的 `setStart` 函数。回想一下，我们保留合约的状态，因此似乎此函数允许您更改本地 `FibonacciBalance` 合约中 `start` 变量的状态。如果是这样，这将允许您提取更多的以太币，因为生成的 `calculatedFibNumber` 依赖于 `start` 变量（如库合约中所见）。实际上，`setStart` 函数不会（也不能）修改 `FibonacciBalance` 合约中的 `start` 变量。此合约中的潜在漏洞远比仅修改 `start` 变量更严重。
 
-Before discussing the actual issue, let’s take a quick detour to understand how state variables actually get stored in contracts. *State* or *storage variables* (variables that persist over individual transactions) are placed into *slots* sequentially as they are introduced in the contract. (There are some complexities here; consult the [Solidity docs](https://oreil.ly/LzV7L) for a more thorough understanding.)
+在讨论实际问题之前，让我们快速绕道了解状态变量实际上是如何存储在合约中的。*状态*或*存储变量*（在单个交易中持续存在的变量）在合约中引入时按顺序放置到*插槽*中。（这里有一些复杂性；请参阅 [Solidity 文档](https://oreil.ly/LzV7L) 以获得更彻底的理解。）
 
-As an example, let’s look at the library contract. It has two state variables: `start` and `calculatedFibNumber`. The first variable, `start`, is stored in the contract’s storage at `slot[0]` (i.e., the first slot). The second variable, `calculatedFibNumber`, is placed in the next available storage slot, `slot[1]`. The function `setStart` takes an input and sets `start` to whatever the input was. This function therefore sets `slot[0]` to whatever input we provide in the `setStart` function. Similarly, the `setFibonacci` function sets `calculatedFibNumber` to the result of `fibonacci(n)`. Again, this is simply setting storage `slot[1]` to the value of `fibonacci(n)`.
+例如，让我们看一下库合约。它有两个状态变量：`start` 和 `calculatedFibNumber`。第一个变量 `start` 存储在合约的存储中的 `slot[0]`（即，第一个插槽）。第二个变量 `calculatedFibNumber` 放置在下一个可用的存储插槽 `slot[1]` 中。函数 `setStart` 接受一个输入并将 `start` 设置为输入的内容。因此，此函数将 `slot[0]` 设置为我们在 `setStart` 函数中提供的任何输入。类似地，`setFibonacci` 函数将 `calculatedFibNumber` 设置为 `fibonacci(n)` 的结果。同样，这只是将存储 `slot[1]` 设置为 `fibonacci(n)` 的值。
 
-Now, let’s look at the `FibonacciBalance` contract. Storage `slot[0]` now corresponds to the `fibonacciLibrary` address, and `slot[1]` corresponds to `calculatedFibNumber`. It is in this incorrect mapping that the vulnerability occurs: `delegatecall` *preserves contract context*. This means that code that is executed via `delegatecall` will act on the state (i.e., storage) of the calling contract.
+现在，让我们看一下 `FibonacciBalance` 合约。存储 `slot[0]` 现在对应于 `fibonacciLibrary` 地址，而 `slot[1]` 对应于 `calculatedFibNumber`。正是在这种不正确的映射中发生了漏洞：`delegatecall` *保留合约上下文*。这意味着通过 `delegatecall` 执行的代码将作用于调用合约的状态（即，存储）。
 
-Now notice that in `withdraw` on line 21 we execute `fibonacciLibrary.delegatecall(fibSig,withdrawalCounter)`. This calls the `setFibonacci` function, which, as we discussed, modifies storage `slot[1]`, which in our current context is `calculatedFibNumber`. This is as expected (i.e., after execution, `calculatedFibNumber` is modified). However, recall that the `start` variable in the `FibonacciLib` contract is located in storage `slot[0]`, which is the `fibonacciLibrary` address in the current contract. This means that the function `fibonacci` will give an unexpected result. This is because it references `start` (`slot[0]`), which in the current calling context is the `fibonacciLibrary` address (which will often be quite large, when interpreted as a `uint`). Thus, it is likely that the `withdraw` function will revert since it will not contain `uint(fibonacciLibrary)` amount of ether, which is what `calculatedFibNumber` will return.
+现在请注意，在第 21 行的 `withdraw` 中，我们执行 `fibonacciLibrary.delegatecall(fibSig,withdrawalCounter)`。这将调用 `setFibonacci` 函数，如我们所讨论的，该函数修改存储 `slot[1]`，在当前上下文中是 `calculatedFibNumber`。这正如预期的那样（即，执行后，`calculatedFibNumber` 被修改）。但是，回想一下 `FibonacciLib` 合约中的 `start` 变量位于存储 `slot[0]` 中，在当前合约中是 `fibonacciLibrary` 地址。这意味着函数 `fibonacci` 将给出意想不到的结果。这是因为它引用了 `start` (`slot[0]`)，在当前的调用上下文中是 `fibonacciLibrary` 地址（当被解释为 `uint` 时，这通常会非常大）。因此，`withdraw` 函数很可能会恢复，因为它将不包含 `uint(fibonacciLibrary)` 个以太币，这将是 `calculatedFibNumber` 返回的值。
 
-Even worse, the `FibonacciBalance` contract allows users to call all of the `fibonacciLibrary` functions via the fallback function at line 27. As we discussed earlier, this includes the `setStart` function. We discussed that this function allows anyone to modify or set storage `slot[0]`. In this case, storage `slot[0]` is the `fibonacciLibrary` address. Therefore, an attacker could create a malicious contract, convert the address to a `uint256` (this can be done in Python easily using `int('<address>',16)`), and then call `setStart(<attack_contract_address_as_uint>)`. This will change `fibonacciLibrary` to the address of the attack contract. Then, whenever a user calls `withdraw` or the fallback function, the malicious contract will run (which can steal the entire balance of the contract) because we’ve modified the actual address for `fibonacciLibrary`. An example of such an attack contract would be:
+更糟糕的是，`FibonacciBalance` 合约允许用户通过第 27 行的回退函数调用所有 `fibonacciLibrary` 函数。正如我们前面所讨论的，这包括 `setStart` 函数。我们讨论了此函数允许任何人修改或设置存储 `slot[0]`。在这种情况下，存储 `slot[0]` 是 `fibonacciLibrary` 地址。因此，攻击者可以创建一个恶意合约，将地址转换为 `uint256`（这可以在 Python 中使用 `int('<address>',16)` 轻松完成），然后调用 `setStart(<attack_contract_address_as_uint>)`。这将更改 `fibonacciLibrary` 为攻击合约的地址。然后，每当用户调用 `withdraw` 或回退函数时，恶意合约将运行（可以窃取合约的全部余额），因为我们已经修改了 `fibonacciLibrary` 的实际地址。此类攻击合约的示例是：
 
 ```solidity
 contract Attack {
     uint256 private storageSlot0; // corresponds to fibonacciLibrary
-    uint256 private storageSlot1; // corresponds to calculatedFibNumber
-    // fallback - this will run if a specified function is not found
-    fallback() external {
-        storageSlot1 = 0; // we set calculatedFibNumber to 0, so if withdraw
-        // is called we don’t send out any ether
-        payable(<attacker_address>).transfer(this.balance); // we take all the ether
-    }
-}
-```
+   请注意，`Wallet`合约实际上是通过委托调用将所有调用传递给`WalletLibrary`合约。此代码片段中的常量`_walletLibrary`地址充当实际部署的`WalletLibrary`合约的占位符（地址为`0x863DF6BFa4469f3ead0bE8f9F2AAE51c91A907b4`）。
 
-Notice that this attack contract modifies the `calculatedFibNumber` by changing storage `slot[1]`. In principle, an attacker could modify any other storage slots they choose to perform all kinds of attacks on this contract. We encourage you to put these contracts into [Remix](https://remix.ethereum.org) and experiment with different attack contracts and state changes through these `delegatecall` functions.
+这些合约的预期操作是拥有一个简单的、低成本的、可部署的`Wallet`合约，其代码库和主要功能都在`WalletLibrary`合约中。不幸的是，`WalletLibrary`合约本身也是一个合约，并维护自己的状态。你能看出这可能存在什么问题吗？
 
-It is also important to notice that when we say that `delegatecall` is state preserving, we are not talking about the variable names of the contract but rather the actual storage slots to which those names point. As you can see from this example, a simple mistake can lead to an attacker hijacking the entire contract and its ether.
+可以将调用发送到`WalletLibrary`合约本身。具体来说，`WalletLibrary`合约可以被初始化并被拥有。事实上，一个用户这样做了，调用了`WalletLibrary`合约上的`initWallet`函数，并成为该库合约的所有者。该用户随后调用了`kill`函数。因为该用户是该库合约的所有者，所以修饰器通过了，并且该库合约自毁了。由于所有现有的`Wallet`合约都引用这个库合约，并且没有方法来改变这个引用，所以它们的所有功能，包括提取以太币的能力，都随着`WalletLibrary`合约的消失而丧失。结果，所有此类Parity多重签名钱包中的所有以太币立即丢失或永久无法恢复。
 
-#### Preventative techniques
-
-Solidity provides the `library` keyword for implementing library contracts (see the [docs](https://oreil.ly/K7kF1) for further details). This ensures that the library contract is stateless and non-self-destructible. Forcing libraries to be stateless mitigates the complexities of storage context demonstrated in this section. Stateless libraries also prevent attacks wherein attackers modify the state of the library directly in order to affect the contracts that depend on the library’s code. As a general rule of thumb, when you are using `DELEGATECALL`, pay careful attention to the possible calling context of both the library contract and the calling contract and, whenever possible, build stateless libraries.
-
-#### Real-world example: Parity multisig wallet (second hack)
-
-The second Parity multisig wallet hack is an example of how well-written library code can be exploited if it is run outside its intended context. There are a number of good explanations of this hack, such as [“Parity Multisig Hacked. Again”](https://oreil.ly/OLt5Q). To add to these references, let’s explore the contracts that were exploited.
-
-Since the exploit is seven years old, the following code snippets have been updated to reflect the syntax of recent Solidity versions, making them easier to read and understand.
-
-The library contract is as follows:
-
-```solidity
-1 contract WalletLibrary is WalletEvents {
-2
-3   ...
-4
-5   // throw unless the contract is not yet initialized.
-6   modifier only_uninitialized { if (m_numOwners > 0) revert(); _; }
-7
-8   // constructor - just pass on the owner array to multiowned and
-9   // the limit to daylimit
-10   function initWallet(address[] memory _owners, uint256 _required, uint256
-11        _daylimit) public only_uninitialized {
-12     initDaylimit(_daylimit);
-13     initMultiowned(_owners, _required);
-14   }
-15
-16   // kills the contract sending everything to `_to`.
-17   function kill(address _to) onlymanyowners(keccak256(msg.data)) external {
-18     selfdestruct(_to);
-19   }
-20
-21   ...
-22
-23 }
-```
-
-And here’s the wallet contract:
-
-```solidity
-1 contract Wallet is WalletEvents {
-2
-3   ...
-4
-5   // METHODS
-6
-7   // gets called when no other function matches
-8   fallback() external payable {
-9     // just being sent some cash?
-10     if (msg.value > 0)
-11       Deposit(msg.sender, msg.value);
-12     else if (msg.data.length > 0)
-13       _walletLibrary.delegatecall(msg.data);
-14   }
-15
-16   ...
-17
-18   // FIELDS
-19   address constant _walletLibrary =
-20     0xcafecafecafecafecafecafecafecafecafecafe;
-21 }
-```
-
-Notice that the `Wallet` contract essentially passes all calls to the `WalletLibrary` contract via a delegate call. The constant `_walletLibrary` address in this code snippet acts as a placeholder for the actually deployed `WalletLibrary` contract (which was at `0x863DF6BFa4469f3ead0bE8f9F2AAE51c91A907b4`).
-
-The intended operation of these contracts was to have a simple, low-cost, deployable `Wallet` contract whose codebase and main functionality were in the `WalletLibrary` contract. Unfortunately, the `WalletLibrary` contract is itself a contract and maintains its own state. Can you see why this might be an issue?
-
-It is possible to send calls to the `WalletLibrary` contract itself. Specifically, the `WalletLibrary` contract could be initialized and become owned. In fact, a user did this, calling the `initWallet` function on the `WalletLibrary` contract and becoming an owner of the library contract. The same user subsequently called the `kill` function. Because the user was an owner of the library contract, the modifier passed, and the library contract self-destructed. As all `Wallet` contracts in existence refer to this library contract and contain no method to change this reference, all of their functionality, including the ability to withdraw ether, was lost along with the `WalletLibrary` contract. As a result, all ether in all Parity multisig wallets of this type instantly became lost or permanently unrecoverable.
-
-> **Note**
+> **注意**
 >
-> The exploiter later [appeared on GitHub](https://oreil.ly/VVgnm), leaving the memorable comment, “I accidentally killed it.” He claimed to be a newcomer to Ethereum who had been experimenting with smart contracts.
+> 利用者后来[出现在GitHub上](https://oreil.ly/VVgnm)，留下了令人难忘的评论：“我不小心杀死了它。” 他声称自己是以太坊的新手，一直在试验智能合约。
 
-### Entropy Illusion
+### 熵的错觉
 
-All transactions on the Ethereum blockchain are *deterministic state transition* operations. This means that every transaction modifies the global state of the Ethereum ecosystem in a calculable way, with no uncertainty. This has the fundamental implication that there is no source of entropy or randomness in Ethereum. In the early days, finding a decentralized way to create randomness was a big challenge. But over the years, we’ve developed some solid solutions to solve this problem.
+以太坊区块链上的所有交易都是*确定性的状态转换*操作。这意味着每笔交易都以可计算的方式修改以太坊生态系统的全局状态，没有任何不确定性。这从根本上意味着以太坊中没有熵或随机性的来源。早期，找到一种去中心化的方法来创建随机性是一个很大的挑战。但多年来，我们已经开发出一些可靠的解决方案来解决这个问题。
 
-#### The vulnerability
+#### 漏洞
 
-When developers build smart contracts on Ethereum, they often need a source of randomness, whether for games, lotteries, or other features that require unpredictability. The challenge is that Ethereum, as a blockchain, is inherently deterministic: every node must reach the same result to maintain consensus. So introducing true randomness requires a bit of creativity.
+当开发者在以太坊上构建智能合约时，他们经常需要一个随机性来源，无论是为了游戏、彩票还是其他需要不可预测性的功能。挑战在于，以太坊作为一个区块链，本质上是确定性的：每个节点必须达成相同的结果才能维持共识。因此，引入真正的随机性需要一些创造力。
 
-One approach many developers have resorted to is using block variables (such as block hashes, timestamps, or block numbers) as seeds to generate random numbers. These values may appear random, but they are actually controlled by the validator proposing the current block. For example, imagine a DApp where the outcome of a game is based on whether the next block hash ends in an even number. A validator could manipulate the process: if they are about to propose a block and the hash doesn’t fit their desired outcome, they could, for example, change the transaction order to change the block hash in a favorable way.
+许多开发者采用的一种方法是使用区块变量（例如区块哈希、时间戳或区块号）作为种子来生成随机数。这些值可能看起来是随机的，但实际上是由提议当前区块的验证者控制的。例如，想象一个DApp，其中游戏的结果基于下一个区块哈希是否以偶数结尾。验证者可以操纵这个过程：如果他们即将提议一个区块，并且哈希不符合他们想要的结果，他们可以，例如，更改交易顺序，以一种有利的方式更改区块哈希。
 
-Validator manipulation isn’t the only risk when deriving randomness from block variables. Other smart contracts are aware of the value of these block variables, enabling them to interact with a vulnerable contract only when the outcome is favorable.
+当从区块变量中获取随机性时，验证者操纵并不是唯一的风险。其他智能合约知道这些区块变量的值，使他们能够在结果有利时才与易受攻击的合约交互。
 
-#### Preventative techniques
+#### 预防技术
 
-Compared to the past, Ethereum developers now have reliable methods for generating randomness: `PREVRANDAO` and *verifiable random functions* (VRFs).
+与过去相比，以太坊开发者现在拥有可靠的生成随机数的方法：`PREVRANDAO`和*可验证随机函数*（VRF）。
 
-VRFs are cryptographic proofs ensuring that the randomness generated is fair and unbiased. VRFs are supported by multiple providers, such as Chainlink. The VRF generates a random number along with a proof that verifies its fairness. This proof is verifiable by anyone, ensuring that the randomness is secure. VRFs have become a standard decentralized solution for securely obtaining randomness in smart contracts.
+VRF是加密证明，确保生成的随机数是公平和公正的。VRF由多个提供商支持，例如Chainlink。VRF生成一个随机数以及一个验证其公平性的证明。任何人都可以验证此证明，确保随机性是安全的。VRF已成为在智能合约中安全获取随机性的标准去中心化解决方案。
 
-Another solid option is the `PREVRANDAO` opcode, introduced to Ethereum with the transition to PoS. This opcode is used to obtain the `PREVRANDAO` value, which originates from the Randao process, an integral component of PoS block production. Essentially, Randao is a collective effort by validators to generate randomness by each contributing a piece of data. `PREVRANDAO` is the result of this process from the previous block, and it serves as a reliable source of randomness. It’s trustworthy because manipulating the `PREVRANDAO` value would require compromising a significant number of validators, making such exploitation impractical and economically unfeasible. Developers can use this value in their contracts, but they should keep in mind that `PREVRANDAO` represents the value from the previous block, which is already known. To avoid this value being predictable at the time of commitment, smart contracts should instead commit to the `PREVRANDAO` value of a future block. This way, the value won’t be known when the commitment is made.
+另一个可靠的选择是`PREVRANDAO`操作码，随着向PoS的过渡而引入以太坊。此操作码用于获取`PREVRANDAO`值，该值源自Randao过程，Randao过程是PoS区块生产的组成部分。本质上，Randao是验证者通过每个人贡献一块数据来生成随机性的集体努力。`PREVRANDAO`是来自先前区块的此过程的结果，并且它是可靠的随机性来源。它是值得信赖的，因为操纵`PREVRANDAO`值需要损害大量验证者，使得这种利用在实践中不可行且在经济上不可行。开发者可以在他们的合约中使用此值，但他们应该记住，`PREVRANDAO`代表来自先前区块的值，该值已经是已知的。为了避免此值在提交时是可预测的，智能合约应该改为提交到未来区块的`PREVRANDAO`值。这样，当进行提交时，该值将是未知的。
 
-> **Warning**
+> **警告**
 >
-> Randao can be manipulated if an attacker gains control of the proposers assigned to the final slots in an epoch. To decide if `PREVRANDAO` is a reliable choice for generating randomness in your smart contract, you should carefully weigh the costs and benefits of its manipulation. Although tampering with Randao can be expensive, if your contract involves valuable assets, it’s safer to use a decentralized oracle solution instead.
+> 如果攻击者控制了分配给一个epoch中最后几个slot的提议者，则Randao可能会被操纵。 要确定`PREVRANDAO`是否是智能合约中生成随机数的可靠选择，您应该仔细衡量操纵它的成本和收益。 虽然篡改Randao的成本可能很高，但如果您的合约涉及有价值的资产，则使用去中心化预言机解决方案会更安全。
 
-With solutions like `PREVRANDAO` and VRFs widely documented and accessible, it’s uncommon nowadays to see developers using insecure block variables as a randomness source. However, mistakes still occur when shortcuts are taken or when developers are unaware of these tools.
+由于`PREVRANDAO`和VRF等解决方案已被广泛记录和访问，如今很少见到开发者使用不安全的区块变量作为随机性来源。但是，当采取捷径或当开发者不了解这些工具时，仍然会发生错误。
 
-#### Real-world example: Fomo3D
+#### 现实案例：Fomo3D
 
-Fomo3D was an Ethereum lottery game where players bought “keys” to extend a timer, competing to be the last buyer when the timer hit zero to win the prize pool. It included an airdrop feature with poor randomness, as shown in the following code:
+Fomo3D是一个以太坊彩票游戏，玩家购买“钥匙”来延长计时器，竞争成为计时器归零时的最后一位买家以赢得奖金池。它包括一个随机性很差的空投功能，如下面的代码所示：
 
 ```solidity
 function airdrop()
@@ -478,17 +401,17 @@ function airdrop()
     }
 ```
 
-A malicious contract would know in advance the values used to compute the seed, allowing it to trigger the `airdrop` function only when it would result in a win. It’s no surprise the contract was exploited.
+恶意合约会提前知道用于计算种子的值，从而只会在导致获胜时才触发`airdrop`函数。 毫不奇怪，该合约遭到了利用。
 
-### Unchecked CALL Return Values
+### 未检查的CALL返回值
 
-There are a number of ways to perform external calls in Solidity. Sending ether to external accounts is commonly performed via the `transfer` method. However, the `send` function can also be used, and for more versatile external calls, the `CALL` opcode can be directly employed in Solidity. The `call` and `send` functions return a Boolean indicating whether the call succeeded or failed. Thus, these functions have a simple caveat, in that the transaction that executes these functions will not revert if the external call (initialized by `call` or `send`) fails; rather, the functions will simply return `false`. A common error is that the developer expects a revert to occur if the external call fails and does not check the return value.
+在Solidity中有多种执行外部调用的方法。将以太币发送到外部帐户通常通过`transfer`方法执行。但是，也可以使用`send`函数，对于更通用的外部调用，可以直接在Solidity中使用`CALL`操作码。`call`和`send`函数返回一个布尔值，指示调用是成功还是失败。因此，这些函数有一个简单的警告，即如果外部调用（由`call`或`send`初始化）失败，则执行这些函数的交易不会回滚；相反，这些函数只会返回`false`。一个常见的错误是开发者期望如果外部调用失败会发生回滚，但不检查返回值。
 
-#### The vulnerability
+#### 漏洞
 
-Consider the contract in Example 9-4.
+考虑示例9-4中的合约。
 
-**Example 9-4. Vulnerable Lotto contract**
+**示例9-4。易受攻击的Lotto合约**
 
 ```solidity
 1 contract Lotto {
@@ -497,7 +420,7 @@ Consider the contract in Example 9-4.
 4     address public winner;
 5     uint256 public winAmount;
 6
-7     // ... extra functionality here
+7     // ... 这里有额外的功能
 8
 9     function sendToWinner() public {
 10         require(!payedOut);
@@ -512,21 +435,21 @@ Consider the contract in Example 9-4.
 19 }
 ```
 
-This represents a Lotto-like contract, where a `winner` receives `winAmount` of ether, which typically leaves a little left over for anyone to withdraw. The vulnerability exists on line 11, where a `send` is used without checking the response. In this trivial example, a `winner` whose transaction fails (either by running out of gas or by being a contract that intentionally throws in the fallback function) allows `payedOut` to be set to `true` regardless of whether ether was sent or not. In this case, anyone can withdraw the `winner`’s winnings via the `withdrawLeftOver` function.
+这代表一个类似Lotto的合约，其中`winner`收到`winAmount`的以太币，这通常会留下一点剩余给任何人提取。漏洞存在于第11行，其中使用`send`而没有检查响应。在这个简单的例子中，一个`winner`的交易失败（要么因为耗尽gas，要么因为是一个故意在回退函数中抛出的合约）允许`payedOut`设置为`true`，而不管是否发送了以太币。在这种情况下，任何人都可以通过`withdrawLeftOver`函数提取`winner`的奖金。
 
-#### Preventative techniques
+#### 预防技术
 
-The first line of defense is always to check the return value of the `send` function and low-level calls, with no exceptions. Nowadays, any static analysis tool will flag this issue, making it hard to overlook.
+第一道防线始终是检查`send`函数和底层调用的返回值，没有例外。如今，任何静态分析工具都会标记此问题，使其难以忽略。
 
-When sending ether, we need to carefully consider which method to use. If we want the transaction to automatically revert on failure, `transfer` might seem appealing because it handles failure by default. But since both `send` and `transfer` forward only 2,300 gas units, they can easily fail when the recipient (whether a contract or, now with EIP-7702, even an EOA) has any fallback logic. Given this evolving context, the safer and more flexible approach is to use `call` instead, explicitly check its return value, and manage errors accordingly. That gives us full control over gas forwarding and keeps our contracts compatible with a wider range of recipients.
+在发送以太币时，我们需要仔细考虑使用哪种方法。如果我们希望交易在失败时自动回滚，那么`transfer`似乎很有吸引力，因为它默认会处理失败。但是，由于`send`和`transfer`仅转发 2,300 个 gas 单位，当收件人（无论是合约还是现在的 EIP-7702，甚至是 EOA）有任何回退逻辑时，它们很容易失败。鉴于这种不断变化的情况，更安全、更灵活的方法是改为使用`call`，显式检查其返回值，并相应地管理错误。这使我们能够完全控制 gas 转发，并使我们的合约与更广泛的收件人兼容。
 
-#### Real-world example: Etherpot and King of the Ether
+#### 现实案例：Etherpot和King of the Ether
 
-[Etherpot](https://oreil.ly/_-iC-) was a smart contract lottery, not too dissimilar to the contract in Example 9-4. The downfall of this contract was primarily due to incorrect use of block hashes (only the last 256 block hashes are usable; see “Predefined Global Variables and Functions”). However, this contract also suffered from an unchecked `call` value.
+[Etherpot](https://oreil.ly/_-iC-)是一个智能合约彩票，与示例9-4中的合约非常相似。 此合约的失败主要是由于不正确地使用block hash（只有最后256个block hash可用；请参阅“预定义的全局变量和函数”）。 但是，此合约也遭受了未检查的`call`值的影响。
 
-Consider the function `cash` in Example 9-5: again, the following code snippet has been updated to reflect the syntax of recent Solidity versions.
+考虑示例9-5中的函数`cash`：同样，以下代码段已更新以反映最新Solidity版本的语法。
 
-**Example 9-5. Lotto.sol: code snippet**
+**示例9-5。Lotto.sol：代码段**
 
 ```solidity
 1 function cash(uint256 roundIndex, uint256 subpotIndex) public {
@@ -538,145 +461,145 @@ Consider the function `cash` in Example 9-5: again, the following code snippet h
 7        return;
 8    if(rounds[roundIndex].isCashed[subpotIndex])
 9        return;
-10    //Subpots can only be cashed once. This is to prevent double payouts
+10    //子奖池只能兑现一次。这是为了防止双重支付
 11    address winner = calculateWinner(roundIndex,subpotIndex);
 12    uint256 subpot = getSubpot(roundIndex);
 13    payable(winner).send(subpot);
 14    rounds[roundIndex].isCashed[subpotIndex] = true;
-15    //Mark the round as cashed
+15    //将回合标记为已兑现
 16 }
 ```
 
-Notice that on line 13, the `send` function’s return value is not checked, and the following line then sets a Boolean indicating that the winner has been sent their funds. This bug can allow a state where the winner does not receive their ether but the state of the contract can indicate that the winner has already been paid.
+请注意，在第13行，未检查`send`函数的返回值，并且下一行然后设置一个布尔值，指示已将资金发送给获胜者。此错误可能允许一种状态，即获胜者没有收到他们的以太币，但合约的状态可以指示已经支付了获胜者。
 
-A more serious version of this bug occurred in the [King of the Ether](https://oreil.ly/4zLMH) contract. An excellent [postmortem](https://oreil.ly/U8ckx) of this contract has been written that details how an unchecked, failed `send` could be used to attack the contract.
+在[King of the Ether](https://oreil.ly/4zLMH)合约中发生了此错误的更严重版本。已经编写了针对此合约的出色的[事后分析](https://oreil.ly/U8ckx)，详细说明了如何使用未经检查的失败的`send`来攻击合约。
 
-#### The ERC-20 case
+#### ERC-20 案例
 
-When dealing with ERC-20 tokens in Solidity, simply checking the return value of token transfers isn’t enough to ensure safe interactions. This is because not all ERC-20 tokens strictly follow the ERC-20 standard, especially older tokens. Some tokens return a Boolean value upon completion of a transfer rather than revert or throw exceptions directly when the operation fails. Others might not return any value at all, leading to ambiguous behavior when interacting with them using the standard methods. Tether (USDT) is a prominent example of a widespread token that does not fully conform to the ERC-20 standard.
+在 Solidity 中处理 ERC-20 代币时，仅检查代币转移的返回值不足以确保安全交互。 这是因为并非所有 ERC-20 代币都严格遵循 ERC-20 标准，尤其是较旧的代币。 有些代币在完成转移后会返回一个布尔值，而不是在操作失败时直接回滚或抛出异常。 其他代币可能根本不返回任何值，导致在使用标准方法与它们交互时出现模糊行为。 Tether (USDT) 是一个没有完全符合 ERC-20 标准的广泛使用的代币的突出例子。
 
-To mitigate this, we use libraries like OpenZeppelin’s SafeERC20. This library wraps standard ERC-20 operations (like `transfer`, `transferFrom`, and `approve`) in a way that gracefully handles these variations. If a token returns `false`, the library ensures that the transaction is reverted, and if a token doesn’t return a value, the library assumes the operation succeeded if no revert occurred.
+为了缓解这个问题，我们使用像 OpenZeppelin 的 SafeERC20 这样的库。 这个库以一种优雅地处理这些变化的方式包装了标准的 ERC-20 操作（如 `transfer`、`transferFrom` 和 `approve`）。 如果一个代币返回 `false`，该库确保交易被回滚，如果一个代币不返回值，该库假定如果没有发生回滚，操作就成功了。
 
-### Race Conditions and Front-Running
+### 竞争条件和抢跑交易
 
-To really grasp this vulnerability, let’s briefly revisit how transactions work in Ethereum. When we send a transaction, it’s broadcast to the network of nodes and placed in the mempool, a kind of waiting room for pending transactions. Validators then pick up these transactions from the mempool to build a block. Transactions within a block are executed sequentially in a specific order, and because each transaction changes the blockchain’s global state, the outcome of a transaction can vary depending on its position in the block. This transaction ordering is important because it can significantly affect the results of transaction execution.
+为了真正理解此漏洞，让我们简要回顾一下交易在以太坊中如何运作。 当我们发送交易时，它会被广播到节点网络并放置在 mempool 中，这是一种待处理交易的等待室。 然后，验证者从 mempool 中提取这些交易以构建块。 块内的交易按特定顺序依次执行，并且由于每个交易都更改了区块链的全局状态，因此交易的结果可能会因其在块中的位置而异。 此交易排序很重要，因为它会显着影响交易执行的结果。
 
-> **Note**
+> **注意**
 >
-> In practice, controlling a transaction’s position in the block mostly comes down to payment. Originally, you could influence ordering simply by offering a higher gas price. Today, thanks to the Flashbots infrastructure implementing builder-proposer separation (which isn’t yet part of Ethereum natively), users can submit bundles of transactions in a specific order and bid for their inclusion via off-chain relay systems. These processes—both the legacy mempool-based system and the new builder-based one—are covered in more detail in Chapter 6.
+> 实际上，控制交易在区块中的位置主要归结为支付。 最初，您可以通过提供更高的 gas 价格来简单地影响订单管理。 今天，由于实施构建者-提议者分离的 Flashbots 基础设施（这尚未成为以太坊原生的一部分），用户可以按特定顺序提交交易捆绑，并通过链下中继系统竞标将其包含在内。 这些过程——无论是传统的基于 mempool 的系统还是新的基于构建者的系统——都在第 6 章中进行了更详细的介绍。
 
-#### The vulnerability
+#### 漏洞
 
-*Front-running* is the practice of exploiting this sequential execution by inserting other transactions into the block in a way that benefits the front-runner. Essentially, someone watches for pending transactions that could affect the market or a specific contract and then submits their own transaction to get processed before the original. By doing so, they can capitalize on the information from the pending transaction, often to the detriment of the original sender. It’s important that our code accounts for this dynamic and is designed to be resilient against changes in transaction order within a block.
+*抢跑交易*是一种通过将其他交易插入块中，以使抢跑者受益的方式来利用此顺序执行的做法。 本质上，有人会监视可能影响市场或特定合约的待处理交易，然后提交自己的交易以在原始交易之前进行处理。 通过这样做，他们可以利用来自待处理交易的信息来获利，这通常会对原始发送者不利。 重要的是，我们的代码要考虑到这种动态，并设计为能够抵御块内交易顺序的变化。
 
-Let’s see how this could work with a simple example. Consider the contract shown in Example 9-6.
+让我们看一个简单的例子，说明这如何运作。 考虑示例 9-6 中所示的合约。
 
-**Example 9-6. FindThisHash: a contract vulnerable to front-running**
+**示例 9-6。FindThisHash：容易受到抢跑交易攻击的合约**
 
 ```solidity
 contract FindThisHash {
     bytes32 constant public hash =
-      0xb5b5b97fafd9855eec9b41f74dfb6c38f5951141f9a3ecd7f44d5479b630ee0a;
-    constructor() payable {} // load with ether
+      0xb5b5b97fafd9855eec9b41f74dfb6c38f5951141f9a3ecd7f44d​5479b630ee0a;
+    constructor() payable {} // 加载以太币
     function solve(string memory solution) public {
-        // If you can find the pre-image of the hash, receive 1000 ether
+        // 如果您可以找到哈希的预映像，则可以收到 1000 个以太币
         require(hash == keccak256(abi.encodePacked(solution)));
         payable(msg.sender).transfer(1000 ether);
     }
 }
 ```
 
-Say this contract has 1,000 ether. The user who can find the preimage of the SHA-3 hash `0xb5b5b97fafd9855eec9b41f74dfb6c38f5951141f9a3ecd7f44d​5479b630ee0a` can submit the solution and retrieve the 1,000 ether. Let’s say one user figures out that the solution is `Ethereum!`. They call `solve` with `Ethereum!` as the parameter. Unfortunately, an attacker spotted the transaction in the mempool, checked its validity, and then submitted an equivalent transaction with higher priority in the block. The original transaction will revert since the attacker’s transaction will be processed first.
+假设此合约有 1,000 个以太币。 可以找到 SHA-3 哈希 `0xb5b5b97fafd9855eec9b41f74dfb6c38f5951141f9a3ecd7f44d​5479b630ee0a` 的预映像的用户可以提交解决方案并检索 1,000 个以太币。 假设一个用户发现解决方案是 `Ethereum!`。 他们使用 `Ethereum!` 作为参数调用 `solve`。 不幸的是，攻击者在 mempool 中发现了该交易，检查了其有效性，然后提交了具有更高块优先级的等效交易。 原始交易将回滚，因为攻击者的交易将首先被处理。
 
-#### Preventative techniques
+#### 预防技术
 
-Front-running vulnerabilities can appear in various forms, often depending on the specific logic of the smart contract or protocol. Whenever an operation can be exploited by means of transaction ordering, we have a front-running vulnerability. Therefore, the solutions are usually tailored to the specific problem. For instance, automated market maker (AMM) protocols address this issue by allowing users to set a minimum number of tokens they must receive during a swap. While this doesn’t prevent front-running entirely, it severely limits the potential profit an attacker can extract, reducing the damage and protecting users from extreme slippage.
+抢跑漏洞会以各种形式出现，具体取决于智能合约或协议的特定逻辑。 只要可以通过交易排序来利用操作，我们就会遇到抢跑漏洞。 因此，解决方案通常是针对特定问题量身定制的。 例如，自动做市商 (AMM) 协议通过允许用户设置他们在交换期间必须收到的最少代币数量来解决此问题。 虽然这不能完全防止抢跑，但它会严重限制攻击者可以提取的潜在利润，从而减少损害并保护用户免受极端滑点的影响。
 
-Another general technique is the use of a commit-reveal scheme. In this approach, users first submit a transaction containing hidden information, typically represented as a hash (the commit phase). Once this transaction is included into a block, the user follows up with a second transaction that reveals the actual data (the reveal phase). This method effectively prevents front-running because attackers can’t see the details of the initial transaction until it’s too late to act on it. The trade-off, however, is that it requires two separate transactions, which means higher costs and added latency. In addition to the poorer user experience, the required delay between transactions can be a practical limitation in time-sensitive applications.
+另一种通用技术是使用提交-披露方案。 在此方法中，用户首先提交一个包含隐藏信息的交易，通常表示为哈希（提交阶段）。 一旦此交易被包含在块中，用户将继续进行第二次交易，以披露实际数据（披露阶段）。 此方法可有效防止抢跑，因为攻击者无法看到初始交易的详细信息，直到采取行动为时已晚。 但是，权衡是它需要两个单独的交易，这意味着更高的成本和增加的延迟。 除了较差的用户体验外，交易之间所需的延迟可能是在时间敏感型应用中的实际限制。
 
-#### Real-world example: AMM and minAmountOut
+#### 现实案例：AMM 和 minAmountOut
 
-Let’s explore a common real-world front-running vulnerability. It occurs when smart contracts integrating AMM protocols perform swaps that don’t set a minimum number of tokens to receive, making the said swaps susceptible to front-running attacks. If the minimum number of tokens to receive isn’t set properly (or is left too low), the swap transaction becomes vulnerable to sandwich attacks, a specific type of front-running.
+让我们探讨一个常见的现实世界中的抢跑漏洞。 当集成 AMM 协议的智能合约执行未设置要接收的最少代币数量的交换时，就会发生这种情况，从而使所述交换容易受到抢跑攻击。 如果未正确设置要接收的最少代币数量（或将其设置得太低），则交换交易将容易受到三明治攻击的影响，三明治攻击是一种特定类型的抢跑。
 
-Here’s how the sandwich attack unfolds: a front-runner monitors pending transactions in the mempool and spots our swap transaction that doesn’t enforce a minimum amount out. The attacker submits a buy transaction just before our swap to artificially inflate the token price. Our transaction then goes through at this inflated price, resulting in fewer tokens than we might have expected. On top of that, our transaction further inflates the price. Immediately afterward, the attacker sells their tokens at this higher price, bringing the price back down and profiting from the price difference created by our transaction. This strategy “sandwiches” our transaction between their two trades, hence the name *sandwich attack*. To fix the issue, smart contracts integrating AMMs need to fetch the real asset price from a trusted source like an oracle (even time-weight average price based), then compute and enforce a precise minimum amount out when performing a swap.
+以下是三明治攻击的展开方式：抢跑者监视 mempool 中的待处理交易，并发现我们的交换交易没有强制执行最少数量的输出。 攻击者在我们的交换之前提交购买交易，以人为地抬高代币价格。 然后，我们的交易以这个虚高的价格继续进行，导致我们收到的代币比我们预期的要少。 最重要的是，我们的交易进一步抬高了价格。 紧随其后，攻击者以更高的价格出售他们的代币，从而使价格回落并从我们的交易产生的价格差异中获利。 此策略会将我们的交易“夹在”他们的两个交易之间，因此得名 *三明治攻击*。 为了解决此问题，集成 AMM 的智能合约需要从受信任的来源（如预言机，甚至是基于时间的加权平均价格）获取实际资产价格，然后在执行交换时计算并强制执行精确的最低输出量。
 
-### Denial of Service
+### 拒绝服务
 
-This category is very broad but fundamentally consists of attacks where users can render a contract or part of it inoperable for a period of time or, in some cases, permanently. This can trap funds in these contracts forever, as was the case described in “Real-world example: Parity multisig wallet (second hack)”.
+此类别非常广泛，但从根本上讲，它包含攻击者可以在一段时间内或在某些情况下永久地使合约或其一部分无法运行的攻击。 这会永远将资金困在这些合约中，如“实际案例：Parity 多重签名钱包（第二次黑客攻击）”中所述。
 
-#### The vulnerability
+#### 漏洞
 
-There are various ways a contract can become inoperable. Here we highlight just a few less-obvious Solidity coding patterns that can lead to DoS vulnerabilities.
+合约可能以多种方式变得无法运行。 在这里，我们仅重点介绍一些不太明显的 Solidity 编码模式，这些模式可能会导致 DoS 漏洞。
 
-#### Looping through externally manipulated mappings or arrays
+#### 循环遍历外部操纵的映射或数组
 
-This pattern typically appears when an owner wishes to distribute tokens to investors with a `distribute`-like function, as in the contract in Example 9-7.
+当所有者希望使用类似 `distribute` 的函数将代币分配给投资者时，通常会出现这种模式，如示例 9-7 中的合约所示。
 
-**Example 9-7. DistributeTokens contract**
+**示例 9-7。DistributeTokens 合约**
 
 ```solidity
 1 contract DistributeTokens {
-2     address public owner; // gets set somewhere
-3     address[] investors; // array of investors
-4     uint[] investorTokens; // the amount of tokens each investor gets
+2     address public owner; // 在某处设置
+3     address[] investors; // 投资者数组
+4     uint[] investorTokens; // 每个投资者获得的代币数量
 5
-6     // ... extra functionality, including transfertoken()
+6     // ... 额外的功能，包括 transfertoken()
 7
 8     function invest() public payable {
 9         investors.push(msg.sender);
-10         investorTokens.push(msg.value * 5); // 5 times the wei sent
+10         investorTokens.push(msg.value * 5); // 发送的 wei 的 5 倍
 11         }
 12
 13     function distribute() public {
-14         require(msg.sender == owner); // only owner
+14         require(msg.sender == owner); // 只有所有者
 15         for(uint256 i = 0; i < investors.length; i++) {
-16             // here transferToken(to,amount) transfers "amount" of
-17             // tokens to the address "to"
+16             // 在这里 transferToken(to,amount) 转移
+17             // “amount” 的代币到地址 “to”
 18             transferToken(investors[i],investorTokens[i]);
 19         }
 20     }
 21 }
 ```
 
-Notice that the loop in this contract runs over an array that can be artificially inflated. An attacker can create many user accounts, making the `investors` array very large. The risk isn’t just the loop itself but also the cumulative gas cost of the operations inside it, like `transferToken` or any other logic. Each additional iteration adds to the total gas used, and if the array gets large enough, the gas required to complete the loop can exceed the block gas limit. At that point, the `distribute` function effectively becomes unusable.
+请注意，此合约中的循环遍历一个可以被人为膨胀的数组。 攻击者可以创建许多用户帐户，从而使 `investors` 数组非常大。 风险不仅在于循环本身，还在于其中操作的累积 gas 成本，例如 `transferToken` 或任何其他逻辑。 每个额外的迭代都会增加使用的总 gas，如果数组变得足够大，则完成循环所需的 gas 可能超过块 gas 限制。 此时，`distribute` 函数实际上变得无法使用。
 
-> **Note**
+> **注意**
 >
-> This kind of DoS isn’t limited to state-changing functions. Even read-only view functions can become inaccessible if they loop over large arrays. While calling them doesn’t consume gas on chain, RPC endpoints enforce their own arbitrary gas caps on `eth_call` executions. So if a view function runs enough logic to exceed those limits, the RPC call would fail.
+> 这种 DoS 不限于更改状态的函数。 如果只读视图函数循环遍历大型数组，即使它们也可以变得无法访问。 虽然调用它们不会消耗链上的 gas，但 RPC 端点对 `eth_call` 执行强制执行它们自己的任意 gas 上限。 因此，如果视图函数运行足够的逻辑以超过这些限制，则 RPC 调用将失败。
 
-#### Progressing state based on external calls
+#### 基于外部调用推进状态
 
-Contracts are sometimes written such that progressing to a new state requires sending ether to an address or waiting for some input from an external source. These patterns can lead to DoS when the external call fails or is prevented for external reasons. In the example of sending ether, a user can create a contract that does not accept ether. If a contract requires ether to be sent in order to progress to a new state, the contract will never achieve the new state since ether can never be sent to the user’s contract that does not accept ether.
+有时会编写合约，以便推进到新状态需要向地址发送以太币或等待来自外部来源的一些输入。 当外部调用失败或由于外部原因而阻止时，这些模式可能会导致 DoS。 在发送以太币的示例中，用户可以创建一个不接受以太币的合约。 如果合约需要发送以太币才能推进到新状态，则合约将永远无法达到新状态，因为永远无法将以太币发送到不接受以太币的用户合约。
 
-#### Unexpected issues
+#### 意外问题
 
-DoS issues can pop up in unexpected ways, and they don’t always involve malicious attacks. Sometimes, a contract’s functionality can be disrupted just by unforeseen events. For instance, if a smart contract relies on an owner’s private key to call specific privileged functions and that key gets lost or compromised, we’re in trouble. Without that key, those crucial functions become permanently inaccessible, which might stall the entire contract’s operations. Imagine an initial coin offering (ICO) contract where the owner must call a function to finalize the sale. If the key is lost, no one can call it, and tokens will stay locked forever.
+DoS 问题可能会以意想不到的方式出现，并且它们并不总是涉及恶意攻击。 有时，合约的功能可能会因无法预见的事件而中断。 例如，如果智能合约依赖所有者的私钥来调用特定的特权函数，并且该密钥丢失或泄露，我们将遇到麻烦。 如果没有该密钥，这些关键函数将永久无法访问，这可能会阻止整个合约的运行。 想象一个初始代币发行 (ICO) 合约，其中所有者必须调用一个函数才能完成销售。 如果密钥丢失，则没有人可以调用它，并且代币将永远锁定。
 
-Another example of an unexpected disruption comes from ether sent to a contract without its knowledge or intention. Ether can be “forced” into a contract using a method called `selfdestruct` (now deprecated) or even by sending ether before the contract is deployed to its predetermined address. If a contract assumes it controls the accounting of all ether it receives through its own functions, it might not know what to do with these uninvited funds, leading to unintended behavior. It’s like getting money in your bank account you didn’t expect—sometimes it’s nice, but it could also mean your account balance is off, and any system relying on that exact number can start acting up.
+另一个意外中断的例子来自发送到合约的以太币，而合约对此不知情或无意。 可以使用称为 `selfdestruct`（现在已弃用）的方法，甚至通过在将合约部署到其预定地址之前发送以太币来将以太币“强制”到合约中。 如果合约假设它通过自己的函数控制它收到的所有以太币的会计，则它可能不知道如何处理这些不请自来的资金，从而导致意外行为。 这就像在您的银行帐户中收到您不期望的钱一样——有时这很好，但这也可能意味着您的帐户余额不正确，并且任何依赖于该精确数量的系统都可能开始出现问题。
 
-#### Preventative techniques
+#### 预防技术
 
-Since DoS issues appear in different forms, the solutions are also usually situation specific.
+由于 DoS 问题以不同的形式出现，因此解决方案通常也是特定于情况的。
 
-Long lists that risk hitting the block gas limit are a fairly common situation, so we can give some suggestions for dealing with this. In the first example, contracts should not loop through data structures that can be artificially manipulated by external users. A withdrawal pattern is recommended, whereby each of the investors call a `withdraw` function to claim tokens independently (pull-over-push pattern). For functions iterating over long lists, a good solution is to implement a pagination feature.
+存在达到 gas 限制风险的长列表是一个相当常见的情况，因此我们可以为处理这种情况提供一些建议。 在第一个示例中，合约不应循环遍历可以由外部用户人为操纵的数据结构。 建议采用提款模式，即每个投资者都调用 `withdraw` 函数以独立声明代币（pull-over-push 模式）。 对于迭代长列表的函数，一个好的解决方案是实现分页功能。
 
-The generic solution for DoS is to research as much as you can what could go wrong and implement safeguards.
+DoS 的通用解决方案是尽可能多地研究可能出现的问题并实施安全措施。
 
-#### Real-world example: ZKsync Era Gemholic funds lock
+#### 实际案例：ZKsync Era Gemholic 资金锁定
 
-As we just said, the most unexpected errors can lead to a DoS issue in a smart contract. A recent example involves Gemholic, a project that deployed a smart contract on ZKsync Era, an Ethereum L2 solution. Gemholic faced a major problem when it couldn’t access 921 ETH (approximately $1.7 million) raised in a token sale. The root cause? The smart contract relied on the `transfer()` function, which is not supported by ZKsync Era. Although ZKsync Era is compatible with much of the EVM functionality, it isn’t fully EVM equivalent, meaning some features, like `transfer()`, don’t work as they would on the Ethereum mainnet. This incompatibility resulted in Gemholic’s funds being stuck because the smart contract wasn’t able to withdraw the ether as intended. Fortunately, ZKsync’s team was able to step in and develop what they described as an “elegant solution” to unlock the funds, allowing Gemholic to access them again. Unfortunately, the specifics of this “elegant solution” remain undisclosed.
+正如我们刚才所说，最意想不到的错误可能导致智能合约中的 DoS 问题。 最近的一个例子涉及 Gemholic，这是一个在以太坊 L2 解决方案 ZKsync Era 上部署智能合约的项目。 当 Gemholic 无法访问代币销售中筹集的 921 ETH（约 170 万美元）时，它面临一个主要问题。 根本原因？ 智能合约依赖于 `transfer()` 函数，ZKsync Era 不支持该函数。 尽管 ZKsync Era 与 EVM 的大部分功能兼容，但它并非完全等同于 EVM，这意味着某些功能（如 `transfer()`）的运行方式与以太坊主网上不同。 这种不兼容导致 Gemholic 的资金被卡住，因为智能合约无法按预期提取以太币。 幸运的是，ZKsync 的团队能够介入并开发他们所谓的“优雅解决方案”来解锁资金，从而使 Gemholic 能够再次访问它们。 不幸的是，这个“优雅解决方案”的具体细节仍然未公开。
 
-### Floating Point and Precision
+### 浮点数和精度
 
-As of this writing, v0.8.29 of Solidity doesn’t fully support fixed-point and floating-point numbers. This design choice stems from blockchain’s fundamental need for determinism: every node in the network must reach identical results from the same inputs to maintain consensus. Unfortunately, floating-point arithmetic is inherently nondeterministic across different hardware architectures, possibly producing subtly different results from identical calculations.
+截至撰写本文时，Solidity的 v0.8.29 尚未完全支持定点数和浮点数。 这种设计选择源于区块链对确定性的根本需求：网络中的每个节点必须从相同的输入获得相同的结果，以维持共识。 不幸的是，浮点运算在不同的硬件架构中本质上是不确定的，可能会从相同的计算中产生略有不同的结果。
 
-Since blockchain applications require absolute determinism to prevent network forks and maintain security, Solidity forces developers to implement floating-point representations using integer types. While this approach is more cumbersome and prone to errors if not implemented correctly, it ensures that financial calculations and smart contract logic produce identical results across all nodes in the network.
+由于区块链应用程序需要绝对确定性以防止网络分叉并保持安全性，Solidity 强制开发者使用整数类型实现浮点表示。 虽然如果不正确地实现，这种方法会更加繁琐且容易出错，但它可以确保财务计算和智能合约逻辑在网络中的所有节点上产生相同的结果。
 
-#### The vulnerability
+#### 漏洞
 
-Fixed-point numbers are not yet fully supported by Solidity. They can be declared but cannot be assigned to or from, meaning that developers are required to implement their own using the standard integer data types. There are a number of pitfalls developers can run into during this process. We will try to highlight some of these in this section. Let’s begin with a code example (Example 9-8).
+Solidity 尚未完全支持定点数。 它们可以被声明，但不能被赋值或从中赋值，这意味着开发者需要使用标准整数数据类型来实现自己的定点数。 在此过程中，开发者可能会遇到许多陷阱。 我们将尝试在本节中重点介绍其中的一些内容。 让我们从一个代码示例开始（示例 9-8）。
 
-**Example 9-8. FunWithNumbers**
+**示例 9-8。FunWithNumbers**
 
 ```solidity
 1 contract FunWithNumbers {
@@ -685,7 +608,7 @@ Fixed-point numbers are not yet fully supported by Solidity. They can be declare
 4    mapping(address => uint) public balances;
 5
 6    function buyTokens() public payable {
-7        // convert wei to eth, then multiply by token rate
+7        // 将 wei 转换为 eth，然后乘以代币费率
 8        uint256 tokens = msg.value/weiPerEth*tokensPerEth;
 9        balances[msg.sender] += tokens;
 10    }
@@ -699,27 +622,27 @@ Fixed-point numbers are not yet fully supported by Solidity. They can be declare
 18 }
 ```
 
-This simple token-buying and -selling contract has some obvious problems. Although the mathematical calculations for buying and selling tokens are correct, the lack of floating-point numbers will give erroneous results. For example, when buying tokens on line 8, if the value is less than 1 ether, the initial division will result in 0, leaving the result of the final multiplication as `0` (e.g., 200 wei divided by `1e18` `weiPerEth` equals 0). Similarly, when selling tokens, any number of tokens less than 10 will also result in 0 ether. In fact, rounding here is always down, so selling 29 tokens will result in 2 ether (29 tokens / 10 `tokensPerEth` = 2.9, which rounded down resolves to 2).
+这个简单的代币买卖合约存在一些明显的问题。 尽管买卖代币的数学计算是正确的，但缺乏浮点数会给出错误的结果。 例如，在第 8 行购买代币时，如果该值小于 1 个以太币，则初始除法将导致 0，从而使最终乘法的结果为 `0`（例如，200 wei 除以 `1e18` `weiPerEth` 等于 0）。 同样，在出售代币时，任何小于 10 的代币数量也将导致 0 个以太币。 事实上，这里的舍入总是向下舍入，因此出售 29 个代币将导致 2 个以太币（29 个代币 / 10 `tokensPerEth` = 2.9，向下舍入得到 2）。
 
-The issue with this contract is that the precision is only to the nearest ether (i.e., 1e18 wei). This can get tricky when dealing with decimals in [ERC-20](https://oreil.ly/YzzyU) tokens when you need higher precision. In practical cases, the precision losses may seem small, but they can easily be amplified and exploited. Flash loans, for example, allow attackers to borrow large amounts of capital with no up-front cost, making it possible to exploit even minor inconsistencies.
+此合约的问题在于精度仅为最接近的以太币（即 1e18 wei）。 当您需要在 [ERC-20](https://oreil.ly/YzzyU) 代币中使用小数时，这可能会变得棘手，因为您需要更高的精度。 在实际情况下，精度损失可能看起来很小，但它们很容易被放大和利用。 例如，闪电贷允许攻击者以零前期成本借入大量资金，从而可以利用即使是微小的差异。
 
-#### Preventative techniques
+#### 预防技术
 
-Keeping the right precision in your smart contracts is very important, especially when dealing with ratios and rates that reflect economic decisions. You should ensure that any ratios or rates you are using allow for large numerators in fractions. For example, we used the rate `tokensPerEth` in our example. It would have been better to use `weiPerTokens`, which would be a large number. To calculate the corresponding number of tokens, we could do `msg.sender/weiPerTokens`. This would give a more precise result.
+在智能合约中保持正确的精度非常重要，尤其是在处理反映经济决策的比率和费率时。 您应确保您使用的任何比率或费率都允许分母中的大分子。 例如，我们在示例中使用了费率 `tokensPerEth`。 最好使用 `weiPerTokens`，这将是一个很大的数字。 为了计算相应的代币数量，我们可以执行 `msg.sender/weiPerTokens`。 这将给出更精确的结果。
 
-Another tactic is to be mindful of order of operations. In our example, the calculation to purchase tokens was `msg.value/weiPerEth*tokenPerEth`. Notice that the division occurs before the multiplication. Solidity, unlike some languages, guarantees to perform operations in the order in which they are written. This example would have achieved a greater precision if the calculation performed the multiplication first and then the division: `msg.value*tokenPerEth/weiPerEth`.
+另一种策略是注意运算顺序。 在我们的示例中，购买代币的计算是 `msg.value/weiPerEth*tokenPerEth`。 请注意，除法发生在乘法之前。 与某些语言不同，Solidity 保证按照书写顺序执行运算。 如果通过先执行乘法，然后执行除法来执行计算，则此示例将获得更高的精度：`msg.value*tokenPerEth/weiPerEth`。
 
-Finally, when defining arbitrary precision for numbers, it can be a good idea to convert values to higher precision, perform all mathematical operations, and then convert back down to the precision required for output. Typically, `uint256`s are used as they are optimal for gas usage; these give us approximately 60 orders of magnitude in their range, some of which can be dedicated to the precision of mathematical operations. It is better to keep all variables in high precision in Solidity and convert back to lower precision in external apps. This is essentially how the `decimals` variable works in ERC-20 token contracts: when we send 1,000 USDT on MetaMask, we are actually sending 1,000,000,000 units of USDT, which is 1,000 multiplied by USDT’s decimals (1e6).
+最后，当为数字定义任意精度时，最好将值转换为更高的精度，执行所有数学运算，然后转换回输出所需的精度。 通常，使用 `uint256`，因为它们是 gas 使用的最佳选择； 这些在它们的范围内给了我们大约 60 个数量级，其中一些可以专用于数学运算的精度。 最好将 Solidity 中的所有变量保持高精度，并在外部应用程序中转换回较低的精度。 这基本上就是 ERC-20 代币合约中 `decimals` 变量的工作方式：当我们在 MetaMask 上发送 1,000 个 USDT 时，我们实际上发送的是 1,000,000,000 个 USDT 单位，这是 1,000 乘以 USDT 的小数位数 (1e6)。
 
-To see an example of how to handle math operations with increased precision, let’s bring in Wad and Ray mathematics. A *Wad* represents a decimal number with 18 digits of precision, aligning perfectly with the 18 decimals common for ERC-20 tokens like ether. This makes it ideal for representing token balances, ensuring we have enough accuracy during computations. A *Ray*, on the other hand, goes even further with 27 digits of precision, useful for calculations of ratios very close to zero. The first Solidity fixed-point math library, known as DS-Math, provided a structure for working with these high-precision numbers.
+要查看如何使用更高的精度处理数学运算的示例，让我们引入 Wad 和 Ray 数学。 *Wad* 表示一个精度为 18 位的十进制数，与以太币等 ERC-20 代币的 18 个小数位完美对齐。 这使其非常适合表示代币余额，确保我们在计算期间具有足够的准确性。 另一方面，*Ray* 的精度甚至更高，为 27 位，可用于计算非常接近于零的比率。 第一个 Solidity 定点数学库（称为 DS-Math）提供了一种处理这些高精度数字的结构。
 
-The developers at MakerDAO originally created Wad and Ray specifically for their project’s needs. Given ether’s 18-decimal standard—and the fact that most ERC-20 tokens also follow this convention, although there are plenty of exceptions—Wad was perfect for the main financial units, while Ray was reserved for cases where precise fractional adjustments were needed. And while DS-Math pioneered this approach, many more libraries are now available for precise Solidity math operations. Aave’s WadRayMath, Solmate’s FixedPointMathLib, and OpenZeppelin’s Math library are just a few options available today.
+MakerDAO 的开发者最初专门为他们的项目需求创建了 Wad 和 Ray。 鉴于以太币的 18 位小数标准——也由于大多数 ERC-20 代币也遵循这种约定（尽管存在很多例外）——Wad 非常适合主要的金融单位，而 Ray 则保留用于需要精确小数调整的情况。 虽然 DS-Math 开创了这种方法，但现在有更多的库可用于精确的 Solidity 数学运算。 Aave 的 WadRayMath、Solmate 的 FixedPointMathLib 和 OpenZeppelin 的 Math 库只是当今可用的几个选项。
 
-#### Real-world example: ERC-4626 inflation attack
+#### 实际案例：ERC-4626 通货膨胀攻击
 
-We will now see a precision-loss vulnerability commonly exploited in the wild, using a simplified version of OpenZeppelin’s ERC-4626 implementation. ERC-4626 is a tokenized vault standard that lets users deposit assets (like USDT) into a vault and receive shares representing their portion of the vault’s assets. Example 9-9 is a simplified version of the contract we’re working with.
+我们现在将看到一个在野外常见的精度损失漏洞，使用 OpenZeppelin 的 ERC-4626 实现的简化版本。 ERC-4626 是一个代币化的金库标准，允许用户将资产（如 USDT）存入金库并接收代表他们金库资产份额的份额。 示例 9-9 是我们正在使用的合约的简化版本。
 
-**Example 9-9. Simplified version of the original ERC4626 OpenZeppelin implementation**
+**示例 9-9。原始 ERC4626 OpenZeppelin 实现的简化版本**
 
 ```solidity
 1 abstract contract ERC4626 is ERC20, IERC4626 {
@@ -743,116 +666,67 @@ We will now see a precision-loss vulnerability commonly exploited in the wild, u
 19        uint256 shares = _convertToShares(assets, Math.Rounding.Up);
 20        _burn(msg.sender, shares);
 21        SafeERC20.safeTransfer(_asset, receiver, assets);
-22        emit Withdraw(msg.sender, receiver, msg.sender, assets, shares);
-23    }
-24    function _convertToShares(uint256 assets, Math.Rounding rounding) internal view
-      returns (uint256) {
-25        uint256 supply = totalSupply();
-26        return
-27            (assets == 0 || supply == 0)
-28                ? assets
-29                : assets.mulDiv(supply, totalAssets(), rounding); // (assets * supply) /
-                  totalAssets()
-30    }
-31    function _convertToAssets(uint256 shares, Math.Rounding rounding) public view returns
-      (uint256) {
-32        uint256 supply = totalSupply();
-33        return
-34            (supply == 0)
-35                ? shares
-36                : shares.mulDiv(totalAssets(), supply, rounding); // (shares * totalAssets())
-                  / supply
-37    }
-38 }
-```
+22 #### 漏洞
 
-Now, let’s examine how the attack plays out.
+想象一下这个简单的场景：攻击者发现一个借贷协议，该协议依赖于不安全的预言机来定价。通过操纵资产的价格，使其看起来低于实际价格，攻击者可以借入超过他们应有的该资产。然后他们以真实的市場價格出售借入的资产，从而获利。这种漏洞的根源在于依赖于链上价格指标来确定资产价格，而这些指标是可以被操纵的。这种操纵通常通过 *闪电贷* 来放大：即时且无需抵押的贷款，必须在同一交易区块内偿还。
 
-An attacker, keeping a close eye on newly created ERC-4626 vaults, sees one pop up. They waste no time and deposit a tiny amount, just one unit of the vault’s asset, to mint a share for themselves. At this point, the total assets in the vault are just one (because that’s all the attacker deposited), and the total supply of shares is also one (because the attacker minted one share).
+#### 预防措施
 
-Here’s where things get sneaky. The attacker now waits for another user to deposit a significant amount—let’s say 1,000 USDT. But before the legitimate transaction goes through, the attacker jumps in and front-runs the deposit by directly transferring 1,000 USDT to the vault contract. Importantly, the attacker doesn’t use the vault’s `deposit` function; they just call `USDT.transfer()`. This “donation” of 1,000 USDT inflates the vault’s `totalAssets()` to 1000e6 + 1, while the `totalSupply()` of shares remains 1. Keep in mind that 1,000 USDT are actually accounted as 1,000e6, which is 1,000 multiplied by USDT’s decimals (1e6).
+当我们需要确定价格时，最好的选择是使用像 Chainlink、RedStone、Pyth 等去中心化预言机。由于这些预言机是去中心化的，因此它们更难被攻击，因为攻击者需要控制网络中超过 50% 的节点。但它们也有局限性。例如，它们可能不适用于所有资产。在这种情况下，我们可以转向时间加权平均价格（TWAP）预言机。
 
-When the victim’s deposit finally gets processed, the smart contract tries to calculate how many shares to mint for the user. Remember, the formula for calculating shares is:
+TWAP 预言机从链上数据推导出资产价格，并增加了一些安全性。它们通过计算资产在定义的时间范围内的平均价格来运作，例如过去五分钟。通过从计算中排除当前区块，TWAP 预言机有效地防止了闪电贷攻击。然而，TWAP 预言机并非完全免疫于资金充足的攻击者的操纵。这里的关键是调整周期长度：周期越长，攻击者操纵价格所需的资金就越多。但较长的周期也意味着 TWAP 价格可能与实际市场价格有更大的偏差。因此，根据项目的具体需求和风险状况微调 TWAP 非常重要。
 
-(assets × supply) / `totalAssets()`
+无论我们使用哪种预言机，我们都不应该盲目信任它提供的数据。定期将预言机数据与其他来源进行验证是一个好习惯。例如，我们可以编写一个脚本，将预言机价格与其他来源的价格进行比较，并标记任何重大差异。如果发现此类差异，可以暂停协议以防止进一步的问题。
 
-In our case, the victim is depositing 1,000e6 USDT, and the formula becomes:
+#### 原型示例：依赖于 AMM 链上数据
 
-1,000e6 × 1 / (1,000e6 + 1) = 0.999
+通常，易受攻击的预言机模块是协议本身的一部分，正如我们将在本例中看到的那样。当智能合约直接从 Uniswap 等链上 AMM 协议获取资产价格时，就会发生常见的漏洞利用场景。想象一个 Uniswap V2 池，其中有 4,000 USDC 和 1 ETH 的储备。智能合约可能会假设 1 ETH 价值 4,000 USDC。但是，如果推断出的价格用于进一步的状态改变操作，这种假设可能非常危险。在这种情况下，攻击者可以进行闪电贷执行大规模的兑换，改变池的余额，从而改变 ETH 的推断价格。易受攻击的协议依赖于这种被操纵的价格，然后会被攻击者利用。
 
-Because of the rounding-down mechanism, this results in zero shares. The victim gets nothing for their 1,000 USDT deposit.
+幸运的是，这种特定的攻击向量是众所周知的。虽然它不像以前那样频繁地被利用，但它仍然出现在备受瞩目的事件中。例如，在 2025 年 5 月，Mobius Token 被攻击，损失了 210 万美元。尽管直接触发因素是 `mint` 函数中错误的乘以 1018，但该合约还包含一个单独的但同样关键的漏洞：它依赖于链上指标来计算 BNB/USDT 价格，使其容易受到操纵。即使没有数学错误，该合约仍然会在短时间内被利用。你可能想知道这样的代码是如何进入生产环境的，最终保障了如此多的总锁定价值 (TVL)。该团队选择不发布合约的源代码，假设保持隐藏可以提供安全保障——这再次提醒我们，通过模糊性来确保安全性是行不通的，尤其是在风险如此之高的情况下。
 
-Meanwhile the attacker, still holding their one share, can now burn that share and withdraw the total vault balance, which is 2,000 USDT. The attacker walks away with all the funds while the victim is left empty-handed.
-
-> **Note**
+> **注意**
 >
-> OpenZeppelin has since updated its ERC-4626 implementation to prevent this attack by introducing both a virtual offset and a decimal offset. The decimal offset increases the number of decimal places used for vault shares, which helps minimize rounding errors and makes precision-loss attacks less profitable. The virtual offset adds virtual assets and shares to the exchange-rate calculation, limiting the attacker’s ability to manipulate the initial conversion rate and protecting the vault from dead-share creation.
+> 只有当从链上数据推断出的价格应用于状态改变操作时，使用这些价格才是危险的。如果这些价格仅用于信息目的，例如前端用于获取数据的 view 函数中，那么攻击是不可行的。但是，如果外部合约从这样的 view 函数中检索价格，然后将其用于状态改变操作，那么它就容易受到操纵。
 
-### Price Manipulation
+#### 真实案例：Mango Markets
 
-Accurate asset pricing is essential for DeFi protocols to operate smoothly. These systems depend on price oracles to deliver current asset values. Think of an *oracle* as a data feed that supplies real-world information to smart contracts. Price manipulation attacks focus on these oracles—thus, not the smart contract’s code itself but the data that the contracts depend on. This manipulation can significantly change the behavior of DeFi protocols, creating arbitrage opportunities that wouldn’t normally exist. The outcome? An attacker can exploit the system to make substantial profits.
+在 Mango Markets 被攻击事件中，一名交易员利用该平台价格操纵漏洞提取了超过 1.16 亿美元。攻击者通过在两个钱包中使用 1000 万美元，以每股 3.8 美分的价格开设了 4.83 亿 Mango 永续期货 (MNGO-PERPs)。然后，他们在三个不同的交易所购买了价值 400 万美元的 MNGO，使预言机报告的价格上涨了 2,300%。攻击者利用这种被抬高的 perp 头寸作为抵押品，从 Mango Markets 借了 1.16 亿美元，留下了大量的坏账，然后带着资金逃之夭夭。正如价格操纵攻击中常见的情况一样，这并非黑客行为，而是对系统机制的操纵，在不破坏任何底层代码的情况下利用了 Mango 的流动性。
 
-#### The vulnerability
+#### 与攻击者谈判
+攻击者和协议经常在链上直接谈判，以决定攻击者应该归还多少被盗资金，以换取协议同意撤销任何指控。虽然这些交易很常见，但它们在法庭上可能几乎没有法律效力。通常，协议会向攻击者提供约 10% 的赏金，这意味着如果攻击者归还 90% 的被盗资金，协议将同意停止追究他们。尽管这些类型的谈判很常见，但本案中发生的事情尤其引人注目。
+攻击发生后，攻击者向 Mango Markets 的 DAO 提出了一个交易：如果社区同意承担之前为拯救另一个 Solana 项目 Solend 而承担的一些坏账，他们将归还大部分被盗资金。作为回应，Mango 团队提出了第二个提案，该提案将使攻击者归还高达 6700 万美元，同时保留 4700 万美元作为一种漏洞赏金。该协议包括放弃与坏账相关的任何索赔，并承诺在代币归还后不追究刑事指控或冻结攻击者的资金。第一个提案被否决，而第二个提案获得通过。这导致 Mango Markets 在 10 月 15 日发推文称，6700 万美元的资产确实已归还。
+当其中一名攻击者在 Twitter 上透露自己的身份时，事情出现了法律转折，他称这种攻击是一种“利润丰厚的交易策略”，并声称这一切都是在协议的预期设计范围内完成的。但美国当局对此有不同的看法，并以市场操纵罪逮捕了他。Mango Markets 随后提起了民事诉讼，认为该协议是在胁迫下达成的，因此应无效，并寻求 4700 万美元的赔偿。由于 DAO 在法律上是一个相对较新的概念，因此该案件引起了很多关注，并且可能为去中心化组织如何处理法律纠纷树立先例。
+2025 年 5 月，攻击者实际上赢得了他的欺诈案件，这完美地捕捉了加密货币领域疯狂的法律格局：法官裁定，你不能通过没有服务条款的无需许可的协议进行欺诈。但这里有一个关键：当当局在最初的 Mango Markets 调查期间搜查他的设备时，他们发现了 1,200 多张儿童性虐待材料的图片和视频，他现在因此服刑四年多，这证明即使是才华横溢的 DeFi 攻击也无法将你从违反基本人类尊严的行为中拯救出来。
 
-Imagine this simple scenario: an attacker finds a lending protocol that relies on an insecure oracle for its pricing. By manipulating the price of an asset to make it appear lower than it actually is, the attacker can borrow more of that asset than they should be able to. They then sell the borrowed asset at its true market price, making a profit. The root of this vulnerability lies in the reliance on on-chain price metrics, which can be manipulated, to determine asset prices. The manipulation is often amplified using *flash loans*: instant and collateral-free loans that must be repaid within the same transaction block.
+### 不正确的输入验证
 
-#### Preventative techniques
+一个经常被忽视的主要漏洞是不正确的输入验证。当来自用户或外部来源的输入未得到正确验证时，对智能合约的后果可能会有很大差异，从轻微问题到重大资金损失。正确的输入验证有助于防范可能操纵合约行为的恶意行为者以及用户或管理员犯下的真正错误，否则可能导致资金损失。如果我们不采取正确的预防措施，看似无辜的疏忽可能会导致合约执行中的重大问题。
 
-When we need to determine a price, our best bet is to use decentralized oracles like Chainlink, RedStone, Pyth, and many others. Because these oracles are decentralized, that makes them much harder to compromise since an attacker would need to control more than 50% of the nodes in the network. They do have their limitations, though. For instance, they may not be available for every asset. In such cases, we can turn to a time-weighted average price (TWAP) oracle.
+#### 漏洞
 
-TWAP oracles derive asset prices from on-chain data with some added security. They function by calculating the average price of an asset over a defined time frame, such as the past five minutes. By excluding the current block from their calculations, TWAP oracles effectively protect against flash-loan attacks. However, TWAP oracles aren’t completely immune to manipulation by a well-funded attacker. The key here is to adjust the period length: the longer the period, the more capital an attacker would need to manipulate the price. But a longer period also means the TWAP price might diverge more from the actual market price. Therefore, it’s important to fine-tune the TWAP based on the specific needs and risk profile of the project.
+在其核心，不正确的输入验证发生在智能合约在处理数据或参数之前没有彻底检查它们的情况。如果我们不确保某些值满足特定条件，我们就会为真正的用户错误和潜在攻击打开大门。用户可能会意外输入不正确的数据，而攻击者可能会故意向我们的合约提供意外数据。这可能会绕过预期的逻辑并导致意外的状态更改，从而导致我们的合约以不可预测的方式运行。
 
-Regardless of the oracle we use, we shouldn’t blindly trust the data it provides. It’s a good practice to regularly verify the oracle data against other sources. For instance, we could write a script that compares the oracle prices with prices from other sources and flags any significant discrepancies. If such differences are found, the protocol can be paused to prevent further issues.
+当 setter 函数在将地址设置为资金接收者之前未验证该地址是否为零地址时，就会发生此漏洞的一个简单实例。如果我们错误地将零地址设置为接收者，则发送到零地址的资金将被永久锁定，使其无法追回。
 
-#### Prototype example: Reliance on AMM on-chain data
+智能合约开发中一个常见且危险的误解是认为保持源代码私有化将在某种程度上保护它免受漏洞利用。我们之前在本章中讨论过为什么通过模糊性来确保安全性是行不通的，并且此原则也适用于输入验证。开发人员有时会保留不受保护的函数，假设如果代码未发布，它们就不会被发现。但是，攻击者可以并且确实会对合约字节码进行逆向工程，以识别敏感且不受保护的函数。例如，几个封闭源代码的 MEV 机器人已通过不受保护的闪电贷回调被利用，导致数百万美元的损失。隐藏代码并不能隐藏风险。
 
-Often, the vulnerable oracle module is part of the protocol itself, as we will see in this example. A common exploit scenario occurs when a smart contract derives asset prices directly from on-chain AMM protocols like Uniswap. Imagine a Uniswap V2 pool with reserves of 4,000 USDC and 1 ETH. A smart contract might assume that 1 ETH is worth 4,000 USDC. However, this assumption can be very risky if the inferred price is used for further state-changing operations. In such a case, an attacker could take out a flash loan to perform a large swap, altering the pool’s balance and thus changing the inferred price of ETH. The vulnerable protocol, relying on this manipulated price, will then be exploited by the attacker.
+#### 预防措施
 
-Fortunately, this specific attack vector is well known. Although it’s not exploited as frequently as it once was, it still shows up in high-profile incidents. In May 2025, for example, Mobius Token was exploited for $2.1 million. Although the immediate trigger was a faulty multiplication by 1018 in the `mint` function, the contract also contained a separate but equally critical vulnerability: it relied on on-chain metrics to compute the BNB/USDT price, exposing it to manipulation. Even if the math bug had been absent, the contract would still have been exploited in a short time. You might be wondering how code like this made it to production, ending up securing so much total value locked (TVL). The team had chosen not to publish the contract’s source code, assuming that keeping it hidden would provide safety—another reminder that security through obscurity doesn’t work, especially when the stakes are so high.
+那么，我们如何防范不正确的输入验证呢？第一步很简单：永远不要假设我们收到的输入是有效的。无论输入来自 EOA、另一个合约，甚至有时来自同一合约，都应严格检查。我们不仅需要验证输入长度，还需要验证极端情况和边界条件，例如最小值和最大值。我们不应忽视的一个经典极端情况是零值。
 
-> **Note**
->
-> Using prices inferred from on-chain data is risky only when these prices are applied to state-changing operations. If the prices are solely for informational purposes, such as in a view function that frontends use to fetch data, then the attack isn’t feasible. However, if an external contract retrieves the price from such a view function and then uses it for state-changing operations, it is vulnerable to manipulation.
+可重用的验证逻辑是编写安全且可维护的智能合约的关键部分。我们可以使用修饰符或内部函数来实现这些验证块，具体取决于最适合的方法。修饰符对于以一致且声明性的方式将先决条件或后置条件附加到多个函数特别有用。例如，我们可以使用修饰符来确保函数的输入不是零地址，或者在执行敏感操作之前检查调用者是否具有正确的权限。内部函数可以实现相同的目标，有时提供更大的灵活性，尤其是在验证取决于复杂逻辑或需要返回值时。
 
-#### Real-world example: Mango Markets
+#### 访问控制
+说到权限，实施强大的访问控制非常重要：`msg.sender` 是一个参数，应将其视为如此。虽然自定义逻辑是一种选择，但使用像 OpenZeppelin 这样的受信任的库可以帮助我们安全地管理访问，同时最大限度地降低复杂性。
+对于需要一个实体完全控制的简单项目，开发人员可以使用 OpenZeppelin 的 Ownable 合约，该合约指定一个具有密钥函数权限的“所有者”。为了增加安全性，我们建议使用 Ownable2Step。此版本包括一个两步所有权转移过程，有助于防止意外丢失所有权。
+对于更复杂的需求，OpenZeppelin 的 AccessControl 允许我们创建多个角色，每个角色具有不同的权限。基于角色的访问控制允许我们将特定任务分配给不同的用户，使其成为更大项目的理想选择。
+在实施正确的访问控制之前，我们需要验证我们对谁可能调用外部函数和公共函数的所有假设。智能合约在公共和无需信任的环境中运行，因此我们不能假设只有我们预期的实体才会与合约交互。事实上，我们应该始终假设攻击者会尝试调用这些函数来触发意外行为。
 
-In the Mango Markets exploit, a trader took advantage of the platform’s price manipulation vulnerabilities to extract more than $116 million. By using $10 million across two wallets, the attacker opened 483 million Mango perpetual futures (MNGO-PERPs) at a price of 3.8 cents each. They then purchased $4 million worth of MNGO on three separate exchanges, driving the oracle-reported price up by 2,300%. Using this inflated perp position as collateral, the attacker borrowed $116 million from Mango Markets, leaving significant bad debt and fleeing with the funds. As commonly happens with price-manipulation exploits, this wasn’t a hack but rather a manipulation of the system’s mechanics, exploiting Mango’s liquidity without breaking any of its underlying code.
+#### 原型示例：任意调用
 
-#### Negotiating with Exploiters
-Exploiters and protocols often negotiate directly on chain to decide how much of the stolen funds the exploiter should return in exchange for the protocol agreeing to drop any charges. While these deals are common, they likely hold little legal weight in court. Typically, protocols offer a bounty of around 10% to the exploiter, meaning if the exploiter returns 90% of the stolen funds, the protocol will agree to stop pursuing them. Although these types of negotiations are common, what happened in this case was particularly remarkable.
-After the exploit, the attacker proposed a deal to Mango Markets’ DAO: they would return most of the stolen funds if the community agreed to cover some bad debt that had previously been taken on to save another Solana project, Solend. In response, the Mango team put forth a second proposal that would see the attacker return up to $67 million while keeping $47 million as a kind of bug bounty. The agreement included a waiver of any claims related to bad debt and a commitment not to pursue criminal charges or freeze the attacker’s funds once the tokens were returned. The first proposal got rejected, while the second one passed. This led to Mango Markets tweeting on October 15 that $67 million in assets had indeed been returned.
-Things took a legal turn when one of the attackers revealed himself on Twitter, calling the exploit a “highly profitable trading strategy” and claiming it was all done within the protocol’s intended design. But US authorities saw it differently and arrested him on charges of market manipulation. Mango Markets then filed a civil suit, arguing that the agreement should be void because it was made under duress, and it sought $47 million in damages. Since DAOs are a relatively new concept legally, the case has caught a lot of attention and could set a precedent for how decentralized organizations handle legal disputes.
-In a twist that perfectly captures crypto’s wild legal landscape, the attacker actually won his fraud case in May 2025: the judge ruled that you can’t defraud a permissionless protocol with no terms of service. But here’s the kicker: when authorities searched his devices during the original Mango Markets investigation, they discovered more than 1,200 images and videos of child sexual abuse material, and he’s now serving four-plus years for that, proving that even brilliant DeFi exploits can’t save you from violations of basic human decency.
+最常见的漏洞包括任意调用。在这里，一个易受攻击的智能合约允许攻击者提供要调用的地址。在这种情况下，合约将有效地执行攻击者想要的任何调用。一种可能的利用方式是通过返回被操纵的值来欺骗合约转移不应该转移的代币。
 
-### Improper Input Validation
-
-One major vulnerability often overlooked is improper input validation. When input from users or external sources isn’t properly validated, the consequences for smart contracts can vary widely, ranging from minor issues to significant loss of funds. Proper input validation helps protect against both malicious actors who might manipulate the contract’s behavior and genuine mistakes made by users or administrators, which could otherwise lead to loss of funds. If we don’t take the right precautions, a seemingly innocent oversight can result in significant issues in the contract’s execution.
-
-#### The vulnerability
-
-At its core, improper input validation occurs when a smart contract doesn’t thoroughly check the data or parameters it receives before processing them. If we don’t make sure that certain values meet specific conditions, we open the door for both genuine user mistakes and potential attacks. Users might accidentally input incorrect data, while attackers could intentionally feed our contracts unexpected data. This can bypass the intended logic and lead to unexpected state changes, causing our contracts to behave unpredictably.
-
-A simple instance of this vulnerability occurs when a setter function doesn’t verify that an address isn’t the zero address before setting it as a recipient for funds. If we mistakenly set the zero address as the recipient, funds sent to the zero address will be locked forever, making them irretrievable.
-
-A common and dangerous misconception in smart contract development is the belief that keeping the source code private will somehow protect it from exploitation. We’ve previously discussed in this chapter why security through obscurity doesn’t work, and this principle applies to input validation as well. Developers sometimes leave functions unprotected, assuming they won’t be discovered if the code isn’t published. But attackers can and do reverse-engineer contract bytecode to identify sensitive and unprotected functions. For instance, several closed-source MEV bots have been exploited through unprotected flash-loan callbacks, leading to millions in losses. Hiding the code doesn’t hide the risk.
-
-#### Preventative techniques
-
-So, how do we guard against improper input validation? The first step is simple: never assume that the inputs we receive are valid. Whether the input is coming from an EOA, another contract, or sometimes even the same contract, it should be rigorously checked. We need to validate not just input lengths but also edge cases and boundary conditions like minimum and maximum values. A classic edge case we shouldn’t overlook is the zero value.
-
-Reusable validation logic is a key part of writing secure and maintainable smart contracts. We can implement these validation blocks using either modifiers or internal functions, depending on what fits best. Modifiers are particularly useful for attaching preconditions or postconditions to multiple functions in a consistent and declarative way. For example, we might use a modifier to ensure that a function’s input isn’t the zero address or to check that the caller has the right permissions before executing a sensitive operation. Internal functions can achieve the same goals and sometimes offer more flexibility, especially when validation depends on complex logic or needs to return values.
-
-#### Access Control
-Speaking of permissions, it’s important to implement robust access controls: `msg.sender` is a parameter and should be treated as such. While custom logic is an option, using trusted libraries like OpenZeppelin helps us manage access securely while minimizing complexity.
-For simple projects where one entity needs full control, developers can use OpenZeppelin’s Ownable contract, which designates a single “owner” with authority over key functions. For added security, we recommend using Ownable2Step. This version includes a two-step ownership-transfer process that helps prevent accidental loss of ownership.
-For more complex needs, OpenZeppelin’s AccessControl allows us to create multiple roles, each with different permissions. Role-based access control lets us assign specific tasks to different users, making it ideal for larger projects.
-Before implementing proper access control, we need to validate all our assumptions about who might call external and public functions. Smart contracts operate in a public and trustless environment, so we can’t assume that only our intended entities will interact with the contract. In fact, we should always assume an attacker will attempt to call these functions to trigger unintended behaviors.
-
-#### Prototype example: Arbitrary calls
-
-The most common exploits entail arbitrary calls. Here, a vulnerable smart contract allows an attacker to provide an address to be called. Under these circumstances, the contract will effectively perform any call the attacker wants. One possible way to exploit this is by returning manipulated values that trick the contract into transferring tokens it shouldn’t.
-
-Check this sample code of a vulnerable yield aggregator protocol:
+检查此易受攻击的收益聚合器协议的示例代码：
 
 ```solidity
 contract Aggregator {
@@ -871,9 +745,9 @@ contract Aggregator {
 }
 ```
 
-Its goal is simple: the `claimMultipleStakingRewards` function loops through an array of staking contract addresses provided by the user, calls the `claimStakingRewards` function on each one, and tallies up the total rewards. Finally, it sends the accumulated rewards to the user’s address. The problem is that the contract doesn’t check whether the addresses in `_claimContracts` actually point to trusted staking contracts. That opens the door to arbitrary external calls.
+它的目标很简单：`claimMultipleStakingRewards` 函数循环遍历用户提供的 staking 合约地址数组，调用每个合约上的 `claimStakingRewards` 函数，并统计总奖励。最后，它将累积的奖励发送到用户的地址。问题在于，合约没有检查 `_claimContracts` 中的地址是否真的指向受信任的 staking 合约。这为任意外部调用打开了大门。
 
-For instance, an attacker can deploy a contract like this:
+例如，攻击者可以部署这样的合约：
 
 ```solidity
 contract Attack {
@@ -883,19 +757,19 @@ contract Attack {
 }
 ```
 
-This malicious contract pretends to be a staking contract and simply returns an inflated reward value. When the `Aggregator` calls `claimStakingRewards` on it, it gets tricked into thinking the caller is owed a huge amount of tokens. Without additional checks, the `Aggregator` blindly adds that to the total and transfers real tokens to the attacker. This could have been avoided with a basic allowlist to ensure that only trusted contracts are allowed in `claimMultipleStakingRewards`.
+这个恶意合约假装是一个 staking 合约，只是返回一个 inflated 的奖励值。当 `Aggregator` 在其上调用 `claimStakingRewards` 时，它被欺骗，认为调用者被欠了大量的代币。如果没有额外的检查，`Aggregator` 会盲目地将其添加到总数中，并将真正的代币转移给攻击者。可以通过基本的允许列表来避免这种情况，以确保只有受信任的合约才能在 `claimMultipleStakingRewards` 中被允许。
 
-### Signature Replay Attack
+### 签名重放攻击
 
-Signatures on Ethereum are incredibly useful because they let us authorize actions off chain, reducing the need for costly on-chain transactions. For example, if you’re authorizing someone to take a specific action on your behalf, such as transferring tokens or accessing a certain feature in a smart contract, you can sign an off-chain message that gives them permission. The contract then verifies the signature and executes the action without needing you to interact directly on chain. This also enables gasless transactions, where you sign off chain and a relayer submits it on chain, paying the gas fees. Smart contracts can verify these signatures to ensure that actions are securely authorized without requiring constant on-chain interaction.
+以太坊上的签名非常有用，因为它们允许我们在链下授权操作，从而减少了对昂贵的链上交易的需求。例如，如果您授权某人代表您执行特定操作，例如转移代币或访问智能合约中的某个功能，您可以签署一个链下消息，授予他们许可。然后，合约验证签名并执行操作，而无需您直接在链上进行交互。这也实现了无 gas 交易，您可以在链下签名，然后由中继器在链上提交，并支付 gas 费用。智能合约可以验证这些签名，以确保在不需要持续的链上交互的情况下安全地授权操作。
 
-However, once a piece of data is signed, it should logically be used only once. If a signed transaction can be reused, it opens the door to replay attacks, where an attacker replays the signature to execute the same action multiple times, such as transferring funds or changing contract states without permission. Smart contracts must be designed to prevent this by ensuring that each signed message is unique and can’t be replayed.
+然而，一旦一段数据被签名，它在逻辑上应该只使用一次。如果可以重用已签名的交易，那么它就为重放攻击打开了大门，攻击者可以重放签名以多次执行相同的操作，例如未经授权地转移资金或更改合约状态。智能合约必须设计为防止这种情况，方法是确保每个已签名的消息都是唯一的且不能被重放。
 
-#### The vulnerability
+#### 漏洞
 
-Let’s look at an example contract (Example 9-10) that’s vulnerable to replay attacks.
+让我们看一个容易受到重放攻击的示例合约（示例 9-10）。
 
-**Example 9-10. Token: A contract vulnerable to signature replay attack**
+**示例 9-10. Token：容易受到签名重放攻击的合约**
 
 ```solidity
 1 contract Token {
@@ -924,15 +798,15 @@ Let’s look at an example contract (Example 9-10) that’s vulnerable to replay
 23 }
 ```
 
-At first glance, this looks like a handy contract function. It allows anyone with a valid signature to perform multiple transfers without the signer needing to pay gas. An administrator could sign the data off chain, and someone else—perhaps a service—could submit the transaction on chain for them. Anyway, handling signatures is not trivial, and this very short code contains a significant number of issues.
+乍一看，这看起来像一个方便的合约函数。它允许任何拥有有效签名的人执行多次转账，而无需签名者支付 gas 费用。管理员可以在链下签署数据，而其他人（可能是服务）可以在链上为他们提交交易。无论如何，处理签名并非易事，并且这段非常简短的代码包含大量问题。
 
-The most obvious problem is that there’s no mechanism to prevent someone from reusing the same signature over and over. Without any way to track if a signature has been used, an attacker could simply repeat the transaction until the victim’s balance is drained. The fix is pretty simple: we need to add a *nonce* (a value to be used only once, usually a counter that increments with each transaction) into the data being signed. The contract verifying the signature has the responsibility to check that the provided nonces have not been previously used. This ensures that each signature is unique, too, preventing replays. Ethereum transactions already use nonces for this reason.
+最明显的问题是没有机制可以阻止某人一遍又一遍地重复使用相同的签名。在没有任何方法来跟踪签名是否已被使用的情况下，攻击者可以简单地重复该交易，直到受害者的余额耗尽。修复非常简单：我们需要将 *nonce*（一个只使用一次的值，通常是一个每次交易都会递增的计数器）添加到正在签名的数据中。验证签名的合约有责任检查提供的 nonce 是否以前被使用过。这确保了每个签名都是唯一的，从而防止了重放。以太坊交易已经出于这个原因使用了 nonce。
 
-Another critical issue here is signature malleability. This happens when a cryptographic signature can be altered to produce a different but still valid signature for the same underlying message. The built-in `ecrecover` function used in the contract is vulnerable to this problem. Attackers can tweak a valid signature and create another one that also works, even though the underlying signed message remains the same. To avoid this, developers should use a safer signature-verification method, like the one provided by the OpenZeppelin ECDSA library. Malleable signatures are the reason why you don’t want to use signatures as unique identifiers, such as to avoid replay attacks—stick to nonces.
+这里的另一个关键问题是签名可延展性。当可以更改加密签名以生成相同底层消息的不同但仍然有效的签名时，就会发生这种情况。合约中使用的内置 `ecrecover` 函数容易受到此问题的影响。攻击者可以调整有效签名并创建另一个也有效的签名，即使底层的已签名消息保持不变。为避免这种情况，开发人员应使用更安全的签名验证方法，例如 OpenZeppelin ECDSA 库提供的方法。可延展的签名是您不想将签名用作唯一标识符的原因，例如为了避免重放攻击——坚持使用 nonce。
 
-We’ve addressed potential signature manipulation, but what if the data being signed can also be manipulated? In this contract, it can. The problem lies with the use of `abi.encodePacked`, which is often chosen for its compact encoding that requires less memory. But that efficiency comes with trade-offs, and we’re about to explore them. Specifically, `abi.encodePacked` concatenates raw bytes without adding length information or boundaries, which means that different sets of inputs can end up producing the same output. Here’s how that can play out.
+我们已经解决了潜在的签名操纵问题，但是如果也可以操纵正在签名的数据会发生什么呢？在这个合约中，它可以。问题在于使用 `abi.encodePacked`，它通常因其紧凑的编码而选择，这种编码需要更少的内存。但是，这种效率是有代价的，我们将要探讨它们。具体来说，`abi.encodePacked` 连接原始字节而不添加长度信息或边界，这意味着不同的输入集最终可能产生相同的输出。以下是它如何发挥作用。
 
-For the sake of simplicity, let’s suppose that amounts take 8 bits (two hex digits) and addresses take 12 bits (three hex digits). Let’s say the parameters are as follows:
+为了简单起见，让我们假设金额采用 8 位（两位十六进制数字），地址采用 12 位（三位十六进制数字）。让我们说参数如下：
 
 ```solidity
 _amount = [0x64, 0x64]
@@ -940,7 +814,7 @@ _from = [0x001, 0x002]
 _to = [0x003, 0x003]
 ```
 
-When we use `abi.encodePacked`, it combines these values into `0x6464001002003003`. But here’s where things get tricky. If we move `0x002` from `_from` to `_to`, we still get the exact same output from `abi.encodePacked` as before:
+当我们使用 `abi.encodePacked` 时，它将这些值组合成 `0x6464001002003003`。但是，这里的事情变得棘手了。如果我们从 `_from` 将 `0x002` 移动到 `_to`，我们仍然会从 `abi.encodePacked` 获得与之前完全相同的输出：
 
 ```solidity
 _amount = [0x64, 0x64]
@@ -948,100 +822,100 @@ _from = [0x001]
 _to = [0x002, 0x003, 0x003]
 ```
 
-Over this new set of values, `abi.encodePacked` would return the same output: `0x6464001002003003`. This means that user `0x002` can use the valid signature but change the input parameters `_from` and `_to`, tricking the contract into thinking that the only transfer to be performed is from `0x001` to `0x002`. The code used in the example does a terrible job at validating inputs, allowing for this problematic situation. Anyway, it shows how `encodePacked` should be avoided when generating signatures over dynamic data types such as arrays. In these cases, we should use `abi.encode`, which produces unambiguous output even when concatenating dynamic data, effectively preventing this type of attack.
+对于这组新值，`abi.encodePacked` 将返回相同的输出：`0x6464001002003003`。这意味着用户 `0x002` 可以使用有效的签名，但更改输入参数 `_from` 和 `_to`，从而欺骗合约认为要执行的唯一转账是从 `0x001` 到 `0x002`。示例中使用的代码在验证输入方面做得非常糟糕，从而允许了这种有问题的situation。无论如何，它表明在动态数据类型（如数组）上生成签名时应避免使用 `encodePacked`。在这些情况下，我们应该使用 `abi.encode`，即使在连接动态数据时，它也会产生明确的输出，从而有效地防止这种类型的攻击。
 
-But wait, there’s one more issue. What happens if this contract is deployed on multiple chains? The same signature would be valid across all of them, creating an opportunity for cross-chain replay attacks. An attacker could monitor a user’s activity on one chain and then reuse their signature on other chains. To prevent this, we need to include contextual data in the signed message—at the very least, the `chainId`. Depending on the use case, you might also include the contract address or its version. Fortunately, we don’t have to come up with a new solution from scratch: EIP-712 is a standard that solves this by allowing for context-aware signatures. It also improves the user experience by showing users readable information about what they’re signing instead of a confusing byte string.
+但是等等，还有一个问题。如果此合约部署在多个链上会发生什么？相同的签名将在所有这些链上都有效，从而创造了跨链重放攻击的机会。攻击者可以监视用户在一个链上的活动，然后在其他链上重复使用其签名。为防止这种情况，我们需要在已签名的消息中包含上下文数据——至少是 `chainId`。根据用例，您可能还会包括合约地址或其版本。幸运的是，我们不必从头开始提出新的解决方案：EIP-712 是一个通过允许上下文感知签名来解决此问题的标准。它还通过向用户显示有关他们正在签名的内容的可读信息，而不是令人困惑的字节字符串，从而改善了用户体验。
 
-#### Preventative techniques
+#### 预防措施
 
-To prevent replay attacks and other vulnerabilities, we need to ensure that each signature is unique, secure, and usable only once. We can easily achieve that through nonces, secure signature handling, and context-aware signatures.
+为防止重放攻击和其他漏洞，我们需要确保每个签名都是唯一的、安全的且只能使用一次。我们可以通过 nonce、安全签名处理和上下文感知签名轻松实现这一点。
 
-Nonces are used for ensuring uniqueness. By adding a nonce to each signed message, we prevent attackers from reusing signatures. Contracts validating signatures make sure that the nonces used are unique. Once a signature is used, its nonce becomes invalid, stopping replay attempts.
+Nonce 用于确保唯一性。通过向每个已签名的消息添加 nonce，我们可以防止攻击者重复使用签名。验证签名的合约要确保使用的 nonce 是唯一的。一旦签名被使用，其 nonce 将变为无效，从而阻止重放尝试。
 
-When validating signatures, we should avoid using the plain built-in `ecrecover` function and resort to OpenZeppelin’s ECDSA library, which is immune to signature malleability. We also should never use signatures as unique identifiers since they can be manipulated.
+在验证签名时，我们应该避免使用普通的内置 `ecrecover` 函数，而应使用 OpenZeppelin 的 ECDSA 库，该库可以防止签名可延展性。我们也不应将签名用作唯一标识符，因为它们可以被操纵。
 
-For signing dynamic data, using `abi.encode` instead of `abi.encodePacked` prevents the manipulation of the inputs by properly separating them, ensuring that they can’t be tampered with or misinterpreted.
+对于签名动态数据，使用 `abi.encode` 而不是 `abi.encodePacked` 可以通过正确分离输入来防止操纵输入，从而确保它们不会被篡改或误解。
 
-Finally, we should implement EIP-712 any time we work with signatures. Beyond adding context awareness, such as the `chainId` to prevent cross-chain replays, EIP-712 improves user experience by letting users see a clear, meaningful visualization of the data they’re signing instead of an opaque byte string. This not only makes transactions easier to understand but also enhances user safety by making phishing attacks more difficult, since users can better recognize suspicious requests.
+最后，每当我们处理签名时，我们都应实施 EIP-712。除了添加上下文感知（例如，`chainId` 以防止跨链重放）之外，EIP-712 还可以让用户看到清晰、有意义的他们正在签名的数据的可视化表示，而不是不透明的字节字符串，从而改善用户体验。这不仅使交易更容易理解，而且还通过使用户更容易识别可疑请求来增强用户安全，因为这使得网络钓鱼攻击更加困难。
 
-#### Real-world example: TCH token
+#### 真实案例：TCH 代币
 
-In May 2024, the TCH token was exploited due to a common signature-malleability vulnerability. The issue lay in a contract’s `burnToken` function, which verified signatures to authorize token burns. To prevent signature replay attacks, the contract stored used signatures in a mapping. However, this defense could be bypassed if the signature was tampered with.
+2024 年 5 月，TCH 代币由于常见的签名可延展性漏洞而被利用。问题出在合约的 `burnToken` 函数中，该函数验证签名以授权代币销毁。为防止签名重放攻击，合约将已使用的签名存储在映射中。但是，如果签名被篡改，则可以绕过此防御。
 
-The attacker exploited this by collecting previously submitted signatures and modifying the `v` and `s` values, which are part of the signature. Although the signature was altered, it still passed verification using `ecrecover`. Since the modified signature differed from the original, it wasn’t recognized as already used, and the new version was stored in the mapping. With this trick, the attacker was able to repeatedly burn large amounts of TCH tokens owned by the PancakeSwap liquidity pair. This allowed the attacker to manipulate the token’s price in the pool and profit from the price fluctuations they had caused.
+攻击者通过收集先前提交签名并修改 `v` 和 `s` 值来利用这一点，这些值是签名的一部分。尽管签名被更改了，但它仍然通过使用 `ecrecover` 进行了验证。由于修改后的签名与原始签名不同，因此未被识别为已使用，并且新版本存储在映射中。通过这种技巧，攻击者能够反复销毁 PancakeSwap 流动性池拥有的大量 TCH 代币。这允许攻击者操纵池中代币的价格，并从他们造成的价格波动中获利。
 
-### Smart Contracts Misconfiguration
+### 智能合约错误配置
 
-Misconfiguration is one of those sneaky issues that isn’t technically a vulnerability but can still have serious consequences for smart contracts. After you have written your smart contract and gotten it audited, the job isn’t done; you still need to deploy, maintain, and sometimes upgrade it. And it’s during these stages when misconfigurations often occur. DeFi protocols, for example, come with tons of parameters, and if any of these are misconfigured, that can lead to significant losses. Unfortunately, these kinds of issues are tricky to catch, even in audits, because auditors often overlook deployment and upgrade scripts. So while misconfigurations aren’t vulnerabilities themselves, they can create an opening for vulnerabilities, making it critical to be extra cautious during the deployment and management stages.
+错误配置是那些并不是技术上的漏洞，但仍然可能对智能合约产生严重后果的隐蔽问题之一。在您编写完智能合约并通过审计后，工作并没有完成；您仍然需要部署、维护，有时还需要升级它。正是在这些阶段，经常会发生错误配置。例如，DeFi 协议带有大量的参数，如果这些参数中的任何一个配置错误，都可能导致重大损失。不幸的是，即使在审计中，这些类型的问题也很难发现，因为审计员经常忽略部署和升级脚本。因此，虽然错误配置本身不是漏洞，但它们可能会为漏洞的出现创造机会，因此在部署和管理阶段格外小心至关重要。
 
-Misconfiguration issues are hard to categorize because they can vary widely, so instead of trying to list them all, let’s jump straight into some real-world examples to get a sense of what can go wrong.
+错误配置问题很难分类，因为它们可能差异很大，因此与其尝试全部列出，不如直接跳到一些真实案例，以了解可能出错的情况。
 
-#### Real-world example: yUSDT
+#### 真实案例：yUSDT
 
-Let’s take a look at the simplest possible misconfiguration case: a misconfigured storage variable in the yUSDT token from Yearn Finance, which led to an exploit in April 2023. The yUSDT token is supposed to generate yield by investing in USDT-based derivatives, but due to a misconfiguration, it was actually using a different token (IUSDC) as its underlying asset. The crazy part is that this went unnoticed for more than one thousand days. The misconfiguration allowed an attacker to manipulate the system, drain value from the pool, and mint yUSDT essentially for free. As a result, the value of yUSDT dropped to zero, and the attacker walked away with $11.6 million in profit.
+让我们看一下最简单的错误配置案例：Yearn Finance 的 yUSDT 代币中配置错误的存储变量，这导致了 2023 年 4 月的利用。yUSDT 代币应该通过投资于基于 USDT 的衍生品来产生收益，但由于错误配置，它实际上使用了一个不同的代币 (IUSDC) 作为其底层资产。疯狂的是，这种情况持续了一千多天都没被注意到。错误配置允许攻击者操纵系统，从池中耗尽价值，并基本上免费铸造 yUSDT。因此，yUSDT 的价值降至零，攻击者带着 1,160 万美元的利润离开了。
 
-#### Real-world example: Ronin Bridge
+#### 真实案例：Ronin Bridge
 
-In August 2024, the Ronin Bridge was hacked just an hour after a contract upgrade. The root cause was a misstep during the upgrade process: an important variable, `_totalOperatorWeight`, wasn’t initialized. This variable was supposed to be set in the `initializeV3` function, but during the upgrade, only `initializeV4` was called, skipping over the necessary setup from the previous version. This oversight left the contract exposed. In this case, a white-hat MEV bot was able to front-run the attack and return the stolen 4,000 ETH, but this underscores the importance of thorough review and testing of upgrade procedures.
+2024 年 8 月，Ronin Bridge 在合约升级后仅一小时就被黑客入侵。根本原因是升级过程中的一个失误：一个重要的变量 `_totalOperatorWeight` 没有被初始化。这个变量应该在 `initializeV3` 函数中设置，但在升级期间，只调用了 `initializeV4`，跳过了之前版本中必要的设置。这个疏忽使合约暴露了。在这种情况下，一个白帽 MEV 机器人能够在攻击之前抢先行动并归还被盗的 4,000 ETH，但这突出了彻底审查和测试升级程序的重要性。
 
-> **Note**
+> **注意**
 >
-> If you think a hack happening shortly after a contract upgrade is just a coincidence, you’re mistaken. Both black and white hats closely monitor contract upgrades: black hats look for weaknesses to exploit while white hats try to prevent attacks. Teams often underestimate the security risks of even small code changes and skip the audit process. Unfortunately, it doesn’t take much to break a contract, and as this case shows, the vulnerability isn’t always in the smart contract itself—sometimes it’s in how the upgrade is executed.
+> 如果您认为在合约升级后不久发生的黑客攻击纯粹是巧合，那么您就错了。黑帽和白帽都在密切监视合约升级：黑帽寻找可以利用的弱点，而白帽则试图防止攻击。团队经常低估即使是小的代码更改的安全风险，并跳过审计过程。不幸的是，破坏一份合约并不需要太多，正如本案所示，漏洞并不总是在智能合约本身中——有时它在于升级的执行方式。
 
-#### Real-world example: Sonne Finance
+#### 真实案例：Sonne Finance
 
-The root cause of the Sonne Finance May 2024 hack wasn’t just a typical protocol bug but rather a flaw in its market-activation process. Like many protocols, Sonne was aware of the “empty market” bug found in Compound v2, where an open but unfunded market could be exploited to drain the entire protocol. The standard fix for this bug is to ensure that funds are deposited into the market atomically when it’s activated, preventing the market from being empty at any point.
+Sonne Finance 在 2024 年 5 月被黑客入侵的根本原因不仅仅是一个典型的协议错误，而是其市场激活过程中的缺陷。像许多协议一样，Sonne 意识到了 Compound v2 中发现的“空市场”错误，即一个开放但未注资的市场可能被利用来耗尽整个协议。此错误的标准解决方法是确保在市场激活时原子地将资金存入市场，从而防止市场在任何时候都为空。
 
-Sonne had a plan in place to handle this. It intended to add the market, deposit funds, and then open the market for use—all three actions through timelocks. The process would have worked, if it had been done in the right order. The issue arose because Sonne scheduled each of these steps as separate transactions in the governance timelock controller, meaning that their execution order was not enforced. The Sonne team made the governance `EXECUTOR_ROLE` accessible to everyone, allowing any user to execute governance transactions once the timelock expired. While this setup is unusual, it wasn’t inherently problematic; however, it proved devastating in this specific situation. It left the door open for anyone to execute the actions out of order once the timelock expired.
+Sonne 制定了一个处理此问题的计划。它打算添加市场、存入资金，然后开放市场供使用——所有这三个操作都通过时间锁进行。如果以正确的顺序完成，此过程将起作用。问题出现的原因是 Sonne 将这些步骤中的每一个都安排为治理时间锁控制器中的单独交易，这意味着它们的执行顺序没有被强制执行。Sonne 团队使每个人都可以访问治理 `EXECUTOR_ROLE`，允许任何用户在时间锁到期后执行治理交易。虽然这种设置是不寻常的，但它本身并没有问题；然而，它在这种特定情况下被证明是毁灭性的。它为任何人在时间锁到期后以错误的顺序执行操作敞开了大门。
 
-The attacker simply executed all of the queued timelock actions without waiting for the fund deposit, leaving an empty, vulnerable market open. By exploiting this unfunded market, they drained $20 million from the protocol.
+攻击者只是执行了所有排队的时间锁操作，而没有等待资金存入，从而使一个空的、易受攻击的市场开放。通过利用这个未注资的市场，他们从协议中耗尽了 2000 万美元。
 
-The key takeaway here is that when governance actions need to occur in a specific order to ensure security, they should be made atomic. For example, if they are using the OpenZeppelin Timelock, they should be scheduled with `scheduleBatch()` instead of `schedule()`. Sonne’s mistake was to allow these actions to be queued separately, which left them exposed.
+这里的关键要点是，当治理操作需要以特定的顺序发生以确保安全时，它们应该被原子化。例如，如果他们使用 OpenZeppelin Timelock，则应使用 `scheduleBatch()` 而不是 `schedule()` 进行安排。Sonne 的错误是允许将这些操作单独排队，这使它们暴露了。
 
-#### Preventative techniques
+#### 预防措施
 
-To avoid misconfiguration issues and the kind of costly mistakes we’ve discussed, we need to take a proactive approach during the entire life cycle of a smart contract, especially when it comes to deployment, upgrades, and any critical governance actions. We should always ensure that deployment and upgrade scripts are thoroughly tested and audited. We need to go beyond auditing the code itself and pay close attention to the scripts that touch the mainnet, ensuring that every aspect of the process has been tested in a live-like environment.
+为避免错误配置问题以及我们讨论过的代价高昂的错误，我们需要在智能合约的整个生命周期中采取积极主动的方法，尤其是在部署、升级和任何关键的治理操作方面。我们应始终确保部署和升级脚本经过彻底的测试和审计。我们需要超越审计代码本身，并密切关注触及主网的脚本，确保流程的每个方面都在类似直播的环境中进行了测试。
 
-## Contract Libraries
+## 合约库
 
-There is a lot of existing code available for reuse, both deployed on chain as callable libraries and off chain as code template libraries. In Ethereum, the most widely used resource is the [OpenZeppelin suite](https://oreil.ly/OSSoV), an ample library of contracts ranging from implementations of various tokens to different proxy architectures to simple behaviors commonly found in contracts, such as `Ownable`, `Pausable`, or `ReentrancyGuard`. The contracts in this repository have been extensively tested and, in some cases, even function as de facto standard implementations. They are free to use and are built and maintained by [OpenZeppelin](https://www.openzeppelin.com) together with an ever-growing list of external contributors.
+有很多现有代码可供重用，无论是在链上部署为可调用的库，还是在链下部署为代码模板库。在以太坊中，最广泛使用的资源是 [OpenZeppelin 套件](https://oreil.ly/OSSoV)，这是一个包含大量合约的库，范围从各种代币的实现到不同的代理架构，再到合约中常见的简单行为，例如 `Ownable`、`Pausable` 或 `ReentrancyGuard`。此存储库中的合约已经过广泛的测试，并且在某些情况下，甚至可以作为事实上的标准实现。它们可以免费使用，并且由 [OpenZeppelin](https://www.openzeppelin.com) 与不断增长的外部贡献者列表共同构建和维护。
 
-Other notable contract libraries include Paradigm’s [Solmate](https://oreil.ly/yTuU9) and Vectorized’s [Solady](https://oreil.ly/zqpib). Solmate is more opinionated in design, while Solady focuses primarily on gas optimization.
+其他值得注意的合约库包括 Paradigm 的 [Solmate](https://oreil.ly/yTuU9) 和 Vectorized 的 [Solady](https://oreil.ly/zqpib)。Solmate 在设计方面更固执己见，而 Solady 主要侧重于 gas 优化。
 
-## Additional Resources
+## 附加资源
 
-Since smart contract security encompasses so much depth and nuance, here is a list of resources where curious readers can go to learn more about this very advanced subject:
+由于智能合约安全性涵盖了如此多的深度和细微差别，因此这里提供了一个资源列表，好奇的读者可以在其中了解有关这个非常高级主题的更多信息：
 
-**Cyfrin Updraft Smart Contract Security and Auditing**
+**Cyfrin Updraft 智能合约安全和审计**
 
-A comprehensive 24-hour course (270+ lessons)
+一个全面的 24 小时课程（270 多个课程）
 
-**Secureum Bootcamp**
+**Secureum 训练营**
 
-A three-month intensive bootcamp focused on Ethereum smart contract security auditing
+一个为期三个月的强化训练营，专注于以太坊智能合约安全审计
 
 **Ethernaut**
 
-A Solidity-based wargame by OpenZeppelin where players hack smart contract levels to learn common vulnerabilities
+OpenZeppelin 的一个基于 Solidity 的战争游戏，玩家通过黑客智能合约级别来学习常见的漏洞
 
 **Damn Vulnerable DeFi**
 
-A capture-the-flag (CTF) platform featuring 18 challenges covering flash loans, price oracles, governance, NFTs, and more
+一个夺旗 (CTF) 平台，包含 18 个挑战，涵盖闪电贷、价格预言机、治理、NFT 等
 
 **Capture the Ether**
 
-A classic CTF-style Ethereum security game
+一个经典的 CTF 风格的以太坊安全游戏
 
 **QuillCTF**
 
-A collection of Ethereum security puzzles by QuillAudits
+QuillAudits 的以太坊安全谜题的集合
 
 **Paradigm CTF**
 
-An annual online CTF competition organized by Paradigm for experienced smart contract hackers where challenges are highly advanced and reflect cutting-edge exploits; official solutions and write-ups are often released, making it a learning resource as well
+由 Paradigm 组织的年度在线 CTF 竞赛，面向经验丰富的智能合约黑客，挑战非常高级，反映了最前沿的漏洞；官方解决方案和说明经常发布，使其也成为一种学习资源
 
-## Conclusion
+## 结论
 
-Thanks to its updates, the Solidity compiler now mitigates risks like integer overflows and default visibility issues. This allowed us to remove some of the older pitfalls mentioned in the first edition of the book and to use the space to focus on more current and relevant vulnerabilities instead. Anyway, there is still a lot for any developer working in the smart contract domain to know and understand. By following best practices in your smart contract design and code writing, you will avoid many severe pitfalls and traps.
+感谢它的更新，Solidity 编译器现在可以缓解诸如整数溢出和默认可见性问题之类的风险。这使我们能够删除本书第一版中提到的一些较旧的陷阱，并使用该空间来关注更多当前和相关的漏洞。无论如何，任何在智能合约领域工作的开发人员仍然需要知道和理解很多东西。通过遵循智能合约设计和代码编写中的最佳实践，您将避免许多严重的陷阱和陷阱。
 
-Perhaps the most fundamental software security principle is to maximize reuse of trusted code. In cryptography, this is so important that it has been condensed into an adage: “Don’t roll your own crypto.” In the case of smart contracts, this amounts to gaining as much as possible from freely available libraries that have been thoroughly vetted by the community.
+也许最基本的软件安全原则是最大限度地重用受信任的代码。在密码学中，这非常重要，以至于它已被浓缩成一句格言：“不要自己编写密码。”在智能合约的情况下，这相当于从社区彻底审查过的免费库中获得尽可能多的收益。

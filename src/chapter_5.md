@@ -1,40 +1,40 @@
-# Chapter 5: Wallets
+# 第五章：钱包
 
-The word *wallet* is used to describe a few different things in Ethereum. At a high level, a wallet is a software application that serves as the primary user interface to Ethereum. The wallet controls access to a user's money, manages keys and addresses, tracks the balance, and creates and signs transactions. In addition, some Ethereum wallets can interact with contracts, such as ERC-20 tokens.
+*钱包* 这个词在以太坊中用于描述几种不同的事物。从高层次来看，钱包是一个软件应用程序，作为以太坊的主要用户界面。钱包控制对用户资金的访问，管理密钥和地址，跟踪余额，并创建和签署交易。此外，一些以太坊钱包可以与合约进行交互，比如ERC-20代币。
 
-More narrowly, from a programmer's perspective, the word *wallet* refers to the system used to store and manage a user's keys. Every wallet has a key-management component. For some wallets, that's all there is. Other wallets are part of a much broader category, that of *browsers*, which are interfaces to Ethereum-based DApps, which we will examine in more detail in Chapter 12. There are no clear lines of distinction between the various categories that are conflated under the term *wallet*.
+更狭义地讲，从程序员的角度来看，*钱包* 指的是用于存储和管理用户密钥的系统。每个钱包都有一个密钥管理组件。对于一些钱包来说，这就是全部。其他钱包是更广泛的类别的一部分，即 *浏览器*，它们是以太坊DApp的界面，我们将在第12章中更详细地研究。在各类被统称为 *钱包* 的事物之间没有明确的区分界限。
 
-In this chapter, we will look at wallets as containers for private keys and as systems for managing these keys.
+在本章中，我们将把钱包看作是私钥的容器，以及管理这些密钥的系统。
 
-## Overview of Wallet Technologies
+## 钱包技术概述
 
-In this section, we summarize the various technologies used to construct user-friendly, secure, and flexible Ethereum wallets.
+在本节中，我们将总结用于构建用户友好、安全和灵活的以太坊钱包的各种技术。
 
-One key consideration in designing wallets is balancing convenience and privacy. The most convenient Ethereum wallet is one with a single private key and address that you reuse for everything. Unfortunately, such a solution is a privacy nightmare since anyone can easily track and correlate all your transactions. Using a new key for every transaction is best for privacy but becomes very difficult to manage. The correct balance is difficult to achieve, which is why good wallet design is paramount.
+在设计钱包时，一个关键考虑因素是平衡便利性和隐私性。最方便的以太坊钱包是只有一个私钥和地址，并且你把它们用于所有事情。不幸的是，这样的解决方案对于隐私来说是一场噩梦，因为任何人都可以轻松地跟踪和关联你的所有交易。为每笔交易使用一个新的密钥对于隐私来说是最好的，但是管理起来非常困难。正确的平衡很难实现，这就是为什么良好的钱包设计至关重要。
 
-A common misconception about Ethereum is that Ethereum wallets contain ether or tokens. In fact, very strictly speaking, the wallet holds only keys. The ether or other tokens are recorded on the Ethereum blockchain. Users control the tokens on the network by signing transactions with the keys in their wallets. In a sense, an Ethereum wallet is a *keychain*. Having said that, given that the keys held by the wallet are the only things needed to transfer ether or tokens to others, in practice this distinction is fairly irrelevant.
+一个关于以太坊的常见误解是以太坊钱包包含以太币或代币。实际上，严格来说，钱包只持有密钥。以太币或其他代币记录在以太坊区块链上。用户通过使用钱包中的密钥签署交易来控制网络上的代币。从某种意义上说，以太坊钱包是一个 *钥匙串*。话虽如此，考虑到钱包持有的密钥是将以太币或代币转移给他人所需的唯一东西，实际上这种区别相当无关紧要。
 
-Where the difference does matter is in changing one's mindset from dealing with the centralized system of conventional banking (where only you and the bank can see the money in your account, and you only need to convince the bank that you want to move funds to make a transaction) to the decentralized system of blockchain platforms (where everyone can see the ether balance of an account, although they probably don't know the account's owner, and everyone needs to be convinced that the owner wants to move funds for a transaction to be enacted). In practice, this means that there is an independent way to check an account's balance without needing its wallet. Moreover, you can move your account handling from your current wallet to a different wallet, if you grow to dislike the wallet app you started out using.
+真正重要的是改变人们的思维方式，从处理传统银行的中心化系统（只有你和银行可以看到你账户中的钱，你只需要说服银行你想转移资金来完成交易）到区块链平台的去中心化系统（每个人都可以看到账户的以太币余额，尽管他们可能不知道账户的所有者，并且需要说服每个人所有者想要转移资金才能执行交易）。在实践中，这意味着有一种独立的方法可以检查账户的余额，而无需使用其钱包。此外，如果你开始不喜欢你最初使用的钱包应用程序，你可以将你的账户处理从当前的钱包转移到另一个钱包。
 
-> **Note**  
+> **注意**
 >
-> Ethereum wallets contain keys, not ether or tokens. Wallets are like keychains containing pairs of private and public keys. Users sign transactions with the private keys, thereby proving they own the ether. The ether is stored on the blockchain.
+> 以太坊钱包包含密钥，而不是以太币或代币。钱包就像包含私钥和公钥对的钥匙串。用户使用私钥签署交易，从而证明他们拥有以太币。以太币存储在区块链上。
 
-There are two primary types of wallets, distinguished by whether the keys they contain are related to one another or not.
+有两种主要类型的钱包，它们的区别在于它们包含的密钥是否相互关联。
 
-The first type is a *nondeterministic wallet*, where each key is independently generated from a different random number. The keys are not related to one another. This type of wallet is also known as a *JBOK wallet*, from the phrase "just a bunch of keys."
+第一种类型是 *非确定性钱包*，其中每个密钥都是独立地从不同的随机数生成的。这些密钥彼此不相关。这种类型的钱包也称为 *JBOK 钱包*，来自短语 "just a bunch of keys"（只是一堆密钥）。
 
-The second type of wallet is a *deterministic wallet*, where all the keys are derived from a single master key, known as the *seed*. All the keys in this type of wallet are related to one another and can be generated again if you have the original seed. Several different key-derivation methods are used in deterministic wallets. The most common derivation method uses a treelike structure, as described in "Hierarchical Deterministic Wallets (BIP-32/BIP-44)".
+第二种类型的钱包是 *确定性钱包*，其中所有密钥都派生自一个主密钥，称为 *种子*。这种钱包中的所有密钥都彼此相关，如果你有原始种子，则可以再次生成。确定性钱包中使用几种不同的密钥派生方法。最常见的派生方法使用树状结构，如“分层确定性钱包（BIP-32 / BIP-44）”中所述。
 
-To make deterministic wallets slightly more secure against data-loss accidents, such as having your phone stolen or dropping it in the toilet, the seeds are often encoded as a list of words (in English or another language) for you to write down and use in case of an accident. These are known as the wallet's *mnemonic code words*. Of course, if someone gets hold of your mnemonic code words, then they can also re-create your wallet and thus gain access to your ether and smart contracts. As such, be very, very careful with your recovery word list! Never store it electronically, in a file on your computer or phone. Write it down on paper and store it in a safe, secure place.
+为了使确定性钱包对数据丢失事故（例如手机被盗或掉入马桶）的安全性更高，种子通常被编码为一系列单词（用英语或其他语言），供你写下来并在发生事故时使用。这些被称为钱包的 *助记词*。当然，如果有人获得你的助记词，那么他们也可以重新创建你的钱包，从而获得对你的以太币和智能合约的访问权限。因此，请非常小心你的恢复词列表！永远不要以电子方式将其存储在电脑或手机的文件中。将其写在纸上并存储在安全的地方。
 
-The next few sections introduce each of the wallet technologies at a high level.
+接下来的几节将从高层次介绍每种钱包技术。
 
-### Nondeterministic (Random) Wallets
+### 非确定性（随机）钱包
 
-In the first Ethereum wallet (produced for the Ethereum presale), each wallet file stored a single randomly generated private key. Such wallets are being replaced with deterministic wallets because these "old-style" wallets are in many ways inferior. For example, it is considered good practice to avoid reusing Ethereum addresses as part of maximizing your privacy while using Ethereum—that is, to use a new address (which needs a new private key) every time you receive funds. You can go further and use a new address for each transaction, although this can get expensive if you deal a lot with tokens. To follow this practice, a nondeterministic wallet will need to regularly increase its list of keys, which means you will need to make regular backups. If you ever lose your data (disk failure, drink accident, phone stolen) before you've managed to back up your wallet, you will lose access to your funds and smart contracts. The "type 0" nondeterministic wallets are the hardest to deal with because they create a new wallet file for every new address in a "just in time" manner.
+在第一个以太坊钱包（为以太坊预售而制作）中，每个钱包文件存储一个随机生成的私钥。这种钱包正在被确定性钱包所取代，因为这些“老式”钱包在许多方面都比较差。例如，避免重复使用以太坊地址被认为是最大化使用以太坊时的隐私的最佳实践——即每次收到资金时都使用新的地址（这需要一个新的私钥）。你可以更进一步，为每笔交易使用一个新的地址，尽管如果你经常处理代币，这可能会很昂贵。为了遵循这种做法，非确定性钱包将需要定期增加其密钥列表，这意味着你需要定期备份。如果你在设法备份钱包之前丢失了数据（磁盘故障、饮料事故、手机被盗），你将失去对你的资金和智能合约的访问权限。“类型 0”非确定性钱包是最难处理的，因为它们以“just in time”的方式为每个新地址创建一个新的钱包文件。
 
-Nevertheless, many Ethereum clients (including Geth) use a *keystore file*, which is a JSON-encoded file that contains a single (randomly generated) private key, encrypted by a passphrase for extra security. The JSON file's contents look like this:
+然而，许多以太坊客户端（包括 Geth）使用 *keystore 文件*，该文件是一个 JSON 编码的文件，其中包含一个（随机生成的）私钥，该私钥通过密码进行加密以增加安全性。JSON 文件的内容如下所示：
 
 ```json
 {
@@ -62,106 +62,106 @@ Nevertheless, many Ethereum clients (including Geth) use a *keystore file*, whic
 }
 ```
 
-The keystore format uses a *key derivation function* (KDF), also known as a *password-stretching algorithm*, which protects against brute-force, dictionary, and rainbow table attacks. In simple terms, the private key is not encrypted by the passphrase directly. Instead, the passphrase is "stretched" by repeatedly hashing it. The hashing function is repeated for 262,144 rounds, which can be seen in the keystore JSON as the parameter `crypto.kdfparams.n`. An attacker trying to brute-force the passphrase would have to apply 262,144 rounds of hashing for every attempted passphrase, which slows the attack sufficiently to make it infeasible for passphrases of appropriate complexity and length.
+keystore 格式使用 *密钥派生函数* (KDF)，也称为 *密码拉伸算法*，它可以防御暴力破解、字典和彩虹表攻击。简单来说，私钥不是直接由密码加密的。而是通过重复哈希“拉伸”密码。哈希函数重复 262,144 轮，这可以在 keystore JSON 中看到为参数 `crypto.kdfparams.n`。试图暴力破解密码的攻击者必须为每次尝试的密码应用 262,144 轮哈希，这会充分减慢攻击速度，使其对于具有适当复杂性和长度的密码来说是不可行的。
 
-> **Tip**  
+> **提示**
 >
-> Using nondeterministic wallets is discouraged for anything other than simple tests. They are too cumbersome to back up and use for anything but the most basic of situations. Instead, use an industry standard–based hierarchical deterministic wallet with a mnemonic seed for backup.
+> 对于简单测试之外的任何事情，都不鼓励使用非确定性钱包。它们备份起来太麻烦，除了最基本的情况之外，不适用于任何事情。相反，使用基于行业标准的具有助记词种子的分层确定性钱包进行备份。
 
-### Deterministic (Seeded) Wallets
+### 确定性（种子）钱包
 
-Deterministic or "seeded" wallets contain private keys that are all derived from a single master key, or seed. The seed is a randomly generated number that is combined with other data, such as an index number or "chain code" (see "Extended Public and Private Keys"), to derive any number of private keys. In a deterministic wallet, the seed is sufficient to recover all the derived keys, and therefore a single backup, at creation time, is sufficient to secure all the funds and smart contracts in the wallet. The seed is also sufficient for a wallet export or import, allowing for easy migration of all the keys between different wallet implementations.
+确定性或“种子”钱包包含所有派生自单个主密钥或种子的私钥。种子是一个随机生成的数字，它与其他数据（例如索引号或“链码”——参见“扩展公钥和私钥”）组合，以派生任意数量的私钥。在确定性钱包中，种子足以恢复所有派生的密钥，因此只需在创建时进行一次备份就足以保护钱包中的所有资金和智能合约。种子也足以进行钱包导出或导入，从而可以轻松地在不同的钱包实现之间迁移所有密钥。
 
-This design makes the security of the seed of utmost importance, as only the seed is needed to gain access to the entire wallet. On the other hand, being able to focus security efforts on a single piece of data can be seen as an advantage.
+这种设计使得种子的安全性至关重要，因为只有种子才需要获得对整个钱包的访问权限。另一方面，能够将安全工作集中在单个数据上可以被视为一种优势。
 
-### Hierarchical Deterministic Wallets (BIP-32/BIP-44)
+### 分层确定性钱包 (BIP-32 / BIP-44)
 
-Deterministic wallets were developed to make it easy to derive many keys from a single seed. Currently, one of the most advanced forms of deterministic wallet is the *hierarchical deterministic (HD) wallet* defined by Bitcoin's BIP-32 standard. HD wallets contain keys derived in a tree structure, such that a parent key can derive a sequence of child keys, each of which can derive a sequence of grandchild keys, and so on. This tree structure is illustrated in Figure 5-1.
+开发确定性钱包是为了更容易地从单个种子派生多个密钥。目前，最先进的确定性钱包形式之一是由比特币的 BIP-32 标准定义的 *分层确定性 (HD) 钱包*。HD 钱包包含以树状结构派生的密钥，因此父密钥可以派生一系列子密钥，每个子密钥都可以派生一系列孙密钥，依此类推。图 5-1 说明了这种树状结构。
 
-![HD wallet: a tree of keys generated from a single seed](images/ch5/maet_0501.png)
+![HD 钱包：从单个种子生成的密钥树](images/ch5/maet_0501.png)
 
-Figure 5-1. HD wallet: a tree of keys generated from a single seed
+图 5-1. HD 钱包：从单个种子生成的密钥树
 
-HD wallets offer a few key advantages over simpler deterministic wallets. First, the tree structure can be used to express additional organizational meaning, such as when a specific branch of subkeys is used to receive incoming payments and a different branch is used to receive change from outgoing payments. Branches of keys can also be used in corporate settings, where different branches can be allocated to departments, subsidiaries, specific functions, or accounting categories.
+与简单的确定性钱包相比，HD 钱包具有几个关键优势。首先，树状结构可用于表达其他组织含义，例如当子密钥的特定分支用于接收传入付款，而不同的分支用于接收来自传出付款的找零。密钥分支也可以用于公司环境中，其中不同的分支可以分配给部门、子公司、特定职能或会计类别。
 
-The second advantage of HD wallets is that users can create a sequence of public keys without having access to the corresponding private keys. This allows HD wallets to be used on an insecure server or in a watch-only or receive-only capacity, where the wallet doesn't have the private keys that can spend the funds.
+HD 钱包的第二个优点是用户可以在没有访问相应私钥的情况下创建一系列公钥。这允许 HD 钱包在不安全的服务器上或以仅观察或仅接收的容量使用，其中钱包没有可以花费资金的私钥。
 
-### Seeds and Mnemonic Codes (BIP-39)
+### 种子和助记码 (BIP-39)
 
-There are many ways to encode a private key for secure backup and retrieval. The currently preferred method is to use a sequence of words that, when taken together in the correct order, can uniquely re-create the private key. This is sometimes known as a *mnemonic*, and the approach has been standardized by BIP-39. Today, many Ethereum wallets (as well as wallets for other cryptocurrencies) use this standard and can import and export seeds for backup and recovery using interoperable mnemonics.
+有许多方法可以编码私钥以进行安全备份和检索。当前首选的方法是使用一系列单词，这些单词以正确的顺序组合在一起时，可以唯一地重新创建私钥。这有时被称为 *助记符*，并且该方法已通过 BIP-39 标准化。如今，许多以太坊钱包（以及其他加密货币的钱包）都使用此标准，并且可以使用可互操作的助记符导入和导出种子以进行备份和恢复。
 
-To see why this approach has become popular, let's have a look at an example:
+为了了解为什么这种方法变得流行，让我们看一个例子：
 
 ```
-FCCF1AB3329FD5DA3DA9577511F8F137 ← seed in hexadecimal
+FCCF1AB3329FD5DA3DA9577511F8F137 ← 十六进制的种子
 wolf juice proud gown wool unfair
-wall cliff insect more detail hub ← seed using BIP-39 representation
+wall cliff insect more detail hub ← 使用 BIP-39 表示的种子
 ```
 
-In practical terms, the chance of an error when writing down the hex sequence is unacceptably high. In contrast, the list of known words is quite easy to deal with, mainly because there is a high level of redundancy in the writing of words (especially English words). If *inzect* had been recorded by accident, it could quickly be determined, upon the need for wallet recovery, that *inzect* is not a valid English word and that *insect* should be used instead. We are talking about writing down a representation of the seed because that is good practice when managing HD wallets: the seed is needed to recover the wallet in the case of data loss (whether through accident or theft), so keeping a backup is very prudent. However, the seed must be kept extremely private, so digital backups should be carefully avoided—hence, the advice to back up with pen and paper.
+实际上，写下十六进制序列时出错的可能性高得令人无法接受。相比之下，已知单词列表很容易处理，主要是因为单词的书写方式具有很高的冗余度（尤其是英语单词）。如果意外记录了 *inzect*，则在需要钱包恢复时，可以快速确定 *inzect* 不是一个有效的英语单词，而应该使用 *insect*。我们正在谈论写下种子的表示形式，因为这在管理 HD 钱包时是一种很好的做法：在发生数据丢失（无论是由于事故还是被盗）的情况下，需要种子来恢复钱包，因此保持备份非常谨慎。但是，种子必须保持极度私密，因此应谨慎避免数字备份，因此，建议使用笔和纸进行备份。
 
-In summary, using a recovery word list to encode the seed for an HD wallet is the easiest way to safely export a private key set, transcribe it, record it on paper, read it without error, and import it into another wallet.
+总而言之，使用恢复词列表来编码 HD 钱包的种子是安全导出私钥集、转录、将其记录在纸上、无错误地读取并将其导入到另一个钱包中的最简单方法。
 
-## Wallet Best Practices
+## 钱包最佳实践
 
-As cryptocurrency wallet technology has matured, certain industry standards have emerged that make wallets broadly interoperable, easy to use, secure, and flexible. These standards also allow wallets to derive keys for multiple different cryptocurrencies, all from a single mnemonic. These standards are:
+随着加密货币钱包技术的成熟，已经出现了一些行业标准，这些标准使钱包具有广泛的互操作性、易用性、安全性和灵活性。这些标准还允许钱包从单个助记符中派生出多种不同加密货币的密钥。这些标准是：
 
-- Mnemonic code words, based on BIP-39
-- HD wallets, based on BIP-32
-- A multipurpose HD wallet structure, based on BIP-43
-- Multicurrency and multiaccount wallets, based on BIP-44
+- 基于 BIP-39 的助记码
+- 基于 BIP-32 的 HD 钱包
+- 基于 BIP-43 的多用途 HD 钱包结构
+- 基于 BIP-44 的多货币和多账户钱包
 
-These standards may change or be made obsolete by future developments, but for now, they form a set of interlocking technologies that have become the de facto wallet standard for most blockchain platforms and their cryptocurrencies.
+这些标准可能会发生变化或被未来的发展所取代，但就目前而言，它们形成了一组相互关联的技术，已成为大多数区块链平台及其加密货币的事实上的钱包标准。
 
-A broad range of software and hardware wallets have adopted the standards, making all these wallets interoperable. A user can export a mnemonic generated in one of these wallets and import it to another wallet, recovering all keys and addresses.
+各种各样的软件和硬件钱包都采用了这些标准，使所有这些钱包都具有互操作性。用户可以导出在其中一个钱包中生成的助记符，并将其导入到另一个钱包中，从而恢复所有密钥和地址。
 
-Some examples of software wallets supporting these standards include Rabby Wallet, MetaMask, and Phantom. Examples of hardware wallets supporting these standards are various models of Ledger and Trezor.
+支持这些标准的软件钱包的一些示例包括 Rabby Wallet，MetaMask 和 Phantom。支持这些标准的硬件钱包的示例是 Ledger 和 Trezor 的各种型号。
 
-The following sections examine each of these technologies in detail.
+以下各节将详细研究每种技术。
 
-> **Tip**  
+> **提示**
 >
-> If you are implementing an Ethereum wallet, it should be built as an HD wallet, with a seed encoded as a mnemonic code for backup, following the BIP-32, BIP-39, BIP-43, and BIP-44 standards, as described in the following sections.
+> 如果你正在实现以太坊钱包，则应将其构建为 HD 钱包，种子编码为助记码以进行备份，并遵循 BIP-32、BIP-39、BIP-43 和 BIP-44 标准，如以下各节所述。
 
-### Mnemonic Code Words (BIP-39)
+### 助记码 (BIP-39)
 
-Mnemonic code words are word sequences that encode a random number used as a seed to derive a deterministic wallet. The sequence of words is sufficient to re-create the seed and, from there, to re-create the wallet and all the derived keys. A wallet application that implements deterministic wallets with mnemonic words will show the user a sequence of 12–24 words when first creating a wallet. That sequence of words is the wallet backup and can be used to recover and re-create all the keys in the same or any compatible wallet application. As we explained earlier, mnemonic word lists make it easier for users to back up wallets because they are easy to read and correctly transcribe.
+助记码是单词序列，用于编码用作种子以派生确定性钱包的随机数。单词序列足以重新创建种子，并从那里重新创建钱包和所有派生的密钥。实现带有助记词的确定性钱包的钱包应用程序将显示给用户在首次创建钱包时显示 12-24 个单词的序列。该单词序列是钱包备份，可用于在相同或任何兼容的钱包应用程序中恢复和重新创建所有密钥。正如我们前面解释的那样，助记词列表使用户更容易备份钱包，因为它们易于阅读和正确转录。
 
-> **Note**  
+> **注意**
 >
-> Mnemonic words are often confused with *brainwallets*. They are not the same. The primary difference is that a brainwallet consists of words chosen by the user, whereas mnemonic words are created randomly by the wallet and presented to the user. This important difference makes mnemonic words much more secure because humans are very poor sources of randomness. Perhaps more important, using the term *brainwallet* suggests that the words have to be memorized, which is a terrible idea and a recipe for not having your backup when you need it.
+> 助记词常常与 *脑钱包* 混淆。它们不一样。主要区别在于脑钱包由用户选择的单词组成，而助记词则是由钱包随机创建并呈现给用户的。这种重要的区别使得助记词更加安全，因为人类是随机性的很差的来源。也许更重要的是，使用术语 *脑钱包* 表明这些单词必须被记住，这是一个糟糕的主意，而且是在你需要的的时候没有备份的处方。
 
-Mnemonic codes are defined in BIP-39. Note that BIP-39 is one implementation of a mnemonic code standard. There is a different standard, with a different set of words, used by the Electrum Bitcoin wallet and predating BIP-39. BIP-39 was proposed by the company behind the Trezor hardware wallet and is incompatible with Electrum's implementation. However, BIP-39 has now achieved broad industry support across dozens of interoperable implementations and should be considered the de facto industry standard. Furthermore, BIP-39 can be used to produce multicurrency wallets supporting Ethereum, whereas Electrum seeds cannot.
+助记码在 BIP-39 中定义。请注意，BIP-39 是助记码标准的一种实现。Electrum 比特币钱包使用了一个不同的标准，带有一组不同的单词，并且早于 BIP-39。BIP-39 由 Trezor 硬件钱包背后的公司提出，并且与 Electrum 的实现不兼容。但是，BIP-39 现在已经在数十个可互操作的实现中获得了广泛的行业支持，应被视为事实上的行业标准。此外，BIP-39 可用于生成支持以太坊的多货币钱包，而 Electrum 种子则不能。
 
-BIP-39 defines the creation of a mnemonic code and seed, which we describe here in nine steps. For clarity, the process is split into two parts: steps 1 through 6 are listed in "Generating mnemonic words", and steps 7 through 9 are listed in "From mnemonic to seed".
+BIP-39 定义了助记码和种子的创建，我们在此用九个步骤进行描述。为了清楚起见，该过程分为两个部分：步骤 1 到 6 在“生成助记词”中列出，步骤 7 到 9 在“从助记词到种子”中列出。
 
-#### Generating mnemonic words
+#### 生成助记词
 
-The wallet generates mnemonic words automatically using the standardized process defined in BIP-39. The wallet starts from a source of entropy, adds a checksum, and then maps the entropy to a word list following these steps:
+钱包使用 BIP-39 中定义的标准化过程自动生成助记词。钱包从熵源开始，添加校验和，然后按照以下步骤将熵映射到单词列表：
 
-1. Create a cryptographically random sequence *S* of 128–256 bits.
+1. 创建一个 128-256 位的密码学随机序列 *S*。
 
-2. Create a checksum of *S* by taking the first length-of-*S* ÷ 32 bits of the SHA-256 hash of *S*.
+2. 通过获取 *S* 的 SHA-256 哈希的前 length-of-*S* ÷ 32 位来创建 *S* 的校验和。
 
-3. Add the checksum to the end of the random sequence *S*.
+3. 将校验和添加到随机序列 *S* 的末尾。
 
-4. Divide the sequence-and-checksum concatenation into sections of 11 bits.
+4. 将序列和校验和的连结分成 11 位的 sections。
 
-5. Map each 11-bit value to a word from the predefined dictionary of 2,048 words.
+5. 将每个 11 位的值映射到预定义的 2,048 个单词的字典中的一个单词。
 
-6. Create the mnemonic code from the sequence of words, maintaining the order.
+6. 从单词序列创建助记码，保持顺序。
 
-Figure 5-2 shows how entropy is used to generate mnemonic words.
+图 5-2 显示了如何使用熵来生成助记词。
 
-![Generating mnemonic words](images/ch5/maet_0502.png)
+![生成助记词](images/ch5/maet_0502.png)
 
-Figure 5-2. Generating mnemonic words
+图 5-2. 生成助记词
 
-Table 5-1 shows the relationship between the size of the entropy data and the length of mnemonic codes in words.
+表 5-1 显示了熵数据的大小与助记码长度（以单词为单位）之间的关系。
 
-**Table 5-1. Mnemonic codes: Entropy and word length**
+**表 5-1. 助记码：熵和单词长度**
 
-| Entropy (bits) | Checksum (bits) | Entropy + checksum (bits) | Mnemonic length (words) |
+| 熵（位） | 校验和（位） | 熵 + 校验和（位） | 助记词长度（单词） |
 |---|---|---|---|
 | 128 | 4 | 132 | 12 |
 | 160 | 5 | 165 | 15 |
@@ -169,409 +169,408 @@ Table 5-1 shows the relationship between the size of the entropy data and the le
 | 224 | 7 | 231 | 21 |
 | 256 | 8 | 264 | 24 |
 
-#### From mnemonic to seed
+#### 从助记词到种子
 
-The mnemonic words represent entropy with a length of 128–256 bits. The entropy is then used to derive a longer (512-bit) seed through the use of the key-stretching function PBKDF2. The seed produced is used to build a deterministic wallet and derive its keys.
+助记词表示长度为 128-256 位的熵。然后，通过使用密钥拉伸函数 PBKDF2，使用该熵派生更长的（512 位）种子。生成的种子用于构建确定性钱包并派生其密钥。
 
-The key-stretching function takes two parameters: the mnemonic and a salt. The purpose of a salt in a key-stretching function is to make it difficult to build a lookup table enabling a brute-force attack. In the BIP-39 standard, the salt has another purpose: it allows for the introduction of a passphrase that serves as an additional security factor protecting the seed, which we will describe in more detail in the next section.
+密钥拉伸函数采用两个参数：助记词和盐。盐在密钥拉伸函数中的目的是使其难以构建查找表，从而实现暴力破解攻击。在 BIP-39 标准中，salt 具有另一个目的：它允许引入一个密码，该密码充当保护种子的附加安全因素，我们将在下一节中对此进行更详细的描述。
 
-The process continues from the previous section with the following steps:
+该过程从上一节继续，并执行以下步骤：
 
-7. The first parameter to the PBKDF2 key-stretching function is the mnemonic produced in step 6.
+7. PBKDF2 密钥拉伸函数的第一个参数是在步骤 6 中生成的助记词。
 
-8. The second parameter to the PBKDF2 key-stretching function is a *salt*. The salt is composed of the string constant `"mnemonic"` concatenated with an optional user-supplied passphrase.
+8. PBKDF2 密钥拉伸函数的第二个参数是一个 *盐*。该盐由字符串常量 `"mnemonic"` 连接一个可选的用户提供的密码组成。
 
-9. PBKDF2 stretches the mnemonic and salt parameters using 2,048 rounds of hashing with the HMAC-SHA512 algorithm, producing a 512-bit value as its final output. That 512-bit value is the seed.
+9. PBKDF2 使用 HMAC-SHA512 算法通过 2,048 轮哈希来拉伸助记词和盐参数，生成一个 512 位的值作为其最终输出。该 512 位的值是种子。
 
-Figure 5-3 shows how a mnemonic is used to generate a seed.
+图 5-3 显示了如何使用助记词来生成种子。
 
-![From mnemonic to seed](images/ch5/maet_0503.png)
+![从助记词到种子](images/ch5/maet_0503.png)
 
-Figure 5-3. From mnemonic to seed
+图 5-3. 从助记词到种子
 
-> **Note**  
+> **注意**
 >
-> The key-stretching function, with its 2,048 rounds of hashing, is a somewhat effective protection against brute-force attacks against the mnemonic or the passphrase. It makes it costly (in computation) to try more than a few thousand passphrase and mnemonic combinations, while the number of possible derived seeds is vast (2^512^, or about 10^154^)—far bigger than the number of atoms in the visible universe (about 10^80^).
+> 密钥拉伸函数及其 2,048 轮哈希在一定程度上有效地防止了针对助记词或密码的暴力破解攻击。它使得尝试超过几千个密码和助记词组合在计算上代价高昂，而可能的派生种子的数量是巨大的（2^512^，或大约 10^154^）——远大于可见宇宙中的原子数量（大约 10^80^）。
 
-Tables 5-2, 5-3, and 5-4 show some examples of mnemonic codes and the seeds they produce.
+表 5-2、5-3 和 5-4 显示了助记码及其生成的种子的一些示例。
 
-**Table 5-2. A 128-bit entropy mnemonic code with no passphrase and the resulting seed**
-
-| | |
-|---|---|
-| **Entropy** | 0c1e24e5917779d297e14d45f14e1a1a |
-| **Mnemonic** | army van defense carry jealous true garbage claim echo media make crunch |
-| **Passphrase** | (none) |
-| **Seed** | 5b56c417303faa3fcba7e57400e120a0ca83ec5a4fc9ffba757fbe63fbd77a89a1a3be4c67196f57c39... |
-
-**Table 5-3. A 128-bit entropy mnemonic code with a passphrase and the resulting seed**
+**表 5-2. 一个没有密码的 128 位熵助记码以及生成的种子**
 
 | | |
 |---|---|
-| **Entropy** | 0c1e24e5917779d297e14d45f14e1a1a |
-| **Mnemonic** | army van defense carry jealous true garbage claim echo media make crunch |
-| **Passphrase** | SuperDuperSecret |
-| **Seed** | 3b5df16df2157104cfdd22830162a5e170c0161653e3afe6c88defeefb0818c793dbb28ab3ab091897d0... |
+| **熵** | 0c1e24e5917779d297e14d45f14e1a1a |
+| **助记词** | army van defense carry jealous true garbage claim echo media make crunch |
+| **密码** | (none) |
+| **种子** | 5b56c417303faa3fcba7e57400e120a0ca83ec5a4fc9ffba757fbe63fbd77a89a1a3be4c67196f57c39... |
 
-**Table 5-4. A 256-bit entropy mnemonic code with no passphrase and the resulting seed**
+**表 5-3. 一个带有密码的 128 位熵助记码以及生成的种子**
 
 | | |
 |---|---|
-| **Entropy** | 2041546864449caff939d32d574753fe684d3c947c3346713dd8423e74abcf8c |
-| **Mnemonic** | cake apple borrow silk endorse fitness top denial coil riot stay wolf luggage oxygen faint major edit measure invite love trap field dilemma oblige |
-| **Passphrase** | (none) |
-| **Seed** | 3269bce2674acbd188d4f120072b13b088a0ecf87c6e4cae41657a0bb78f5315b33b3a04356e53d062e5... |
+| **熵** | 0c1e24e5917779d297e14d45f14e1a1a |
+| **助记词** | army van defense carry jealous true garbage claim echo media make crunch |
+| **密码** | SuperDuperSecret |
+| **种子** | 3b5df16df2157104cfdd22830162a5e170c0161653e3afe6c88defeefb0818c793dbb28ab3ab091897d0... |
 
-#### Optional Passphrase in BIP-39
+**表 5-4. 一个没有密码的 256 位熵助记码以及生成的种子**
 
-The BIP-39 standard allows for the use of an optional passphrase in the derivation of the seed. If no passphrase is used, the mnemonic is stretched with a salt consisting of the constant string `"mnemonic"`, producing a specific 512-bit seed from any given mnemonic. If a passphrase is used, the stretching function produces a *different* seed from that same mnemonic. In fact, given a single mnemonic, every possible passphrase leads to a different seed. Essentially, there is no "wrong" passphrase. All passphrases are valid, and they all lead to different seeds, forming a vast set of possible uninitialized wallets. The set of possible wallets is so large (2^512^) that there is no practical possibility of brute-forcing or accidentally guessing one that is in use, as long as the passphrase has sufficient complexity and length.
+| | |
+|---|---|
+| **熵** | 2041546864449caff939d32d574753fe684d3c947c3346713dd8423e74abcf8c |
+| **助记词** | cake apple borrow silk endorse fitness top denial coil riot stay wolf luggage oxygen faint major edit measure invite love trap field dilemma oblige |
+| **密码** | (none) |
+| **种子** | 3269bce2674acbd188d4f120072b13b088a0ecf87c6e4cae41657a0bb78f5315b33b3a04356e53d062e5... |
 
-> **Tip**  
+#### BIP-39 中的可选密码
+
+BIP-39 标准允许在种子的派生中使用可选密码。如果不使用密码，则助记词将使用由常量字符串 `"mnemonic"` 组成的盐进行拉伸，从而从任何给定的助记词中生成特定的 512 位种子。如果使用密码，则拉伸函数会从同一助记词生成 *不同的* 种子。实际上，给定一个助记词，每个可能的密码都会生成一个不同的种子。从本质上讲，没有“错误”的密码。所有密码都是有效的，并且它们都通向不同的种子，从而形成大量可能的未初始化钱包。可能钱包的集合非常大 (2^512^)，只要密码具有足够的复杂性和长度，就没有实际的可能性进行暴力攻击或意外猜测到正在使用的密码。
+
+> **提示**
 >
-> There are no "wrong" passphrases in BIP-39. Every passphrase leads to some wallet, which unless previously used will be empty.
+> BIP-39 中没有“错误”的密码。每个密码都会通向某个钱包，除非先前使用过，否则该钱包将是空的。
 
-The optional passphrase creates two important features:
+可选密码创建了两个重要功能：
 
-- A second factor (something memorized) that makes a mnemonic useless on its own, protecting mnemonic backups from compromise by a thief
+- 第二个因素（记住的东西），使助记词本身毫无用处，从而保护助记词备份免受窃贼的侵害
 
-- A form of plausible deniability or "duress wallet," where a chosen passphrase leads to a wallet with a small amount of funds, used to distract an attacker from the "real" wallet that contains the majority of funds
+- 一种似是而非的否认或“胁迫钱包”的形式，其中选择的密码通向一个只有少量资金的钱包，用于分散攻击者对包含大部分资金的“真实”钱包的注意力
 
-However, it is important to note that the use of a passphrase also introduces the risk of loss:
+但是，重要的是要注意，使用密码也会带来丢失的风险：
 
-- If the wallet owner is incapacitated or dead and no one else knows the passphrase, the seed is useless, and all the funds stored in the wallet are lost forever.
+- 如果钱包所有者丧失能力或死亡，并且没有人知道密码，则种子将毫无用处，并且存储在钱包中的所有资金将永远丢失。
 
-- Conversely, if the owner backs up the passphrase in the same place as the seed, that defeats the purpose of a second factor.
+- 相反，如果所有者将密码备份在与种子相同的位置，则违背了第二因素的目的。
 
-While passphrases are very useful, they should be used only in combination with a carefully planned process for backup and recovery, considering the possibility of heirs surviving the owner being able to recover the cryptocurrency.
+虽然密码非常有用，但应仅结合仔细计划的备份和恢复过程使用它们，并考虑到继承人能够从所有者那里恢复加密货币的可能性。
 
-#### Working with Mnemonic Codes
+#### 使用助记码
 
-BIP-39 is implemented as a library in many different programming languages, such as:
+BIP-39 作为库在许多不同的编程语言中实现，例如：
 
 **python-mnemonic**
 
-The reference implementation of the standard by the SatoshiLabs team that proposed BIP-39, in Python
+由 SatoshiLabs 团队提出的 BIP-39 的标准参考实现，采用 Python 编写
 
 **ConsenSys/eth-lightwallet**
 
-A lightweight JavaScript Ethereum wallet for nodes and browser (with BIP-39)
+一个轻量级的 JavaScript 以太坊钱包，适用于节点和浏览器（带有 BIP-39）
 
 **npm/bip39**
 
-A JavaScript implementation of Bitcoin BIP-39
+一个 Bitcoin BIP-39 的 JavaScript 实现
 
-There is also a BIP-39 generator implemented in a standalone web page (Figure 5-4), which is extremely useful for testing and experimentation. The [Mnemonic Code Converter](https://iancoleman.io/bip39/) generates mnemonics, seeds, and extended private keys. It can be used offline in a browser, or it can be accessed online.
+还有一个 BIP-39 生成器在独立的网页上实现（图 5-4），这对于测试和实验非常有用。[助记码转换器](https://iancoleman.io/bip39/) 生成助记符、种子和扩展私钥。它可以在浏览器中离线使用，也可以在线访问。
 
-> **Note**  
+> **注意**
 >
-> This will be emphasized repeatedly throughout the chapter because it is the most crucial rule for seed security: never, under any circumstances, save your seed phrase in digital form.
+> 这将在本章中被反复强调，因为这是种子安全性的最关键规则：在任何情况下都不要以数字形式保存你的种子短语。
 
-![The BIP-39 generator web page](images/ch5/maet_0504.png)
+![BIP-39 生成器网页](images/ch5/maet_0504.png)
 
-Figure 5-4. The BIP-39 generator web page
+图 5-4. BIP-39 生成器网页
 
-### Creating an HD Wallet from the Seed
+### 从种子创建 HD 钱包
 
-HD wallets are created from a single *root seed*, which is a 128-, 256-, or 512-bit random number. This seed is most commonly generated from a mnemonic, as detailed in the previous section.
+HD 钱包是从单个 *根种子* 创建的，根种子是一个 128 位、256 位或 512 位的随机数。最常见的做法是从助记符生成此种子，如上一节所述。
 
-Every key in the HD wallet is deterministically derived from this root seed, which makes it possible to re-create the entire HD wallet from that seed in any compatible HD wallet. This makes it easy to export, back up, restore, and import HD wallets containing thousands or even millions of keys by transferring just the mnemonic from which the root seed is derived.
+HD 钱包中的每个密钥都是从这个根种子确定性地派生出来的，这使得在任何兼容的 HD 钱包中从该种子重新创建整个 HD 钱包成为可能。这使得导出、备份、恢复和导入包含数千甚至数百万个密钥的 HD 钱包变得容易，只需传输派生根种子的助记符即可。
 
-### HD Wallets (BIP-32)
+### HD 钱包（BIP-32）
 
-Most HD wallets follow the BIP-32 standard, which has become a de facto industry standard for deterministic key generation. We won't be discussing all the details of BIP-32 here, only the components necessary to understand how it is used in wallets. The most important aspect is the treelike hierarchical relationships that it is possible for the derived keys to have, as you can see in Figure 5-1. It's also important to understand the ideas of extended keys and hardened keys, which are explained in the following sections.
+大多数 HD 钱包都遵循 BIP-32 标准，该标准已成为确定性密钥生成的事实上的行业标准。我们不会在此讨论 BIP-32 的所有细节，只会讨论理解它如何在钱包中使用的组件。最重要的方面是它派生的密钥可能具有树状分层关系，如图 5-1 所示。理解扩展密钥和强化密钥的概念也很重要，这将在以下各节中进行解释。
 
-There are dozens of interoperable implementations of BIP-32 offered in many software libraries. These are mostly designed for Bitcoin wallets, which implement addresses in a different way, but they share the same key-derivation implementation as Ethereum's BIP-32-compatible wallets. Use one designed for Ethereum or adapt one from Bitcoin by adding an Ethereum address encoding library.
+许多软件库提供了 BIP-32 的数十个可互操作的实现。这些实现主要为比特币钱包设计，它们以不同的方式实现地址，但它们与以太坊的 BIP-32 兼容钱包共享相同的密钥派生实现。使用专为以太坊设计的实现，或者通过添加以太坊地址编码库来适配比特币的实现。
 
-There is also a BIP-32 generator implemented as a standalone web page that is very useful for testing and experimentation with BIP-32.
+还有一个 BIP-32 生成器实现为一个独立的网页, 对于 BIP-32 的测试和实验非常有用。
 
-> **Warning**  
+> **警告**
 >
-> The standalone BIP-32 generator is not an HTTPS site. That's to remind you that using this tool is not secure. It is only for testing. You should not use the keys produced by this site with real funds.
+> 独立的 BIP-32 生成器不是一个 HTTPS 站点。这是为了提醒你，使用此工具是不安全的。它仅用于测试。你不应该使用此站点生成的密钥来处理真实资金。
 
-#### Extended Public and Private Keys
+#### 扩展公钥和私钥
 
-In BIP-32 terminology, keys can be "extended." With the right mathematical operations, these extended "parent" keys can be used to derive "child" keys, thus producing the hierarchy of keys and addresses described earlier. A parent key doesn't have to be at the top of the tree. It can be picked out from anywhere in the tree hierarchy. Extending a key involves taking the key itself and appending a special *chain code* to it. A chain code is a 256-bit binary string that is mixed with each key to produce child keys.
+在 BIP-32 术语中，密钥可以被“扩展”。通过正确的数学运算，这些扩展的“父”密钥可以用于派生“子”密钥，从而产生先前描述的密钥和地址层次结构。父密钥不必位于树的顶部。它可以从树层次结构中的任何位置挑选出来。扩展密钥涉及获取密钥本身并在其后附加一个特殊的 *链码*。链码是一个 256 位的二进制字符串，它与每个密钥混合以生成子密钥。
 
-If the key is a private key, it becomes an *extended private key* distinguished by the prefix `xprv`:
+如果密钥是私钥，则它将成为一个 *扩展私钥*，其前缀为 `xprv`：
 
     xprv9s21ZrQH143K2JF8RafpqtKiTbsbaxEeUaMnNHsm5o6wCW3z8ySyH4UxFVSfZ8n7ESu7fgir8i...
 
-An *extended public key* is distinguished by the prefix `xpub`:
+一个 *扩展公钥* 的前缀为 `xpub`：
 
     xpub661MyMwAqRbcEnKbXcCqD2GT1di5zQxVqoHPAgHNe8dv5JP8gWmDproS6kFHJnLZd23tWevhdn...
 
-A very useful characteristic of HD wallets is the ability to derive child public keys from parent public keys *without* having the private keys. This gives us two ways to derive a child public key: either directly from the child private key or from the parent public key. An extended public key can be used, therefore, to derive all the public keys (and *only* the public keys) in that branch of the HD wallet structure.
+HD 钱包的一个非常有用的特性是能够从父公钥派生子公钥 *而无需* 拥有私钥。这给了我们两种派生子公钥的方式：直接从子私钥派生，或者从父公钥派生。因此，扩展公钥可以用于派生 HD 钱包结构的该分支中的所有公钥（*仅* 公钥）。
 
-This shortcut can be used to create extremely secure public-key-only deployments, where a server or application has a copy of an extended public key but no private keys whatsoever. That kind of deployment can produce an infinite number of public keys and Ethereum addresses but cannot spend any money sent to those addresses. Meanwhile, on another, more secure server, the extended private key can derive all the corresponding private keys to sign transactions and spend the money.
+这种快捷方式可用于创建极其安全的仅公钥部署，其中服务器或应用程序拥有扩展公钥的副本，但没有任何私钥。这种部署可以生成无限数量的公钥和以太坊地址，但无法花费发送到这些地址的任何资金。同时，在另一个更安全的服务器上，扩展私钥可以派生所有相应的私钥以签署交易并花费资金。
 
-One common application of this method is to install an extended public key on a web server that serves an ecommerce application. The web server can use the public key derivation function to create a new Ethereum address for every transaction (e.g., for a customer shopping cart) and will not have any private keys that would be vulnerable to theft. Without HD wallets, the only way to do this is to generate thousands of Ethereum addresses on a separate secure server and then preload them on the ecommerce server. That approach is cumbersome and requires constant maintenance to ensure that the server doesn't run out of keys—hence the preference to use extended public keys from HD wallets.
+此方法的一个常见应用是在提供电子商务应用程序的 Web 服务器上安装扩展公钥。Web 服务器可以使用公钥派生函数为每笔交易（例如，对于客户购物车）创建一个新的以太坊地址，并且不会有任何容易被盗的私钥。如果没有 HD 钱包，执行此操作的唯一方法是在单独的安全服务器上生成数千个以太坊地址，然后将它们预加载到电子商务服务器上。这种方法繁琐且需要不断维护以确保服务器不会耗尽密钥——因此首选使用 HD 钱包中的扩展公钥。
 
-Another common application of this solution is for cold-storage or hardware wallets. In that scenario, the extended private key can be stored in a hardware wallet, while the extended public key can be kept online. The user can create "receive" addresses at will while the private keys are safely stored offline. To spend the funds, the user can use the extended private key in an offline signing Ethereum client or sign transactions on the hardware wallet device.
+此解决方案的另一个常见应用是冷存储或硬件钱包。在这种情况下，扩展私钥可以存储在硬件钱包中，而扩展公钥可以保持联机状态。用户可以随意创建“接收”地址，同时将私钥安全地离线存储。要花费资金，用户可以使用离线签名以太坊客户端中的扩展私钥或在硬件钱包设备上签署交易。
 
-#### Hardened Child Key Derivation
+#### 强化子密钥派生
 
-The ability to derive a branch of public keys from an extended public key, or `xpub`, is very useful, but it comes with potential risk. Access to an `xpub` does not give access to child private keys. However, because the `xpub` contains the chain code (used to derive child public keys from the parent public key), if a child private key is known or somehow leaked, it can be used with the chain code to derive all the other child private keys. A single leaked child private key, together with a parent chain code, reveals all the private keys of all the children. Worse, the child private key together with a parent chain code can be used to deduce the parent private key.
+从扩展公钥或 `xpub` 派生公钥分支的能力非常有用，但它具有潜在的风险。访问 `xpub` 无权访问子私钥。但是，由于 `xpub` 包含链码（用于从父公钥派生子公钥），因此如果已知或以某种方式泄露了子私钥，则可以将其与链码一起使用以派生所有其他子私钥。一个泄露的子私钥以及父链码会泄露所有子项的所有私钥。更糟糕的是，子私钥和父链码可以用来推断父私钥。
 
-To counter this risk, HD wallets use an alternative derivation function called *hardened derivation*, which "breaks" the relationship between parent public key and child chain code. The hardened derivation function uses the parent private key to derive the child chain code, instead of the parent public key. This creates a "firewall" in the parent-child sequence, with a chain code that cannot be used to compromise a parent or sibling private key.
+为了应对这种风险，HD 钱包使用了一种替代派生函数，称为 *强化派生*，它“打破”了父公钥和子链码之间的关系。强化派生函数使用父私钥来派生子链码，而不是父公钥。这在父子序列中创建了一个“防火墙”，该防火墙具有无法用于危害父私钥或同级私钥的链码。
 
-In simple terms, if you want to use the convenience of an `xpub` to derive branches of public keys without exposing yourself to the risk of a leaked chain code, you should derive it from a hardened parent, rather than a normal parent. Best practice is to have the level-one children of the master keys always derived by hardened derivation, to prevent compromise of the master keys.
+简单来说，如果你想使用 `xpub` 的便利性来派生公钥分支而不让自己暴露于泄露的链码的风险中，你应该从强化的父密钥派生它，而不是从普通的父密钥派生它。最佳实践是始终通过强化派生来派生主密钥的一级子密钥，以防止主密钥受到损害。
 
-#### Index Numbers for Normal and Hardened Derivation
+#### 普通派生和强化派生的索引号
 
-It is clearly desirable to be able to derive more than one child key from a given parent key. To manage this, an index number is used. Each index number, when combined with a parent key using the special child derivation function, gives a different child key. The index number used in the BIP-32 parent-to-child derivation function is a 32-bit integer. To easily distinguish between keys derived through the normal (unhardened) derivation function versus keys derived through hardened derivation, this index number is split into two ranges. Index numbers between 0 and 2^31^–1 (0x0 to 0x7FFFFFFF) are used *only* for normal derivation. Index numbers between 2^31^ and 2^32^–1 (0x80000000 to 0xFFFFFFFF) are used *only* for hardened derivation. Therefore, if the index number is less than 2^31^, the child is normal, whereas if the index number is equal to or above 2^31^, the child is hardened.
+显然，能够从给定的父密钥派生多个子密钥是可取的。为了管理这一点，使用了一个索引号。当使用特殊的子派生函数与父密钥组合时，每个索引号都会给出不同的子密钥。用于 BIP-32 父子派生函数中的索引号是一个 32 位整数。为了易于区分通过普通（非强化）派生函数派生的密钥与通过强化派生派生的密钥，此索引号被分成两个范围。0 到 2^31^–1 (0x0 到 0x7FFFFFFF) 范围内的索引号 *仅* 用于普通派生。2^31^ 到 2^32^–1 (0x80000000 到 0xFFFFFFFF) 范围内的索引号 *仅* 用于强化派生。因此，如果索引号小于 2^31^，则子密钥是普通密钥；如果索引号等于或大于 2^31^，则子密钥是强化密钥。
 
-To make the index numbers easier to read and display, the index numbers for hardened children are displayed starting from zero, but with a prime symbol. The first normal child key is therefore displayed as 0, whereas the first hardened child (index 0x80000000) is displayed as 0′. In sequence, then, the second hardened key would have an index of 0x80000001 and would be displayed as 1′, and so on. When you see an HD wallet index *i*′, that means 2^31^ + *i*.
+为了使索引号更易于阅读和显示，强化子密钥的索引号从零开始显示，但带有素数符号。因此，第一个普通子密钥显示为 0，而第一个强化子密钥（索引 0x80000000）显示为 0′。然后，按顺序，第二个强化密钥的索引为 0x80000001，将显示为 1′，依此类推。当你看到 HD 钱包索引 *i*′ 时，那意味着 2^31^ + *i*。
 
-#### HD Wallet Key Identifier (Path)
+#### HD 钱包密钥标识符（路径）
 
-Keys in an HD wallet are identified using a "path" naming convention, with each level of the tree separated by a slash (`/`) character (see Table 5-5). Private keys derived from the master private key start with `m`. Public keys derived from the master public key start with `M`. Therefore, the first child private key of the master private key is `m/0`. The first child public key is `M/0`. The second grandchild of the first child is `m/0/1`, and so on.
+HD 钱包中的密钥使用“路径”命名约定进行标识，树的每一层都用斜杠 (`/`) 字符分隔（参见表 5-5）。从主私钥派生的私钥以 `m` 开头。从主公钥派生的公钥以 `M` 开头。因此，主私钥的第一个子私钥是 `m/0`。第一个子公钥是 `M/0`。第一个孩子的第二个孙子是 `m/0/1`，依此类推。
 
-The "ancestry" of a key is read from right to left, until you reach the master key from which it was derived. For example, identifier `m/x/y/z` describes the key that is the *z*-th child of key `m/x/y`, which is the *y*-th child of key `m/x`, which is the *x*-th child of `m`.
+密钥的“祖先”从右到左读取，直到到达从中派生的主密钥。例如，标识符 `m/x/y/z` 描述的是密钥 `m/x/y` 的第 *z* 个子密钥，它是密钥 `m/x` 的第 *y* 个子密钥，它是密钥 `m/x` 的第 *x* 个子密钥，而它是 `m` 的第 *x* 个子密钥。
 
-**Table 5-5. HD wallet path examples**
+**表 5-5. HD 钱包路径示例**
 
-| HD path | Key described |
+| HD 路径 | 描述的密钥 |
 |---|---|
-| m/0 | The first (0) child private key from the master private key (m) |
-| m/0/0 | The first grandchild private key of the first child (m/0) |
-| m/0'/0 | The first normal grandchild of the first hardened child (m/0') |
-| m/1/0 | The first grandchild private key of the second child (m/1) |
-| M/23/17/0/0 | The first great-great-grandchild public key of the first great-grandchild of the 18th grandchild of the 24th child |
+| m/0 | 来自主私钥 (m) 的第一个 (0) 子私钥 |
+| m/0/0 | 第一个孩子 (m/0) 的第一个孙子私钥 |
+| m/0'/0 | 第一个强化孩子 (m/0') 的第一个普通孙子密钥 |
+| m/1/0 | 第二个孩子 (m/1) 的第一个孙子私钥 |
+| M/23/17/0/0 | 第 24 个孩子的第 18 个孙子的第一个曾孙的第一个曾曾孙公钥 |
 
-### Navigating the HD Wallet Tree Structure
+### 导航 HD 钱包树结构
 
-The HD wallet tree structure is tremendously flexible. The flip side of this is that it also allows for unbounded complexity: each parent extended key can have four billion children—two billion normal children and two billion hardened children. Each of those children can have another four billion children, and so on. The tree can be as deep as you want, with a potentially infinite number of generations. With all that potential, it can become quite difficult to navigate these very large trees.
+HD 钱包树结构非常灵活。另一方面，它也允许无界的复杂性：每个父扩展密钥可以有 40 亿个孩子——20 亿个普通孩子和 20 亿个强化孩子。这些孩子中的每一个都可以有另外 40 亿个孩子，依此类推。树可以像你想要的那么深，具有潜在的无限代。有了所有这些潜力，导航这些非常大的树可能会变得非常困难。
 
-Two BIPs offer a way to manage this potential complexity by creating standards for the structure of HD wallet trees. BIP-43 proposes the use of the first hardened child index as a special identifier that signifies the "purpose" of the tree structure. Based on BIP-43, an HD wallet should use only one level-one branch of the tree, with the index number defining the purpose of the wallet by identifying the structure and namespace of the rest of the tree. More specifically, an HD wallet using only branch `m/i′/...` is intended to signify a specific purpose, and that purpose is identified by index number *i*.
+两个 BIP 提供了一种通过创建 HD 钱包树结构的标准来管理这种潜在复杂性的方法。BIP-43 建议使用第一个强化的子索引作为特殊标识符，表示树结构的“目的”。基于 BIP-43，HD 钱包应仅使用树的第一个一级分支，索引号通过识别树的结构和命名空间来定义钱包的目的。更具体地说，仅使用分支 `m/i′/...` 的 HD 钱包旨在表示特定目的，该目的由索引号 *i* 标识。
 
-Extending that specification, BIP-44 proposes a multicurrency, multiaccount structure signified by setting the "purpose" number to `44′`. All HD wallets following the BIP-44 structure are identified by the fact that they use only one branch of the tree: `m/44′/*`. BIP-44 specifies the structure as consisting of five predefined tree levels:
+扩展该规范，BIP-44 提出了一个多货币、多帐户结构，通过将“purpose”数字设置为 `44′` 来表示。所有遵循 BIP-44 结构的 HD 钱包都通过它们仅使用树的一个分支来识别：`m/44′/*`。BIP-44 指定该结构由五个预定义的树级别组成：
 
     m / purpose′ / coin_type′ / account′ / change / address_index
+第一层，`purpose′`，始终设置为 `44′`。 第二层，`coin_type′`，指定加密货币币种的类型，允许使用多币种 HD 钱包，其中每种货币在第二层下都有自己的子树。 标准文档 SLIP-0044 中定义了几种货币； 例如，以太坊是 `m/44′/60′`，以太坊经典是 `m/44′/61′`，比特币是 `m/44′/0′`，所有货币的测试网是 `m/44′/1′`。
 
-The first level, `purpose′`, is always set to `44′`. The second level, `coin_type′`, specifies the type of cryptocurrency coin, allowing for multicurrency HD wallets where each currency has its own subtree under the second level. There are several currencies defined in the standards document SLIP-0044; for example, Ethereum is `m/44′/60′`, Ethereum Classic is `m/44′/61′`, Bitcoin is `m/44′/0′`, and testnet for all currencies is `m/44′/1′`.
+树的第三层是 `account′`，允许用户将其钱包细分为单独的逻辑子帐户，用于会计或组织目的。 例如，HD 钱包可能包含两个以太坊帐户：`m/44′/60′/0′` 和 `m/44′/60′/1′`。 每个帐户都是其自身子树的根。
 
-The third level of the tree is `account′`, which allows users to subdivide their wallets into separate logical subaccounts for accounting or organizational purposes. For example, an HD wallet might contain two Ethereum accounts: `m/44′/60′/0′` and `m/44′/60′/1′`. Each account is the root of its own subtree.
+由于 BIP-44 最初是为比特币创建的，因此它包含一个在以太坊世界中不相关的“怪癖”。 在路径的第四层 `change` 上，HD 钱包有两个子树：一个用于创建接收地址，一个用于创建找零地址。 以太坊中仅使用“接收”路径，因为像比特币那样没有找零地址的必要。 请注意，虽然前几层使用强化推导，但这一层使用正常推导。 这是为了允许树的帐户级别导出扩展公钥，以在非安全环境中使用。
 
-Because BIP-44 was created originally for Bitcoin, it contains a "quirk" that isn't relevant in the Ethereum world. On the fourth level of the path, `change`, an HD wallet has two subtrees: one for creating receiving addresses and one for creating change addresses. Only the "receive" path is used in Ethereum, as there is no necessity for a change address like there is in Bitcoin. Note that whereas the previous levels used hardened derivation, this level uses normal derivation. This is to allow the account level of the tree to export extended public keys for use in a nonsecured environment.
+可用的地址由 HD 钱包作为第四层的子级派生，使树的第五层成为 `address_index`。 例如，主要帐户中用于以太坊支付的第三个接收地址将是 `M/44′/60′/0′/0/2`。 表 5-6 显示了更多示例。
 
-Usable addresses are derived by the HD wallet as children of the fourth level, making the fifth level of the tree the `address_index`. For example, the third receiving address for Ethereum payments in the primary account would be `M/44′/60′/0′/0/2`. Table 5-6 shows a few more examples.
+**表 5-6. BIP-44 HD 钱包结构示例**
 
-**Table 5-6. BIP-44 HD wallet structure examples**
-
-| HD path | Key described |
+| HD 路径 | 描述的密钥 |
 |---|---|
-| M/44′/60′/0′/0/2 | The third receiving public key for the primary Ethereum account |
-| M/44′/0′/3′/1/14 | The 15th change-address public key for the fourth Bitcoin account |
-| m/44′/2′/0′/0/1 | The second private key in the Litecoin main account, for signing transactions |
+| M/44′/60′/0′/0/2 | 主要以太坊帐户的第三个接收公钥 |
+| M/44′/0′/3′/1/14 | 第四个比特币帐户的第 15 个找零地址公钥 |
+| m/44′/2′/0′/0/1 | Litecoin 主帐户中的第二个私钥，用于签署交易 |
 
-## Security
+## 安全性
 
-Let's start by introducing the concept of security versus ease of recovery. Taking these concepts to the extreme: what's the most secure seed? It's the one that no one can recover, not even you. So if the seed is created and all copies (physical or digital) are destroyed, that's the most secure seed in the world. Not great, as you wouldn't be able to recover it, but it's technically the most secure.
+让我们首先介绍安全性与易于恢复的概念。 将这些概念推向极致：最安全的种子是什么？ 这是任何人都无法恢复的种子，甚至包括您自己。 因此，如果创建了种子并销毁了所有副本（物理或数字），那么这就是世界上最安全的种子。 这不是很好，因为您将无法恢复它，但从技术上讲，它是最安全的。
 
-On the flip side, for ease of recovery, what's the easiest seed to recover? One that has the seed phrase written everywhere, like getting it tattooed on your body, in plain sight. That seed will be super easy to recover but not secure at all.
+另一方面，为了便于恢复，最容易恢复的种子是什么？ 一个到处都写着助记词短语的种子，就像把它纹在你的身体上，一目了然。 该种子将非常容易恢复，但一点也不安全。
 
-Any choice you make for your operational security (OpSec) in self-custody will likely increase either the security or the ease of recovery of your seed phrase. Increasing security typically reduces ease of recovery, and vice versa. Sometimes, you may end up reducing both, which should be avoided.
+您在自我托管中为您的操作安全（OpSec）所做的任何选择都可能会增加您的助记词短语的安全性或易于恢复性。 提高安全性通常会降低易于恢复性，反之亦然。 有时，您最终可能会同时降低两者，这应该避免。
 
-Even with a high-security system, no setup is 100% secure. You can do everything in your power to create a perfect system, but there will still be vulnerabilities. One of the most interesting is private-key collisions: essentially generating a seed that's already been used. Since seeds in hardware wallets are generated offline and there's no database of generated seeds, it's technically possible to generate the same wallet twice. The chances of this happening are astronomically small (you're more likely to win the lottery twice in a row), but it's still a possibility.
+即使使用高安全性系统，也没有 100% 安全的设置。 您可以尽一切努力创建一个完美的系统，但仍然会存在漏洞。 最有趣的一个是私钥冲突：本质上是生成一个已经使用过的种子。 由于硬件钱包中的种子是离线生成的，并且没有已生成种子的数据库，因此从技术上讲，有可能生成两次相同的钱包。 发生这种情况的可能性极小（您更有可能连续两次赢得彩票），但仍然存在可能性。
 
-> **Warning**  
+> **警告**  
 >
-> Often, there's no urgency in seed security. Either your seed has been stolen, in which case you're already in trouble, or it hasn't. This is especially true for Bitcoin wallets. For Ethereum, it is still the case, but there are situations where acting fast can save funds—for example, removing approvals to dangerous smart contracts. If you receive any urgent messages about your seed, it's probably a scam.
+> 通常，种子安全性并不紧急。 要么您的种子被盗，在这种情况下您已经遇到麻烦，要么没有。 对于比特币钱包来说尤其如此。 对于以太坊来说，情况仍然如此，但在某些情况下，快速行动可以挽救资金——例如，取消对危险智能合约的批准。 如果您收到任何关于您的种子的紧急消息，那很可能是一个骗局。
 
-Complex security mechanisms for hiding your seed are not a best practice. Although they may seem foolproof at first, professionals in the field can often recover these types of seeds with the right tools. And if it's so complex that even professionals can't recover it, there's a good chance you won't be able to when needed.
+用于隐藏您的种子的复杂安全机制不是最佳实践。 尽管它们起初看起来万无一失，但该领域的专业人员通常可以使用正确的工具来恢复这些类型的种子。 而且，如果它过于复杂，甚至专业人员都无法恢复，那么当需要时，您很可能也无法恢复。
 
-Another non–best practice is relying on obscurity for security. Your system should have as few "secret" components as possible, with the seed itself being the main one. If revealing parts of your system causes it to collapse, it's not secure.
+另一个非最佳实践是依赖于模糊性来确保安全性。 您的系统应尽可能少地包含“秘密”组件，种子本身是主要的组件。 如果泄露系统的一部分会导致系统崩溃，那么它就不安全。
 
-A best practice is to follow what most others do. Trying to invent new systems or, worse, creating everything from scratch is wrong. It's not secure, and the majority of people don't have the technical skills to do it. Keep things simple. Simplicity is absolutely a best practice.
+最佳实践是遵循大多数其他人所做的事情。 试图发明新的系统，或者更糟糕的是，从头开始创建一切都是错误的。 这不安全，而且大多数人没有技术技能来做到这一点。 保持简单。 简单绝对是一种最佳实践。
 
-Making a backup of your seed is probably the most important best practice. Whether it's a hardware wallet or a browser wallet, a backup is essential. Backup storage should (a) withstand natural disasters, (b) be geographically separate from your hardware wallet, (c) be in a secure place, and (d) have tamper-evident packaging. Dividing your seed across multiple pieces of paper is not a best practice. It gives a false sense of security.
+备份您的种子可能是最重要的最佳实践。 无论是硬件钱包还是浏览器钱包，备份都是必不可少的。 备份存储应（a）能够承受自然灾害，（b）在地理上与您的硬件钱包分开，（c）位于安全的地方，以及（d）具有防篡改包装。 将您的种子分成多张纸张不是最佳实践。 它给人一种虚假的安全感。
 
-> **Tip**  
+> **提示**  
 >
-> If you don't have a secure place to store your seed, consider using a passphrase. The passphrase adds an extra layer of protection by being combined with your seed during the key-generation process. You can even store the passphrase digitally since it's useless without the seed. If someone gets your seed but not your passphrase, they won't be able to access your funds for a certain amount of time; this is because the passphrase can be brute-forced if the attacker has the seed.
+> 如果您没有安全的地方存放您的种子，请考虑使用密码短语。 密码短语通过在密钥生成过程中与您的种子结合使用，从而增加了一层额外的保护。 您甚至可以以数字方式存储密码短语，因为它在没有种子的情况下是无用的。 如果有人获得了您的种子但没有获得您的密码短语，他们将无法在一段时间内访问您的资金； 这是因为如果攻击者拥有种子，则可以通过暴力破解密码短语。
 
-Everyone's needs are different, and their security requirements will vary accordingly. But you should always follow best practices. Your needs may change over time, so stay aware and adjust your OpSec if needed.
+每个人的需求都不同，他们的安全要求也会有所不同。 但是您应该始终遵循最佳实践。 您的需求可能会随着时间的推移而变化，因此请保持警惕并在需要时调整您的 OpSec。
 
-After setting up your hardware wallet, test your ability to recover the seed. Do this at least once every 12 months, ensuring that your backup works and is accessible.
+设置好您的硬件钱包后，请测试您恢复种子的能力。 至少每 12 个月执行一次此操作，以确保您的备份有效且可访问。
 
-What does a secure system look like? A trusted hardware wallet (like Trezor), at least one safe backup (never saved digitally), and a plan for inheritance in case something happens to you.
+一个安全的系统是什么样的？ 一个可信的硬件钱包（例如 Trezor），至少一个安全的备份（永远不要以数字方式保存），以及万一您发生意外情况的继承计划。
 
-> **Note**  
+> **注意**  
 >
-> Inheritance is a very complicated topic. We recommend reading *Cryptoasset Inheritance Planning: A Simple Guide for Owners* by Pamela Morgan (Merkle Bloom).
+> 继承是一个非常复杂的话题。 我们建议阅读 Pamela Morgan（Merkle Bloom）的 *Cryptoasset Inheritance Planning: A Simple Guide for Owners*。
 
-## Improving on User Experience
+## 改善用户体验
 
-As we mentioned earlier, at a high level, a wallet is a software application that serves as the primary user interface to Ethereum. So for most of Ethereum's users, the wallet is most of the user experience. For years, it has not really been improved. For example, the most popular browser wallet at the time of writing is MetaMask, which has not evolved that much since its inception; a close second, Rabby, has recently emerged. We will now examine a few updates to wallets that could drastically improve the user experience.
+正如我们前面提到的，从高层次来看，钱包是一个软件应用程序，它是以太坊的主要用户界面。 因此，对于大多数以太坊用户来说，钱包就是大部分用户体验。 多年来，它并没有真正得到改善。 例如，在撰写本文时，最受欢迎的浏览器钱包是 MetaMask，自推出以来变化不大； 紧随其后的是 Rabby，最近才出现。 现在，我们将研究对钱包的一些更新，这些更新可能会极大地改善用户体验。
 
-### Account Abstraction
+### 帐户抽象
 
-Account abstraction (AA) on Ethereum is a way to make user accounts more flexible and easier to use. Normally, there are two types of accounts in Ethereum, as described in Chapter 2: EOAs and smart contract accounts. AA combines the benefits of both types. It allows regular accounts (EOAs) to behave more like smart contracts, meaning users can set up custom rules for how their accounts work, such as adding security features or allowing multiple people to sign transactions.
+以太坊上的帐户抽象（AA）是一种使户帐户更灵活和更易于使用的方法。 通常，以太坊中有两种类型的帐户，如第 2 章所述：EOA 和智能合约帐户。 AA 结合了这两种类型的优点。 它允许常规帐户（EOA）的行为更像智能合约，这意味着用户可以为他们的帐户设置自定义规则，例如添加安全功能或允许多人签署交易。
 
-With AA, Ethereum can become more user-friendly and flexible. For example, you could recover a lost account without relying solely on a private key, or you could pay transaction fees in any token, not just ether.
+通过 AA，以太坊可以变得更加用户友好和灵活。 例如，您可以在不完全依赖私钥的情况下恢复丢失的帐户，或者您可以使用任何代币（而不仅仅是以太币）支付交易费用。
 
-There have been multiple proposals to implement AA. The main distinction is that one group of proposals tried to implement AA without changing the Ethereum protocol. Another group of proposals, which will be implemented in the Pectra upgrade, will end up changing the Ethereum protocol.
+已经有多个实施 AA 的提案。 主要的区别在于，一组提案试图在不更改以太坊协议的情况下实施 AA。 另一组提案，将在 Pectra 升级中实施，最终将更改以太坊协议。
 
-Let's look at the main EIPs and Ethereum Requests for Comments (ERCs) for AA. Keep in mind that these proposals are evolving rapidly, and by the time this book is published, the AA landscape may have changed significantly. Nevertheless, it's still useful to explore what has been implemented and what is planned for the near future.
+让我们看一下主要的 EIP 和以太坊请求评论（ERC）的 AA。 请记住，这些提案正在迅速发展，到本书出版时，AA 格局可能已经发生了重大变化。 尽管如此，探索已经实施的内容和计划在不久的将来实施的内容仍然是有用的。
 
-> **Tip**  
+> **提示**  
 >
-> It is important to understand the difference between an ERC, an EIP, and a Rollup Improvement Proposal (RIP). Essentially, EIPs and RIPs are improvements that center on changes in the Ethereum networks, whereas ERCs are application-related changes that do not have any impact on core network capability.
+> 重要的是要了解 ERC、EIP 和 Rollup 改进提案（RIP）之间的区别。 本质上，EIP 和 RIP 是以太坊网络中更改的改进中心，而 ERC 是与应用程序相关的更改，不会对核心网络功能产生任何影响。
 
 #### ERC-4337
 
-ERC-4337 is an advancement in the Ethereum blockchain that aims to make user accounts more versatile, secure, and user-friendly. Unlike typical upgrades that alter the Ethereum protocol, ERC-4337 introduces new functionality through smart contracts and off-chain components. As of September 2024, the primary on-chain implementation of AA is ERC-4337.
+ERC-4337 是以太坊区块链的一项进步，旨在使用户帐户更加通用、安全和用户友好。 与改变以太坊协议的典型升级不同，ERC-4337 通过智能合约和链下组件引入了新功能。 截至 2024 年 9 月，AA 的主要链上实施是 ERC-4337。
 
-As we said in Chapter 2, traditional Ethereum accounts are divided into two types: EOAs, controlled solely by private keys, and contract accounts, which operate through smart contracts. EOAs dominate user wallets today because they are simple and economical; however, they are also limited in functionality and prone to security risks. Losing a private key can mean permanent loss of funds, and EOAs are not customizable for security features like multisignature setups or account-recovery options. Contract accounts can incorporate these security measures and more, yet their complexity and higher transaction fees have prevented their widespread use by everyday users. ERC-4337 overcomes this by enabling EOAs to function as smart contracts, merging the simplicity of EOAs with the security and flexibility of contract accounts.
+正如我们在第 2 章中所说的，传统的以太坊帐户分为两种类型：EOA，仅由私钥控制，以及合约帐户，通过智能合约运行。 EOA 在今天的用户钱包中占据主导地位，因为它们简单且经济； 但是，它们在功能上也受到限制，并且容易受到安全风险的影响。 丢失私钥可能意味着永久失去资金，并且 EOA 无法为多重签名设置或帐户恢复选项等安全功能进行自定义。 合约帐户可以结合这些安全措施以及更多，但它们的复杂性和更高的交易费用阻止了普通用户的广泛使用。 ERC-4337 通过使 EOA 像智能合约一样运行来克服了这个问题，从而将 EOA 的简单性与合约帐户的安全性和灵活性结合在一起。
 
-The implementation of ERC-4337 introduces *UserOperations* to handle transactions differently, as shown in Figure 5-5. Rather than directly broadcasting each transaction to the blockchain, users submit UserOperations to a high-level mempool, where transactions are temporarily stored. Special participants, known as *bundlers*, collect and process these UserOperations, packaging them into a single Ethereum transaction. This process reduces network congestion and allows multiple operations to be processed in a more efficient, bundled manner. ERC-4337 also establishes a new role called *paymasters*. Typically, Ethereum transactions require the payment of gas fees in ETH, but paymasters make it possible for users to cover gas fees with alternative tokens or even to have a third-party sponsor pay the fees on their behalf. This shift eliminates a significant barrier, especially for newcomers who may not hold ETH, making the Ethereum network more inclusive and accessible.
+ERC-4337 的实施引入了 *UserOperations* 来以不同的方式处理交易，如图 5-5 所示。 用户不是直接将每个交易广播到区块链，而是将 UserOperations 提交到高级别的内存池，交易在其中临时存储。 特殊参与者，称为 *bundler*，收集和处理这些 UserOperations，将它们打包成单个以太坊交易。 此过程减少了网络拥塞，并允许以更有效、更捆绑的方式处理多个操作。 ERC-4337 还建立了一个名为 *paymaster* 的新角色。 通常，以太坊交易需要以 ETH 支付 gas 费用，但 paymaster 使其成为可能，用户可以使用替代代币支付 gas 费用，甚至让第三方赞助支付费用。 这种转变消除了一个重大障碍，特别是对于可能没有 ETH 的新手来说，使以太坊网络更具包容性和可访问性。
 
-![ERC-4337 implementation diagram](images/ch5/maet_0505.png)
+![ERC-4337 实施图](images/ch5/maet_0505.png)
 
-Figure 5-5. ERC-4337 implementation diagram
+图 5-5. ERC-4337 实施图
 
-Instead of using the traditional public mempool, which hosts pending transactions for EOAs, UserOperations are sent to a specialized *UserOperation mempool*: a higher-level mempool specifically designed for these operations. Bundlers monitor the UserOperation mempool, collecting multiple UserOperations to package them into a single "classic" transaction. They start by verifying each UserOperation's validity through the EntryPoint methods. After validation, the bundler submits this bundled transaction directly to the next proposed block, bypassing the regular mempool. Bundlers can either act as block builders themselves or collaborate with block builders to add the transaction to the blockchain.
+UserOperations 不是使用传统的公共内存池（托管 EOA 的待处理交易），而是发送到专门的 *UserOperation 内存池*：一个专门为这些操作设计的高级内存池。 Bundler 监视 UserOperation 内存池，收集多个 UserOperation 以将它们打包成单个“经典”交易。 他们首先通过 EntryPoint 方法验证每个 UserOperation 的有效性。 验证后，bundler 将此捆绑的交易直接提交到下一个提议的区块，绕过常规内存池。 Bundler 可以自己充当区块构建器，也可以与区块构建器合作以将交易添加到区块链。
 
 #### EIP-2938
 
-While ERC-4337 focuses on AA at a high level via smart contracts without changing Ethereum's core, EIP-2938 goes a step further by proposing that AA be embedded within the protocol layer itself. This lower-level approach allows for even more direct and flexible interactions among users, smart contracts, and applications by fundamentally changing how the EVM treats accounts. Through EIP-2938, users could handle operations without traditional EOAs, removing reliance on private-key-based accounts and enabling a greater diversity of account management systems, such as multisignature accounts or social recovery accounts, directly on Ethereum's protocol level.
+虽然 ERC-4337 侧重于通过智能合约在高级别进行 AA，而无需更改以太坊的核心，但 EIP-2938 通过提议将 AA 嵌入协议层本身，从而更进一步。 这种较低级别的方法允许用户、智能合约和应用程序之间进行更直接和灵活的交互，从而从根本上改变 EVM 处理帐户的方式。 通过 EIP-2938，用户无需传统的 EOA 即可处理操作，从而消除了对基于私钥的帐户的依赖，并实现了更多样化的帐户管理系统，例如多重签名帐户或社交恢复帐户，直接在以太坊的协议级别上。
 
-The main difference between EIP-2938 and some existing AA proposals lies in the focus on integrating abstraction directly into the protocol, rather than layering it on top. With EIP-2938, Ethereum would support "operations" rather than "transactions," where each operation could represent a more versatile, customizable transaction type. EIP-2938 can redefine Ethereum's transactions as programmable objects, supporting a broader spectrum of use cases. By treating accounts and transactions as inherently programmable, it expands Ethereum's utility beyond standard payments and contract interactions, fitting perfectly with the increasingly complex applications being built on the network.
+EIP-2938 与一些现有的 AA 提案之间的主要区别在于，它侧重于将抽象直接集成到协议中，而不是将其分层在顶部。 通过 EIP-2938，以太坊将支持“操作”而不是“交易”，其中每个操作都可以代表更多功能、可自定义的交易类型。 EIP-2938 可以将以太坊的交易重新定义为可编程对象，支持更广泛的用例。 通过将帐户和交易视为固有可编程的，它扩展了以太坊在标准支付和合约交互之外的实用性，非常适合在网络上构建的日益复杂的应用程序。
 
 #### RIP-7560
 
-The RIP-7560 proposal integrates EIP-2938 and ERC-4337 into a unified approach for native AA, splitting Ethereum's transaction scope into validation, execution, and post-transaction steps. By separating transaction validation into distinct processes for authorization and payment of gas fees, it enables one contract to sponsor gas fees for another account's transaction. This approach maintains compatibility with ERC-4337's ecosystem while working toward the goal of fully native AA.
+RIP-7560 提案将 EIP-2938 和 ERC-4337 集成到用于原生 AA 的统一方法中，将以太坊的交易范围分为验证、执行和交易后步骤。 通过将交易验证分为授权和 gas 费用支付的不同过程，它使一个合约可以赞助另一个帐户的交易的 gas 费用。 这种方法保持了与 ERC-4337 生态系统的兼容性，同时朝着完全原生 AA 的目标迈进。
 
-ERC-4337 introduces AA at the application level, but it comes with limitations due to its out-of-protocol design. These drawbacks include extra gas costs, limited censorship resistance, a dependency on nonstandard RPC methods, and restrictions that limit compatibility with existing contract expectations. Native AA, as proposed in EIP-2938, presents a more robust alternative by building these features directly into the protocol. However, EIP-2938 doesn't fully align with ERC-4337's structure, which has been widely tested and implemented without protocol changes.
+ERC-4337 在应用级别引入了 AA，但由于其协议外设计，它存在局限性。 这些缺点包括额外的 gas 成本、有限的审查抵抗力、对非标准 RPC 方法的依赖以及限制与现有合约期望的兼容性的限制。 如 EIP-2938 中提议的原生 AA，通过将这些功能直接构建到协议中，提供了一种更强大的替代方案。 但是，EIP-2938 没有完全与 ERC-4337 的结构保持一致，该结构已经过广泛测试并在没有协议更改的情况下实施。
 
-By combining EIP-2938's built-in protocol-level features with the practical insights gained from ERC-4337, this proposal brings together the best of both approaches. This hybrid approach aims to lower gas costs, improve the reliability of transactions by making them more resistant to censorship, and ensure compatibility with current and future Ethereum contracts. Gradually moving from EOAs to smart contract accounts would also reduce risks tied to private keys, making Ethereum more secure and easier to use. Importantly, this setup ensures that those already using ERC-4337 can smoothly adopt these new features.
+通过将 EIP-2938 的内置协议级别功能与从 ERC-4337 获得的实际见解相结合，此提案汇集了两种方法的优点。 这种混合方法旨在降低 gas 成本，通过使交易更具审查抵抗力来提高交易的可靠性，并确保与当前和未来的以太坊合约的兼容性。 逐渐从 EOA 迁移到智能合约帐户还可以降低与私钥相关的风险，从而使以太坊更安全且更易于使用。 重要的是，此设置可确保已经使用 ERC-4337 的人可以顺利采用这些新功能。
 
-Figure 5-6 represents the transaction flow for AA as outlined in RIP-7560. The process incorporates several key contracts that handle validation, deployment, and execution, creating a streamlined, modular approach to managing user accounts and transactions on the Ethereum blockchain.
+图 5-6 表示 RIP-7560 中概述的 AA 的交易流程。 该过程包含处理验证、部署和执行的几个关键合约，从而为管理以太坊区块链上的用户帐户和交易创建了简化的模块化方法。
 
-![RIP-7560 transaction flow](images/ch5/maet_0506.png)
+![RIP-7560 交易流程](images/ch5/maet_0506.png)
 
-Figure 5-6. RIP-7560 transaction flow
+图 5-6. RIP-7560 交易流程
 
-The flow begins with a nonce check by the Nonce Manager Contract to ensure that the transaction is unique and hasn't been replayed. This is a crucial step for transaction integrity because it prevents double-spending or accidental repeats. If the nonce is valid, the system moves forward; otherwise, the transaction is halted.
+该流程从 Nonce Manager Contract 进行 nonce 检查开始，以确保交易是唯一的并且没有被重放。 这是交易完整性的关键步骤，因为它可防止双重支出或意外重复。 如果 nonce 有效，则系统将继续前进； 否则，交易将停止。
 
-Next, the process checks if the user's Account Contract (a smart wallet) already exists. If not, the Deployer Contract steps in to create this wallet, allowing the user to participate in transactions. Once it is deployed, or if it is already in place, the Account Contract itself performs a validation check to confirm that the transaction is legitimate and aligns with the contract's logic. This ensures that only authorized actions proceed, adding a layer of security and customization to each user's wallet.
+接下来，该过程检查用户的帐户合约（智能钱包）是否已经存在。 如果没有，则 Deployer Contract 会介入以创建此钱包，从而允许用户参与交易。 一旦部署，或者如果它已经到位，帐户合约本身将执行验证检查，以确认交易是合法的并且与合约的逻辑一致。 这确保只有授权的操作才能进行，从而为每个用户的钱包增加了一层安全性和自定义。
 
-An interesting feature of this flow is the optional involvement of a Paymaster Contract. If specified, this contract can cover the gas fees for the transaction or offer alternative payment methods. When a paymaster is involved, it undergoes its own validation process to ensure it can legitimately cover the transaction costs. This flexibility allows for sponsorship models and potentially reduces the burden of transaction fees on users.
+此流程的一个有趣功能是 Paymaster Contract 的可选参与。 如果指定了该功能合约，则该合约可以支付交易的 gas 费用或提供替代付款方式。 当 paymaster 参与时，它会进行自己的验证过程，以确保它可以合法地支付交易成本。 这种灵活性允许赞助模式，并有可能减轻用户交易费用的负担。
 
-Once all validations are complete, the Ethereum Execution Layer begins processing the transaction. During execution, an Execution Frame is used to handle the transaction details and monitor its progression. After execution, if a paymaster was involved, it performs any necessary postprocessing to finalize the transaction sponsorship.
+完成所有验证后，以太坊执行层开始处理交易。 在执行期间，使用执行框架来处理交易详细信息并监视其进度。 执行后，如果 paymaster 参与了，它将执行任何必要的后处理以完成交易赞助。
 
 #### EIP-5806
 
-EIP-5806 introduces a new transaction type, enabling EOAs to run custom code through a "delegate call" mechanism.
+EIP-5806 引入了一种新的交易类型，使 EOA 可以通过“委托调用”机制运行自定义代码。
 
-Currently, EOAs can only deploy contracts or send "call" transactions, limiting user interactions with the blockchain. This restriction affects usability since EOAs cannot perform tasks like batching multiple actions into one transaction or executing complex operations. While AA could solve these issues, its adoption path remains uncertain, and not all users can migrate because of costs and nontransferable asset custody.
+当前，EOA 只能部署合约或发送“调用”交易，从而限制了用户与区块链的交互。 此限制影响了可用性，因为 EOA 无法执行诸如将多个操作批处理到一次交易或执行复杂操作之类的任务。 虽然 AA 可以解决这些问题，但其采用路径仍然不确定，并且由于成本和不可转让的资产托管，并非所有用户都可以迁移。
 
-This proposal offers a straightforward way for EOAs to execute custom code with minimal EVM changes and familiar security standards. By allowing EOAs to delegate calls to specific contracts, users gain more control and flexibility, enabling complex operations like multicall batching or secure token transfers. Unlike other AA proposals, this approach aims to improve EOA user experience without replacing existing abstraction methods, making it an accessible option for enhanced EOA functionality in the near future.
+此提案提供了一种直接的方法，使 EOA 可以使用最小的 EVM 更改和熟悉的安全性标准来执行自定义代码。 通过允许 EOA 将调用委托给特定合约，用户可以获得更多的控制权和灵活性，从而可以实现诸如多调用批处理或安全代币转移之类的复杂操作。 与其他 AA 提案不同，此方法旨在改善 EOA 用户体验，而无需替换现有的抽象方法，从而使其成为未来增强 EOA 功能的一个可访问的选项。
 
 #### EIP-3074
 
-EIP-3074 introduces two opcodes, `AUTH` and `AUTHCALL`, to allow EOAs to delegate control of their transactions to an "invoker" contract. The user signs a message containing the invoker and a commit (a hash of transaction values), ensuring that the invoker only processes authorized transactions. Replay protection is handled by the invoker, and users must trust this contract to avoid malicious behavior. This proposal improves transaction batching and enables flexible account delegation.
+EIP-3074 引入了两个操作码 `AUTH` 和 `AUTHCALL`，以允许 EOA 将其交易的控制权委托给“调用者”合约。 用户签署一条包含调用者和提交（交易值的哈希）的消息，以确保调用者仅处理经过授权的交易。 重放保护由调用者处理，用户必须信任此合约以避免恶意行为。 此提案改进了交易批处理并启用了灵活的帐户委托。
 
-`AUTH` lets users grant a smart contract permission to act on their behalf. It uses a digital signature (ECDSA) to verify this authorization, then stores the user's address for future transactions. `AUTHCALL` allows the authorized smart contract to perform transactions, such as sending tokens or interacting with other contracts. For example, if you want to swap 10 DAI for ETH, you can authorize the invoker (using `AUTH`) with one signature. The invoker will use `AUTHCALL` to approve Uniswap to spend your DAI and then execute the swap.
+`AUTH` 允许用户授予智能合约代表其行事的权限。 它使用数字签名（ECDSA）来验证此授权，然后存储用户的地址以供将来交易。 `AUTHCALL` 允许授权的智能合约执行交易，例如发送代币或与其他合约交互。 例如，如果您想将 10 DAI 兑换为 ETH，则可以使用一个签名授权调用者（使用 `AUTH`）。 然后，调用者将使用 `AUTHCALL` 来批准 Uniswap 花费您的 DAI，然后执行兑换。
 
-Initially, replay protection and fields like value, gas, and other `AUTHCALL` arguments were also signed. The design evolved to delegate these tasks to the invoker contract, making it crucial for users to trust the invoker. Users can "commit" to particular call properties by hashing them. The invoker validates only if the committed values, such as the nonce for replay protection, match the user's commitment, as shown in Figure 5-7. This ensures that the invoker processes exactly what the user authorized.
+最初，重放保护和诸如值、gas 和其他 `AUTHCALL` 参数之类的字段也已签名。 该设计已演变为将这些任务委托给调用者合约，这使得用户信任调用者至关重要。 用户可以通过散列来“提交”到特定的调用属性。 仅当提交的值（例如用于重放保护的 nonce）与用户的承诺匹配时，调用者才会进行验证，如图 5-7 所示。 这确保了调用者处理的确切内容是用户授权的内容。
 
-![EIP-3074 commitment validation](images/ch5/maet_0507.png)
+![EIP-3074 承诺验证](images/ch5/maet_0507.png)
 
-Figure 5-7. EIP-3074 commitment validation
+图 5-7. EIP-3074 承诺验证
 
-The commit hash enables invokers to enforce various rules, such as allowing parallel nonces or bundling multiple calls under one signature. This enables multicall flows, such as consolidating an ERC-20 approve-transfer into a single transaction, as seen in Figure 5-8.
+提交哈希使调用者可以强制执行各种规则，例如允许并行 nonce 或将多个调用捆绑在一个签名下。 这启用了多调用流程，例如将 ERC-20 批准转移合并为单个交易，如图 5-8 所示。
 
-![EIP-3074 multicall flow](images/ch5/maet_0508.png)
+![EIP-3074 多调用流程](images/ch5/maet_0508.png)
 
-Figure 5-8. EIP-3074 multicall flow
+图 5-8. EIP-3074 多调用流程
 
-Additionally, it supports delegating control of the EOA to other keys by signing a commit message with the delegate's address and an access policy, which the invoker verifies before relaying calls on behalf of the EOA, as seen in Figure 5-9.
+另外，它通过使用委托地址和访问策略签署提交消息来支持将 EOA 的控制权委托给其他密钥，调用者在代表 EOA 中继调用之前会验证该消息，如图 5-9 所示。
 
-![EIP-3074 delegation flow](images/ch5/maet_0509.png)
+![EIP-3074 委托流程](images/ch5/maet_0509.png)
 
-Figure 5-9. EIP-3074 delegation flow
+图 5-9. EIP-3074 委托流程
 
 #### EIP-5003
 
-EIP-5003 introduces the `AUTHUSURP` opcode, which allows code deployment at an address authorized through EIP-3074, effectively removing the original EOA's signing key (when used with EIP-3607). Traditional EOAs control a lot of value on Ethereum but face limitations. There's no easy way to rotate keys, batch transactions for efficiency, or enable gas sponsorship without holding ETH. Contract accounts and AA address these issues, allowing users to customize security features, authentication methods, spending limits, key rotation, social recovery, and more. However, these benefits are mostly limited to users who actively adopt new standards through smart contract wallets and app-layer solutions, such as those proposed by ERC-4337. This leaves a substantial number of existing users, who have relied on EOAs since Ethereum's inception, with limited security and usability improvements.
+EIP-5003 引入了 `AUTHUSURP` 操作码，该操作码允许通过 EIP-3074 授权的地址进行代码部署，从而有效地删除了原始 EOA 的签名密钥（与 EIP-3607 一起使用时）。 传统的 EOA 控制着以太坊上的大量价值，但面临着限制。 没有简单的方法可以轮换密钥、批量处理交易以提高效率或在不持有 ETH 的情况下启用 gas 赞助。 合约帐户和 AA 可以解决这些问题，从而允许用户自定义安全功能、身份验证方法、消费限制、密钥轮换、社交恢复等。但是，这些好处主要限于通过智能合约钱包和应用层解决方案积极采用新标准的用户，例如 ERC-4337 提出的那些。 这使得大量自以太坊成立以来就依赖 EOA 的现有用户，在安全性和可用性方面的改进有限。
 
-While EIP-3074 offers an initial solution by enabling EOAs to delegate signing authority to a contract account, it stops short of allowing the EOA to completely revoke this original signing key. This gap introduces a security risk: even with delegated authority, the primary private key remains a potential vulnerability. If compromised, the entire account remains at risk, as there is currently no revocation option for an exposed private key. If a user's private key is leaked, either by accident or through a malicious attack, the only option is to create a new wallet and painstakingly migrate assets individually, an expensive and often incomplete process due to the immovability of certain assets within existing smart contracts.
+虽然 EIP-3074 通过允许 EOA 将签名授权委托给合约帐户提供了一个初步解决方案，但它并未允许 EOA 完全撤销此原始签名密钥。 这种差距引入了一个安全风险：即使具有委托的授权，主私钥仍然是一个潜在的漏洞。 如果遭到入侵，整个帐户仍处于危险之中，因为目前没有针对暴露的私钥的撤销选项。 如果用户的私钥因意外或通过恶意攻击而泄漏，则唯一的选择是创建一个新钱包并费力地单独迁移资产，这既昂贵又经常不完整，这是由于现有智能合约中某些资产的不可移动性造成的。
 
-With this EIP, `AUTHUSURP` provides a secure transition path for EOA holders. It allows EOAs to fully transfer control to a smart contract, removing the original key's authority and thereby eliminating it as a security threat.
+通过此 EIP，`AUTHUSURP` 为 EOA 持有者提供了一个安全的过渡路径。 它允许 EOA 将控制权完全转移到智能合约，从而删除了原始密钥的授权，从而消除了将其作为安全威胁的方式。
 
 #### EIP-7702
 
-EIP-7702 is the main AA EIP expected to be implemented in Pectra by early 2025. (Note: this chapter was written in September and October 2024, which is why we are using future tense.) EIP-7702 introduces a "set code transaction" under EIP-2718, enabling an EOA to delegate certain code to be executed on its behalf by authorized addresses.
+EIP-7702 是预计在 2025 年初通过 Pectra 实施的主要 AA EIP。（注意：本章写于 2024 年 9 月和 10 月，这就是为什么我们使用将来时。）EIP-7702 在 EIP-2718 下引入了“设置代码交易”，使 EOA 能够委托某些代码由授权地址代表其执行。
 
-> **Note**  
+> **注意**  
 >
-> EIP-2718 introduces a "typed transaction envelope" format for Ethereum, supporting multiple transaction types within the protocol. This standardized format allows backward-compatible transaction upgrades, enabling future improvements with new transaction types while maintaining existing structures. This will be explained in more detail in Chapter 6. This EIP also adjusts EIP-3607's restrictions, allowing transactions from EOAs flagged with a delegation designation. It enables secure delegation for EOAs, adding improved account-management capabilities to Ethereum.
+> EIP-2718 为以太坊引入了“类型化交易信封”格式，支持协议中的多种交易类型。 这种标准化的格式允许向后兼容的交易升级，从而可以使用新的交易类型进行未来的改进，同时保持现有结构。 这将在第 6 章中进行更详细的解释。此 EIP 还修改了 EIP-3607 的限制，允许来自标有委托指定的 EOA 的交易。 它为 EOA 启用了安全委托，从而为以太坊添加了改进的帐户管理功能。
 >
-> A question arises around how users should specify the code they intend to run in their accounts. The main options are to include the bytecode directly in the transaction or to reference a pointer to the code. The simplest pointer is the address of some code deployed on chain. Direct code specification allows EOAs to execute arbitrary code within the transaction calldata. One consideration when signing a code pointer is whether that address points to the intended code on another chain; wallet maintainers can hardcode a single EIP-7702 authorization message, ensuring cross-chain code consistency.
+> 现在出现了一个问题，即用户应如何在他们的帐户中指定他们打算运行的代码。 主要选项是将字节码直接包含在交易中，或引用指向该代码的指针。 最简单的指针是链上部署的某些代码的地址。 直接代码规范允许 EOA 在交易 calldata 中执行任意代码。 签名代码指针时要考虑的一个因素是，该地址是否指向另一条链上的目标代码。钱包维护者可以硬编码一条 EIP-7702 授权消息，从而确保跨链代码的一致性。
 
-There is an important security consideration to make. Once code is embedded in an EOA, EIP-7702 transactions may allow `msg.sender == tx.origin`, where the transaction creator is also the broadcasting address whenever the EOA code dispatches a call. Without EIP-7702, this scenario only occurs at the topmost execution layer of a transaction. Because EIP-7702 would enable transaction sponsoring, this would also be possible in other layers of execution. Consequently, this EIP breaks that invariant, affecting smart contracts that contain `require(msg.sender == tx.origin)` checks. This check serves at least three purposes:
+还有一个重要的安全考虑因素需要考虑。 将代码嵌入 EOA 后，EIP-7702 交易可能允许 `msg.sender == tx.origin`，其中交易创建者也是广播地址，只要 EOA 代码分派调用。 在没有 EIP-7702 的情况下，这种情况仅发生在交易的最顶层执行层。 由于 EIP-7702 将启用交易赞助，因此这在其他执行层中也是可能的。 因此，此 EIP 破坏了该不变量，从而影响了包含 `require(msg.sender == tx.origin)` 检查的智能合约。 此检查至少用于三个目的：
 
-1. Verifying that `msg.sender` is an EOA (as `tx.origin` must always be an EOA). This invariant remains unaffected by execution-layer depth; it is still possible to ensure that the `tx.origin` is the `msg.sender` if the depth of the call is 1.
+1. 验证 `msg.sender` 是否为 EOA（因为 `tx.origin` 必须始终为 EOA）。 此不变量不受执行层深度的影响； 如果调用的深度为 1，则仍然可以确保 `tx.origin` 为 `msg.sender`。
 
-2. Preventing atomic sandwich attacks, such as flash loans, which rely on altering state before and after target contract execution within the same atomic transaction. This protection is compromised by this EIP. However, using `tx.origin` for this purpose is generally considered poor practice and can already be bypassed by miners selectively including transactions.
+2. 防止原子夹层攻击，例如 flash loan，这些攻击依赖于在同一原子交易中在目标合约执行之前和之后更改状态。 此保护措施已被此 EIP 破坏。 但是，通常认为将 `tx.origin` 用于此目的的做法很差，并且矿工已经可以通过选择性地包含交易来绕过它。
 
-3. Guarding against reentrancy.
+3. 防止重入。
 
-Examples of the first two appear in Ethereum mainnet contracts, with the first being more common (and unaffected by this EIP). However, the third case is more vulnerable under this EIP, although no instances of reentrancy protection relying on `tx.origin` were observed during the initial review by the creators of the proposal.
+前两个示例出现在以太坊主网合约中，前者更常见（并且不受此 EIP 的影响）。 但是，第三种情况在此 EIP 下更容易受到攻击，尽管在提案创建者的初步审查期间未观察到依赖 `tx.origin` 的重入保护的实例。
 
-> **Tip**  
+> **提示**  
 >
-> Unlike prior versions of this EIP and similar proposals, the delegation designation can be revoked at any time by signing and submitting an EIP-7702 authorization targeting a new address, using the account's current nonce. Without such action, a delegation remains valid indefinitely.
+> 与此 EIP 的先前版本和类似提案不同，可以通过签署并提交以新地址为目标的 EIP-7702 授权消息，使用帐户当前的 nonce，随时撤销委托指定。 如果没有此类操作，委托将无限期有效。
 
-There is considerable interest in adding functionality improvements to EOAs, improving usability and, in some cases, improving security. One key application is transaction sponsorship, which enables users to transact without holding ETH to cover gas fees. In traditional Ethereum transactions, gas fees are paid in ETH, which may be inconvenient for users holding only other tokens or those who are new to the ecosystem. EIP-7702 introduces a model where transaction fees can be covered by third parties, temporarily or permanently, allowing users to complete transactions without ETH. This could simplify onboarding, making Ethereum applications more accessible to new users interested in specific DApps or tokens without requiring ETH management.
+人们对向 EOA 添加功能改进、提高可用性以及在某些情况下提高安全性非常感兴趣。 一个关键应用是交易赞助，它使用户无需持有 ETH 来支付 gas 费用即可进行交易。 在传统的以太坊交易中，gas 费用以 ETH 支付，这对于仅持有其他代币或不熟悉该生态系统的用户来说可能不方便。 EIP-7702 引入了一种模型，在这种模型中，交易费用可以由第三方暂时或永久地支付，从而允许用户在没有 ETH 的情况下完成交易。 这可以简化入门过程，使以太坊应用程序更容易被对特定 DApp 或代币感兴趣而无需 ETH 管理的新用户访问。
 
-Traditional Ethereum accounts rely solely on a single private key, so losing it means losing access to the account and assets. EIP-7702's structure supports various recovery mechanisms, enabling users to regain access if they lose their private keys. Recovery mechanisms are especially valuable for security-focused users and for those who are new to blockchain and may find key management daunting. Potential recovery options include multisignature and social recovery, which allow selected contacts to assist in account restoration; this is a big step in Ethereum accounts' security and user-friendliness.
+传统的以太坊帐户仅依赖于单个私钥，因此丢失密钥意味着失去对帐户和资产的访问权限。 EIP-7702 的结构支持各种恢复机制，使用户可以在丢失私钥时重新获得访问权限。 恢复机制对于注重安全性的用户和那些不熟悉区块链并且发现密钥管理令人生畏的用户来说尤其有价值。 潜在的恢复选项包括多重签名和社交恢复，这些选项允许选定的联系人协助帐户恢复； 这是以太坊帐户的安全性和用户友好性的一大步。
 
-EIP-7702 also introduces batching and privilege deescalation. Batching allows multiple actions to be processed within a single atomic transaction, enabling users to complete complex workflows—such as ERC-20 approval followed by token spending—in one step rather than two. Privilege deescalation offers subkeys with restricted permissions, authorizing actions like spending a specific amount or interacting only with certain applications, to improve security by minimizing exposure in case of compromise.
+EIP-7702 还引入了批处理和权限降级。 批处理允许在单个原子交易中处理多个操作，从而使用户可以一步完成复杂的工作流程（例如 ERC-20 批准，然后进行代币消费），而不是分两步完成。 权限降级提供具有受限权限的子密钥，从而授权诸如消费特定金额或仅与某些应用程序交互之类的操作，从而通过最大限度地减少在发生泄露时的暴露来提高安全性。
 
-This EIP also modifies the invariants that traditionally govern account balance and nonce behaviors. It breaks the expectation that the balance of an EOA account can only decrease due to transactions from that account, and that an EOA's nonce cannot increment once transaction execution begins. These changes affect the mempool design and other EIPs. However, since the accounts are statically listed in the outer transaction, transaction-propagation rules can be adjusted to prevent forwarding of conflicting transactions. It does have forward compatibility with ERC-4337 and RIP-7560. Among other benefits, it enables EOAs to masquerade as contracts compatible with ERC-4337 bundles via the existing EntryPoint mechanism.
+此 EIP 还修改了传统上管理帐户余额和 nonce 行为的不变量。 它打破了 EOA 帐户的余额只能因该帐户的交易而减少的预期，并且一旦交易执行开始，就不能增加 EOA 的 nonce。 这些更改会影响内存池设计和其他 EIP。 但是，由于帐户静态地列在外部交易中，因此可以调整交易传播规则以防止转发冲突的交易。 它确实具有与 ERC-4337 和 RIP-7560 的向前兼容性。 除其他好处外，它还允许 EOA 通过现有的 EntryPoint 机制伪装成与 ERC-4337 捆绑包兼容的合约。
 
-> **Note**  
+> **注意**  
 >
-> A general design goal for state-transition changes is minimizing special cases in an EIP. Earlier iterations of this EIP resisted adding a special case for clearing an account's delegation designation. Generally, an account delegated to 0x0 behaves like a true EOA; however, most operations interacting with that account incur an additional cost. This extra cost may influence overall EIP adoption. For these reasons, a mechanism was included to allow users to restore their EOAs to their original state.
+> 状态转换更改的一般设计目标是在 EIP 中最大限度地减少特殊情况。 此 EIP 的早期版本拒绝为清除帐户的委托指定添加特殊情况。 通常，委托给 0x0 的帐户的行为类似于真正的 EOA； 但是，与该帐户交互的大多数操作都会产生额外的成本。 这种额外的成本可能会影响 EIP 的整体采用。 出于这些原因，包含了一种机制，使您可以将用户的 EOA 恢复到其原始状态。
 
-This EIP involves multiple security considerations, which will be the responsibility of the implementation and should be carefully evaluated. In addition to the noted `tx.origin` issue, there are three key considerations:
+此 EIP 涉及多个安全注意事项，这将是实施的责任，应认真评估。 除了提到的 `tx.origin` 问题外，还有三个关键注意事项：
 
-- Enabling EOAs to act like smart contracts challenges transaction propagation. Traditionally, EOAs could only send value via transactions. With this EIP, an EOA's delegated code can be invoked by anyone at any time in a transaction, preventing static balance validation by nodes; it essentially makes it harder for nodes to validate the balance of an address.
+- 使 EOA 像智能合约一样运行对交易传播提出了挑战。 传统上，EOA 只能通过交易发送价值。 借助此 EIP，任何人都可以在交易中随时调用 EOA 的委托代码，从而阻止节点进行静态的余额验证。它本质上使节点更难验证地址的余额。
 
-- Smart contract wallet developers must consider the implications of setting code in an account without execution. Normally, contracts are deployed with initcode, initializing storage slots deterministically. This EIP omits initcode execution for delegation, so developers must verify initial calldata to prevent an observer from front-running setup with an account they control.
+- 智能合约钱包开发人员必须考虑在没有执行的情况下在帐户中设置代码的影响。 通常，合约使用 initcode 进行部署，从而确定性地初始化存储插槽。 此 EIP 省略了委托的 initcode 执行，因此开发人员必须验证初始 calldata，以防止观察者通过他们控制的帐户抢先设置。
 
-- Replay protection (e.g., nonce handling) should be implemented by the delegate and signed. Without this, a malicious actor could reuse a signature, gaining near-complete control over the signer's EOA.
+- 重放保护（例如，nonce 处理）应由委托实施并签名。 没有这个，恶意行为者可以重复使用签名，从而几乎完全控制签名者的 EOA。
 
-#### The future of account abstraction
+#### 帐户抽象的未来
 
-AA on Ethereum is a complex but promising idea, with many possible paths forward. Each proposal offers a different way to make user interactions simpler and more secure. Some improve on previous proposals, such as EIP-5003 building on EIP-3074, while others, such as EIP-5806, stand alone or even lack backward compatibility. This variety reflects a search for the best solution, with the final direction likely shaped by which options users find easiest and most effective. Although the exact future is unclear, AA holds real promise for improving the experience of using Ethereum.
+以太坊上的 AA 是一个复杂但有希望的想法，具有许多可能的未来发展道路。 每项提案都提供了一种不同的方法来使用户交互更简单、更安全。 一些基于先前的提案进行改进，例如 EIP-5003 构建在 EIP-3074 之上，而另一些（例如 EIP-5806）则独立存在，甚至缺乏向后兼容性。 这种多样性反映了对最佳解决方案的寻找，最终的方向可能会受到用户认为最简单、最有效的方式的影响。 尽管确切的未来尚不清楚，但 AA 确实有望改善使用以太坊的体验。
 
-### Social Recovery
+### 社交恢复
 
-The primary EIP related to social recovery is EIP-2429. Titled "Secret Multisig Recovery," EIP-2429 introduces a mechanism that allows users to regain access to their wallets by assigning trusted individuals or entities as "guardians." In case a user loses their private key, they can use these guardians to help recover control of the wallet. The guardians are involved only during the recovery process, limiting their power, as shown in Figure 5-10.
+与社交恢复相关的主要 EIP 是 EIP-2429。 EIP-2429 标题为“秘密多重签名恢复”，引入了一种机制，允许用户通过将受信任的个人或实体指定为“监护人”来重新获得对其钱包的访问权限。 如果用户丢失了他们的私钥，他们可以使用这些监护人来帮助恢复对钱包的控制权。 监护人仅在恢复过程中参与，从而限制了他们的权力，如图 5-10 所示。
 
-![Social recovery flow](images/ch5/maet_0510.png)
+![社交恢复流程](images/ch5/maet_0510.png)
 
-Figure 5-10. Social recovery flow
+图 5-10. 社交恢复流程
 
-> **Note**  
+> **注意**  
 >
-> Vitalik Buterin released an article in 2021 that said, and we are quoting, "This gets us to my preferred method for securing a wallet: social recovery." We do not know if the situation has changed, but it still might be the case that social recovery is Buterin's preferred method.
+> Vitalik Buterin 在 2021 年发表了一篇文章，他说（我们正在引用）：“这使我们获得了保护钱包的首选方法：社交恢复。” 我们不知道情况是否发生了变化，但社交恢复仍然可能是 Buterin 的首选方法。
 
-For normal use, a social recovery wallet functions like a regular one, allowing the user to sign transactions with their signing key. If the key is lost, social recovery activates, enabling the user to contact guardians, who sign a transaction to update the wallet's signing key. Guardians can be trusted individuals, devices, or institutions. Guardians can remain anonymous, and to prevent attacks, their identities aren't stored on chain. In case of the user's death, guardians can coordinate to recover the user's funds.
+对于正常使用，社交恢复钱包的功能与普通钱包类似，允许用户使用其签名密钥对交易进行签名。 如果密钥丢失，则社交恢复会激活，从而使用户可以联系监护人，后者签署交易以更新钱包的签名密钥。 监护人可以是受信任的个人、设备或机构。 监护人可以保持匿名状态，并且为防止攻击，他们的身份不会存储在链上。 如果用户死亡，监护人可以协调以恢复用户的资金。
 
 ### ENS
 
-The Ethereum Name Service is like a Web3 version of traditional domain names, but instead of linking to websites, it connects human-readable names to Ethereum addresses. This makes dealing with long, complex blockchain addresses much easier. For instance, rather than having to send cryptocurrency to an address like `0xd8dA6BF...`, you can simply send it to something like `vitalik.eth`. This simplifies transactions and makes the whole process far less intimidating, especially for newcomers to crypto.
+以太坊名称服务就像是传统域名的一种 Web3 版本，但它不是链接到网站，而是将人类可读的名称连接到以太坊地址。 这使得处理漫长而复杂的区块链地址变得更加容易。 例如，与其必须将加密货币发送到像 `0xd8dA6BF...` 这样的地址，你可以简单地将其发送到像 `vitalik.eth` 这样的地址。 这简化了交易，并使整个过程不那么令人生畏，特别是对于加密货币的新人来说。
 
-If you compare ENS to the Web2 world, it's similar to how DNS works. DNS takes IP addresses (which are hard to remember) and connects them to URLs like `google.com`, so you don't have to remember a string of numbers to visit a website. However, there's a key difference between ENS and DNS: ENS is decentralized. No central authority controls your `.eth` name once you own it. In Web2, domain names are managed by registrars and can be censored, suspended, or restricted. In ENS, you control your name entirely through your Ethereum wallet, meaning your `.eth` name is as secure as the wallet that holds it.
+如果你将 ENS 与 Web2 世界进行比较，它类似于 DNS 的工作方式。 DNS 采用 IP 地址（难以记住）并将其连接到 URL（如 `google.com`），因此你不必记住一串数字即可访问网站。 但是，ENS 和 DNS 之间存在一个关键区别：ENS 是去中心化的。 一旦你拥有了你的 `.eth` 名称，就没有中心机构来控制它。 在 Web2 中，域名由注册商管理，并且可以被审查、暂停或限制。 在 ENS 中，你完全通过你的以太坊钱包控制你的名称，这意味着你的 `.eth` 名称与持有它的钱包一样安全。
 
-When you're sending or receiving crypto, using a name like `andreas.eth` instead of a long, complex Ethereum address makes everything smoother and safer. It reduces the chance of making a mistake when entering an address, which can otherwise be a big risk in a transaction.
+当你发送或接收加密货币时，使用像 `andreas.eth` 这样的名称而不是漫长而复杂的以太坊地址，可以使一切变得更顺畅、更安全。 它可以减少在输入地址时出错的机会，否则这可能是交易中的一个大风险。
 
-Another cool aspect of ENS is that it provides a sense of digital identity. Just like owning a domain name for your website, having a unique `.eth` name can serve as your public identity on the blockchain.
+ENS 的另一个很酷的方面是，它提供了一种数字身份感。 就像拥有你网站的域名一样，拥有一个独特的 `.eth` 名称可以作为你在区块链上的公开身份。
 
-## Conclusion
+## 结论
 
-Wallets are the foundation of any user-facing blockchain application. They enable users to manage collections of keys and addresses. Wallets also allow users to demonstrate their ownership of ether and authorize transactions by applying digital signatures, as we will see in Chapter 6.
+钱包是任何面向用户的区块链应用程序的基础。 它们使管理密钥和地址的集合成为可能。 钱包还允许用户展示他们对以太币的所有权，并通过应用数字签名来授权交易，正如我们将在第 6 章中看到的那样。

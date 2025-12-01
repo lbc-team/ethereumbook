@@ -1,431 +1,407 @@
-# Chapter 16. Scaling Ethereum
+# 第十六章. 以太坊扩容
 
-Ethereum is one of the most powerful and widely used blockchain platforms, but as we've seen time and again, success comes with growing pains. Ethereum has become so popular that its base layer is having trouble keeping up, gas fees often get so high that transactions become too expensive, and the system is becoming weighed down by all the data it has to handle. While Ethereum developers have been rolling out upgrades like EIP-1559 (described in Chapter 6), The Merge (the 2022 hard fork that changed the consensus protocol from PoW to PoS), and EIP-4844 (proto-danksharding, described later in this chapter), the fundamental constraints of L1 remain a bottleneck for mass adoption. These improvements help, but they don't eliminate the need for additional scaling solutions like L2 rollups.
+以太坊是最强大和最广泛使用的区块链平台之一，但正如我们一次又一次看到的那样，成功伴随着成长的烦恼。以太坊变得如此受欢迎，以至于其基础层难以跟上，gas 费用经常高到交易变得过于昂贵，并且系统正因其必须处理的所有数据而变得不堪重负。虽然以太坊开发者一直在推出诸如 EIP-1559（在第 6 章中描述）、The Merge（2022 年的硬分叉，将共识协议从 PoW 更改为 PoS）和 EIP-4844（proto-danksharding，稍后在本章中描述）之类的升级，但 L1 的基本约束仍然是大规模采用的瓶颈。这些改进有所帮助，但它们并没有消除对 L2 rollup 等额外扩容解决方案的需求。
 
-> **Note**  
+> **注意**
 >
-> L2 rollups are scaling solutions that process transactions off chain and then post a summary (such as a proof or data batch) to Ethereum's Layer 1. This reduces congestion and fees while still relying on Ethereum for security. There are two main types: optimistic rollups (assume valid, challenge if wrong) and zero-knowledge rollups (prove correctness with cryptography). Ethereum essentially becomes a settlement layer, meaning its main role shifts toward verifying proofs, ensuring data availability, and providing ultimate security guarantees for L2 transactions. We will explore rollups in detail in the second part of this chapter.
+> L2 rollup 是在链下处理交易，然后将摘要（例如证明或数据批次）发布到以太坊 Layer 1 的扩容解决方案。这减少了拥堵和费用，同时仍然依赖以太坊的安全性。有两种主要类型：乐观 rollup（假设有效，如果错误则发起挑战）和零知识 rollup（使用密码学证明正确性）。以太坊本质上变成了结算层，这意味着其主要角色转变为验证证明、确保数据可用性以及为 L2 交易提供最终安全保障。我们将在本章的第二部分详细探讨 rollup。
 
-## The Problems of Ethereum's Layer 1
+## 以太坊 Layer 1 的问题
 
-To fully understand Ethereum's scaling challenges, we need to break things down into four major issues: the scalability trilemma, gas costs and network congestion, state growth and storage, and block propagation and MEV. These issues aren't unique to Ethereum—other chains run into the same problems in different forms—but Ethereum's popularity amplifies them. Let's dig into each.
+要充分理解以太坊的扩容挑战，我们需要将其分解为四个主要问题：可扩展性三难困境、gas 成本和网络拥堵、状态增长和存储以及区块传播和 MEV。这些问题并非以太坊独有——其他链也以不同的形式遇到相同的问题——但以太坊的受欢迎程度放大了这些问题。让我们深入研究每一个问题。
 
-### The Scalability Trilemma
+### 可扩展性三难困境
 
-Ethereum, like any permissionless blockchain, has three fundamental goals: *decentralization*, *security*, and *scalability*. But here's the problem: improving one of these often means compromising another. This is what Vitalik Buterin calls the *scalability trilemma*.
+像任何无需许可的区块链一样，以太坊有三个基本目标：*去中心化*、*安全性*和*可扩展性*。但问题是：改进其中一个通常意味着牺牲另一个。这就是 Vitalik Buterin 所谓的*可扩展性三难困境*。
 
-Let's break it down:
+让我们来分解一下：
 
-**Decentralization**
+**去中心化**
 
-Decentralization is what makes Ethereum censorship resistant and trustless. Anyone can run a node, validate transactions, and participate in the network without needing permission from a central authority.
+去中心化使得以太坊具有抗审查性和无需信任性。任何人都可以运行节点、验证交易并参与网络，而无需中央机构的许可。
 
-**Security**
+**安全性**
 
-Security ensures that Ethereum remains resilient against attacks. Transactions must be irreversible, smart contracts must be immutable, and bad actors should have no easy way to manipulate the system.
+安全性确保以太坊对攻击保持弹性。交易必须是不可逆转的，智能合约必须是不可变的，恶意行为者不应该有轻易操纵系统的方法。
 
-**Scalability**
+**可扩展性**
 
-Scalability is what allows the network to handle thousands or even millions of transactions per second (TPS), making it practical for global adoption.
+可扩展性使网络能够处理每秒数千甚至数百万笔交易（TPS），使其成为全球采用的实用选择。
 
-The challenge is that traditional blockchains like Ethereum are designed to be fully decentralized and secure at the cost of scalability. Every transaction is processed by all nodes, ensuring correctness but also creating a bottleneck.
+挑战在于，像以太坊这样的传统区块链被设计为完全去中心化和安全，但代价是可扩展性。每笔交易都由所有节点处理，确保正确性，但也造成了瓶颈。
 
-Why can't we just increase throughput? If we try to speed things up by making blocks larger (so they can hold more transactions), fewer people will be able to run full nodes because the hardware requirements will become too demanding. This could push Ethereum toward centralization, where only a handful of powerful entities control the network—exactly what we're trying to avoid.
+为什么我们不能仅仅提高吞吐量呢？如果我们试图通过使区块更大（以便它们可以容纳更多交易）来加速，那么能够运行完整节点的人将会减少，因为硬件要求将变得过于苛刻。这可能会将以太坊推向中心化，只有少数强大的实体控制着网络——这正是我们试图避免的。
 
-Other blockchains, like Solana, have taken a different approach. They've optimized for speed and scalability but at the cost of decentralization, requiring more powerful hardware to run a node. Ethereum has refused to compromise on decentralization, making the challenge of scaling all the more difficult.
+其他区块链，如 Solana，采取了不同的方法。它们针对速度和可扩展性进行了优化，但以去中心化为代价，需要更强大的硬件才能运行节点。以太坊拒绝在去中心化方面妥协，这使得扩容的挑战更加艰巨。
 
-PoS, introduced with The Merge, replaced the energy-intensive PoW system. This not only cut Ethereum's energy use dramatically but also reduced the dominance of big players who could afford massive mining setups. While staking introduces new centralization risks, it's still a step toward a more accessible and efficient network. However, PoS brings new challenges, such as the centralization risk posed by large staking pools. Liquid staking solutions help keep staked ETH accessible, but they also concentrate control in the hands of a few platforms. Finding the right balance remains a work in progress.
+随着 The Merge 引入的 PoS 取代了能源密集型的 PoW 系统。这不仅大幅降低了以太坊的能源消耗，还减少了能够负担大规模挖矿设置的大玩家的主导地位。虽然 staking 引入了新的中心化风险，但这仍然是朝着更易于访问和更高效的网络迈出的一步。然而，PoS 带来了新的挑战，例如大型 staking 池造成的中心化风险。流动性质押解决方案有助于保持已质押 ETH 的可访问性，但它们也将控制权集中在少数平台手中。找到合适的平衡仍然是一个持续进行的工作。
 
-### Gas Costs and Network Congestion
+### Gas 成本和网络拥堵
 
-One of the most frustrating experiences for Ethereum users is high gas fees, with transaction costs that fluctuate wildly depending on network demand. How does this happen, and why do fees get so expensive during peak times?
+对于以太坊用户来说，最令人沮丧的体验之一是高 gas 费用，交易成本根据网络需求而剧烈波动。这是如何发生的，为什么费用在高峰时段变得如此昂贵？
 
-Ethereum transactions require *gas*, a unit that measures the computational effort needed to execute operations like transfers or smart contract interactions. The more complex the operation, the more gas it requires. Every block has a limited amount of gas it can include, meaning there's competition for block space. When demand is high, users bid against one another, driving fees up.
+以太坊交易需要 *gas*，这是一种衡量执行转移或智能合约交互等操作所需的计算量的单位。操作越复杂，所需的 gas 就越多。每个区块可以包含的 gas 量是有限的，这意味着对区块空间存在竞争。当需求很高时，用户相互竞价，从而推高费用。
 
-We've seen this play out in dramatic ways:
+我们已经看到了这种情况以戏剧性的方式上演：
 
-**CryptoKitties craze (2017)**
+**CryptoKitties 热潮（2017 年）**
 
-This was the first real test of Ethereum's limits. A simple game where users could breed and trade digital cats clogged the network so badly that transaction times slowed to a crawl and gas fees soared.
+这是以太坊极限的第一次真正考验。一个简单的游戏，用户可以在其中繁殖和交易数字猫，严重堵塞了网络，以至于交易时间减慢到爬行速度，gas 费用飙升。
 
-**DeFi Summer (2020)**
+**DeFi 之夏（2020 年）**
 
-The explosion of DeFi apps like Uniswap and Compound brought massive activity to Ethereum. Traders rushed to make transactions, sometimes paying hundreds of dollars in gas fees to get priority in the mempool.
+Uniswap 和 Compound 等 DeFi 应用的爆发给以太坊带来了大规模的活动。交易者争先恐后地进行交易，有时支付数百美元的 gas 费用以获得在 mempool 中的优先权。
 
-**NFT boom (2021)**
+**NFT 繁荣（2021 年）**
 
-NFT drops became gas wars, with people paying thousands just to mint a new digital collectible before someone else did. Some transactions failed despite users spending exorbitant amounts on gas.
+NFT 发售变成了 gas 战争，人们支付数千美元只是为了在其他人之前铸造一个新的数字收藏品。尽管用户花费了过多的 gas，但有些交易还是失败了。
 
-Ethereum's Layer 1 wasn't designed to handle this level of demand efficiently. However, the introduction of EIP-1559 in 2021 changed how fees work by introducing variable block sizes and a new gas-pricing mechanism, which reduced spikes in gas fees during periods of high network activity. The rising popularity of L2 solutions has allowed Ethereum to offload a significant portion of its computational burden, further reducing gas fees. More recently, EIP-4844 (proto-danksharding) was rolled out, significantly lowering fees, especially for L2 rollups, and making Ethereum transactions more affordable for users. Despite these improvements, Ethereum's transaction costs remain higher than those of most other blockchains (see Figure 16-1).
+以太坊的 Layer 1 并非旨在有效处理这种程度的需求。然而，2021 年 EIP-1559 的引入通过引入可变区块大小和新的 gas 定价机制改变了费用的运作方式，从而减少了网络活动高峰期间 gas 费用的飙升。L2 解决方案日益普及，使得以太坊能够卸载其大部分计算负担，从而进一步降低 gas 费用。最近，EIP-4844（proto-danksharding）已推出，显着降低了费用，特别是对于 L2 rollup 而言，并使以太坊交易对用户来说更负担得起。尽管有这些改进，以太坊的交易成本仍然高于大多数其他区块链（见图 16-1）。
 
-![Gas cost comparison across blockchains](images/ch16/maet_1601.png)
+![跨区块链的 gas 成本比较](images/ch16/maet_1601.png)
 
-Figure 16-1. Gas cost comparison across blockchains
+图 16-1. 跨区块链的 gas 成本比较
 
-### State Growth and Storage Issues
+### 状态增长和存储问题
 
-Ethereum isn't just used for transactions; it's a *global state machine* that continuously tracks account balances, smart contract data, DeFi positions, NFTs, and other on-chain activity. Unlike traditional databases, which can archive or delete old records, Ethereum is designed to retain its full history, ensuring transparency and verifiability. The problem? As Ethereum grows, it needs to store more data, and that storage burden keeps getting heavier.
+以太坊不仅仅用于交易；它是一个*全球状态机*，持续跟踪帐户余额、智能合约数据、DeFi 头寸、NFT 和其他链上活动。与可以存档或删除旧记录的传统数据库不同，以太坊旨在保留其完整历史记录，从而确保透明度和可验证性。问题是？随着以太坊的增长，它需要存储更多数据，而这种存储负担越来越重。
 
-Right now, the size of Ethereum's state—essentially, the set of all active accounts, contract balances, and storage slots—is growing at an alarming rate. Every new smart contract adds to this state, and every transaction modifies it. Full nodes, which play a crucial role in verifying the network's integrity, must store and constantly update this data. As the state grows, it becomes increasingly difficult for individuals to run full nodes without expensive hardware, leading to concerns about decentralization.
+目前，以太坊状态的大小——本质上是所有活跃帐户、合约余额和存储槽位的集合——正以惊人的速度增长。每个新的智能合约都会添加到此状态，并且每笔交易都会修改它。完整节点在验证网络完整性方面发挥着关键作用，它们必须存储并不断更新此数据。随着状态的增长，个人越来越难以在没有昂贵硬件的情况下运行完整节点，从而引发了对去中心化的担忧。
 
-Archival nodes face an even bigger challenge. These nodes store not only the current state but also the entire historical record of Ethereum, including every past transaction and contract execution. The sheer volume of this data reaches into the terabytes, requiring significant storage capacity and bandwidth. The number of people capable of running these nodes is shrinking, raising questions about who will preserve Ethereum's long-term history.
+归档节点面临着更大的挑战。这些节点不仅存储当前状态，还存储以太坊的完整历史记录，包括每笔过去的交易和合约执行。此数据的庞大量达到 terabytes 级别，需要大量的存储容量和带宽。能够运行这些节点的人数正在减少，引发了关于谁将保存以太坊长期历史的问题。
 
-Validators, who are responsible for proposing and attesting to blocks in Ethereum's PoS system, also feel the weight of state growth. To verify transactions efficiently, they need quick access to the latest blockchain state. But as the state expands, accessing and processing this information becomes slower and more expensive. If this trend continues unchecked, we risk creating an environment where only those with high-end hardware can participate in validation, pushing Ethereum toward centralization.
+验证者负责在以太坊的 PoS 系统中提议和证明区块，他们也感受到状态增长的压力。为了有效地验证交易，他们需要快速访问最新的区块链状态。但是随着状态的扩展，访问和处理此信息变得越来越慢且成本更高。如果这种趋势继续不受控制，我们可能会创造一种只有拥有高端硬件的人才能参与验证的环境，从而将以太坊推向中心化。
 
-Ethereum developers have explored solutions to curb state bloat, including history expiry and state rent, which we will discuss in detail later in this chapter in "Scaling the L1".
+以太坊开发人员已经探索了控制状态膨胀的解决方案，包括历史过期和状态租金，我们将在本章后面的“扩容 L1”中详细讨论。
 
-Client diversity also helps. While Geth has historically been the dominant Ethereum client (see Figure 16-2), alternatives like Nethermind, Erigon, and Besu introduce optimizations that improve storage efficiency. Erigon, for example, specializes in handling historical data more efficiently, reducing the burden on full nodes.
+客户端多样性也有帮助。虽然 Geth 在历史上一直是占主导地位的以太坊客户端（参见图 16-2），但像 Nethermind、Erigon 和 Besu 这样的替代方案引入了优化，从而提高了存储效率。例如，Erigon 专门用于更有效地处理历史数据，从而减轻了完整节点的负担。
 
-![Ethereum client distribution](images/ch16/maet_1602.png)
+![以太坊客户端分布](images/ch16/maet_1602.png)
 
-Figure 16-2. Ethereum client distribution
+图 16-2. 以太坊客户端分布
 
-### Block Propagation and MEV
+### 区块传播和 MEV
 
-Even if Ethereum could handle a higher transaction throughput, there's another fundamental bottleneck: the time it takes for new blocks to propagate across the network. The moment a validator produces a new block, that block must be broadcast to thousands of other nodes worldwide. The larger the block, the longer it takes to propagate. And the longer it takes, the higher the chance of network disagreements, or even temporary forks, where different parts of the network momentarily diverge.
+即使以太坊可以处理更高的交易吞吐量，仍然存在另一个根本瓶颈：新区块在网络上传播所需的时间。验证者生成新区块的那一刻，该区块必须广播到全球数千个其他节点。区块越大，传播所需的时间就越长。而且传播时间越长，网络出现分歧的可能性就越高，甚至可能出现临时分叉，即网络的各个部分暂时diverge。
 
-PoS has helped reduce these risks, but block-propagation delays still affect performance. Client teams have been working on network optimizations to speed things up, but it's a challenge we'll continue to refine as we scale Ethereum.
+PoS 有助于降低这些风险，但区块传播延迟仍然会影响性能。客户端团队一直在努力进行网络优化以加快速度，但这是一个我们将随着以太坊的扩展而继续改进的挑战。
 
-There's another issue that lurks beneath the surface: MEV. Even though Ethereum has transitioned to PoS, the name "miner extractable value" has stuck. Today, it's more accurate to call it *maximal extractable value*, meaning the profit that validators and searchers can make by strategically reordering, including, or excluding transactions in a block.
+还有一个潜伏在地表之下的问题：MEV。即使以太坊已过渡到 PoS，名称“miner extractable value”仍然存在。今天，更准确的说法是 *maximal extractable value*，这意味着验证者和搜索者可以通过策略性地重新排序、包括或排除区块中的交易来获得的利润。
 
-MEV arises because transactions don't always get processed in the order they're submitted. Instead, validators can prioritize transactions based on their own profit motives. This creates opportunities for sophisticated actors to extract value in ways that disadvantage regular users. High-frequency trading bots scan the mempool (Ethereum's waiting room for transactions yet to be included in a block), searching for profitable opportunities. For example, if someone submits a large trade on a decentralized exchange like Uniswap, bots can jump ahead of them, buying the asset first and selling it back at a higher price. This is known as a *sandwich attack*, which is a form of front-running, and it's one of the most notorious forms of MEV.
+MEV 的出现是因为交易并非总是按照提交的顺序处理。相反，验证者可以根据自己的利润动机来确定交易的优先级。这为复杂的参与者创造了以损害普通用户的方式提取价值的机会。高频交易机器人扫描 mempool（以太坊的交易待处理区，尚未包含在区块中），寻找有利可图的机会。例如，如果有人在 Uniswap 等去中心化交易所提交了一笔大额交易，机器人可以抢先一步，首先购买该资产，然后再以更高的价格卖回。这被称为*夹击攻击*，是抢跑的一种形式，也是最臭名昭着的 MEV 形式之一。
 
-A mitigation that has been running for years is MEV-Boost, a protocol developed by Flashbots that makes MEV more democratic and transparent. However, the long-term fix is a more fundamental redesign: a native implementation of *proposer-builder separation* (PBS). We'll explore these solutions in more detail in the following section.
+一个运行多年的缓解措施是 MEV-Boost，这是一个由 Flashbots 开发的协议，使 MEV 更加民主和透明。然而，长期的解决方案是更根本的重新设计：*proposer-builder separation* (PBS) 的原生实现。我们将在下一节中更详细地探讨这些解决方案。
 
-> **Note**  
+> **注意**
 >
-> MEV is largely absent from most L2 chains because they typically rely on centralized transaction sequencers. A single centralized sequencer usually processes transactions in the exact order they're received, eliminating opportunities for transaction reordering or front-running. While this centralized approach significantly reduces MEV, it does introduce potential trade-offs related to decentralization and censorship resistance. Future L2 developments aim to balance these trade-offs by introducing decentralized sequencing mechanisms.
+> MEV 在大多数 L2 链中基本上不存在，因为它们通常依赖于中心化的交易排序器。单个中心化的排序器通常按照接收到的确切顺序处理交易，从而消除了交易重新排序或抢跑的机会。虽然这种中心化的方法显着减少了 MEV，但它确实引入了与去中心化和抗审查性相关的潜在权衡。未来的 L2 发展旨在通过引入去中心化的排序机制来平衡这些权衡。
 
-## Solutions
+## 解决方案
 
-What's being done to overcome Ethereum's scaling challenges? While there's no single, simple fix, developers are actively working on various improvements to make the network faster, cheaper, and better equipped for mass adoption. Let's take a closer look at the main strategies they're exploring.
+正在采取哪些措施来克服以太坊的扩容挑战？虽然没有单一、简单的解决方案，但开发人员正在积极致力于各种改进，以使网络更快、更便宜，并更好地适应大规模采用。让我们仔细看看他们正在探索的主要策略。
 
-### Scaling the L1
+### 扩容 L1
 
-Scaling Ethereum's base layer, Layer 1, is one of the hardest challenges we've faced since day one. The reality is that no single fix will solve everything; scaling isn't a binary switch we can flip. Instead, it's a long-term process: a combination of optimizations that gradually make Ethereum more efficient without sacrificing decentralization or security. While L2 rollups are our best bet for handling the majority of transactions, improving Ethereum's base layer is still important. If we can increase throughput and efficiency at L1, rollups become even more powerful, gas fees drop, and Ethereum stays competitive without resorting to centralization. Let's walk through some of the core ways we're improving Ethereum's base layer.
+扩容以太坊的基础层（Layer 1）是我们从第一天起就面临的最艰巨的挑战之一。现实情况是，没有一种单一的解决方案可以解决所有问题；扩容不是我们可以翻转的二进制开关。相反，这是一个长期的过程：一系列优化，逐步提高以太坊的效率，而不会牺牲去中心化或安全性。虽然 L2 rollup 是我们处理大部分交易的最佳选择，但改进以太坊的基础层仍然很重要。如果我们可以提高 L1 的吞吐量和效率，rollup 将变得更加强大，gas 费用也会下降，并且以太坊可以在不诉诸中心化的情况下保持竞争力。让我们来看看我们改进以太坊基础层的一些核心方法。
 
-#### Raising the gas limit
+#### 提高 gas 上限
 
-Ethereum's blocks aren't constrained by the number of transactions they can hold but by how much gas can fit inside each block. This is the *gas limit*. We can think of it like a budget. Every transaction consumes gas based on its complexity, and the available gas in a block is defined by the EIP-1559 mechanics. Raising the gas limit means we can fit more transactions in each block, effectively increasing Ethereum's throughput.
+以太坊的区块不受它们可以容纳的交易数量的限制，而是受每个区块中可以容纳的 gas 数量的限制。这就是 *gas 上限*。我们可以将其视为预算。每笔交易都会根据其复杂性消耗 gas，而区块中可用的 gas 由 EIP-1559 机制定义。提高 gas 上限意味着我们可以在每个区块中容纳更多交易，从而有效地提高以太坊的吞吐量。
 
-But it's not as simple as just cranking up the gas limit. Bigger blocks take longer to propagate across the network, making Ethereum more susceptible to chain splits. They also increase hardware requirements for full nodes, pushing us closer to centralization. So increases in gas limit happen gradually and carefully, balancing throughput improvements with network health (see Figure 16-3).
+但这不仅仅是提高 gas 上限那么简单。更大的区块需要更长的时间才能在网络上传播，这使得以太坊更容易受到链分裂的影响。它们还会增加完整节点的硬件要求，从而使我们更接近中心化。因此，gas 上限的增加是逐步且谨慎的，需要在吞吐量改进和网络健康之间取得平衡（参见图 16-3）。
 
-![Historical gas limit changes](images/ch16/maet_1603.png)
+![历史 gas 上限变化](images/ch16/maet_1603.png)
 
-Figure 16-3. Historical gas limit changes
+图 16-3. 历史 gas 上限变化
 
-#### The future of parallel execution in Ethereum
+#### 以太坊并行执行的未来
 
-Ethereum processes transactions sequentially because of its shared-state model. This ensures security and consistency but limits scalability since transactions cannot be executed in parallel. In contrast, some newer blockchains like Solana and Aptos have adopted parallel execution, but they rely on more centralized architectures and require validators to use high-performance hardware.
+由于以太坊的共享状态模型，它按顺序处理交易。这可以确保安全性和一致性，但会限制可扩展性，因为交易无法并行执行。相比之下，Solana 和 Aptos 等一些较新的区块链采用了并行执行，但它们依赖于更中心化的架构，并且需要验证者使用高性能硬件。
 
-The challenge in Ethereum is that transactions often interact with the same state—for example, two DeFi trades modifying the same liquidity pool. Reordering them without a robust dependency-management system could break smart contract logic. Another complexity is that full nodes must verify all transactions, and introducing parallel execution would require careful synchronization across threads.
+以太坊面临的挑战是，交易通常与相同的状态交互——例如，两个 DeFi 交易修改相同的流动性池。如果没有强大的依赖关系管理系统，重新排序它们可能会破坏智能合约逻辑。另一个复杂之处在于，完整节点必须验证所有交易，而引入并行执行将需要跨线程进行仔细的同步。
 
-Ethereum researchers are actively exploring solutions to introduce partial parallel execution while maintaining decentralization. One approach is *stateless execution*, which reduces the reliance on full node storage, making transaction processing more efficient. Another is *optimistic concurrency*, where transactions are assumed to be independent and are rolled back only if conflicts arise. We'll explain these concepts in detail in the second part of this chapter.
+以太坊研究人员正在积极探索引入部分并行执行的解决方案，同时保持去中心化。一种方法是*无状态执行*，它可以减少对完整节点存储的依赖，从而使交易处理更有效率。另一种方法是*乐观并发*，其中假定交易是独立的，只有在出现冲突时才会回滚。我们将在本章的第二部分详细解释这些概念。
 
-Several experimental implementations of parallel EVM have emerged in EVM-compatible chains, including Monad, Polygon PoS, and Shardeum. Monad, for instance, implements an optimistic parallel execution model that achieves more than 10,000 TPS. Polygon PoS has achieved a 1.6x gas throughput increase with its Block-STM approach, allowing for partial parallelization of transactions. These advancements provide valuable insights, but Ethereum must implement parallelization while preserving decentralization, a balance that remains a key challenge. Recent studies suggest that about 64.85% of Ethereum transactions could be parallelized, highlighting significant potential for performance improvements. However, as of March 2025, there is no concrete plan for integrating parallel execution into Ethereum's mainnet. Discussions around parallelizing EVM through end-of-the-block virtual transactions are ongoing, but the complexity of Ethereum's execution model makes implementation challenging. The roadmap for Ethereum's scalability includes continued research into transaction-dependency resolution, alternative execution models, and gradual improvements to EVM efficiency.
+一些实验性的并行 EVM 实现已经出现在与 EVM 兼容的链中，包括 Monad、Polygon PoS 和 Shardeum。例如，Monad 实现了乐观的并行执行模型，实现了超过 10,000 TPS。Polygon PoS 通过其 Block-STM 方法实现了 1.6 倍的 gas 吞吐量增加，从而可以实现交易的部分并行化。这些进步提供了宝贵的见解，但以太坊必须在保持去中心化的同时实现并行化，这是一个仍然是关键挑战的平衡。最近的研究表明，大约 64.85% 的以太坊交易可以并行化，突出了性能改进的巨大潜力。但是，截至 2025 年 3 月，尚未有将并行执行集成到以太坊主网中的具体计划。围绕通过块结束虚拟交易并行化 EVM 的讨论正在进行中，但以太坊执行模型的复杂性使得实施具有挑战性。以太坊可扩展性的路线图包括继续研究交易依赖关系解决、替代执行模型以及逐步提高 EVM 效率。
 
-#### State growth and expiry
+#### 状态增长和过期
 
-Ethereum's state, comprising the collection of all account balances, smart contract storage, and other on-chain data, just keeps growing. Every new contract adds more data, and once something is written to Ethereum's state, it stays there forever. This is great for decentralization and verifiability but terrible for scalability. Full nodes must store and process all this data, and as the state gets larger, the cost of running a node increases.
+以太坊的状态，包括所有帐户余额、智能合约存储和其他链上数据的集合，一直在增长。每个新合约都会添加更多数据，并且一旦将某些内容写入以太坊的状态，它就会永远保留在那里。这对于去中心化和可验证性来说非常棒，但对于可扩展性来说却很糟糕。完整节点必须存储和处理所有这些数据，并且随着状态的增大，运行节点的成本也会增加。
 
-Right now, the Ethereum state size is around 1.2 TB for full nodes, but archival nodes, which store the entire historical state and transaction data, need upward of 21 TB of storage. This massive data footprint makes it increasingly difficult for individuals to run archival nodes, concentrating this role in the hands of a few well-funded entities. It's worth mentioning that Erigon and Reth execution clients are optimized to require less storage, as both need around 2 TB for an archive node.
+目前，完整节点的以太坊状态大小约为 1.2 TB，但存储整个历史状态和交易数据的归档节点需要超过 21 TB 的存储空间。这种庞大的数据占用空间使得个人越来越难以运行归档节点，从而将此角色集中在少数资金充足的实体手中。值得一提的是，Erigon 和 Reth 执行客户端经过优化，需要更少的存储空间，因为两者都需要大约 2 TB 的存储空间用于归档节点。
 
-There's often confusion between state expiry and history expiry, but they address different problems. *State expiry* aims to reduce the size of Ethereum's actively maintained state by requiring smart contracts to periodically pay rent for the storage they consume. If a contract doesn't pay, it becomes inaccessible until someone explicitly pays to revive it. This would significantly slow state growth and make it easier for full nodes to operate.
+状态过期和历史过期之间经常存在混淆，但它们解决了不同的问题。*状态过期*旨在通过要求智能合约定期为它们消耗的存储空间支付租金来减少以太坊的活跃维护状态的大小。如果合约不支付租金，它将变得无法访问，直到有人明确支付租金以恢复它。这将显着减慢状态增长，并使完整节点更易于操作。
 
-*History expiry*, on the other hand, deals with the sheer size of past transaction data. Instead of forcing every node to store all historical transactions, Ethereum could prune older data, offloading it to external storage solutions. This wouldn't affect the live state but would make historical queries more reliant on third-party data providers. Both approaches have trade-offs, and research is ongoing to determine the best balance between efficiency and accessibility.
+另一方面，*历史过期*处理的是过去交易数据的庞大规模。以太坊可以修剪较旧的数据，将其卸载到外部存储解决方案，而不是强制每个节点存储所有历史交易。这不会影响实时状态，但会使历史查询更加依赖于第三方数据提供商。这两种方法都有权衡取舍，目前正在进行研究以确定效率和可访问性之间的最佳平衡。
 
-To explore this topic further, we recommend looking into EIP-4444, which covers history expiry. As for state expiry, it's still in the research phase, so there's no clear strategy yet, but you can find more information in the Ethereum roadmap.
+要进一步探索此主题，我们建议您研究 EIP-4444，其中涵盖了历史过期。至于状态过期，它仍处于研究阶段，因此目前尚无明确的策略，但您可以在以太坊路线图中找到更多信息。
 
-#### Proposer-builder separation
+#### 提议者-构建者分离
 
-MEV has been a persistent issue in Ethereum, even after the transition to PoS. Validators and specialized searchers engage in transaction reordering, front-running, and other strategies to extract profit at the expense of regular users. This isn't just an economic problem; it also affects network health, increasing congestion and making gas fees unpredictable.
+即使在过渡到 PoS 之后，MEV 一直是以太坊中一个持续存在的问题。验证者和专门的搜索者参与交易重新排序、抢跑和其他策略，以牺牲普通用户的利益为代价来提取利润。这不仅仅是一个经济问题；它还会影响网络健康，增加拥堵并使 gas 费用变得不可预测。
 
-PBS is one of the most promising solutions for mitigating MEV. Right now, validators both propose and build blocks, meaning they have full control over transaction ordering. PBS changes this by splitting these roles: validators still propose blocks, but the actual block construction is outsourced to specialized builders through a competitive auction. This removes the direct incentive for validators to engage in MEV extraction and makes transaction inclusion more transparent.
+PBS 是缓解 MEV 最有希望的解决方案之一。目前，验证者既提议又构建区块，这意味着他们对交易排序拥有完全的控制权。PBS 通过拆分这些角色来改变这一点：验证者仍然提议区块，但实际的区块构建通过竞争性拍卖外包给专门的构建者。这消除了验证者参与 MEV 提取的直接动机，并使交易包含更加透明。
 
-PBS has already been tested in the form of MEV-Boost, which allows validators to outsource block construction to the highest bidder. However, it's important to understand that MEV-Boost and PBS won't eliminate MEV; they will just make it more transparent and fairer. MEV will still exist because the underlying incentives that drive arbitrage, front-running, and sandwich attacks won't go away. What PBS does is ensure that instead of a few insiders benefiting from opaque MEV strategies, the process of capturing MEV is more open, fair, and competitive. In the long run, additional solutions like order-flow auctions, encrypted mempools, and other MEV-mitigation techniques will need to be integrated alongside PBS to further reduce its negative impact.
+PBS 已经以 MEV-Boost 的形式进行了测试，MEV-Boost 允许验证者将区块构建外包给出价最高的人。但是，重要的是要理解 MEV-Boost 和 PBS 不会消除 MEV；它们只会使其更加透明和公平。MEV 仍然会存在，因为驱动套利、抢跑和夹击攻击的基本激励措施不会消失。PBS 所做的是确保捕获 MEV 的过程更加开放、公平和具有竞争力，而不是少数内部人士从不透明的 MEV 策略中受益。从长远来看，其他解决方案（如订单流拍卖、加密 mempool 和其他 MEV 缓解技术）需要与 PBS 一起集成，以进一步减少其负面影响。
 
-### Rollups
+### Rollup
 
-Ethereum has faced persistent challenges with scalability, transaction throughput (measured in TPS), and high fees. To address these issues, the concept of rollups has emerged.
+以太坊在可扩展性、交易吞吐量（以 TPS 衡量）和高费用方面面临着持续的挑战。为了解决这些问题，rollup 的概念应运而生。
 
-*Rollups* are mechanisms that execute transactions "off chain" on a dedicated L2, then post aggregated ("rolled up") data or proofs back to the L1 blockchain. Because the heavy lifting of computation and state updates occurs away from L1, the blockchain avoids its usual throughput bottlenecks, thereby increasing transaction speeds and lowering fees. In effect, the rollup's own execution environment handles signature checks, contract execution, and state transitions more efficiently, while L1 remains the authoritative "settlement layer."
+*Rollup* 是一种在专用 L2 上“链下”执行交易的机制，然后将聚合（“rollup”）数据或证明发布回 L1 区块链。由于繁重的计算和状态更新远离 L1 进行，因此区块链避免了其通常的吞吐量瓶颈，从而提高了交易速度并降低了费用。实际上，rollup 自己的执行环境可以更有效地处理签名检查、合约执行和状态转换，而 L1 仍然是权威的“结算层”。
 
-Rollups aim to preserve as much of L1's security as possible. The security goals are ensuring data availability, verifying correct state transitions, and providing censorship resistance. Data availability requires all transaction and state information to be accessible so that in the event of a dispute, participants can independently verify the chain's state or safely withdraw funds by relying on data posted to (or guaranteed by) L1. State-transition integrity ensures that changes on L2 are valid according to the network rules, typically through validity proofs (such as zero-knowledge proofs) or fraud proofs. Finally, censorship resistance guarantees that no single entity or small group of participants can indefinitely block or withhold user transactions.
+Rollup 旨在尽可能多地保留 L1 的安全性。安全目标是确保数据可用性、验证正确的状态转换以及提供抗审查性。数据可用性要求所有交易和状态信息都可访问，以便在发生争议时，参与者可以独立验证链的状态或通过依赖发布到（或由）L1 保证的数据安全地提取资金。状态转换完整性确保 L2 上的更改根据网络规则有效，通常通过有效性证明（例如零知识证明）或欺诈证明。最后，抗审查性保证没有单个实体或一小群参与者可以无限期地阻止或扣留用户交易。
 
-> **Note**  
+> **注意**
 >
-> Data availability and validity are essential components of secure rollup implementations, ensuring that malicious actors cannot forge transactions, steal funds, or artificially inflate balances. Data validity typically relies on one of two main approaches. The first approach uses zero-knowledge proofs, where each batch of the L2 transactions comes with a cryptographic proof attesting to correct execution. When this proof is submitted to L1, a smart contract verifies its correctness before accepting the new state root. The second approach uses fraud proofs under an optimistic assumption: the L2 operator posts new states to L1, and anyone can challenge those submissions by providing evidence of wrongdoing. If a fraud proof is upheld, the invalid batch is reversed, and the malicious actor faces penalties.
+> 数据可用性和有效性是安全 rollup 实现的重要组成部分，确保恶意行为者无法伪造交易、窃取资金或人为地夸大余额。数据有效性通常依赖于两种主要方法之一。第一种方法使用零知识证明，其中每批 L2 交易都附带一个证明正确执行的加密证明。当此证明提交到 L1 时，智能合约会在接受新状态根之前验证其正确性。第二种方法在乐观假设下使用欺诈证明：L2 运营商将新状态发布到 L1，并且任何人都可以通过提供不当行为的证据来质疑这些提交。如果欺诈证明成立，则无效批次将被撤销，并且恶意行为者将面临处罚。
 >
-> Beyond validity, data availability ensures that users can always reconstruct the chain if the L2 operator disappears or behaves dishonestly. Different methods exist to achieve this. Some systems store all transaction data directly on L1, often as Ethereum calldata, or more commonly nowadays, blobs, so it remains transparently recorded in blockchain logs. Other designs rely on off-chain data availability layers, specialized networks, or external storage solutions that offer cryptoeconomic incentives for maintaining and providing data. Hybrid approaches may combine both methods: critical information is placed on chain, while less essential data is stored off chain.
+> 除了有效性之外，数据可用性确保用户始终可以在 L2 运营商消失或行为不诚实时重建链。存在不同的方法来实现这一点。一些系统将所有交易数据直接存储在 L1 上，通常作为以太坊 calldata，或者现在更常见的 blobs，因此它仍然透明地记录在区块链日志中。其他设计依赖于链下数据可用性层、专用网络或外部存储解决方案，这些解决方案提供密码经济激励来维护和提供数据。混合方法可能会结合这两种方法：关键信息放置在链上，而不太重要的数据存储在链下。
 
-Rollups rely on a specialized smart contract deployed on L1 that maintains the canonical state of all L2 accounts. This contract stores a root (commonly a Merkle root) representing the current L2 state, accepts batches of new transactions submitted by designated actors (sometimes called sequencers, aggregators, or operators), and verifies the validity of those batches. Depending on the type of rollup, it may check zero-knowledge proofs or handle fraud proofs to ensure that the state updates are legitimate. In the event of a detected violation (e.g., a successful fraud proof), the contract can revert the invalid batch.
+Rollup 依赖于部署在 L1 上的专用智能合约，该合约维护所有 L2 帐户的规范状态。此合约存储一个根（通常是 Merkle 根），表示当前的 L2 状态，接受由指定参与者（有时称为排序器、聚合器或运营商）提交的新交易批次，并验证这些批次的有效性。根据 rollup 的类型，它可能会检查零知识证明或处理欺诈证明，以确保状态更新是合法的。如果检测到违规行为（例如，成功的欺诈证明），合约可以恢复无效批次。
 
-Anyone meeting the rollup's requirements, such as staking a bond, can submit a state update of L2 transactions to the smart contract. This isn't always the case. In fact, as of now, most rollups with the highest transaction volume and total value locked are centralized at the sequencer level. While some rollups have achieved decentralization, for the majority it remains an end goal. Each state update includes the previous state root (to show continuity), a newly proposed state root (reflecting the result of the submitted transactions), and either compressed transaction data or references to it. If the rollup's rules are satisfied (and no valid challenges arise, in the case of optimistic rollups), the contract updates its stored state root to the new one, making it the canonical L2 state.
+满足 rollup 要求的任何人都可以在智能合约中提交 L2 交易的状态更新，例如质押债券。情况并非总是如此。实际上，到目前为止，交易量和总锁定价值最高的rollup，其排序器级别都是中心化的。虽然一些 rollup 已经实现了去中心化，但对于大多数 rollup 而言，去中心化仍然是一个最终目标。每个状态更新都包括先前的状态根（以显示连续性）、新提出的状态根（反映提交的交易的结果）以及压缩的交易数据或对其的引用。如果满足 rollup 的规则（并且没有出现有效的挑战，对于乐观 rollup 而言），则合约将其存储的状态根更新为新的状态根，使其成为规范的 L2 状态。
 
-Different rollups deal with fraud or invalid state updates in distinct ways. Optimistic rollups assume by default that new state updates are correct but provide a challenge window (often lasting several days) for anyone to submit a fraud proof. If a proof is verified, the invalid state update is rolled back, and the malicious submitter's stake is slashed. Meanwhile, zero-knowledge rollups require a zero-knowledge proof to accompany each new state root. Since this proof is verified on chain, the chain immediately knows whether the updates are valid; if the proof is correct, no lengthy challenge period is necessary.
+不同的 rollup 以不同的方式处理欺诈或无效的状态更新。乐观 rollup 默认假设新的状态更新是正确的，但提供一个挑战窗口（通常持续几天）供任何人提交欺诈证明。如果证明被验证，则无效的状态更新将被回滚，并且恶意提交者的质押将被削减。同时，零知识 rollup 需要零知识证明来伴随每个新的状态根。由于此证明是在链上验证的，因此链会立即知道更新是否有效；如果证明是正确的，则不需要长时间的挑战期。
 
-#### Rollup stages
+#### Rollup 阶段
 
-During their early phases, most rollups retain partial centralized controls, often called *training wheels*, which allow operators to swiftly intervene in the event of bugs or critical updates. Although this is practical for a new system, true decentralization demands that such training wheels be gradually removed.
+在其早期阶段，大多数 rollup 保留了部分中心化控制，通常称为*training wheels*，这允许运营商在出现错误或重大更新时迅速进行干预。虽然这对于新系统来说是实用的，但真正的去中心化要求逐步移除这些保护措施。
 
-To chart this transition, a framework has been proposed, building on Vitalik Buterin's initial milestones, that categorizes rollups into three maturity stages. Each stage indicates how much authority remains in centralized hands and how close the rollup is to inheriting Ethereum's base-layer security.
+为了绘制此转换图，已经提出了一个框架，建立在 Vitalik Buterin 最初的里程碑之上，该框架将 rollup 分为三个成熟阶段。每个阶段都表明有多少权力保留在中心化手中，以及 rollup 离继承以太坊的基础层安全性有多近。
 
-At *stage 0*, a rollup calls itself a rollup but is still heavily operator controlled. It posts state roots to L1 and provides data availability on L1, enabling reconstruction of the L2 state if something goes wrong. However, at this point the system's "proof mechanism" (fraud or validity proofs) may not be fully enforced by an on-chain smart contract; operator intervention is the main fallback if errors occur. Essentially, stage 0 ensures the rudiments of a rollup—on-chain data, state roots, and user-facing node software—are in place, but governance remains centralized.
+在 *stage 0* 中，rollup 称自己为 rollup，但仍然受到运营商的严格控制。它将状态根发布到 L1 并在 L1 上提供数据可用性，如果出现问题，可以重建 L2 状态。但是，此时，系统的“证明机制”（欺诈或有效性证明）可能不会由链上智能合约完全执行；如果发生错误，运营商干预是主要的后备措施。从本质上讲，stage 0 确保 rollup 的基本要素（链上数据、状态根和用户面向节点的软件）到位，但治理仍然是中心化的。
 
-> **Note**  
+> **注意**
 >
-> The requirements can change for this three-stage framework. For example, as of this writing (February 2025), Arbitrum is a stage 1 rollup, but with the new requirements, it might become a stage 0 rollup if it does not upgrade the network in time.
+> 此三阶段框架的要求可能会改变。例如，截至撰写本文时（2025 年 2 月），Arbitrum 是 stage 1 rollup，但根据新要求，如果它没有及时升级网络，则可能变成 stage 0 rollup。
 
-*Stage 1* rollups need to have a proper proof system (fraud proofs for optimistic rollups or validity proofs for zero-knowledge rollups), and there must be at least five external actors who can submit these proofs. Users should also be able to withdraw or "exit" the system without needing operator cooperation, safeguarding them from censorship. Another criterion is a minimum seven-day exit window for users if they disagree with a proposed system upgrade, although a "Security Council" can still intervene more quickly if a critical bug emerges. This council must be formed via a multisig requiring at least 50% of eight or more signers,[^1] with half external to the rollup's main organization. While this council can fix bugs or revert malicious transactions, there is still a potential single point of failure.
+*Stage 1* rollup 需要具有适当的证明系统（乐观 rollup 的欺诈证明或零知识 rollup 的有效性证明），并且必须至少有五个外部参与者可以提交这些证明。用户还应该能够在不需要运营商合作的情况下退出系统，从而保护他们免受审查。另一个标准是，如果用户不同意提出的系统升级，则用户至少需要七天的退出窗口，但如果出现严重错误，Security Council 仍然可以更快地进行干预。该理事会必须通过一个多重签名形成，该签名需要至少八个或更多签名者的 50% 以上[^1]，其中一半来自 rollup 主要组织之外。虽然该理事会可以修复错误或恢复恶意交易，但仍然存在潜在的单点故障。
 
-[^1]: This was recently modified, and the requirements changed a little bit. We will not analyze the changes in this chapter; see Luca Donno's Medium article for more.
+[^1]: 最近修改了这一点，并且要求做了一些更改。我们不会在本章中分析这些更改；有关更多信息，请参见 Luca Donno 的 Medium 文章。
 
-*Stage 2* signifies that the rollup is truly decentralized, relying on permissionless proofs and robust user protections.[^2] The fraud or validity proof system must be open to anyone—no allowlists. A user must have at least 30 days to exit if a governance proposal or an upgrade is introduced, ensuring that they are not coerced into changes. The Security Council's role is strictly limited to on-chain, soundness-related errors, such as contradictory proofs being submitted, rather than broad governance or discretionary power. Thus, at this final stage, human intervention is narrowly scoped, and the rollup is governed mostly by smart contracts and community consensus, closely mirroring Ethereum's ethos of minimal trust.
+*Stage 2* 表示 rollup 是真正去中心化的，依赖于无需许可的证明和强大的用户保护措施[^2]。欺诈或有效性证明系统必须对任何人开放——没有允许列表。如果引入了治理提案或升级，用户必须至少有 30 天的时间才能退出，以确保他们不会被迫进行更改。Security Council 的作用严格限于链上、与健全性相关的错误，例如提交了矛盾的证明，而不是广泛的治理或酌情决定权。因此，在最终阶段，人为干预的范围很窄，rollup 主要由智能合约和社区共识来管理，这与以太坊的最小信任原则非常相似。
 
-[^2]: Stage 2 does not indicate a better UX or more adoption; it just indicates more decentralization.
+[^2]: Stage 2 并不表示更好的 UX 或更多的采用；它只是表示更多的去中心化。
 
-We want to extend a thank you to everyone involved in developing and updating this framework and anyone involved in analyzing and making public the information about the stages of the rollup; your service is very much appreciated and needed.
+我们要感谢所有参与开发和更新该框架的人员以及所有参与分析和公开 rollup 各阶段信息的人员；非常感谢您的服务，而且非常有必要。
 
-#### Optimistic rollups
+#### 乐观 Rollup
 
-Optimistic rollups rely on fraud proofs. The operator posts state roots to the L1 under the assumption that they are valid. Observers, however, retain the option to challenge batches they believe are fraudulent. If the challenge proves correct, the invalid batch is reverted, and the operator is penalized. Since validity is not instantly confirmed, users must often wait through a challenge window, sometimes a week or more, before confidently withdrawing funds or achieving finality. This design results in longer withdrawal times but offers easy compatibility with the EVM and lower proof complexity. Operators do not need to construct zero-knowledge circuits, which simplifies some aspects of running the system. Nonetheless, the delayed withdrawal times can affect the user experience, and there is a possibility of economic attacks if the operator's bond is smaller than the total locked value. Examples of optimistic rollups include Arbitrum, Optimism, Base, and several other projects inspired by the "Optimistic Ethereum" model.
+乐观 Rollup [依赖于欺诈证明](scaling-ethereum.md#fraud-proof)。运营商将状态根发布到 L1，[基础是](https://ethereum.org/en/developers/docs/scaling/optimistic-rollups/) 假设它们有效。但是，观察者可以自由质疑他们认为带有欺诈性的批次。如果质疑被证明是正确的，无效批次将被恢复，运营商受到惩罚。由于其有效性没有得到即时确认，用户通常必须等待一个挑战窗口，时间可能长达一周甚至更长时间，才能有把握地提取资金或实现最终性。这种设计导致提款时间更长，但是它提供了同 EVM 更简便的兼容性，以及更低的证明复杂性。运营商不需要构建零知识电路，这可以简化系统运行的的某些方面。然而，对于用户体验而言，提款时间的延迟带来了消极影响，并且如果运营商的保证金小于锁定值总额，[就会有经济攻击的可能性](https://ethereum.org/en/developers/docs/scaling/optimistic-rollups/)。乐观 Rollups [的例子](https://l2beat.com/)包括Arbitrum、Optimism、Base 以及[其他大量灵感](https://amberdata.io/blog/optimistic-vs-zk-rollups)来自“乐观以太坊”模型的项目。
 
-#### Zero-knowledge rollups
+#### 零知识 Rollup
 
-ZK rollups operate on a validity-proof basis. When a provider bundles transactions on L2, it generates cryptographic proofs (often SNARKs or STARKs) attesting to the correctness of state transitions. These proofs are verified on chain, offering near-instant finality because there is no need for an extended challenge window. Users benefit from fast withdrawals since no waiting period is needed to confirm legitimacy. The high security originates from the direct verification of proofs, reducing dependence on watchers or sizable operator stakes. Validating a proof on chain is typically more efficient than processing each transaction individually. However, implementing zero-knowledge proofs for general-purpose EVM computations is computationally expensive, potentially requiring specialized hardware.
+ZK Rollup [基于有效性证明](scaling-ethereum.md#validity-proof)。当供应商在 L2 绑定交易时，它将生成加密证明（通常是 SNARK 或 STARK），证明状态转换的正确性。这些证明是链上验证的，无需延长质疑窗口，就可以提供接近即时的完成性。由于无需等待[确认合法](https://ethereum.org/en/developers/docs/scaling/zk-rollups/)，用户可以享受快速提款的好处。这种高安全性来源于对证明的直接验证，降低了对观察者或大量运营商股份的依赖性。[在链上](https://www.alchemy.com/blog/zk-rollups)验证一个证明，通常要比单独处理每笔交易都更高效。但为[通用 EVM 计算](https://blog.matter-labs.io/zkevm-the-holy-grail-of-ethereum-scaling-525b3a492d14)实施零知识证明，在计算上非常昂贵，有可能需要专业的硬件。
 
-##### The Risk of Zero-Knowledge Proofs
+##### 零知识证明带来的风险。
 
-The reality is that bleeding-edge cryptography is risky. Let's take Zcash as an example. Zcash used part of the implementations presented in the paper "Succinct Non-Interactive Zero Knowledge for a von Neumann Architecture", which describes the zk-SNARK construction used in the original launch of Zcash.
+其实，前言的密码学是有风险的。让我们以 Zcash 为例。Zcash [使用](https://electriccoin.co/blog/new-snark-foundational-flaw/)了论文“[succinct non-interactive zero knowledge for a von Neumann architecture](https://eprint.iacr.org/2013/879)”中的一些实施结果，该论文描述了 Zcash 首次发行所使用的 zk-SNARK 构造。
 
-In 2018, years after the release of this paper and dozens of peer reviews, Ariel Gabizon, a cryptographer employed by Zcash at the time, discovered a subtle cryptographic flaw that allowed for a counterfeiting vulnerability—essentially a double-spend attack. The vulnerability was fixed in the Zcash Sapling upgrade, and it seems that it was not exploited by anyone, but it had lain dormant in a very public and referenced paper for years before anyone noticed.
+在 2018 年，在这个[论文发布](https://arxiv.org/abs/1303.1449)几年，以及数十家同行评议之后，Zcash 当时聘用的密码学家 Ariel Gabizon，发现了一个隐晦的密码学缺陷，允许了一种伪造漏洞——本质上就是双花攻击。该漏洞已在 Zcash Sapling 升级中修复，而且看起来并未被任何人利用，但它已在一个非常公开和被引用的论文中潜伏了多年，才被人注意到。
 
-In this chapter, we refer to zero-knowledge proofs as being high security and trustworthy. This is generally true, but it's a dangerous assumption if it is never challenged.
+在本章中，我们将零知识证明，称为高安全性和值得信赖的。一般来说这是确实，但如果从不接受挑战，那么这种假设将非常危险。
 
-Certain zero-knowledge systems also demand a *trusted setup*[^3] (common with SNARKs) to generate initial parameters, which carries its own security considerations. Leading ZK-rollup projects include ZKsync, Starknet, Scroll, and Aztec. The latter also incorporates privacy features under the label "ZK-ZK-rollup."
+某些零知识系统还需要一个[可信设置](https://blog.coinbase.com/what-is-a-trusted-setup-and-why-do-we-need-one-in-the-cryptocurrency-world-7f68285983d1)[^3]（SNARK 常见）来生成初始参数，其中带有其自身的安全考虑因素。领先的 ZK-rollup 项目包括 ZKsync、Starknet、Scroll 和 Aztec。后者还在“ZK-ZK-rollup.”标签下整合了隐私功能。
 
-[^3]: As discussed in Chapter 4.
+[^3]: 第 4 章讨论过。
 
-ZK-rollups were originally well suited for simple tasks like token transfers or swaps but struggled with more complex functionalities. This changed with the emergence of *zk-EVM*, a development aiming to replicate the entire EVM off chain. By generating proofs for Turing-complete computations, including EVM bytecode execution, zk-EVM expands the scope of ZK rollups, allowing for a broad range of DApps to benefit from both scalability and zero-knowledge-level security.
+ZK-Rollup 首先就很适合简单的任务，比如令牌传输和互换，但难以胜任更加复杂的功能。随着 *zk-EVM* 的出现，事情发生了变化，这种开发旨在链下复制所有的 EVM。通过为图灵完备的计算[生成证明](https://ethereum.org/en/developers/docs/scaling/zk-rollups/#zkevm)，包括 EVM 字节码的执行，zk-EVM 扩展了 ZK Rollups 的范围，让大量 DApp 能够受益于可被伸缩性和零知识级别的安全性。
 
-Projects take different paths to achieve zk-EVM functionality. One method uses a transpiler, which converts Solidity (or other EVM high-level languages) into a circuit-friendly language such as Cairo (used by StarkWare). Another approach directly interprets standard EVM bytecode, opcode by opcode, building circuits that reflect each instruction. Hybrid or multitype solutions adjust parts of the EVM (such as data structures or hashing algorithms) to make them more proof friendly while trying to maintain near-full Ethereum compatibility. We will not further expand on zk-EVMs in this chapter; this will be done in Chapter 17.
+[项目](https://polygon.technology/blog/what-is-a-zkevm)采取不同的道路来实现 zk-EVM 功能。一种方法使用 Transpiler，可以将 Solidity（或其他的 EVM 高级语言）转换成电路友好的语言，比如 Cairo（由 StarkWare 所用）。另一种方法会直接解释标准的 EVM 字节码，一个操作码接一个操作码，构建一些反映每条指令的电路。混合或多类型的解决方案，会调整 EVM 的[某些部分](https://www.alchemy.com/blog/zkevm-vs-optimistic-rollups)（比如数据结构或者 Hash 算法）， 使它们更易于被证明，同时试图保持接近全部的以太坊兼容性。我们不会在本章进一步扩展 zk-EVM。这将在第 17 章中完成。
 
-### Other Types of Scaling Solutions
+### 其他扩展方案的类型
 
-Optimistic and ZK rollups are not the only kinds of scaling solutions; they are the two main ones that have been adopted for now, but this might change in the future. We will analyze other scaling solutions: briefly for the ones that are old and have less chance of becoming relevant now, and in more depth for the solutions that are upcoming and have a bright future.
+乐观 Rollup 和 ZK rollup，并非是唯一可以扩展的方案；它们是目前所采用的两种主要方案，但未来可能变化。我们将分析其他扩展方案：对于旧的，目前不太可能再次变得有关联性的方法，我们会简单分析，而对那些即将到来，未来充满希望的方案，则会深入分析。
 
-#### Validiums
+#### 有效性证明
 
-*Validiums* do not store transaction data on Ethereum. Instead, they post proofs to Ethereum that verify the state of the L2 chain, as shown in Figure 16-4. Essentially, a validium is a rollup that uses alternative data availability solutions, such as Celestia, Avail, or EigenLayer.
+*有效性证明* 不会将交易数据存储在以太坊上。相反，它们会将证明发布到以太坊，以验证 L2 链的状态，如图 16-4 所示。 从本质上讲，有效性证明是一种 rollup，它使用了其它的数据可用性解决方案，比如 Celestia, Avail, 或者 EigenLayer。
 
-![Validium architecture](images/ch16/maet_1604.png)
+![验证架构](images/ch16/maet_1604.png)
 
-Figure 16-4. Validium architecture
+图 16-4. 验证架构
 
-As an L2, a validium does not pay high gas fees associated with storing data on Ethereum. This approach is more cost-effective than rollups, meaning gas fees are much lower for users. However, validiums are typically considered less secure than other rollups since they store transaction data off of Ethereum using solutions such as a data availability committee or alternative data availability solutions.
+作为 L2，有效性证明不需要支付与在以太坊存储数据相关的高昂 Gas 费用。这种方法要比 Rollup 的成本更有效益，意味着 Gas 费用对用户来说更低，。然而，有效性证明通常被认为不如其他的 Rollup 安全，这是由于它们使用了 [数据可用性委员会](https://www.altlayer.io/blog/validium-layer-2-scaling-solution)或者[其它的数据可用性方案](https://www.celestia.org/)，在以太坊之外存储交易数据。
 
-#### Sidechains
+#### 侧链
 
-A *sidechain* is a blockchain network operating in parallel with another blockchain (called a main chain). Typically, a sidechain connects with the main chain via a two-way bridge that permits transferring of assets and possibly arbitrary data like contract state, Merkle proofs, and results of specific transactions between the two networks.
+*侧链* 是一种区块链网络，与另一个区块链并行运行。通常，侧链通过双向桥与主链连接，允许资产转移以及可能任意的数据，比如合同状态、Merkle 证明，以及两个网络之间特定交易的结果。
 
-Most sidechains have their consensus mechanisms and validator sets separate from the main chain. This allows sidechains to settle and finalize transactions without relying on another blockchain. However, it also means that the security of funds bridged to the sidechain depends on the existence of strong cryptoeconomic incentives to discourage malicious behavior among validators.
+大多数侧链都有其共识机制，以及独立于主链的验证器集。这使得侧链可以结算，以及最终确认交易，而无需依赖其他的区块链。然而，这也意味着桥接到侧链的资金的安全性，取决于坚固的加密经济激励的存在，从而阻止验证器中的恶意行为。
 
-#### Based Rollups
+#### 基于 Rollup
 
-*Based rollups* rely on the native sequencing capabilities of an L1 blockchain. This design enables a seamless integration that leverages L1's decentralization, liveness, and security properties.
+*基于 Rollup* 依赖于 [L1 区块链的本地排序能力](https://www.alchemy.com/overviews/based-rollups)。这种设计能够进行无缝集成，从而利用 L1 的去中心化、活跃度以及安全属性。
 
-Based rollups use a simpler approach to sequencing compared to traditional rollups. While most rollups implement their own sequencers, based rollups tap into the sequencer of the underlying Layer 1. Essentially, the main difference is that the L1 validators are the sequencers for the rollup instead of having an external one, as with optimistic rollups.
+于传统的 Rollup 相比，基于 Rollup 使用了一种更简单的排序方法。大多数 Rollup 都实现了它们自己的排序器，而基于 Rollup 是接入到其底层的 Layer 1 的排序器上。本质上，主要的区别是，L1 验证器是 Rollup 的排序器，而不是像乐观 Rollup 一样，有外部的排序器。
 
-The consensus, data availability, and settlement layers are all just Ethereum. The only component built into the rollup itself is the execution layer, which takes responsibility for executing transactions and updating their statuses. This design allows L1 block proposers to directly partner with L2 block builders and searchers to incorporate the next rollup block into the L1 block. Because based sequencing relies solely on the existing Ethereum validation approach, it does not depend on any external consensus.
+共识、数据可用性、和结算层都是以太坊。构建在 Rollup 自身的唯一组件，是执行层，该层负责执行交易，以及更新其状态。这种设计允许 L1 区块提出者，与 L2 区块构建者和搜索器直接合作， 将下一个 Rollup 区块合并到 L1 区块中。由于基于排序的方法，仅仅依赖于现有的以太坊验证方法，所有它无需依赖任何外部的共识。
 
-> **Note**  
+> **注意**
 >
-> Based rollups are probably the most promising solution, and they might surpass optimistic rollups in usage. This is mainly because, since the finality is the same as Ethereum itself, there could be atomic transactions between based rollups without the challenge window. For example, DeFi liquidity could be aggregated between based rollups. Earlier, this was possible only on ZK rollups.
+> 基于 Rollup 有可能是最有希望的解决方案，而且有可能在用法上超过乐观Rollup。这主要在于，由于其最终性性与以太坊自身的最终性是相同的，所以基于 Rollup 之间可以进行原子交易，而无需任何挑战窗口。例如，DeFi 流动性可以在基于 Rollup 之间进行聚合。此前，只有 ZK Rollup 才能实现。
 
-#### Booster Rollups
+#### 助推 Rollup
 
-*Booster rollups* are rollups that process transactions as if they were directly executed on L1, granting them full access to the L1 state. At the same time, they maintain their own separate storage. In this way, both execution and storage scale at the L2 level, while the L1 framework serves as a shared base. Another way to see this is that each L2 reflects the L1, effectively adding new block space for all L1-deployed apps by sharding transaction execution and storage.
+*助推 Rollup* 是一种 Rollup，它可以处理交易。就好像交易在 L1 上直接执行一样，这赋予了它们对 L1 状态的全部访问权限。除此之外，他们还维护自己独立的分开存储。以这种方式，执行和存储都在 L2 级别进行扩展，而 L1 框架则充当共享基础。另一种看待它的方式是，每个 L2 都会反映 L1，通过对事务执行与存储进行分片，从而有效地为所有 L1 部署的应用程序，都增加新的区块空间。
 
-If Ethereum's future demands the use of hundreds or even thousands of rollups to handle the high scalability demands, having each rollup function as an isolated chain, complete with its own rule set and contracts, may not be ideal. Developers would find themselves duplicating code onto each rollup.
+如果以太坊的未来，需要用到数百甚至数千个 Rollup，来处理高扩展性需求，那么让每个 Rollup 都像一个孤立的链那样运作，所有都用它们独有的规则集和合同，可能并不理想。开发者可能会发现，自己在每个 Rollup 上都重复相同代码。
 
-Booster rollups, instead, directly add extra block space to any DApp running on L1. Rolling out a booster rollup can be thought of as adding additional CPU cores or more hard drive space to a computer. Whenever an application knows how to leverage multithreading (multirollup, in a blockchain sense), it can automatically make use of that expanded capacity. Developers simply have to consider how best to utilize that extra environment.
+相反，助推 Rollup 会直接为在 L1 上运行的任何 DApp，添加额外的区块空间。推出助推 Rollup，可以被认为是为计算机添加额外的 CPU 内核或更多的硬盘空间。每当应用程序知道如何利用多线程 (在区块链的意义上是多 Rollup)时，它就可以自动利用经过扩展的容量。开发者只需考虑如何最好地利用那个额外环境。
 
-#### Native Rollups
+#### 本地 Rollup
 
-The native rollup proposal introduces the `EXECUTE` precompile, designed to serve as a verifier for rollup state transitions; this significantly simplifies development of EVM-equivalent rollups by removing the need for complex infrastructure, such as fraud-proof games, SNARK circuits, and security councils. With `EXECUTE`, you can deploy minimal native and based rollups in just a few lines of Solidity code.
+本地 Rollup 方案，推出了 `EXECUTE` 预编译，旨在充当 Rollup 状态转换的验证者；开发人员可以通过移除诸如欺诈证明游戏、SNARK 电路和安全委员会 (Security Counci) 等复杂的基础设施，从而极大地简化 EVM 等价 Rollup 的开发。 借助于 `Rollup将已执行的交易存储在数据blob中，并生成一个用于验证的加密“承诺”[^4]。为了创建这个承诺，它们使用多项式函数对数据进行编码。然后可以在特定点评估这个多项式。
 
-Because this new precompile closely parallels the "EVM in EVM" idea, it will be upgraded through Ethereum's normal hard-fork process, governed by social consensus. This alignment guarantees that updates to the EVM also apply to the precompile, so rollups inherit Ethereum's validation rules without requiring governance structures like security councils or multisigs, ultimately making them more secure for end users.
+[^4]: 多项式承诺就像多项式（数学表达式，例如 *f(x) = 2x − 1*）的一个简短、安全的“摘要”，允许你证明其中的特定值，而无需显示整个多项式。想象一下写下一个秘密公式并将其放在一个锁定的保险箱中。稍后，有人可能会问：“如果我们设置 *x = 10*，结果是什么？”无需打开保险箱或向他们展示你的完整公式，你可以快速轻松地提供证明，证明正确的答案是某个数字。多项式承诺正是以数学方式做到这一点：它们让你安全有效地证明较大数学数据集中的特定点（例如 *x = 10*）的准确性，而无需暴露所有细节。你将在第 4 章中找到关于多项式承诺的更详细的解释。
 
-The `EXECUTE` precompile validates EVM state transitions, allowing rollups to leverage Ethereum's native infrastructure at the application layer. It checks EVM state transitions using inputs such as `pre_state_root`, `post_state_root`, `trace`, and `gas_used` while employing an EIP-1559-like mechanism for gas pricing. To enforce correctness, validators may rely on reexecution or SNARK proofs, depending on how each rollup balances scale and complexity. This design, combined with a based rollup approach, where both sequencing and proof systems operate directly under Ethereum, simplifies the creation of "trustless rollups."
+例如，考虑一个简单的多项式函数，例如 *f(x) = 2x − 1*。在 *x = 1, 2, 3* 点评估此函数会得到值 1, 3, 5。证明者独立地将相同的多项式应用于原始数据，并检查其在这些点的值。如果底层数据稍有变化，则多项式（以及因此，其评估值）将不再匹配，从而提醒参与者注意不一致之处。
 
-### Danksharding
+当rollup在blob中发布数据时，它还会提供一个在链上发布的承诺。这个承诺是通过将一个多项式拟合到数据，并在 KZG 仪式（在第 4 章中讨论）期间产生的随机数所确定的特定点评估该多项式来创建的。证明者独立地在这些相同的点评估多项式。如果他们的评估与承诺值匹配，则确认数据是准确的。在实践中，这些承诺及其证明更为复杂，因为它们使用加密方法来确保完整性。
 
-*Danksharding* is Ethereum's latest approach to sharding, offering notable simplifications over earlier designs.
+Danksharding的主要进步是引入了合并费用市场，它旨在成为gas费用市场和blob费用市场的结合。Danksharding不是拥有多个分片，每个分片都有自己的区块和提议者，而是指定一个单独的提议者来选择每个slot的所有交易和数据。
 
-> **Note**  
+为了防止这种方法对验证者施加过高的硬件要求，使用了PBS。在PBS中，专门的“区块构建者”通过竞标来争夺组装slot内容的的权利，而提议者仅选择出价最高的有效header。只有区块构建者必须处理完整的区块，即使这一步也可以通过专门的oracle协议进一步去中心化。同时，验证者和用户可以依靠DAS来验证区块——记住，区块的很大一部分只是数据。
+
+> **注意**
 >
-> Since we are mentioning sharding for the first time, it makes sense to introduce the concept briefly. Keep in mind that this is a topic that can be researched much more. It is out of the scope for this book, but it's an interesting topic nonetheless.
->
-> The base concept of sharding is to split the network into different parts so that each shard can process a subset of transactions and improve performance and costs.
->
-> This has already been implemented by other chains in different forms. In Ethereum, we will never actually reach the first, pure idea of sharding that was conceptualized years ago because it's not necessary anymore. The roadmap has gone toward the direction of scaling the L1 in a L2-centric way.
-
-A key difference between Ethereum's recent sharding proposals (both danksharding and proto-danksharding) and most other sharding solutions lies in Ethereum's rollup-centric strategy. Rather than expanding transaction capacity directly, Ethereum sharding focuses on providing more space for large "blobs" of data that the core protocol does not interpret. (As for these blobs, we will explore them in more detail in a later section.) An important requirement for verifying these blobs of data is to check that they remain accessible—that is, they can be retrieved from the network. L2 rollup protocols will then use these data blobs to enable high-throughput transactions, as shown in Figure 16-5.
-
-![Danksharding architecture](images/ch16/maet_1605.png)
-
-Figure 16-5. Danksharding architecture
-
-Rollups store executed transactions in data blobs and generate a cryptographic "commitment"[^4] for verification. To create this commitment, they encode the data using a polynomial function. This polynomial can then be evaluated at specific points.
-
-[^4]: A polynomial commitment is like a short, secure "summary" of a polynomial (a mathematical expression such as *f(x) = 2x − 1*) that allows you to prove specific values in it without revealing the entire polynomial. Imagine writing down a secret formula and placing it in a locked safe. Later, someone can ask, "What's the result if we set *x = 10*?" Without opening the safe or showing them your full formula, you can quickly and easily provide proof that the correct answer is a certain number. Polynomial commitments do exactly this but mathematically: they let you securely and efficiently prove the accuracy of specific points (such as *x = 10*) within a larger mathematical dataset, without exposing all the details. You'll find a more detailed explanation of polynomial commitments in Chapter 4.
-
-For example, consider a simple polynomial function such as *f(x) = 2x − 1*. Evaluating this function at points *x = 1, 2, 3* gives the values 1, 3, 5. A prover independently applies the same polynomial to the original data and checks its values at these points. If the underlying data changes even slightly, the polynomial—and thus, its evaluated values—will no longer match, alerting participants to inconsistencies.
-
-When a rollup posts data in a blob, it also provides a commitment published on chain. This commitment is created by fitting a polynomial to the data and evaluating that polynomial at specific points determined by random numbers produced during the KZG ceremony (discussed in Chapter 4). Provers independently evaluate the polynomial at these same points. If their evaluation matches the commitment values, the data is confirmed to be accurate. In practice, these commitments and their proofs are more complex since they are secured using cryptographic methods to ensure integrity.
-
-Danksharding's main advancement is the introduction of a merged fee market, which is intended to be a combination of the gas fee market and the blob fee market. Rather than having multiple shards, each with its own block and proposer, danksharding designates a single proposer to select all transactions and data for each slot.
-
-To prevent this approach from imposing high hardware requirements on validators, PBS is used. In PBS, specialized "block builders" compete by bidding for the right to assemble the slot's contents, while the proposer merely picks the valid header with the highest bid. Only block builders must handle the full block, and even this step can be decentralized further through specialized oracle protocols. Meanwhile, validators and users can rely on DAS to verify the block—remember, a large portion of the block is just data.
-
-> **Note**  
->
-> The terms *danksharding* and *proto-danksharding* carry the names of the two main figures of the Ethereum Foundation who helped shape this kind of sharding. Dank stands for Dankrad Feist and proto for Protolambda, aka Diederik Loerakker. Both are researchers: Feist works for the Ethereum Foundation, and Loerakker works for OP Labs at the time of writing.
+> 术语 *danksharding* 和 *proto-danksharding* 带有以太坊基金会两位主要人物的名字，他们帮助塑造了这种分片。Dank 代表 Dankrad Feist，proto 代表 Protolambda，又名 Diederik Loerakker。两人都是研究人员：Feist 在以太坊基金会工作，而 Loerakker 在撰写本文时在 OP Labs 工作。
 
 ### Proto-Danksharding
 
-*Proto-danksharding* (also known as EIP-4844) proposes implementing most of the foundational logic and infrastructure required for full danksharding, such as transaction formats and verification rules, but without actual DAS.[^5] Under proto-danksharding, validators and users still directly verify the complete availability of all data blobs.
+*Proto-danksharding*（也称为EIP-4844）建议实施完整danksharding所需的大部分基础逻辑和基础设施，例如交易格式和验证规则，但没有实际的DAS。[^5] 在proto-danksharding下，验证者和用户仍然直接验证所有数据blob的完整可用性。
 
-[^5]: Data availability sampling is a mechanism for verifying data availability without having to download all the data for a block.
+[^5]: 数据可用性采样是一种验证数据可用性的机制，而无需下载区块的所有数据。
 
-The primary innovation introduced by proto-danksharding is a new transaction type, known as a *blob-carrying transaction*. These transactions (which we already analyzed in Chapter 6) function similarly to regular transactions but include an extra data component called a blob. Blobs are relatively large (approximately 125 KB) and can be significantly cheaper than an equivalent amount of calldata.[^6] However, blob data isn't directly accessible by the EVM; the EVM can only access a cryptographic commitment to the blob. The data in these blobs is also automatically deleted after a fixed time period (set to 4,096 epochs at the time of writing, or about 18 days).
+proto-danksharding引入的主要创新是一种新的交易类型，称为*blob-carrying交易*。这些交易（我们已经在第6章中分析过）的功能与常规交易类似，但包含一个称为blob的额外数据组件。Blob相对较大（约125 KB），并且可能比等量的calldata [^6] 便宜得多。但是，EVM无法直接访问blob数据；EVM只能访问blob的加密承诺。这些blob中的数据也会在固定时间段后自动删除（在撰写本文时设置为4,096个epoch，约18天）。
 
-[^6]: Raw data used for storing function arguments passed during external calls in the EVM.
+[^6]: 用于存储在EVM中外部调用期间传递的函数参数的原始数据。
 
-Because validators and clients must still download the complete contents of each blob, proto-danksharding limits data bandwidth to around 1 MB per slot. Despite this restriction, proto-danksharding still offers substantial scalability benefits since blob data does not compete directly with the gas costs of standard Ethereum transactions.
+由于验证者和客户端仍然必须下载每个blob的完整内容，因此proto-danksharding将数据带宽限制为每个slot约1 MB。尽管存在此限制，但proto-danksharding仍然提供了巨大的可扩展性优势，因为blob数据不会直接与标准以太坊交易的gas成本竞争。
 
-A few questions might arise after you read this.
+阅读本文后可能会出现一些问题。
 
-**Why is it OK to delete blobs data after 18 days? How would users access older blobs?**
+**为什么可以在18天后删除blob数据？用户如何访问较旧的blob？**
 
-Rollups publish cryptographic commitments to their transaction data on chain and simultaneously make the underlying transaction data available through data blobs. This arrangement allows independent provers to verify the accuracy of commitments or challenge incorrect data if necessary. At the network level, consensus clients temporarily store these data blobs and attest that the data has been propagated and made available across the Ethereum network. To prevent nodes from becoming excessively large and resource intensive over time, this data is automatically pruned after 18 days. The attestations provided by consensus clients guarantee that provers had adequate time and access to verify or challenge data during this period. After pruning, the actual data can continue to be stored off chain by rollup operators, users, or other third parties.
+Rollup在链上发布其交易数据的加密承诺，并同时通过数据blob提供基础交易数据。这种安排允许独立的证明者验证承诺的准确性，或者在必要时质疑不正确的数据。在网络级别，共识客户端会临时存储这些数据blob，并证明该数据已在以太坊网络中传播并可用。为了防止节点随着时间的推移变得过大且占用过多资源，此数据会在18天后自动删除。共识客户端提供的证明保证了证明者在此期间有足够的时间和访问权限来验证或质疑数据。修剪后，实际数据可以继续由rollup运营商、用户或其他第三方在链下存储。
 
-There are several practical methods for storing and making historical data easily accessible in the long term. For instance, application-specific protocols (such as individual rollups) can require their own nodes to retain the historical data relevant specifically to their applications. Since historical data loss poses no risk to Ethereum itself, only to individual applications, it makes sense for each application to independently manage its data storage. Other potential solutions include using decentralized systems like BitTorrent—for instance, to regularly generate and distribute daily snapshots of blob data—or leveraging Ethereum's Portal Network, which can be expanded to support historical data storage. Additionally, services such as block explorers, API providers, or third-party indexing platforms like The Graph are likely to maintain comprehensive archives. Finally, individual researchers, hobbyists, or academic institutions conducting data analysis could also keep complete historical records locally, benefiting from the convenience and performance gains of direct access to the data.
+有几种实用的方法可以长期存储和轻松访问历史数据。例如，特定于应用程序的协议（例如单个rollup）可以要求其自己的节点保留专门针对其应用程序的历史数据。由于历史数据丢失不会对以太坊本身构成风险，而只会对单个应用程序构成风险，因此每个应用程序独立管理其数据存储是有意义的。其他潜在的解决方案包括使用BitTorrent等去中心化系统（例如，定期生成和分发blob数据的每日快照），或者利用以太坊的门户网络，该网络可以扩展以支持历史数据存储。此外，诸如区块浏览器、API提供商或The Graph等第三方索引平台之类的服务可能会维护全面的档案。最后，进行数据分析的个人研究人员、爱好者或学术机构也可以在本地保留完整的历史记录，从而受益于直接访问数据的便利性和性能提升。
 
-**Wouldn't it be better to reduce the costs in the normal transaction's calldata instead of having 1 MB bandwidth per slot dedicated to blobs?**
+**与其为blob分配每个slot 1 MB的带宽，不如降低普通交易calldata的成本不是更好吗？**
 
-The issue here relates to the difference between the average load on the Ethereum network and its worst-case (peak) load. Currently, Ethereum blocks average about 90 KB, although the theoretical maximum block size, achieved if all 36 million gas in a block were used entirely for calldata,[^7] is approximately 2 MB. Ethereum has occasionally processed blocks nearing this maximum size without major issues. However, if we simply lowered the gas cost of calldata tenfold while the average block size remained manageable, the potential worst-case block size would surge to around 20 MB, overwhelming the Ethereum network.
+这里的问题与以太坊网络的平均负载与其最坏情况（峰值）负载之间的差异有关。目前，以太坊区块的平均大小约为90 KB，尽管理论上的最大区块大小（如果区块中的所有3600万个gas全部用于calldata [^7]，则可以达到大约2 MB）。以太坊偶尔会处理接近此最大大小的区块，而不会出现重大问题。但是，如果我们只是将calldata的gas成本降低十倍，而平均区块大小保持在可管理的范围内，则潜在的最坏情况区块大小将激增至大约20 MB，从而使以太坊网络不堪重负。
 
-[^7]: Calldata refers to the portion of a transaction containing data that isn't executed directly but is posted on chain primarily for record-keeping and verification purposes.
+[^7]: Calldata指的是交易中包含的数据部分，该部分不会直接执行，而是主要发布在链上以进行记录保存和验证。
 
-Ethereum's current gas-pricing model makes it difficult to separately manage average-load and worst-case scenarios because the ratio between these two depends on how users distribute their gas expenditure across calldata and other resources. As a result, Ethereum must price gas based on worst-case scenarios, artificially limiting average load below what the network can comfortably support. By introducing a multidimensional fee market, where gas pricing explicitly distinguishes between different resource types, we can better align average network usage with its actual capacity, safely accommodating more data per block. Proto-danksharding and EIP-4488 are two proposals designed specifically to address this issue by improving Ethereum's gas-pricing model.
+以太坊当前的gas定价模型使得难以分别管理平均负载和最坏情况，因为这两者之间的比率取决于用户如何在calldata和其他资源之间分配其gas支出。因此，以太坊必须根据最坏情况对gas进行定价，从而人为地将平均负载限制在网络可以舒适支持的水平以下。通过引入多维费用市场，其中gas定价明确区分不同的资源类型，我们可以更好地使平均网络使用率与其实际容量保持一致，从而安全地适应每个区块的更多数据。Proto-danksharding和EIP-4488是专门为解决此问题而设计的两个提案，旨在改善以太坊的gas定价模型。
 
-> **Warning**  
+> **警告**
 >
-> EIP-4488 should not be confused with EIP-4844 (thanks for the not-at-all confusing numbers in these EIPs). EIP-4488 is an earlier, simpler attempt to solve the same problem of average-case/worst-case load mismatch. It is currently stagnant, so it will probably never be implemented. EIP-4844, on the other hand, is already live.
+> EIP-4488不应与EIP-4844混淆（感谢这些EIP中完全不令人困惑的数字）。EIP-4488是较早、更简单的解决平均情况/最坏情况负载不匹配问题的尝试。它目前处于停滞状态，因此可能永远不会实施。另一方面，EIP-4844已经上线。
 
-An ulterior motive is that the end goal is to allow nodes to not download all the blobs of data. This is possible with blobs but can't be done with calldata.
+另一个潜在的动机是，最终目标是允许节点不下载所有数据blob。这对于blob是可能的，但对于calldata却无法做到。
 
-> **Tip**  
+> **提示**
 >
-> You may have many more questions. For answers, see the full listing of further readings at the end of this chapter.
+> 你可能还有更多问题。有关答案，请参阅本章末尾的完整阅读清单。
 
-### Stateless Ethereum
+### 无状态以太坊
 
-The ability to run Ethereum nodes on modest hardware is crucial for achieving genuine decentralization. This is because operating a node enables users to independently verify blockchain information through cryptographic checks rather than relying on third parties. Running a node also allows users to submit transactions directly to Ethereum's P2P network without intermediaries. If these benefits are limited only to users with expensive equipment, true decentralization cannot be achieved. Therefore, Ethereum nodes must have minimal processing and memory requirements, ideally capable of running on everyday hardware like mobile phones, microcomputers, or inconspicuously on home computers.
+在适度的硬件上运行以太坊节点的能力对于实现真正的去中心化至关重要。这是因为操作节点使用户能够通过加密检查独立验证区块链信息，而不是依赖第三方。运行节点还允许用户直接将交易提交到以太坊的P2P网络，而无需中介。如果这些好处仅限于拥有昂贵设备的用户，则无法实现真正的去中心化。因此，以太坊节点必须具有最低的处理和内存要求，理想情况下能够在移动电话、微型计算机或家庭计算机上不显眼地运行。
 
-Today, high disk space requirements are the primary obstacle preventing widespread access to Ethereum node operation. The main reason for this is the need to store Ethereum's extensive state data, which is important for correctly processing new blocks and transactions.
+今天，高磁盘空间要求是阻止广泛访问以太坊节点操作的主要障碍。主要原因是需要存储以太坊的广泛状态数据，这对于正确处理新的区块和交易非常重要。
 
-While cheaper hard drives can store older data, they are typically too slow to manage incoming blocks efficiently. Merely making storage cheaper or more efficient offers only temporary relief because Ethereum's state data growth is effectively unbounded; storage needs will continuously increase, forcing technological improvements to constantly keep pace. A more sustainable approach involves developing new client methods for verifying blocks and transactions that don't rely on retrieving data from local storage.
+虽然更便宜的硬盘可以存储旧数据，但它们通常太慢而无法有效地管理传入的区块。仅仅使存储更便宜或更有效只能提供暂时的缓解，因为以太坊的状态数据增长实际上是无限的；存储需求将不断增加，迫使技术改进不断跟上。更可持续的方法是开发新的客户端方法来验证区块和交易，而无需从本地存储中检索数据。
 
-The term *statelessness* can be somewhat misleading since it doesn't actually eliminate the concept of state entirely. Rather, it changes how Ethereum nodes manage state data. There are two main types of statelessness: weak and strong. *Weak statelessness* allows most nodes to operate without storing state data by shifting that responsibility to a limited number of specialized nodes. In contrast, *strong statelessness* removes the requirement for any node to store the complete state data altogether.
+术语*无状态性*可能具有一定的误导性，因为它实际上并没有完全消除状态的概念。相反，它改变了以太坊节点管理状态数据的方式。无状态性主要有两种类型：弱无状态性和强无状态性。*弱无状态性*允许大多数节点在不存储状态数据的情况下运行，方法是将该责任转移到数量有限的专用节点。相比之下，*强无状态性*消除了任何节点存储完整状态数据的要求。
 
-> **Tip**  
+> **提示**
 >
-> In the following subsections, we will explain weak statelessness and strong statelessness. It is also worth mentioning that these are not the only ways to reach a "stateless Ethereum," as we just said; statelessness here basically means changing how Ethereum nodes manage state data. Another way to do it is with light clients like Helios. Helios converts an untrusted, centralized RPC endpoint into a safe, nonmanipulable, local RPC for its users. It is light enough to be run on mobile devices and requires very little storage.
+> 在以下小节中，我们将解释弱无状态性和强无状态性。值得一提的是，正如我们刚才所说，这些并不是实现“无状态以太坊”的唯一方法；这里的无状态性基本上意味着改变以太坊节点管理状态数据的方式。另一种方法是使用Helios等轻客户端。Helios将其用户的不受信任的集中式RPC端点转换为安全、不可操纵的本地RPC。它足够轻便，可以在移动设备上运行，并且需要的存储空间非常小。
 
-#### Weak Statelessness
+#### 弱无状态性
 
-*Weak statelessness*, briefly mentioned in Chapter 14, involves changes to how Ethereum nodes verify state updates but does not entirely eliminate the necessity for state storage across the network. Instead, it places the responsibility of storing the complete state data onto specialized nodes known as block proposers or builders. All other nodes on the network can then verify blocks without needing to maintain the full state data locally. Under weak statelessness, creating (proposing) new blocks requires full access to Ethereum's state data, whereas verifying these blocks can be done without storing any state data at all.
+*弱无状态性*，在第 14 章中简要提到，涉及对以太坊节点如何验证状态更新的更改，但并未完全消除网络中状态存储的必要性。相反，它将存储完整状态数据的责任放置在称为区块提议者或构建者的专用节点上。网络上的所有其他节点随后可以验证区块，而无需在本地维护完整状态数据。在弱无状态性下，创建（提议）新区块需要完全访问以太坊的状态数据，而验证这些区块可以在不存储任何状态数据的情况下完成。
 
-Implementing weak statelessness depends on Ethereum clients adopting a new data structure known as *Verkle trees* (covered in greater detail in the next section). Verkle trees replace Ethereum's current state storage structures and enable the creation of small, fixed-size witnesses[^8] that nodes exchange to verify blocks without referencing local databases. Additionally, PBS is necessary since it allows block builders—specialized nodes with stronger hardware—to handle the intensive task of maintaining full state data, while regular nodes operate statelessly.
+实施弱无状态性取决于以太坊客户端采用一种称为 *Verkle 树* 的新数据结构（将在下一节中详细介绍）。Verkle 树取代了以太坊当前的状态存储结构，并支持创建小型的、固定大小的见证[^8]，节点交换这些见证以验证区块，而无需引用本地数据库。此外，PBS 是必要的，因为它允许区块构建者——具有更强大硬件的专用节点——处理维护完整状态数据的繁重任务，而常规节点则以无状态方式运行。
 
-[^8]: Verifying a block means reexecuting its transactions, updating Ethereum's state, and confirming that the computed state root matches the one provided by the block proposer. Ethereum clients currently require the entire state trie, stored locally, to verify blocks. A witness includes only the necessary parts of the state data required to execute a block's transactions. However, using traditional Merkle trees, these witnesses become too large, making it difficult for nodes to download and process them quickly within Ethereum's 12-second slot time. This limitation favors nodes with fast internet connections, leading to centralization. Verkle trees solve this by significantly reducing witness sizes, enabling stateless verification without requiring local storage of the state.
+[^8]: 验证区块意味着重新执行其交易，更新以太坊的状态，并确认计算出的状态根与区块提议者提供的状态根匹配。以太坊客户端目前需要本地存储的整个状态 trie 才能验证区块。见证仅包含执行区块交易所需的必要状态数据部分。但是，使用传统的 Merkle 树，这些见证变得太大，使得节点难以在以太坊的 12 秒 slot 时间内快速下载和处理它们。这种限制有利于具有快速互联网连接的节点，从而导致中心化。Verkle 树通过显着减小见证大小来解决这个问题，从而无需本地存储状态即可实现无状态验证。
 
-#### Verkle Trees
+#### Verkle 树
 
-The term *Verkle tree* combines "vector commitment" and "Merkle tree" (which we explained in Chapter 14). Verkle trees are essential for enabling stateless Ethereum clients, which verify blocks without storing the entire Ethereum state locally. Instead, these clients rely on witnesses,[^9] accompanied by cryptographic proofs confirming their validity. Small witness sizes are critical because witnesses must be efficiently distributed and processed by nodes within Ethereum's 12-second slots. The current Merkle-based state data structure produces overly large witnesses, making it unsuitable for stateless verification. Verkle trees address this issue by significantly reducing witness sizes.
+术语 *Verkle 树* 结合了“向量承诺”和“Merkle 树”（我们在第 14 章中解释过的内容）。Verkle 树对于启用无状态以太坊客户端至关重要，这些客户端无需在本地存储整个以太坊状态即可验证区块。相反，这些客户端依赖于见证[^9]，以及确认其有效性的加密证明。小的见证大小至关重要，因为见证必须在以太坊的 12 秒 slot 内由节点有效地分发和处理。当前的基于 Merkle 的状态数据结构产生过大的见证，使其不适合无状态验证。Verkle 树通过显着减小见证大小来解决这个问题。
 
-[^9]: Witnesses are compact collections of state data necessary to execute a block's transactions.
+[^9]: 见证是执行区块交易所需的紧凑状态数据集合。
 
-Just as the name indicates, Verkle trees use *vector commitments*: namely, KZG polynomial commitments, which are cryptographic commitments allowing efficient proof of data values at specific positions within a large dataset without revealing the whole dataset. They scale much better and have a faster computation than hashes that are currently used in Merkle trees, as shown in Figure 16-6. In Merkle trees, we have only the Merkle root (hash), while in Verkle trees, we also have the vector commitment.
+正如名称所示，Verkle 树使用 *向量承诺*：即 KZG 多项式承诺，这是一种加密承诺，允许在不显示整个数据集的情况下，有效地证明大型数据集中特定位置的数据值。与当前在 Merkle 树中使用的哈希相比，它们具有更好的扩展性和更快的计算速度，如图 16-6 所示。在 Merkle 树中，我们只有 Merkle 根（哈希），而在 Verkle 树中，我们还有向量承诺。
 
-![Merkle tree versus Verkle tree](images/ch16/maet_1606.png)
+![Merkle 树与 Verkle 树](images/ch16/maet_1606.png)
 
-Figure 16-6. Merkle tree versus Verkle tree
+图 16-6。Merkle 树与 Verkle 树
 
-With only the hash, we are unable to prove that a certain element is present in a specific location in a certain vector of values; you need to pass the whole vector. But with a vector commitment and an opening—a small portion of the whole vector of values—it is possible to prove that a certain element exists in that specific location.
+仅使用哈希，我们无法证明某个元素存在于某个值向量中的特定位置；您需要传递整个向量。但是，通过向量承诺和一个打开（整个值向量的一小部分），可以证明某个元素存在于该特定位置。
 
-Merkle trees allow Ethereum nodes to verify small parts of data without downloading the entire blockchain. However, when Merkle trees become very large, the size of the proof (the information needed to verify data) also grows significantly. These large proofs slow the network and make it difficult to maintain efficiency as Ethereum continues to scale, as shown in Figure 16-7.
+Merkle 树允许以太坊节点在不下载整个区块链的情况下验证小部分数据。但是，当 Merkle 树变得非常大时，证明的大小（验证数据所需的信息）也会显着增加。这些大的证明会减慢网络速度，并且难以在以太坊继续扩展时保持效率，如图 16-7 所示。
 
-![Merkle tree proof size](images/ch16/maet_1607.png)
+![Merkle 树证明大小](images/ch16/maet_1607.png)
 
-Figure 16-7. Merkle tree proof size
+图 16-7。Merkle 树证明大小
 
-To prove that a specific leaf X is present in this Merkle tree, it is mandatory to pass all the siblings of a given node along the path; this is because the hash would not make sense without this piece of data.
+为了证明特定的叶子 X 存在于此 Merkle 树中，必须传递给定节点沿路径的所有兄弟节点；这是因为如果没有这一部分数据，哈希将没有意义。
 
-Verkle trees address this issue by significantly reducing the size of these proofs. Instead of having proofs that get larger as the amount of data increases, Verkle trees use a cryptographic method called vector commitments. Vector commitments allow you to prove large amounts of data with very short, compact proofs. This means that even if Ethereum's blockchain gets bigger, the proofs stay small and efficient, as shown in Figure 16-8.
+Verkle 树通过显着减小这些证明的大小来解决这个问题。Verkle 树不使用随着数据量增加而增大的证明，而是使用一种称为向量承诺的加密方法。向量承诺允许您使用非常短、紧凑的证明来证明大量数据。这意味着即使以太坊的区块链变得更大，证明也会保持小而高效，如图 16-8 所示。
 
-![Verkle tree proof size](images/ch16/maet_1608.png)
+![Verkle 树证明大小](images/ch16/maet_1608.png)
 
-Figure 16-8. Verkle tree proof size
+图 16-8。Verkle 树证明大小
 
-By utilizing the vector commitments analyzed before, we can avoid unnecessary data and reduce the proof size for the Verkle tree significantly.
+通过利用之前分析的向量承诺，我们可以避免不必要的数据，并显着减小 Verkle 树的证明大小。
 
-The proof size for a Merkle tree is as follows (note that the proof sizes are calculated based on Figures 16-5 and 16-6):
+Merkle 树的证明大小如下（请注意，证明大小是根据图 16-5 和 16-6 计算的）：
 
-- Leaf data plus 15 siblings (unnecessary data sent for every level of depth, 32 bytes for each sibling) multiplied by the seven levels of depth = 3.58 MB for one thousand leaves
+- 所有层深度的叶子数据加上 15 个兄弟节点（为每层深度发送的不必要数据，每个兄弟节点 32 字节）乘以 7 层深度 = 1000 个叶子节点需要 3.58 MB
 
-The proof size for a Verkle tree is much smaller:
+Verkle 树的证明大小要小得多：
 
-- Leaf data plus a commitment (32 bytes) plus a value (32 bytes) plus an index (1 byte) multiplied by the four levels of depth plus some small constant-size data = 150 KB for one thousand leaves
+- 叶子数据加上承诺（32 字节)加值(32 字节)加索引(1 个字节) 乘以四层的深度再加一些小的恒定大小数据 = 1000 个叶子节点需要 150 KB
 
-One small question that might arise after this explanation is: why did we account for seven levels of depth for the Merkle tree and only four for the Verkle tree? The answer is very simple: Merkle trees' nodes have only 15 siblings, while Verkle trees' nodes have 255. Since the width for each level is much larger with the same depth, we can store much more data in the Verkle trees.
+在此解释之后可能出现的一个小问题是：为什么我们计算 Merkle 树的七层深度，而只计算 Verkle 树的四层深度？答案很简单：Merkle 树的节点只有 15 个兄弟节点，而 Verkle 树的节点有 255 个。由于每层深度的宽度相同，Verkle 树每个节点的兄弟节点多得多，因此我们可以在 Verkle 树中存储更多数据。
 
-A Verkle tree organizes data into (key, value) pairs, where each key is 32 bytes consisting of a 31-byte "stem" and a single-byte "suffix," as shown in Figure 16-9. The key scheme is designed this way so that storage locations that are close have the same stem and a different suffix, making it cheaper to access "neighboring" storage positions.
+Verkle 树将数据组织成（key，value）对，其中每个key是 32 字节，由 31 字节的“stem”和一个字节的“suffix”组成，如图 16-9 所示。这种 key 格式特意设计成这样，确保存储位置相近拥有相同的 stem 和不同的 suffix，使得访问“相邻”存储位置的成本更低。
 
-![Verkle tree key structure](images/ch16/maet_1609.png)
+![Verkle 树 key 结构](images/ch16/maet_1609.png)
 
-Figure 16-9. Verkle tree key structure
+图 16-9。Verkle 树 key 结构
 
-These keys are structured into three types of nodes:
+这些 key 被构建进三种节点：
 
-- Extension (or leaf) nodes representing one stem with up to 256 different suffixes
-- Inner nodes containing up to 256 child nodes, potentially including other extension nodes
-- Empty nodes
+- 扩展（或叶子）节点，用最多256个不同的后缀来表示一个词干 stem。
+- 内部节点，包含高达 256 个子节点，可能包括着其他扩展节点。
+- 空节点
 
-To build a complete Verkle tree, you start from the leaf nodes and compute the polynomial commitments progressively upward (bottom-up) until you reach the top-level or root commitment. This root commitment succinctly represents the entire tree's data, allowing nodes to verify blockchain data quickly by only referencing this single root commitment. When a node needs to verify specific blockchain data, such as a user's account balance or transaction validity, it obtains this known root commitment along with a very small cryptographic proof, typically just a few hundred bytes.
+为了构建完整的 Verkle 树，你需要从叶子节点开始，从下往上逐步计算多项式承诺，直到达到顶层或根承诺。 根承诺简洁地表示了整个树的数据，允许节点仅通过引用单个根承诺来快速验证区块链数据。 当节点需要验证特定的区块链数据（例如用户的账户余额或交易有效性）时，它会获取这个已知的根承诺以及一个非常小的加密证明，通常只有几百个字节。
 
-#### Strong Statelessness
+#### 强无状态性
 
-*Strong statelessness* eliminates the requirement for nodes to store any state data whatsoever. In this model, transactions include small witnesses that can be aggregated by block producers. These producers then need to store only the minimal amount of state necessary to generate witnesses for frequently accessed accounts. This shifts most of the responsibility for state management to the users themselves since users must provide these witnesses and specify precisely which accounts and storage keys their transactions interact with through access lists. While this approach would enable nodes to become extremely lightweight, it introduces certain trade-offs, notably increasing complexity and difficulty when interacting with smart contracts.
+*强无状态性* 消除了节点存储任何状态数据的要求。 在这个模型中，交易包括可以由区块生产者聚合的小见证。 然后，这些生产者只需要存储生成经常访问的帐户的见证所需的最小状态量。 这将大部分状态管理责任转移给用户自己，因为用户必须提供这些见证，并通过訪問列表精确指定其交易与之交互的帐户和存储鍵。 虽然这种方法将使节点变得非常轻量级，但它引入了某些权衡，特别是增加了与智能合约交互时的复杂性和难度。
 
-Strong statelessness has been explored in research, but it is currently not planned for Ethereum's immediate roadmap. Ethereum is more likely to pursue weak statelessness since it appears sufficient to meet the network's scaling objectives for the foreseeable future.
+强无状态性已在研究中进行了探索，但目前并未计划将其纳入以太坊的近期路线图。 以太坊更有可能追求弱无状态性，因为它似乎足以满足网络在可预见的未来的扩展目标。
 
-## Conclusion
+## 结论
 
-Ethereum's approach to scaling isn't just about making things faster; it's about upgrading the whole system without sacrificing what makes it trustworthy: decentralization and security. Instead of quick fixes, Ethereum is using rollups and danksharding, and it is aiming for statelessness to build a layered system while continuing to improve the Layer 1. In this setup, L2 networks handle most of the execution work but still rely on Ethereum's base layer for security and final settlement. It's a thoughtful, modular path forward that keeps core values intact while laying the groundwork for long-term growth and innovation.
+以太坊的扩展方法不仅仅是让事情变得更快；它还涉及升级整个系统，而不牺牲使其值得信赖的东西：去中心化和安全性。以太坊没有使用快速修复方法，而是使用 rollup 和 danksharding，并且以无状态性为目标来构建分层系统，同时继续改进 Layer 1。在这种设置中，L2 网络处理大部分执行工作，但仍然依赖于以太坊的基础层来实现安全性和最终结算。这是一种深思熟虑的、模块化的前进道路，它保持了核心价值，同时为长期增长和创新奠定了基础。
 
-For more, please see the following readings:
+更多信息，请参阅以下读物：
 
-- Danksharding proposal
-- Proto-danksharding proposal
+- Danksharding 提案
+- Proto-danksharding 提案
 - EIP-4844
-- Danksharding (easily comprehensible for anyone)
+- Danksharding（任何人都可以轻松理解）
 - EIP-4488
-- Verkle trees for statelessness
-- Verkle proofs
-- Verkle tree EIP
-- Verkle tree structure
-- Pairing-based cryptography report to better understand the BLS12-318 curve
-- BLS12-318 explained "simply"
+- 用于无状态的 Verkle 树
+- Verkle 证明
+- Verkle 树 EIP
+- Verkle 树结构
+- 基于配对的密码学报告，以更好地理解 BLS12-318 曲线
+- BLS12-318 “简单”解释

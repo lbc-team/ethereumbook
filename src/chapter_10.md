@@ -1,247 +1,247 @@
-# Chapter 10. Tokens
+# 第 10 章 代币
 
-The word *token* derives from the Old English *tācen*, meaning a sign or symbol. It is commonly used to refer to privately issued, special-purpose, coin-like items of insignificant intrinsic value, such as transportation tokens, laundry tokens, and arcade-game tokens. Nowadays, tokens administered on blockchains are redefining the word to mean blockchain-based abstractions that can be owned and that represent assets, currency, or access rights.
+*代币 (token)* 这个词源于古英语 *tācen*，意思是符号或象征。它通常用于指私人发行的、具有特殊用途的、类似硬币的物品，其内在价值微不足道，例如交通代币、洗衣代币和街机游戏代币。如今，在区块链上管理的代币正在重新定义这个词，指的是可以拥有的、基于区块链的抽象概念，代表着资产、货币或访问权限。
 
-The association between the word *token* and insignificant value has a lot to do with the limited use of the physical versions of tokens. Often restricted to specific businesses, organizations, or locations, physical tokens are not easily exchangeable and typically have only one function. With blockchain tokens, these restrictions are lifted or, to be more accurate, are completely redefinable. Many blockchain tokens serve multiple purposes globally and can be traded for one another or for other currencies on global liquid markets. With the restrictions on use and ownership gone, the “insignificant value” expectation is also a thing of the past.
+*代币* 这个词与微不足道的价值之间的关联，与代币的物理版本的有限用途有很大关系。物理代币通常仅限于特定的企业、组织或地点，不易交换，通常只有一种功能。有了区块链代币，这些限制被取消了，或者更准确地说，是被完全重新定义了。许多区块链代币在全球范围内具有多种用途，并且可以在全球流动市场上相互交易或与其他货币进行交易。随着使用和所有权限制的消失，“微不足道的价值”的期望也已成为过去。
 
-In this chapter, we look at various uses for tokens and how they are created. We also discuss attributes of tokens, such as fungibility and intrinsicality. Finally, we examine the standards and technologies that they are based on and experiment by building our own tokens.
+在本章中，我们将研究代币的各种用途以及如何创建代币。我们还将讨论代币的属性，例如同质性和内在性。最后，我们将检查它们所基于的标准和技术，并通过构建我们自己的代币进行实验。
 
-## How Tokens Are Used
+## 代币的用途
 
-The most obvious use of tokens is as digital private currencies. However, this is only one possible use. Tokens can be programmed to serve many different functions, which often overlap. For example, a token can simultaneously convey a voting right, an access right, and ownership of a resource. As the following list shows, currency is just the first “app”:
+代币最明显的用途是作为数字私人货币。然而，这只是一个可能的用途。可以对代币进行编程以服务于许多不同的功能，这些功能通常会重叠。例如，代币可以同时传达投票权、访问权和对资源的所有权。如下面的列表所示，货币只是第一个“应用程序”：
 
-**Currency**
+**货币**
 
-A token can serve as a form of currency, with a value determined through private trade.
+代币可以作为一种货币形式，其价值通过私人交易确定。
 
-**Resource**
+**资源**
 
-A token can represent a resource earned or produced in a sharing economy or resource-sharing environment—for example, a storage or CPU token representing resources that can be shared over a network.
+代币可以代表在共享经济或资源共享环境中获得或产生的资源，例如，存储或 CPU 代币代表可以通过网络共享的资源。
 
-**Asset**
+**资产**
 
-A token can represent ownership of an intrinsic or extrinsic, tangible or intangible asset—for example, gold, real estate, a car, oil, energy, MMOG items, and so on.
+代币可以代表对内在或外在的、有形或无形资产的所有权，例如黄金、房地产、汽车、石油、能源、MMOG 项目等。
 
-**Access**
+**访问权限**
 
-A token can represent access rights and can grant access to a digital or physical property, such as a discussion forum, an exclusive website, a hotel room, or a rental car.
+代币可以代表访问权限，并且可以授予对数字或物理财产的访问权限，例如讨论论坛、独家网站、酒店房间或租赁汽车。
 
-**Equity**
+**股权**
 
-A token can represent shareholder equity in a digital organization (e.g., a DAO) or legal entity (e.g., a corporation).
+代币可以代表数字组织（例如 DAO）或法律实体（例如公司）中的股东权益。
 
-**Voting**
+**投票**
 
-A token can represent voting rights in a digital or legal system.
+代币可以代表数字或法律系统中的投票权。
 
-**Collectible**
+**收藏品**
 
-A token can represent a digital collectible (e.g., CryptoPunks) or physical collectible (e.g., a painting).
+代币可以代表数字收藏品（例如 CryptoPunks）或物理收藏品（例如绘画）。
 
-**Identity**
+**身份**
 
-A token can represent a digital identity (e.g., an avatar) or a legal identity (e.g., a national ID).
+代币可以代表数字身份（例如头像）或法律身份（例如国民身份证）。
 
-**Attestation**
+**证明**
 
-A token can represent a certification or attestation of fact by some authority or by a decentralized reputation system (e.g., a marriage record, birth certificate, or college degree).
+代币可以代表由某个权威机构或去中心化信誉系统对事实的认证或证明（例如，结婚记录、出生证明或大学学位）。
 
-**Utility**
+**实用性**
 
-A token can be used to access or pay for a service.
+代币可用于访问或支付服务。
 
-Often, a single token encompasses several of these functions. Sometimes it is hard to discern between them because the physical equivalents have always been inextricably linked. For example, in the physical world, a driver’s license (attestation) is also an identity document (identity), and the two cannot be separated. In the digital realm, previously commingled functions can be separated and developed independently (e.g., an anonymous attestation).
+通常，单个代币包含这些功能中的几个。有时很难区分它们，因为物理等价物一直密不可分地联系在一起。例如，在物理世界中，驾驶执照（证明）也是一种身份证明（身份），两者不能分开。在数字领域，以前混合的功能可以分离并独立开发（例如，匿名证明）。
 
-## Tokens and Fungibility
+## 代币与同质化
 
-[Wikipedia](https://oreil.ly/ge7zP) says, “In economics, fungibility is the property of a good or a commodity whose individual units are essentially interchangeable.” Tokens are *fungible* when we can substitute any single unit of the token for another without any difference in its value or function.
+[维基百科](https://oreil.ly/ge7zP) 说：“在经济学中，同质性是一种商品或商品的基本单位本质上可以互换的属性。” 当我们可以用代币的任何单个单位替换另一个单位，而其价值或功能没有任何差异时，代币就是 *同质的*。
 
-*Nonfungible* *tokens* (NFTs) are tokens that each represent a unique tangible or intangible item and therefore are not interchangeable. For example, a token that represents ownership of a *specific* Van Gogh painting is not equivalent to another token that represents a Picasso, even though they may be part of the same “art ownership token” system. Similarly, a token representing a *specific* digital collectible, such as a specific CryptoKitty, is not interchangeable with any other CryptoKitty. Each NFT is associated with a unique identifier, such as a serial number.
+*非同质化* *代币* (NFT) 是指每个代币代表一个独特的有形或无形物品，因此不可互换。例如，代表拥有 *特定* 梵高画作的代币不等同于代表毕加索的另一个代币，即使它们可能是同一个“艺术所有权代币”系统的一部分。同样，代表一个 *特定* 数字收藏品（例如，特定的 CryptoKitty）的代币不能与任何其他 CryptoKitty 互换。每个 NFT 都与一个唯一的标识符相关联，例如序列号。
 
-We will see examples of both fungible and nonfungible tokens later in this chapter.
+我们将在本章后面看到同质化和非同质化代币的例子。
 
-> **Note**
+> **注意**
+> 
+> 请注意，*同质化* 通常用于表示“可以直接兑换成金钱”（例如，赌场代币可以“兑现”，而洗衣代币通常不能）。这不是我们在这里使用这个词的含义。
+
+## 交易对手风险
+
+*交易对手风险* 是指交易中的 *另一方* 未能履行其义务的风险。某些类型的交易会遭受额外的交易对手风险，因为涉及的当事方不止两个。例如，如果您持有贵金属的存款凭证并将其出售给他人，则该交易中至少有三个当事方：卖方、买方和贵金属的保管人。有人持有实物资产；他们必然成为交易履行的当事方，并给涉及该资产的任何交易增加交易对手风险。一般来说，当资产通过交换所有权代币间接交易时，资产的保管人会带来额外的交易对手风险。他们拥有资产吗？他们会根据代币（例如凭证、契约、所有权或数字代币）的转移来承认（或允许）所有权的转移吗？在代表资产的数字代币世界中，与非数字世界一样，重要的是要了解谁持有代币所代表的资产，以及适用于该基础资产的规则。
+
+## 代币与内在性
+
+*内在* 这个词源于拉丁语 *intra*，意思是“来自内部”。有些代币代表区块链固有的数字项目。这些数字资产受共识规则约束，就像代币本身一样。这具有重要的意义：代表内在资产的代币不承担额外的交易对手风险。如果您持有 CryptoKitty 的密钥，则没有其他方为您持有该 CryptoKitty，您可以直接拥有它。区块链共识规则适用，并且您对私钥的所有权（即控制权）等同于对资产的所有权，没有任何中介。
+
+相反，许多代币用于代表 *外在* 的事物，例如房地产、公司投票股份、商标、金条和债券。这些项目的非 “在区块链内” 的所有权受法律、习俗和政策的约束，与管理代币的共识规则分开。换句话说，代币发行人和所有者可能仍然依赖现实世界中的非智能合约。因此，这些外在资产会带来额外的交易对手风险，因为它们由托管人持有、记录在外部注册机构中，或受区块链环境之外的法律和政策控制。
+
+基于区块链的代币最重要的后果之一是能够将外在资产转换为内在资产，从而消除交易对手风险。一个很好的例子是从公司中的股权（外在）转移到 DAO 或类似（内在）组织中的股权或投票代币。Stablecoin 是另一个例子，充当与法定货币挂钩并由国库券和现金储备等外在资产支持的基于区块链的代币。
+
+## 实用、股权还是圈钱？
+
+几乎每个以太坊项目似乎都启动了一些代币。但是所有这些项目真的需要代币吗？“将所有东西代币化” 的口号听起来很吸引人，但现实要复杂得多。代币可以是组织和激励社区的强大工具，但它们也已成为投机和炒作的代名词。
+
+从理论上讲，代币有两个主要目的。首先，有 *实用代币*。它们旨在提供对特定生态系统中的服务或资源的访问权限。例如，代币可能代表去中心化网络上的存储空间或对 DApp 中高级功能的访问权限。在这种情况下，代币的价值与其在平台中的功能相关。其次，我们有 *股权代币*，它们应该像公司中的股份一样运作。这些代币可以代表项目中的所有权或控制权，例如 DAO 中的投票权或利润分成。
+
+在实践中，这些类别之间的区别往往模糊不清。许多实用代币在很大程度上仍然是投机性的，用户持有它们更多是作为资产而不是访问凭证。类似股权的代币可能授予治理权，但通常缺乏确保有意义参与的机制。一些项目将其代币深入集成到其经济模型中，但这些案例仍然是例外而不是规则。
+
+这就引出了一个问题：代币本质上是坏的吗？一点也不。代币对于创建和激励社区或在 DAO 中支持去中心化治理可能非常有效。但现实情况是，大多数代币的推出都是以利润而不是实用性为主要动机。如果您正在考虑推出代币或投资代币，值得提出一些难题。代币是否真正服务于协议中必要的目标，还是仅仅是一种筹款工具？没有它，项目是否也能运行良好？诚实地回答这些问题可以帮助您区分真正的创新和营销驱动的炒作。
+
+很明显，代币格局仍在不断发展，代币本身并没有好坏之分；它们的价值取决于它们的设计和实施方式。挑战在于将有意义的与无意义的分开，并抵制下一个 meme 币的诱惑。
+
+> **注意**
 >
-> Note that *fungible* is often used to mean “directly exchangeable for money” (for example, a casino token can be “cashed in,” while laundry tokens typically cannot). This is *not* the sense in which we use the word here.
+> 在撰写本章（2025 年 1 月）期间，新当选的总统唐纳德·特朗普推出了自己的 meme 币，该币在一天之内达到了 150 亿美元的市值。许多人曾预期他的总统任期会出台有利的加密政策，但相反，我们得到了一种 meme 币。这一事件突显了主导加密货币的投机狂潮，在这种狂潮中，炒作往往胜过实质。
 
-## Counterparty Risk
+## 这是鸭子！
 
-*Counterparty risk* is the risk that the *other* party in a transaction will fail to meet their obligations. Some types of transactions suffer additional counterparty risk because there are more than two parties involved. For example, if you hold a certificate of deposit for a precious metal and you sell that to someone, there are at least three parties in that transaction: the seller, the buyer, and the custodian of the precious metal. Someone holds the physical asset; by necessity, they become party to the fulfillment of the transaction and add counterparty risk to any transaction involving that asset. In general, when an asset is traded indirectly through the exchange of a token of ownership, there is additional counterparty risk from the custodian of the asset. Do they have the asset? Will they recognize (or allow) the transfer of ownership based on the transfer of a token (such as a certificate, deed, title, or digital token)? In the world of digital tokens representing assets, as in the nondigital world, it is important to understand who holds the asset that is represented by the token and what rules apply to that underlying asset.
+长期以來，代币一直是初创公司最喜欢的融资工具。它们承诺创新、去中心化，有时甚至是彻底的财务自由。但问题是：向公众提供证券在大多数司法管辖区都是受监管的活动，而代币很容易越过界限进入证券领域。多年来，各项目一直试图通过将其代币标记为 “实用代币” 来规避法规，声称它们只是对未来服务的预售。其逻辑是：如果该代币不是股权，那么它就不是证券。但正如老话所说，“如果它走起路来像鸭子，叫起来像鸭子，那么它就是鸭子。” 而监管机构，尤其是美国证券交易委员会 (SEC)，正在关注这些鸭子。
 
-## Tokens and Intrinsicality
+在过去几年中，SEC 对代币发行采取了越来越积极的立场，打击了试图跨越实用性和股权之间界限的项目。例如，在 2020 年，SEC 起诉了 Ripple Labs 的 XRP 代币，认为它是一种未注册的证券。Ripple 声称 XRP 是一种货币，而不是证券，但法院的部分裁决表明这些案例可能是多么微妙。
 
-The word *intrinsic* derives from the Latin *intra*, meaning “from within.” Some tokens represent digital items that are intrinsic to the blockchain. Those digital assets are governed by consensus rules, just like the tokens themselves. This has an important implication: tokens that represent intrinsic assets do not carry additional counterparty risk. If you hold the keys for a CryptoKitty, there is no other party holding that CryptoKitty for you—you own it directly. The blockchain consensus rules apply, and your ownership (i.e., control) of the private keys is equivalent to ownership of the asset, without any intermediary.
+即使是以太坊本身也没有免受审查。早在 2018 年，前 SEC 官员就宣布以太币 “足够去中心化”，因此不是证券。但就在 2024 年，SEC 暗示以太坊向 PoS 的过渡可能会使其再次受到关注。为什么？因为 staking 奖励类似于股息，而股息是证券的标志。这些发展表明，监管环境变得多么不稳定和不可预测。
 
-Conversely, many tokens are used to represent *extrinsic* things, such as real estate, corporate voting shares, trademarks, gold bars, and bonds. The ownership of these items, which are not “within” the blockchain, is governed by law, custom, and policy, separate from the consensus rules that govern the token. In other words, token issuers and owners may still depend on real-world nonsmart contracts. As a result, these extrinsic assets carry additional counterparty risk because they are held by custodians, recorded in external registries, or controlled by laws and policies outside the blockchain environment.
+令人着迷且令人沮丧的是，这些案例往往归结为语义。项目声称他们的代币是实用工具，例如服务的门票。但如果买家的主要动机是投机，SEC 会认为它是证券，仅此而已。挑战在于，用于做出这些决定的法律框架是在区块链技术出现很久以前创建的。《豪威测试》成立于 20 世纪 40 年代，旨在定义投资合同，但并非为去中心化网络或可编程资产而设计。因此，将其应用于加密项目并不总是那么简单。创新者希望筹集资金并建立社区，但监管机构希望保护投资者免受误导。结果是什么？一场在法庭上反复上演的戏剧，数十亿美元和整个生态系统悬而未决。
 
-One of the most important ramifications of blockchain-based tokens is the ability to convert extrinsic assets into intrinsic assets and thereby remove counterparty risk. A good example is moving from equity in a corporation (extrinsic) to an equity or voting token in a DAO or similar (intrinsic) organization. Stablecoins serve as another example, acting as blockchain-based tokens pegged to fiat currencies and backed by extrinsic assets like treasury bills and cash reserves.
+## 以太坊上的代币
 
-## Utility, Equity, or Cash Grab?
+区块链代币在以太坊之前就存在了。在某些方面，第一个区块链货币比特币本身就是一种代币。在以太坊之前，许多代币平台也在比特币和其他加密货币上开发。然而，第一个代币标准在以太坊上的推出导致了代币的爆炸式增长。
 
-Almost every Ethereum project seems to launch with some sort of token. But do all these projects really need tokens? The slogan “Tokenize all the things” sounds catchy, but the reality is far more complex. Tokens can be powerful tools for organizing and incentivizing communities, but they’ve also become synonymous with speculation and hype.
+Vitalik Buterin 建议将代币作为一种通用可编程区块链（如以太坊）最明显和最有用的应用之一。事实上，在以太坊的第一年，经常看到 Buterin 和其他人穿着印有以太坊标志和智能合约示例的 T 恤。这件 T 恤有几种变体，但最常见的是代币的实现。
 
-In theory, tokens serve two primary purposes. First, there are *utility tokens.* These are designed to provide access to a service or resource within a specific ecosystem. For example, a token might represent storage space on a decentralized network or access to premium features in a DApp. The token’s value, in this case, is tied to its function within the platform. Second, we have *equity tokens*, which are supposed to function like shares in a company. These tokens can represent ownership or control in a project, such as voting rights in a DAO or a share of profits.
+在我们深入研究在以太坊上创建代币的细节之前，重要的是要概述代币在以太坊上的工作方式。代币与以太币不同，因为以太坊协议对它们一无所知。发送以太币是以太坊平台的内在操作，但发送甚至拥有代币则不是。以太坊账户的以太币余额在协议级别处理，而以太坊账户的代币余额在智能合约级别处理。要在以太坊上创建新的代币，您必须创建新的智能合约。部署智能合约后，它将处理所有事情，包括所有权、转移和访问权限。您可以编写智能合约来执行您想要的任何必要操作，但遵循现有标准可能是最明智的。接下来我们将研究这些标准。
 
-In practice, the distinction between these categories is often blurred. Many utility tokens remain largely speculative, with users holding them more as assets than as access credentials. Equity-like tokens may grant governance rights but often lack mechanisms to ensure meaningful participation. Some projects integrate their tokens deeply into their economic models, but these cases remain the exception rather than the rule.
+## ERC-20 代币标准
 
-This brings us to the question: are tokens inherently bad? Not at all. Tokens can be incredibly effective for creating and incentivizing communities or powering decentralized governance in a DAO. But the reality is that most tokens are launched with profit, not utility, as the primary motivator. If you’re thinking of launching a token or investing in one, it’s worth asking some tough questions. Does the token truly serve a necessary purpose in the protocol, or is it just a fundraising tool? Would the project work just as well without it? Answering these questions honestly can help you distinguish between genuine innovation and marketing-driven hype.
+第一个标准是由 Fabian Vogelsteller 在 2015 年 11 月作为 ERC 提出的。它被自动分配了 GitHub 问题编号 20，从而产生了名称 “ERC-20 代币”。绝大多数代币目前都基于 ERC-20 标准。ERC-20 征求意见稿最终成为 EIP-20，但它仍然主要以原始名称 ERC-20 称呼。
 
-It’s clear that the token landscape is still evolving, and tokens are not inherently good or bad; their value depends on how they’re designed and implemented. The challenge lies in separating the meaningful from the meaningless and resisting the lure of the next meme coin.
+ERC-20 是同质化代币的标准，这意味着 ERC-20 代币的不同单位可以互换且没有唯一属性。[ERC-20 标准](https://oreil.ly/Psw-O) 为实现代币的合约定义了一个公共接口，以便可以以相同的方式访问和使用任何兼容的代币。该接口由必须存在于标准每个实现中的许多函数以及开发者可以添加的一些可选函数和属性组成。
 
-> **Note**
->
-> During the writing of this chapter (January 2025), the newly elected president Donald Trump launched his own meme coin, which reached a market cap of $15 billion within a single day. Many had anticipated favorable crypto policies from his presidency, but instead, we got a meme coin. This event highlights the speculative frenzy dominating crypto, where hype often triumphs over substance.
+### ERC-20 必需的函数和事件
 
-## It’s a Duck!
-
-Tokens have long been a favorite fundraising tool for startups. They promise innovation, decentralization, and sometimes outright financial freedom. But here’s the catch: offering securities to the public is a regulated activity in most jurisdictions, and tokens can easily cross the line into securities territory. For years, projects have tried to sidestep regulations by branding their tokens as “utility tokens,” claiming they’re just a presale of access to future services. The logic goes: if the token isn’t an equity share, it’s not a security. But as the old saying goes, “If it walks like a duck and quacks like a duck, it’s a duck.” And regulators, especially the US Securities and Exchange Commission (SEC), are paying attention to these ducks.
-
-Over the last few years, the SEC has taken an increasingly aggressive stance against token offerings, striking down projects that try to straddle the line between utility and equity. For example, in 2020, the SEC sued Ripple Labs over their XRP token, arguing it was an unregistered security. Ripple claimed XRP was a currency, not a security, but the court’s partial rulings showed how nuanced these cases can be.
-
-Even Ethereum itself wasn’t exempt from scrutiny. Back in 2018, former SEC officials declared that ether was “sufficiently decentralized” and thus not a security. But as recently as 2024, the SEC suggested that Ethereum’s transition to PoS could bring it back under the microscope. Why? Because staking rewards resemble dividends, and dividends are a hallmark of securities. These developments show just how fluid and unpredictable the regulatory landscape has become.
-
-What’s fascinating—and frustrating—is how often these cases boil down to semantics. Projects claim their tokens are utility tools, like tickets to a service. But if the primary motivation for buyers is speculation, the SEC sees a security, plain and simple. The challenge is that the legal framework used to make these determinations was created long before blockchain technology existed. The Howey Test, developed in the 1940s to define investment contracts, wasn’t designed for decentralized networks or programmable assets. As a result, applying it to crypto projects isn’t always straightforward. Innovators want to raise money and build communities, but regulators want to protect investors from being misled. The result? A courtroom drama that plays out over and over, with billions of dollars and entire ecosystems hanging in the balance.
-
-## Tokens on Ethereum
-
-Blockchain tokens existed before Ethereum. In some ways, the first blockchain currency, Bitcoin, is a token itself. Many token platforms were also developed on Bitcoin and other cryptocurrencies before Ethereum. However, the introduction of the first token standard on Ethereum led to an explosion of tokens.
-
-Vitalik Buterin suggested tokens as one of the most obvious and useful applications of a generalized programmable blockchain such as Ethereum. In fact, during Ethereum’s first year, it was common to see Buterin and others wearing T-shirts emblazoned with the Ethereum logo and a smart contract sample on the back. There were several variations of this T-shirt, but the most common showed an implementation of a token.
-
-Before we delve into the details of creating tokens on Ethereum, it is important to have an overview of how tokens work on Ethereum. Tokens are different from ether because the Ethereum protocol does not know anything about them. Sending ether is an intrinsic action of the Ethereum platform, but sending or even owning tokens is not. The ether balance of Ethereum accounts is handled at the protocol level, whereas the token balance of Ethereum accounts is handled at the smart contract level. To create a new token on Ethereum, you must create a new smart contract. Once the smart contract is deployed, it handles everything, including ownership, transfers, and access rights. You can write your smart contract to perform all the necessary actions any way you want, but it is probably wisest to follow an existing standard. We will look at such standards next.
-
-## The ERC-20 Token Standard
-
-The first standard was introduced in November 2015 by Fabian Vogelsteller as an ERC. It was automatically assigned GitHub issue number 20, giving rise to the name “ERC-20 token.” The vast majority of tokens are currently based on the ERC-20 standard. The ERC-20 request for comments eventually became EIP-20, but it is still mostly referred to by the original name, ERC-20.
-
-ERC-20 is a standard for fungible tokens, meaning that different units of an ERC-20 token are interchangeable and have no unique properties. The [ERC-20 standard](https://oreil.ly/Psw-O) defines a common interface for contracts implementing a token such that any compatible token can be accessed and used in the same way. The interface consists of a number of functions that must be present in every implementation of the standard as well as some optional functions and attributes that may be added by developers.
-
-### ERC-20 required functions and events
-
-A token contract that is compliant with ERC-20 must provide at least the following functions and events:
+符合 ERC-20 的代币合约必须至少提供以下函数和事件：
 
 `totalSupply`
 
-Returns the total units of this token that currently exist. ERC-20 tokens can have a fixed or a variable supply.
+返回当前存在的此代币的总单位数。ERC-20 代币可以具有固定或可变的供应量。
 
 `balanceOf`
 
-Given an address, returns the token balance of that address.
+给定一个地址，返回该地址的代币余额。
 
 `transfer`
 
-Given an address and amount, transfers that number of tokens to that address from the balance of the address that executed the transfer.
+给定一个地址和金额，将该数量的代币从执行转移的地址的余额转移到该地址。
 
 `transferFrom`
 
-Given a sender, recipient, and amount, transfers tokens from one account to another. Used in combination with `approve`.
+给定一个发送者、接收者和金额，将代币从一个帐户转移到另一个帐户。与 `approve` 结合使用。
 
 `approve`
 
-Given a recipient address and amount, authorizes that address to execute several transfers up to that amount from the account that issued the approval.
+给定一个接收者地址和金额，授权该地址从发出批准的帐户执行多次转移，最高可达该金额。
 
 `allowance`
 
-Given an owner address and a spender address, returns the remaining amount that the spender is approved to withdraw from the owner.
+给定一个所有者地址和一个花费者地址，返回花费者被批准从所有者处提取的剩余金额。
 
 `transfer`
 
-Event triggered upon a successful transfer (call to `transfer` or `transferFrom`), even for zero-value transfers.
+成功转移时触发的事件（调用 `transfer` 或 `transferFrom`），即使对于零值转移也是如此。
 
 `approval`
 
-Event logged upon a successful call to `approve`.
+成功调用 `approve` 时记录的事件。
 
-#### ERC-20 optional functions
+#### ERC-20 可选函数
 
-In addition to the required functions listed in the previous section, the following optional functions are also defined by the standard:
+除了上一节中列出的必需函数外，标准还定义了以下可选函数：
 
-**Name**
+**名称**
 
-Returns the human-readable name (e.g., “US dollars”) of the token.
+返回代币的人工可读名称（例如 “美元”）。
 
-**Symbol**
+**符号**
 
-Returns a human-readable symbol (e.g., “USD”) for the token.
+返回代币的人工可读符号（例如 “USD”）。
 
-**decimals**
+**小数位数**
 
-Returns the number of decimals used to divide token amounts. For example, if the number of decimals is 2, then a token amount of 1,000 actually means a balance of 10.
+返回用于除代币金额的小数位数。例如，如果小数位数为 2，则代币金额 1,000 实际上表示余额为 10。
 
-#### The ERC-20 interface defined in Solidity
+#### 在 Solidity 中定义的 ERC-20 接口
 
-Here’s what an ERC-20 interface specification looks like in Solidity:
+以下是 ERC-20 接口规范在 Solidity 中的样子：
 
 ```solidity
 contract ERC20 {
-   function totalSupply() public view returns (uint256 theTotalSupply);
-   function balanceOf(address _owner) public view returns (uint256 balance);
-   function transfer(address _to, uint256 _value) public returns (bool success);
-   function transferFrom(address _from, address _to, uint256 _value) public returns
-      (bool success);
-   function approve(address _spender, uint256 _value) public returns (bool success);
-   function allowance(address _owner, address _spender) public view returns
-      (uint256 remaining);
-   event Transfer(address indexed _from, address indexed _to, uint256 _value);
-   event Approval(address indexed _owner, address indexed _spender, uint256 _value);
+  function totalSupply() public view returns (uint256 theTotalSupply);
+  function balanceOf(address _owner) public view returns (uint256 balance);
+  function transfer(address _to, uint256 _value) public returns (bool success);
+  function transferFrom(address _from, address _to, uint256 _value) public returns
+      (bool success);
+  function approve(address _spender, uint256 _value) public returns (bool success);
+  function allowance(address _owner, address _spender) public view returns
+      (uint256 remaining);
+  event Transfer(address indexed _from, address indexed _to, uint256 _value);
+  event Approval(address indexed _owner, address indexed _spender, uint256 _value);
 }
 ```
 
-#### ERC-20 data structures
+#### ERC-20 数据结构
 
-If you examine any ERC-20 implementation, you will see that it contains two data structures: one to track balances and one to track allowances. In Solidity, they are implemented with a *data mapping*.
+如果您检查任何 ERC-20 实现，您会发现它包含两个数据结构：一个用于跟踪余额，一个用于跟踪限额。在 Solidity 中，它们使用 *数据映射* 实现。
 
-The first data mapping implements an internal table of token balances, by owner. This allows the token contract to keep track of who owns the tokens. Each transfer is a deduction from one balance and an addition to another balance:
+第一个数据映射实现了按所有者划分的内部代币余额表。这使代币合约可以跟踪谁拥有代币。每次转账都是从一个余额中扣除并添加到另一个余额中：
 
 ```solidity
 mapping(address account => uint256) _balances;
 ```
 
-The second data structure is a data mapping of allowances. As we will see in the next section, with ERC-20 tokens, an owner of a token can delegate authority to a spender, allowing them to spend a specific amount (allowance) from the owner’s balance. The ERC-20 contract keeps track of the allowances with a two-dimensional mapping, with the primary key being the address of the token owner, mapping to a spender address and an allowance amount:
+第二个数据结构是限额的数据映射。正如我们将在下一节中看到的那样，使用 ERC-20 代币，代币的所有者可以将控制权委托给花费者，允许他们从所有者的余额中花费特定金额（限额）。ERC-20 合约使用二维映射跟踪限额，其中主键是代币所有者的地址，映射到花费者地址和限额：
 
 ```solidity
 mapping(address account => mapping(address spender => uint256)) public _allowances;
 ```
 
-#### ERC-20 workflows: “Transfer” and “approve and transferFrom”
+#### ERC-20 工作流程：“Transfer” 和 “approve and transferFrom”
 
-The ERC-20 token standard has two transfer functions. You might be wondering why.
+ERC-20 代币标准有两个转移函数。您可能想知道为什么。
 
-ERC-20 allows for two different workflows. The first is a straightforward single-transaction workflow using the `transfer` function. This workflow is the one used by wallets to send tokens to other wallets. The vast majority of token transactions happen with the `transfer` workflow.
+ERC-20 允许两种不同的工作流程。第一个是使用 `transfer` 函数的简单的单事务工作流程。此工作流程是钱包用于将代币发送到其他钱包的工作流程。绝大多数代币交易都是通过 `transfer` 工作流程进行的。
 
-Executing the transfer contract is very simple. If Alice wants to send 10 tokens to Bob, her wallet sends a transaction to the token contract’s address, calling the `transfer` function with Bob’s address and `10` as the arguments. The token contract adjusts Alice’s balance (–10) and Bob’s balance (+10) and issues a `Transfer` event.
+执行转移合约非常简单。如果 Alice 想要向 Bob 发送 10 个代币，她的钱包会向代币合约的地址发送一个事务，调用 `transfer` 函数，并将 Bob 的地址和 `10` 作为参数。代币合约调整 Alice 的余额（-10）和 Bob 的余额（+10），并发出一个 `Transfer` 事件。
 
-The second workflow is a two-transaction workflow that uses `approve` followed by `transferFrom`. This workflow allows a token owner to delegate their control to another address. It is most often used to delegate control to a contract for distribution of tokens, but it can also be used by exchanges. For example, if a company is selling tokens for an ICO, they can `approve` a crowdsale contract address to distribute a certain number of tokens. The crowdsale contract can then `transferFrom` the token contract owner’s balance to each buyer of the token, as illustrated in Figure 10-1.
+第二个工作流程是使用 `approve`，然后使用 `transferFrom` 的两事务工作流程。此工作流程允许代币所有者将其控制权委托给另一个地址。它最常用于将控制权委托给合约以进行代币分发，但也可以用于交易所。例如，如果一家公司正在出售代币以进行 ICO，它们可以 `approve` 一个众筹合约地址，以分发一定数量的代币。然后，众筹合约可以将代币合约所有者的余额 `transferFrom` 到每个代币购买者，如图 10-1 所示。
 
 ![The two-step approve and transferFrom workflow of ERC-20 tokens](images/ch10/maet_1001.png)
 
-**Figure 10-1.** The two-step `approve` and `transferFrom` workflow of ERC-20 tokens
+**图 10-1.** ERC-20 代币的两步 `approve` 和 `transferFrom` 工作流程
 
-> **Note**
+> **注意**
 >
-> An *initial coin offering* (ICO) is a crowdfunding mechanism used by companies and organizations to raise money by selling tokens. The term is derived from *initial public offering* (IPO), which is the process by which a public company offers shares for sale to investors on a stock exchange. Unlike the highly regulated IPO markets, ICOs are open, global, and messy.
+> *首次代币发行* (ICO) 是一种众筹机制，公司和组织通过出售代币来筹集资金。该术语源自 *首次公开募股* (IPO)，后者是一家上市公司在股票交易所向投资者出售股份的过程。与受到高度监管的 IPO 市场不同，ICO 是开放的、全球性的且混乱的。
 
-For the `approve` and `transferFrom` workflow, two transactions are needed. Let’s say that Alice wants to allow the `AliceICO` contract to sell 50% of all the AliceCoin tokens to buyers like Bob and Charlie. First, Alice launches the `AliceCoin` ERC-20 contract, issuing all the AliceCoin to her own address. Then, Alice launches the `AliceICO` contract that can sell tokens for ether. Next, Alice initiates the `approve` and `transferFrom` workflow. She sends a transaction to the `AliceCoin` contract, calling `approve` with the address of the `AliceICO` contract and 50% of the `totalSupply` as arguments. This will trigger the `Approval` event. Now, the `AliceICO` contract can sell AliceCoin.
+对于 `approve` 和 `transferFrom` 工作流程，需要两个事务。假设 Alice 想要允许 `AliceICO` 合约向 Bob 和 Charlie 等买家出售所有 AliceCoin 代币的 50%。首先，Alice 启动 `AliceCoin` ERC-20 合约，将所有 AliceCoin 发行到她自己的地址。然后，Alice 启动可以出售代币以换取以太币的 `AliceICO` 合约。接下来，Alice 启动 `approve` 和 `transferFrom` 工作流程。她向 `AliceCoin` 合约发送一个事务，调用 `approve`，并将 `AliceICO` 合约的地址和 `totalSupply` 的 50% 作为参数。这将触发 `Approval` 事件。现在，`AliceICO` 合约可以出售 AliceCoin。
 
-When the `AliceICO` contract receives ether from Bob, it needs to send some AliceCoin to Bob in return. Within the `AliceICO` contract is an exchange rate between AliceCoin and ether. The exchange rate that Alice set when she created the `AliceICO` contract determines how many tokens Bob will receive for the amount of ether sent to the `AliceICO` contract. When the `AliceICO` contract calls the AliceCoin `transferFrom` function, it sets Alice’s address as the sender and Bob’s address as the recipient and uses the exchange rate to determine how many AliceCoin tokens will be transferred to Bob in the `value` field. The `AliceCoin` contract transfers the balance from Alice’s address to Bob’s address and triggers a `Transfer` event. The `AliceICO` contract can call `transferFrom` an unlimited number of times, as long as it doesn’t exceed the approval limit Alice set. The `AliceICO` contract can keep track of how many AliceCoin tokens it can sell by calling the `allowance` function.
+当 `AliceICO` 合约从 Bob 收到以太币时，它需要向 Bob 发送一些 AliceCoin 作为回报。在 `AliceICO` 合约中，AliceCoin 和以太币之间存在汇率。Alice 在创建 `AliceICO` 合约时设置的汇率决定了 Bob 为发送到 `AliceICO` 合约的以太币数量将收到多少代币。当 `AliceICO` 合约调用 AliceCoin `transferFrom` 函数时，它会将 Alice 的地址设置为发送者，将 Bob 的地址设置为接收者，并使用汇率来确定将有多少 AliceCoin 代币转移到 Bob 的 `value` 字段中。`AliceCoin` 合约将余额从 Alice 的地址转移到 Bob 的地址，并触发 `Transfer` 事件。`AliceICO` 合约可以调用 `transferFrom` 无限次，只要它不超过 Alice 设置的批准限制。`AliceICO` 合约可以通过调用 `allowance` 函数来跟踪它可以出售多少 AliceCoin 代币。
 
-#### ERC-2612: Gasless transfers with “permit”
+#### ERC-2612：带有“permit”的无 Gas 转移
 
-In Chapter 9, we fully explored the ins and outs of the traditional `transfer` and `transferFrom` flows with ERC-20 tokens. While these methods have been the backbone of token transfers, they’re not without their limitations. Both require the sender to interact directly with the blockchain, which means they must have some native cryptocurrency on hand to cover gas fees. This creates a significant hurdle, especially when tokens are sent to a brand-new address without any native funds. It’s a frustrating experience and far from ideal.
+在第 9 章中，我们全面探讨了 ERC-20 代币的传统 `transfer` 和 `transferFrom` 流程的来龙去脉。虽然这些方法一直是代币转移的支柱，但它们并非没有局限性。两者都需要发送方直接与区块链交互，这意味着他们必须手头有一些原生加密货币来支付 Gas 费用。这造成了一个重大障碍，特别是当代币被发送到一个没有任何原生资金的全新地址时。这是一种令人沮丧的体验，远非理想。
 
-This is where ERC-2612 steps in. It’s a clever addition to the ERC-20 token standard that lets users approve token transfers without having to touch the blockchain themselves. Here’s how it works: instead of sending an on-chain transaction to approve a transfer, you just sign the necessary data—things like the recipient’s address, the number of tokens, the expiration time, and a nonce—using your wallet. This creates a signature, and whoever needs to execute the transfer (whether it’s the recipient or another party) can submit that signature to the `permit` method of the token contract. The contract reads the signature, verifies it, and processes the approval, all without you needing to pay gas for the initial step. It’s efficient and secure, and it takes a lot of the hassle out of the process.
+这就是 ERC-2612 的用武之地。它是 ERC-20 代币标准的一个巧妙补充，它允许用户批准代币转移，而无需自己接触区块链。以下是它的工作原理：无需发送链上事务来批准转移，您只需使用您的钱包签署必要的数据 — 例如接收者的地址、代币数量、到期时间和随机数。这将创建一个签名，并且任何需要执行转移的人（无论是接收者还是另一方）都可以将该签名提交给代币合约的 `permit` 方法。合约读取签名、验证签名并处理批准，所有这些都无需您为初始步骤支付 Gas 费用。它既高效又安全，并且消除了流程中的许多麻烦。
 
-For ERC-2612 to work, token developers need to extend their ERC-20 contracts to include this functionality. Once it’s in place, it offers two key benefits for users. First, it simplifies the whole process. Instead of having to approve every single transfer, users can grant permission with one signature. Second, it saves on gas costs since you’re cutting down the number of transactions needed.
+为了使 ERC-2612 工作，代币开发者需要扩展他们的 ERC-20 合约以包含此功能。一旦到位，它将为用户提供两个主要优势。首先，它简化了整个过程。无需批准每次转移，用户只需一个签名即可授予权限。第二，它节省了 Gas 成本，因为您减少了所需的交易数量。
 
-#### ERC-20 implementations
+#### ERC-20 实现
 
-While it is possible to implement a token that is compatible with ERC-20 in about 30 lines of Solidity code, most implementations are more complex. This is to account for potential security vulnerabilities. The EIP-20 standard mentions two implementations, developed by Consensys and OpenZeppelin. The Consensys EIP-20 token has not been maintained since 2018, while [OpenZeppelin’s ERC-20 token](https://oreil.ly/7d7RD) became the de facto standard for developers and is actively maintained. This implementation forms the basis of OpenZeppelin libraries implementing more complex ERC-20-compatible tokens with fundraising caps, tokenized vaults, vesting schedules, and other features.
+虽然可以使用大约 30 行 Solidity 代码来实现与 ERC-20 兼容的代币，但大多数实现都更复杂。这是为了解决潜在的安全漏洞。EIP-20 标准提到了 Consensys 和 OpenZeppelin 开发的两种实现。Consensys EIP-20 代币自 2018 年以来一直没有维护，而 [OpenZeppelin 的 ERC-20 代币](https://oreil.ly/7d7RD) 已成为开发人员事实上的标准，并且正在积极维护。此实现构成了 OpenZeppelin 库的基础，该库实现了更复杂的与 ERC-20 兼容的代币，具有筹款上限、代币化金库、归属计划和其他功能。
 
-### Launching Our Own ERC-20 Token
+### 启动我们自己的 ERC-20 代币
 
-Let’s create and launch our own token. For this example, we will use the Foundry framework. The example assumes that you have already [installed Foundry](https://oreil.ly/dfDGh) and configured it and that you are familiar with its basic operation.
+让我们创建并启动我们自己的代币。对于此示例，我们将使用 Foundry 框架。此示例假定您已[安装 Foundry](https://oreil.ly/dfDGh) 并对其进行了配置，并且您熟悉其基本操作。
 
-We will call our token the “Mastering Ethereum Token,” with the symbol MET. First, let’s create and initialize a Foundry project directory with the following commands:
+我们将我们的代币称为 “Mastering Ethereum Token”，符号为 MET。首先，让我们使用以下命令创建并初始化 Foundry 项目目录：
 
 ```bash
 $ mkdir METoken
@@ -249,26 +249,26 @@ $ cd METoken
 $ forge init
 ```
 
-You should now have the following directory structure:
+您现在应该具有以下目录结构：
 
 ```
 METoken/
 ├── foundry.toml
 ├── lib
-│   └── forge-std
-│       └── ...
+│  └── forge-std
+│      └── ...
 ├── README.md
 ├── script
-│   └── Counter.s.sol
+│  └── Counter.s.sol
 ├── src
-│   └── Counter.sol
+│  └── Counter.sol
 └── test
-    └── Counter.t.sol
+     └── Counter.t.sol
 ```
 
-`Counter` is Foundry’s default example contract, which comes with its own test and deploy scripts. We will remove all its related files to make room for our token contract.
+`Counter` 是 Foundry 的默认示例合约，它带有自己的测试和部署脚本。我们将删除所有相关文件以为我们的代币合约腾出空间。
 
-For our example, we will import the OpenZeppelin library, the industry standard for Solidity-based tokens:
+对于我们的示例，我们将导入 OpenZeppelin 库，这是基于 Solidity 的代币的行业标准：
 
 ```bash
 $ forge install OpenZeppelin/openzeppelin-contracts
@@ -276,11 +276,11 @@ $ forge install OpenZeppelin/openzeppelin-contracts
 Installed openzeppelin-contracts v5.2.0
 ```
 
-Inside *METoken/lib/openzeppelin-contracts/contracts*, we can now see all the OpenZeppelin contracts. The OpenZeppelin library includes a lot more than the ERC-20 token, but we will use only a small part of it.
+在 *METoken/lib/openzeppelin-contracts/contracts* 中，我们现在可以看到所有 OpenZeppelin 合约。OpenZeppelin 库包含的内容远不止 ERC-20 代币，但我们将只使用其中的一小部分。
 
-Next, let’s write our token contract. Create a new file, *METoken.sol*, and copy the code in Example 10-1. Our contract is very simple since it inherits all its functionality from the OpenZeppelin library.
+接下来，让我们编写我们的代币合约。创建一个新文件 *METoken.sol*，并复制示例 10-1 中的代码。我们的合约非常简单，因为它从 OpenZeppelin 库继承了所有功能。
 
-**Example 10-1. METoken.sol: a Solidity contract implementing an ERC-20 token**
+**示例 10-1. METoken.sol：一个实现 ERC-20 代币的 Solidity 合约**
 
 ```solidity
 pragma solidity 0.8.28;
@@ -292,9 +292,9 @@ contract METoken is ERC20 {
 }
 ```
 
-Here we are passing `"METoken"` and `"MET"` as name and symbol to the constructor of the ERC-20 contract. The token initial supply is provided during the deployment as a constructor parameter and will be sent to the deployer of this token contract (`msg.sender`). We are using the default value for decimals, 18, which is the widely adopted standard for ERC-20 tokens.
+在这里，我们将 `"METoken"` 和 `"MET"` 作为名称和符号传递给 ERC-20 合约的构造函数。代币的初始供应量在部署期间作为构造函数参数提供，并将发送到此代币合约的部署者 (`msg.sender`)。我们正在使用小数位数的默认值 18，这是 ERC-20 代币的广泛采用的标准。
 
-We can now use Foundry to compile the `METoken` contract:
+我们现在可以使用 Foundry 编译 `METoken` 合约：
 
 ```bash
 $ forge build
@@ -304,33 +304,33 @@ $ forge build
 Compiler run successful!
 ```
 
-Let’s set up a deploy script to bring the `METoken` contract to the blockchain. Create a new file *METokenDeploy.s.sol*, in the *METoken/script* folder and copy the following code:
+让我们设置一个部署脚本，将 `METoken` 合约带到区块链上。在 *METoken/script* 文件夹中创建一个新文件 *METokenDeploy.s.sol*，并复制以下代码：
 
 ```solidity
 pragma solidity 0.8.28;
 import {Script, console} from "forge-std/Script.sol";
 import {METoken} from "../src/METoken.sol";
 contract METokenDeployer is Script {
-    METoken public _METoken;
-    function run() public {
-        vm.startBroadcast();
-        _METoken = new METoken(50_000_000e18);
-        vm.stopBroadcast();
-    }
+     METoken public _METoken;
+     function run() public {
+         vm.startBroadcast();
+         _METoken = new METoken(50_000_000e18);
+         vm.stopBroadcast();
+     }
 }
 ```
 
-In this example, we are passing 50 million as the initial supply. Did you notice that we are multiplying by 1e18? Those are the token decimals. Remember that in order to have a balance of *X* tokens, we need a token amount of *X* × 10 ^ decimals.
+在此示例中，我们将 5000 万作为初始供应量传递。您是否注意到我们正在乘以 1e18？这些是代币的小数位数。请记住，为了拥有 *X* 个代币的余额，我们需要 *X* × 10 ^ 小数位数的代币数量。
 
-> **Note**
+> **注意**
 >
-> The suffix *.s.sol* for scripts is a Foundry naming convention to quickly identify the purpose of a file. It is not a requirement—it’s enough to place the script files inside the script folder—but it’s a very good practice that will come in handy during development. The same applies to tests with the *.t.sol* suffix.
+> 脚本的后缀 *.s.sol* 是 Foundry 的命名约定，用于快速识别文件的用途。这不是必需的 — 将脚本文件放置在脚本文件夹中就足够了 — 但这是一个很好的实践，在开发期间会派上用场。同样的适用于带有 *.t.sol* 后缀的测试。
 
-Before we deploy on one of the Ethereum test networks, let’s start a local blockchain to test everything. We will use another tool in the Foundry toolbox: Anvil, a local Ethereum development node. To use it, just open a new terminal and type `anvil`. The console will show a list of available accounts, their private keys, the chain ID, the RPC URL, and other information. The RPC URL is the endpoint that allows Foundry (or any Ethereum client) to communicate with our local blockchain node, enabling transactions, contract deployment, and data retrieval. Anvil’s default RPC is *http://127.0.0.1:8545*. To tell our deploy script to deploy on our local blockchain, we need to provide Anvil’s RPC URL as a console parameter with the flag `--rpc-url "http://127.0.0.1:8545"`.
+在我们部署到以太坊测试网络之一之前，让我们启动一个本地区块链来测试所有内容。我们将使用 Foundry 工具箱中的另一个工具：Anvil，一个本地以太坊开发节点。要使用它，只需打开一个新终端并键入 `anvil`。控制台将显示可用帐户列表、其私钥、链 ID、RPC URL 和其他信息。RPC URL 是 Foundry（或任何以太坊客户端）用于与我们的本地区块链节点通信的端点，从而实现事务、合约部署和数据检索。Anvil 的默认 RPC 是 *http://127.0.0.1:8545*。为了告诉我们的部署脚本部署到我们的本地区块链，我们需要通过标志 `--rpc-url "http://127.0.0.1:8545"` 将 Anvil 的 RPC URL 作为控制台参数提供。
 
-The final piece we need is the private key of the deployer account. Since this is a local blockchain, the addresses we use on Ethereum mainnet or testnets won’t have any funds here, and we don’t want to expose real private keys unnecessarily. Instead, we’ll use the test accounts generated by Anvil when it starts up. These accounts come preloaded with 10,000 ETH on our local chain, making them perfect for development and testing.
+我们需要的最后一部分是部署者帐户的私钥。由于这是一个本地区块链，我们在以太坊主网或测试网上使用的地址在这里没有任何资金，并且我们不想不必要地暴露真实的私钥。相反，我们将使用 Anvil 启动时生成的测试帐户。这些帐户在我们的本地链上预加载了 10,000 个 ETH，使其非常适合开发和测试。
 
-We are ready to deploy our token by running:
+我们已准备好通过运行以下命令来部署我们的代币：
 
 ```bash
 $ forge script script/METokenDeploy.s.sol --broadcast --rpc-url "http://127.0.0.1:8545"
@@ -340,88 +340,88 @@ No files changed, compilation skipped
 Script ran successfully.
 ```
 
-> **Note**
+> **注意**
 >
-> You might be wondering what the `--broadcast` flag is for. That is to tell Foundry to actually broadcast the transaction to the blockchain. Without that, Foundry would just simulate the transaction.
+> 您可能想知道 `--broadcast` 标志是做什么用的。这告诉 Foundry 实际将事务广播到区块链。没有它，Foundry 只会模拟事务。
 
-The console output informed us that the deploy script ran successfully. If we take a look at the terminal where we are running Anvil, we will notice a lot of activity, among which is our contract creation:
+控制台输出告诉我们部署脚本已成功运行。如果我们看一下运行 Anvil 的终端，我们会注意到很多活动，其中包括我们的合约创建：
 
 ```
    Transaction: 0xd01e3a90e1f2ee60112658e92f4ebf04c24df67d2ec1315cfb79d145729d15ec
-    Contract created: 0x5FbDB2315678afecb367f032d93F642f64180aa3
-    Gas used: 941861
-    Block Number: 1
-    Block Hash: 0x748b6058dea932317cacf45bb63be82f253554f359b97ace224e35979a92b00a
-    Block Time: "Fri, 31 Jan 2025 19:10:42 +0000"
+     Contract created: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+     Gas used: 941861
+     Block Number: 1
+     Block Hash: 0x748b6058dea932317cacf45bb63be82f253554f359b97ace224e35979a92b00a
+     Block Time: "Fri, 31 Jan 2025 19:10:42 +0000"
 ```
 
-Our METoken was successfully deployed at the following address:
+我们的 METoken 已成功部署到以下地址：
 
 ```
 0x5FbDB2315678afecb367f032d93F642f64180aa3
 ```
 
-Alternatively, we can deploy our token using forge’s `create` console command:
+或者，我们可以使用 forge 的 `create` 控制台命令来部署我们的代币：
 
 ```bash
 $ forge create METoken --broadcast --rpc-url http://127.0.0.1:8545 --private-key
 <DEPLOYER_PRIVATE_KEY> --constructor-args 50000000000000000000000000
 ```
 
-Here, the total supply is passed as a constructor argument, taking decimals into account.
+这里，总供应量作为构造函数参数传递，并考虑到小数位数。
 
-#### Interacting with METoken
+#### 与 METoken 交互
 
-We can interact with our contract in several ways. We could use Remix (as we did in Chapter 2), a Solidity REPL like Foundry’s Chisel, or a JavaScript library like ethers.js. We could also execute transactions using Foundry scripts, which are what we are going to use for our examples.
+我们可以通过多种方式与我们的合约交互。我们可以使用 Remix（就像我们在第 2 章中所做的那样）、像 Foundry 的 Chisel 这样的 Solidity REPL 或像 ethers.js 这样的 JavaScript 库。我们也可以使用 Foundry 脚本执行事务，这就是我们将用于示例的内容。
 
-Ethereum addresses are 40-character hexadecimal strings, which aren’t exactly easy to read. To make our examples clearer, we’ll assign nicknames to the two addresses we’re using: Deployer for the address that deployed the MET contract and Alice for a secondary address. We will also use one of Anvil’s prefunded addresses for Alice.
+以太坊地址是 40 个字符的十六进制字符串，它们并不容易读取。为了使我们的示例更清晰，我们将为我们正在使用的两个地址分配昵称：Deployer 用于部署 MET 合约的地址，Alice 用于辅助地址。我们还将使用 Anvil 的一个预资助地址作为 Alice。
 
-Let’s create a Foundry script to check the Deployer’s METoken balance and send some METoken to Alice. Copy the contents from the following code snippet and paste them in a new file *METoken/script/METokenInteraction.s.sol*:
+让我们创建一个 Foundry 脚本，以检查 Deployer 的 METoken 余额并将一些 METoken 发送到 Alice。复制以下代码段中的内容并将它们粘贴到新文件 *METoken/script/METokenInteraction.s.sol* 中：
 
 ```solidity
 pragma solidity 0.8.28;
 import {Script, console} from "forge-std/Script.sol";
 import {METoken} from "../src/METoken.sol";
 contract METokenInteraction is Script {
-    METoken public _METoken = METoken(0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512);
-    address alice = 0x70997970C51812dc3A010C7d01b50e0d17dc79C8;
-    function run() public {
-        vm.startBroadcast();
-        uint256 ourBalance = _METoken.balanceOf(msg.sender);
-        console.log("Deployer initial balance:", ourBalance);
-        uint256 aliceBalance = _METoken.balanceOf(alice);
-        console.log("Alice initial balance:", aliceBalance);
-        uint256 amountToTransfer = 50e18;
-        bool success = _METoken.transfer(alice, amountToTransfer);
-        if (success) {
-            console.log("Transfer successful");
-        } else {
-            console.log("Transfer failed");
-            revert();
-        }
-        ourBalance = _METoken.balanceOf(msg.sender);
-        console.log("Deployer final balance:", ourBalance);
-        aliceBalance = _METoken.balanceOf(alice);
-        console.log("Alice final balance:", aliceBalance);
-        vm.stopBroadcast();
-    }
+     METoken public _METoken = METoken(0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512);
+     address alice = 0x70997970C51812dc3A010C7d01b50e0d17dc79C8;
+     function run() public {
+         vm.startBroadcast();
+         uint256 ourBalance = _METoken.balanceOf(msg.sender);
+         console.log("Deployer initial balance:", ourBalance);
+         uint256 aliceBalance = _METoken.balanceOf(alice);
+         console.log("Alice initial balance:", aliceBalance);
+         uint256 amountToTransfer = 50e18;
+         bool success = _METoken.transfer(alice, amountToTransfer);
+         if (success) {
+             console.log("Transfer successful");
+         } else {
+             console.log("Transfer failed");
+             revert();
+         }
+         ourBalance = _METoken.balanceOf(msg.sender);
+         console.log("Deployer final balance:", ourBalance);
+         aliceBalance = _METoken.balanceOf(alice);
+         console.log("Alice final balance:", aliceBalance);
+         vm.stopBroadcast();
+     }
 }
 ```
 
-We can run the script with the following console command:
+我们可以使用以下控制台命令运行脚本：
 
 ```bash
 $ forge script script/METokenInteraction.s.sol --private-key <DEPLOYER_PRIVATE_KEY>
 --rpc-url "http://127.0.0.1:8545" -vv
 ```
 
-It’s important to use the same private key that was used for deployment. This ensures that `msg.sender` corresponds to the deployer address, which holds the initial token supply.
+重要的是要使用与部署相同的私钥。这样可以确保 `msg.sender` 对应于持有初始代币供应量的部署者地址。
 
-> **Note**
+> **注意**
 >
-> Foundry’s `-v` flags control the verbosity level of output when running commands like `forge script` or `forge build`. Increasing the number of `v`s increases the output verbosity to include more information. To show the console logs, we need at least `-vv` while the maximum verbosity is provided by `-vvvv`.
+> Foundry 的 `-v` 标志控制运行 `forge script` 或 `forge build` 等命令时输出的详细级别。增加 `v` 的数量会增加输出详细程度以包含更多信息。要显示控制台日志，我们需要至少 `-vv`，而 `-vvvv` 提供最大verbose。
 
-Once we run the script, the following will be printed in the console:
+一旦我们运行脚本，以下内容将打印在控制台中：
 
 ```bash
 [⁘] Compiling...
@@ -430,217 +430,207 @@ Once we run the script, the following will be printed in the console:
 Compiler run successful!
 Script ran successfully.
 == Logs ==
-  Deployer initial balance: 50000000000000000000000000
-  Alice initial balance: 0
-  Transfer successful
-  Deployer final balance: 49999950000000000000000000
-  Alice final balance: 50000000000000000000
-```
-
-In this script, we first log the current token balances of the deployer and Alice. Next, we transfer 50 tokens from the deployer to Alice and log the balances again. Keep in mind that 50 tokens are represented as 50e18 because our token has 18 decimals, hence the large number of zeros.
-
-#### Sending ERC-20 tokens to contract addresses
-
-So far, we’ve set up an ERC-20 token and transferred some tokens from one account to another. All the accounts we used for these demonstrations are EOAs, meaning they are controlled by a private key, not a contract. What happens if we send MET tokens to a contract address? Let’s find out!
-
-First, let’s deploy another contract into our test environment. For this example, we will use the *NaiveFaucet.sol* contract that follows:
-
-```solidity
+   Deploy```solidity
 pragma solidity 0.8.28;
 contract NaiveFaucet {
-    receive() external payable {}
-    // Function to withdraw Ether from the contract
-    function withdraw(uint256 amount) public {
-        require(amount <= address(this).balance, "Insufficient balance in faucet");
-        payable(msg.sender).transfer(amount);
-    }
+    receive() external payable {}
+    // Function to withdraw Ether from the contract
+    // 从合约中提取 Ether 的函数
+    function withdraw(uint256 amount) public {
+        require(amount <= address(this).balance, "faucet 中的余额不足");
+        payable(msg.sender).transfer(amount);
+    }
 }
 ```
 
-Our directory should look like this:
+我们的目录应该像这样：
 
 ```
 METoken/
 +---- src
-|   +---- NaiveFaucet.sol
-|   +---- METoken.sol
+|   +---- NaiveFaucet.sol
+|   +---- METoken.sol
 ```
 
-Let’s compile and deploy the `NaiveFaucet` contract:
+让我们编译和部署 `NaiveFaucet` 合约：
 
 ```bash
 $ forge create NaiveFaucet --broadcast --rpc-url http://localhost:8545
---private-key <DEPLOYER_PRIVATE_KEY>
-[⁘] Compiling...
-[:] Compiling 1 files with Solc 0.8.28
-[⁖] Solc 0.8.28 finished in 8.69ms
-Compiler run successful!
-Deployer: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
-Deployed to: 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
-Transaction hash: 0x4d1947547e3cfec8db670f3c1b7ff309b41de8aacee42165578a3ddf8619f63f
+--private-key <部署者_私钥>
+[⁘] 编译中...
+[:] 使用 Solc 0.8.28 编译 1 个文件
+[⁖] Solc 0.8.28 在 8.69ms 内完成
+编译器运行成功!
+部署者: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+已部署到: 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+交易哈希: 0x4d1947547e3cfec8db670f3c1b7ff309b41de8aacee42165578a3ddf8619f63f
 ```
 
-Great, our `NaiveFaucet` contract has been deployed to the address `0x9fE46736679​d2D9a65F0992F2272dE9f3c7fa6e0`. Now, let’s send some MET to the `NaiveFaucet` contract by copying the following script to *METoken/script/METokenSend.s.sol*:
+太好了，我们的 `NaiveFaucet` 合约已经部署到地址 `0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0`。现在，让我们通过将以下脚本复制到 *METoken/script/METokenSend.s.sol* 来向 `NaiveFaucet` 合约发送一些 MET：
 
 ```solidity
 pragma solidity 0.8.28;
 import {Script, console} from "forge-std/Script.sol";
 import {METoken} from "../src/METoken.sol";
 contract METokenSend is Script {
-    METoken public _METoken = METoken(0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512);
-    address naiveFaucet = 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0;
-    function run() public {
-        vm.startBroadcast();
-        uint256 amountToSend = 100e18;
-        bool success = _METoken.transfer(naiveFaucet, amountToSend);
-        if (success) {
-            console.log("Transfer successful");
-        } else {
-            console.log("Transfer failed");
-            revert();
-        }
-        uint256 faucetBalance = _METoken.balanceOf(naiveFaucet);
-        console.log("Faucet balance:", faucetBalance);
-        vm.stopBroadcast();
-    }
+    METoken public _METoken = METoken(0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512);
+    address naiveFaucet = 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0;
+    function run() public {
+        vm.startBroadcast();
+        uint256 amountToSend = 100e18;
+        bool success = _METoken.transfer(naiveFaucet, amountToSend);
+        if (success) {
+            console.log("Transfer successful");
+        } else {
+            console.log("Transfer failed");
+            revert();
+        }
+        uint256 faucetBalance = _METoken.balanceOf(naiveFaucet);
+        console.log("Faucet balance:", faucetBalance);
+        vm.stopBroadcast();
+    }
 }
 ```
 
-We can run it with:
+我们可以使用以下命令运行它：
 
 ```bash
-$ forge script script/METokenSend.s.sol --private-key <DEPLOYER_PRIVATE_KEY>
+$ forge script script/METokenSend.s.sol --private-key <部署者_私钥>
 --rpc-url "http://127.0.0.1:8545" -vv
-[⁘] Compiling...
-[:] Compiling 1 files with Solc 0.8.28
-[⁖] Solc 0.8.28 finished in 413.41ms
-Compiler run successful!
-Script ran successfully.
-== Logs ==
-  Transfer successful
-  Faucet balance: 100000000000000000000
+[⁘] 编译中...
+[:] 使用 Solc 0.8.28 编译 1 个文件
+[⁖] Solc 0.8.28 在 413.41ms 内完成
+编译器运行成功!
+脚本运行成功。
+== 日志 ==
+  转移成功
+  Faucet 余额: 100000000000000000000
 ```
 
-Again, we need to use the deployer private key to make it work as that is the address that initiates the transfer.
+同样，我们需要使用部署者的私钥使其工作，因为这是启动转移的地址。
 
-We have transferred 100 MET to the `NaiveFaucet` contract. Now, how do we withdraw those tokens?
+我们已经将 100 MET 转移到 `NaiveFaucet` 合约。现在，我们如何提取这些代币？
 
-Remember, *NaiveFaucet.sol* is a pretty simple contract. It only has one function, `withdraw`, which is for withdrawing *ether*. It doesn’t have a function for withdrawing MET or any other ERC-20 token. If we use `withdraw`, it will try to send ether, but since `NaiveFaucet` doesn’t have a balance of ether yet, it will fail.
+请记住，*NaiveFaucet.sol* 是一个非常简单的合约。它只有一个函数 `withdraw`，用于提取 *ether*。它没有用于提取 MET 或任何其他 ERC-20 代币的函数。如果我们使用 `withdraw`，它将尝试发送 ether，但由于 `NaiveFaucet` 还没有 ether 的余额，它将失败。
 
-The `METoken` contract knows that `NaiveFaucet` has a balance, but the only way it can transfer that balance is if it receives a `transfer` call from the address of the contract. Somehow, we need to make the `NaiveFaucet` contract call the `transfer` function in `METoken`.
+`METoken` 合约知道 `NaiveFaucet` 有余额，但转移该余额的唯一方法是它收到来自合约地址的 `transfer` 调用。在某种程度上，我们需要使 `NaiveFaucet` 合约调用 `METoken` 中的 `transfer` 函数。
 
-If you’re wondering what to do next, don’t. There is no solution to this problem. The MET sent to `NaiveFaucet` is stuck, forever. Only the `NaiveFaucet` contract can transfer it, and the `NaiveFaucet` contract doesn’t have code to call the `transfer` function of an ERC-20 token contract.
+如果您想知道接下来该做什么，请不要。这个问题没有解决方案。发送到 `NaiveFaucet` 的 MET 被卡住，永远卡住了。只有 `NaiveFaucet` 合约可以转移它，而 `NaiveFaucet` 合约没有代码来调用 ERC-20 代币合约的 `transfer` 函数。
 
-Perhaps you anticipated this problem. Most likely, you didn’t. In fact, neither did hundreds of Ethereum users who accidentally transferred various tokens to contracts that didn’t have any ERC-20 capability. Over the years, a staggering amount of millions of dollars has gotten “stuck” like this and is lost forever.
+也许您预料到了这个问题。很可能，你没有。事实上，成百上千的 Ethereum 用户也没有，他们不小心将各种代币转移到没有任何 ERC-20 功能的合约中。多年来，惊人的数百万美元像这样“卡住”并且永远丢失。
 
-#### Demonstrating the “approve and transferFrom” workflow
+#### 演示 “approve and transferFrom” 工作流
 
-Our `NaiveFaucet` contract couldn’t handle ERC-20 tokens. Sending tokens to it using the `transfer` function resulted in the loss of those tokens. Let’s rewrite the contract now and make it handle ERC-20 tokens. Specifically, we will turn it into a faucet that gives out MET to anyone who asks.
+我们的 `NaiveFaucet` 合约无法处理 ERC-20 代币。使用 `transfer` 函数将代币发送到它导致这些代币丢失。现在让我们重写合约，使其处理 ERC-20 代币。具体来说，我们将把它变成一个 faucet，向任何需要的人赠送 MET。
 
-Our new faucet contract, *METFaucet.sol*, will look like Example 10-2.
+我们的新 faucet 合约 *METFaucet.sol* 将如例 10-2 所示。
 
-**Example 10-2. METFaucet.sol: A faucet for METoken**
+**例 10-2. METFaucet.sol：METoken 的 faucet**
 
 ```solidity
 pragma solidity 0.8.28;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract METFaucet {
-    IERC20 public _METoken;
-    address public _METOwner;
-    constructor(address _metokenAddress, address metOwner) {
-        _METoken = IERC20(_metokenAddress);
-        _METOwner = metOwner;
-    }
-    // Function to withdraw METoken from the contract
-    function withdraw(uint256 amount) public {
-        require(amount <= 10e18, "At most 10 MET");
-        require(_METoken.transferFrom(_METOwner, msg.sender, amount), "Transfer failed");
-    }
+    IERC20 public _METoken;
+    address public _METOwner;
+    constructor(address _metokenAddress, address metOwner) {
+        _METoken = IERC20(_metokenAddress);
+        _METOwner = metOwner;
+    }
+    // Function to withdraw METoken from the contract
+    // 从合约中提取 METoken 的函数
+    function withdraw(uint256 amount) public {
+        require(amount <= 10e18, "最多 10 MET");
+        require(_METoken.transferFrom(_METOwner, msg.sender, amount), "转移失败");
+    }
 }
 ```
 
-We’ve made quite a few changes to the basic `Faucet` example. Since `METFaucet` will use the `transferFrom` function in `METoken`, it will need two additional variables. One will hold the address of the `METoken` contract. The other will hold the address of the owner of the MET, who will approve the faucet withdrawals. In our case, the owner is the deployer since they received the initial supply. The `METFaucet` contract will call `METoken.transferFrom` and instruct it to move MET from the owner to the address where the faucet withdrawal request came from.
+我们对基本的 `Faucet` 示例进行了一些更改。由于 `METFaucet` 将使用 `METoken` 中的 `transferFrom` 函数，因此它需要两个额外的变量。一个将保存 `METoken` 合约的地址。另一个将保存 MET 所有者的地址，他们将批准 faucet 提款。在我们的例子中，所有者是部署者，因为他们收到了初始供应。`METFaucet` 合约将调用 `METoken.transferFrom` 并指示它将 MET 从所有者移动到 faucet 提款请求来自的地址。
 
-We declare these two variables here:
+我们在这里声明这两个变量：
 
 ```solidity
 IERC20 public _METoken;
 address public _METOwner;
 ```
 
-Since our faucet needs to be initialized with the correct addresses for `METoken` and `METOwner`, we need to declare a custom constructor:
+由于我们的 faucet 需要使用 `METoken` 和 `METOwner` 的正确地址进行初始化，因此我们需要声明一个自定义构造函数：
 
 ```solidity
 // METFaucet constructor - provide the address of the METoken contract and
+// METFaucet 构造函数 - 提供 METoken 合约的地址和
 // the owner address we will be approved to transferFrom
+// 我们将被批准从其转移的所有者地址
 constructor(address _metokenAddress, address metOwner) {
-    _METoken = IERC20(_metokenAddress);
-    _METOwner = metOwner;
+    _METoken = IERC20(_metokenAddress);
+    _METOwner = metOwner;
 }
 ```
 
-The next change is to the `withdraw` function. Instead of calling `transfer`, `METFaucet` uses the `transferFrom` function in `METoken` and asks `METoken` to transfer MET to the faucet recipient:
+下一个更改是 `withdraw` 函数。`METFaucet` 不调用 `transfer`，而是使用 `METoken` 中的 `transferFrom` 函数，并要求 `METoken` 将 MET 转移到 faucet 接收者：
 
 ```solidity
 // Use the transferFrom function of METoken
+// 使用 METoken 的 transferFrom 函数
 _METoken.transferFrom(metOwner, msg.sender, withdraw_amount);
 ```
 
-Finally, since our faucet no longer sends ether, we should probably prevent anyone from sending ether to `METFaucet` since we wouldn’t want it to get stuck. To reject incoming ether, it suffices to remove the `receive` function from our contract.
+最后，由于我们的 faucet 不再发送 ether，我们可能应该阻止任何人向 `METFaucet` 发送 ether，因为我们不希望它被卡住。为了拒绝传入的 ether，只需从我们的合约中删除 `receive` 函数即可。
 
-Now that our *METFaucet.sol* code is ready, we can deploy it by providing the MET token address and its deployer as address parameters:
+现在我们的 *METFaucet.sol* 代码已准备就绪，我们可以通过提供 MET 代币地址及其部署者作为地址参数来部署它：
 
 ```bash
 $ forge create METFaucet --broadcast --rpc-url http://localhost:8545 --private-key
-<DEPLOYER_PRIVATE_KEY> --constructor-args
+<部署者_私钥> --constructor-args
 "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512""0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-[⁘] Compiling...
-No files changed, compilation skipped
-Deployer: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
-Deployed to: 0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9
-Transaction hash: 0xa8bfbde9489ee40d41328a80538d0d3e7778b7f3b896c1d51897bf85bb25cec2
+[⁘] 编译中...
+没有文件更改，跳过编译
+部署者: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+已部署到: 0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9
+交易哈希: 0xa8bfbde9489ee40d41328a80538d0d3e7778b7f3b896c1d51897bf85bb25cec2
 ```
 
-The `METFaucet` contract has been deployed to `0xCf7Ed3AccA5a467e9e704C703E​8D87F634fB0Fc9`, and we are almost ready to test it. First let’s write a *METApprove.s.sol* script to allow the `METFaucet` contract to spend the owner’s MET tokens:
+`METFaucet` 合约已部署到 `0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9`，我们几乎准备好测试它了。首先，让我们编写一个 *METApprove.s.sol* 脚本，以允许 `METFaucet` 合约花费所有者的 MET 代币：
 
 ```solidity
 pragma solidity 0.8.28;
 import {Script, console} from "forge-std/Script.sol";
 import {METoken} from "../src/METoken.sol";
 contract METApprove is Script {
-    METoken public _METoken = METoken(0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512);
-    address _METFaucet = 0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9;
-    function run() public {
-        vm.startBroadcast();
-        bool success = _METoken.approve(_METFaucet, type(uint256).max);
-        if (success) {
-            console.log("Approve successful");
-        } else {
-            console.log("Approve failed");
-            revert();
-        }
-        vm.stopBroadcast();
-    }
+    METoken public _METoken = METoken(0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512);
+    address _METFaucet = 0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9;
+    function run() public {
+        vm.startBroadcast();
+        bool success = _METoken.approve(_METFaucet, type(uint256).max);
+        if (success) {
+            console.log("Approve successful");
+        } else {
+            console.log("Approve failed");
+            revert();
+        }
+        vm.stopBroadcast();
+    }
 }
 ```
 
-We can run it with:
+我们可以使用以下命令运行它：
 
 ```bash
-$ forge script script/METApprove.s.sol --broadcast --private-key <DEPLOYER_PRIVATE_KEY>
+$ forge script script/METApprove.s.sol --broadcast --private-key <部署者_私钥>
 --rpc-url "http://127.0.0.1:8545" -vv
-[⠊] Compiling...
-[⠰] Compiling 2 files with Solc 0.8.28
-[⠔] Solc 0.8.28 finished in 327.90ms
-Compiler run successful!
-Script ran successfully.
-== Logs ==
-  Approve successful
+[⠊] 编译中...
+[⠰] 使用 Solc 0.8.28 编译 2 个文件
+[⠔] Solc 0.8.28 在 327.90ms 内完成
+编译器运行成功!
+脚本运行成功。
+== 日志 ==
+  批准成功
 ```
 
-Now, we can write a script to let a secondary address interact with the `METFaucet` contract to withdraw 10 MET tokens and log its balance before and after the operation. Let’s create a *METFaucetWithdraw.s.sol* script as in Example 10-3.
+现在，我们可以编写一个脚本，让辅助地址与 `METFaucet` 合约交互，以提取 10 个 MET 代币，并在操作前后记录其余额。让我们创建一个如示例 10-3 所示的 *METFaucetWithdraw.s.sol* 脚本。
 
-**Example 10-3. METFaucetWithdraw: a faucet withdrawal script**
+**示例 10-3. METFaucetWithdraw: faucet 提款脚本**
 
 ```solidity
 pragma solidity 0.8.28;
@@ -648,282 +638,254 @@ import {Script, console} from "forge-std/Script.sol";
 import {METoken} from "../src/METoken.sol";
 import {METFaucet} from "../src/METFaucet.sol";
 contract METFaucetWithdraw is Script {
-    METoken public _METoken = METoken(0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512);
-    METFaucet public _METFaucet = METFaucet(0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9);
-    function run() public {
-        vm.startBroadcast();
-       uint256 balanceBefore = _METoken.balanceOf(msg.sender);
-       console.log("Alice balance before:", balanceBefore);
-       _METFaucet.withdraw(10e18);
-       uint256 balanceAfter = _METoken.balanceOf(msg.sender);
-       console.log("Alice balance after:", balanceAfter);
-        vm.stopBroadcast();
-    }
+    METoken public _METoken = METoken(0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512);
+    METFaucet public _METFaucet = METFaucet(0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9);
+    function run() public {
+        vm.startBroadcast();
+       uint256 balanceBefore = _METoken.balanceOf(msg.sender);
+       console.log("Alice balance before:", balanceBefore);
+       _METFaucet.withdraw(10e18);
+       uint256 balanceAfter = _METoken.balanceOf(msg.sender);
+       console.log("Alice balance after:", balanceAfter);
+        vm.stopBroadcast();
+    }
 }
 ```
 
-We can now run this script from Alice’s address by providing her private key while running the script:
+我们现在可以通过在运行脚本时提供 Alice 的私钥来从 Alice 的地址运行此脚本：
 
 ```bash
-$ forge script script/METFaucetWithdraw.s.sol --broadcast --private-key <ALICE_PRIVATE_KEY>
+$ forge script script/METFaucetWithdraw.s.sol --broadcast --private-key <ALICE_私钥>
 --rpc-url "http://127.0.0.1:8545" -vv
-[⠊] Compiling...
-[⠰] Compiling 1 files with Solc 0.8.28
-[⠔] Solc 0.8.28 finished in 330.97ms
-Compiler run successful!
-Script ran successfully.
-== Logs ==
-  Alice balance before: 0
-  Alice balance after: 10000000000000000000
+[⠊] 编译中...
+[⠰] 使用 Solc 0.8.28 编译 1 个文件
+[⠔] Solc 0.8.28 在 330.97ms 内完成
+编译器运行成功!
+脚本运行成功。
+== 日志 ==
+  Alice 之前的余额: 0
+  Alice 之后的余额: 10000000000000000000
 ```
 
-As you can see from the results, we can use the `approve` and `transferFrom` workflow to authorize one contract to transfer tokens defined in another token. If properly used, ERC-20 tokens can be used by EOAs and other contracts. However, the burden of managing ERC-20 tokens correctly is pushed to the user interface. If a user incorrectly attempts to transfer ERC-20 tokens to a contract address and that contract is not equipped to receive ERC-20 tokens, the tokens will be lost.
+正如您从结果中看到的那样，我们可以使用 `approve` 和 `transferFrom` 工作流来授权一个合约转移在另一个代币中定义的代币。如果使用得当，ERC-20 代币可以被 EOA 和其他合约使用。但是，正确管理 ERC-20 代币的负担被推到了用户界面。如果用户错误地尝试将 ERC-20 代币转移到合约地址，并且该合约没有配备接收 ERC-20 代币的功能，则代币将丢失。
 
-### Issues with ERC-20 Tokens
+### ERC-20 代币的问题
 
-The adoption of the ERC-20 token standard has been truly explosive. Thousands of tokens have been launched, both to experiment with the new capabilities and to raise funds in various “crowdfunding” auctions and ICOs. However, there are some potential pitfalls, as we saw with the issue of transferring tokens to contract addresses.
+ERC-20 代币标准的采用确实具有爆炸性。已经启动了数千个代币，既可以试验新功能，也可以在各种“众筹”拍卖和 ICO 中筹集资金。但是，正如我们在将代币转移到合约地址的问题中所看到的那样，存在一些潜在的陷阱。
 
-One of the less obvious issues with ERC-20 tokens is that they expose subtle differences between tokens and ether itself. Whereas ether is transferred by a transaction that has a recipient address as its destination, token transfers occur within the *specific token contract state* and have the token contract as their destination, not the recipient’s address. The token contract tracks balances and issues events. In a token transfer, no transaction is actually sent to the recipient of the token. Instead, the recipient’s address is added to a mapping within the token contract itself. A transaction sending ether to an address changes the state of an address. A transaction transferring a token to an address only changes the state of the token contract, not the state of the recipient address. Even a wallet that has support for ERC-20 tokens does not become aware of a token balance unless the user explicitly adds a specific token contract to “watch.” Some wallets watch the most popular token contracts to detect balances held by addresses they control, but that’s limited to a small fraction of existing ERC-20 contracts.
+ERC-20 代币不太明显的问题之一是，它们暴露了代币和 ether 本身之间的细微差异。当 ether 通过以接收者地址作为其目的地的交易转移时，代币转移发生在*特定的代币合约状态*中，并将代币合约作为其目的地，而不是接收者的地址。代币合约跟踪余额并发出事件。在代币转移中，实际上没有交易发送给代币的接收者。相反，接收者的地址被添加到代币合约本身内的映射中。将 ether 发送到地址的交易会更改地址的状态。将代币转移到地址的交易只会更改代币合约的状态，而不会更改接收者地址的状态。即使具有 ERC-20 代币支持的钱包也不会意识到代币余额，除非用户显式添加特定的代币合约以“监视”。一些钱包会监视最受欢迎的代币合约，以检测它们控制的地址持有的余额，但这仅限于现有 ERC-20 合约的一小部分。
 
-In fact, it’s unlikely that a user would *want* to track all balances in all possible ERC-20 token contracts. Many ERC-20 tokens are more like email spam than usable tokens. They automatically create balances for accounts that have ether activity in order to attract users. If you have an Ethereum address with a long history of activity, especially if it was created in the presale, you will find it full of “junk” tokens that appeared out of nowhere. Of course, the address isn’t really full of tokens; it’s the token contracts that have your address in them. You only see these balances if these token contracts are being watched by the block explorer or wallet you use to view your address.
+事实上，用户不太可能*想要*跟踪所有可能的 ERC-20 代币合约中的所有余额。许多 ERC-20 代币更像是电子邮件垃圾邮件，而不是可用的代币。它们自动为具有 ether 活动的帐户创建余额，以吸引用户。如果您有一个具有长期活动历史的 Ethereum 地址，尤其是在预售中创建的地址，您会发现它充满了凭空出现的“垃圾”代币。当然，该地址实际上并没有充满代币；而是代币合约中有您的地址。您只有在区块浏览器或您用于查看地址的钱包正在监视这些代币合约时才能看到这些余额。
 
-Tokens don’t behave the same way as ether. Ether is sent with the `send` function and accepted by any payable function in a contract or any externally owned address. Tokens are sent using the `transfer` or `approve` and `transferFrom` functions that exist only in the ERC-20 contract and do not (at least in ERC-20) trigger any payable functions in a recipient contract. Tokens are meant to function just like a cryptocurrency such as ether, but they come with certain differences that break that illusion.
+代币的行为方式与 ether 不同。Ether 使用 `send` 函数发送，并被合约中的任何可支付函数或任何外部拥有的地址接受。代币使用仅存在于 ERC-20 合约中的 `transfer` 或 `approve` 和 `transferFrom` 函数发送，并且不（至少在 ERC-20 中）触发接收者合约中的任何可支付函数。代币旨在像 ether 这样的加密货币一样运作，但它们带有一些打破这种错觉的差异。
 
-Let’s focus on the `approve` and `transferFrom` pattern. For newer users, the `approve`-`transferFrom` system can be especially misleading. Many assume that transferring tokens is a single operation, so encountering a two-step process feels confusing and counterintuitive. Worse, the `approve` action seems harmless but can be a trap. When users approve a contract, they might unknowingly grant unlimited permissions, allowing malicious actors to drain their tokens later. This gap in understanding makes phishing attacks easier and highlights how the system’s design doesn’t align with how newcomers expect to interact with the blockchain.
+让我们关注 `approve` 和 `transferFrom` 模式。对于较新的用户，`approve`-`transferFrom` 系统可能特别具有误导性。许多人认为转移代币是一个单一的操作，因此遇到一个两步式过程会感到困惑和违反直觉。更糟糕的是，`approve` 操作看起来无害但可能是一个陷阱。当用户批准合约时，他们可能会在不知不觉中授予无限权限，从而允许恶意行为者稍后耗尽他们的代币。这种理解上的差距使网络钓鱼攻击更容易，并突出了系统的设计如何与新手期望与区块链交互的方式不符。
 
-Consider another issue. To send ether or use any Ethereum contract, you need ether to pay for gas. To send tokens, you *also need ether*. You cannot pay for a transaction’s gas with a token, and the token contract can’t pay for the gas for you. For example, let’s say you use an exchange to convert some Bitcoin to a token. You “receive” the token in a wallet that tracks that token’s contract and shows your balance. It looks the same as any of the other cryptocurrencies you have in your wallet. Try sending the token, though, and your wallet will inform you that you need ether to do that. You might be confused—after all, you didn’t need ether to receive the token. Perhaps you have no ether. Perhaps you didn’t even know the token was an ERC-20 token on Ethereum; maybe you thought it was a cryptocurrency with its own blockchain. The illusion just broke.
+考虑另一个问题。要发送 ether 或使用任何 Ethereum 合约，您需要 ether 来支付 gas。要发送代币，您*也需要 ether*。您不能使用代币支付交易的 gas，并且代币合约无法为您支付 gas。例如，假设您使用交易所将一些 Bitcoin 转换为代币。您在跟踪该代币合约并显示您的余额的钱包中“收到”该代币。它看起来与您钱包中的任何其他加密货币相同。尝试发送该代币，但您的钱包会通知您需要 ether 才能这样做。您可能会感到困惑——毕竟，您不需要 ether 才能收到该代币。也许您没有 ether。也许您甚至不知道该代币是 Ethereum 上的 ERC-20 代币；也许您认为它是一种具有自己区块链的加密货币。这个错觉破灭了。
 
-We can partially address this issue with ERC-2612’s `permit` function and the gas fee sponsorship functionality offered by smart wallets like EIP-4337 and EIP-7702. ERC-2612 lets you approve token allowances by signing off-chain messages, skipping the need for the on-chain approval transaction. EIP-4337 and other smart wallet architectures let third parties pay your gas fees in exchange for reimbursement in ERC-20 tokens. The challenge lies in the limited adoption of ERC-2612 among tokens and the lack of widespread use of smart wallets.
+我们可以使用 ERC-2612 的 `permit` 函数以及智能钱包（如 EIP-4337 和 EIP-7702）提供的 gas 费用赞助功能来部分解决此问题。ERC-2612 允许您通过签署链下消息来批准代币授权，从而跳过链上批准交易的需要。EIP-4337 和其他智能钱包架构允许第三方支付您的 gas 费用，以换取 ERC-20 代币的报销。挑战在于代币中对 ERC-2612 的采用有限以及智能钱包缺乏广泛使用。
 
-Some of these issues are specific to ERC-20 tokens. Others are more general issues that relate to abstraction and interface boundaries within Ethereum. Some can be solved by changing the token interface, while others may need changes to fundamental structures within Ethereum (such as the distinctions between EOAs and contracts and between transactions and messages). Some may not be “solvable” exactly and may require user interface design to hide the nuances and make the user experience consistent regardless of the underlying distinctions.
+这些问题中的一些是 ERC-20 代币特有的。其他问题是与 Ethereum 中抽象和接口边界相关的更普遍的问题。一些问题可以通过更改代币接口来解决，而另一些问题可能需要更改 Ethereum 中的基本结构（例如 EOA 和合约之间以及交易和消息之间的区别）。一些问题可能无法完全“解决”，可能需要用户界面设计来隐藏细微差别并使用户体验保持一致，而不管底层的区别如何。
 
-In the following sections, we will look at various proposals that attempt to address some of these issues.
+在以下各节中，我们将研究尝试解决其中一些问题的各种提案。
 
-### ERC-223: A proposed token contract interface standard
+### ERC-223：一种提议的代币合约接口标准
 
-The ERC-223 proposal attempts to solve the problem of inadvertent transfer of tokens to a contract (that may or may not support tokens) by detecting whether the destination address is a contract or not. ERC-223 requires that contracts designed to accept tokens implement a function named `tokenFallback`. If the destination of a transfer is a contract and the contract does not have support for tokens (i.e., does not implement `tokenFallback`), the transfer fails.
+ERC-223 提案试图通过检测目标地址是否为合约来解决无意中将代币转移到合约（可能支持或不支持代币）的问题。ERC-223 要求设计为接受代币的合约实现一个名为 `tokenFallback` 的函数。如果转移的目标是一个合约，并且该合约不支持代币（即不实现 `tokenFallback`），则转移失败。
 
-To detect whether the destination address is a contract, the ERC-223 reference implementation uses a small segment of inline bytecode in a rather creative way:
+为了检测目标地址是否为合约，ERC-223 参考实现以相当有创意的方式使用了内联字节码的一小段：
 
 ```solidity
 function isContract(address _addr) private view returns (bool is_contract) {
-  uint256 length;
-    assembly {
-       // retrieve the size of the code on target address; this needs assembly
-       length := extcodesize(_addr)
-    }
-    return (length>0);
+  uint256 length;
+    assembly {
+      // retrieve the size of the code on target address; this needs assembly
+      // 检索目标地址上的代码大小；这需要汇编
+      length := extcodesize(_addr)
+    }
+    return (length>0);
 }
 ```
 
-> **Note**
+> **注意**
 >
-> `extcodesize` returns the size of the bytecode stored at a given address. Historically, this was the main difference between EOAs and smart contracts: EOAs had no code, and contracts did. But that assumption no longer holds. With EIP-7702, EOAs can now have code attached, blurring the line entirely.
-> There’s also an important edge case: during the constructor phase of a contract, its code has not yet been stored on chain. The EVM only writes the contract’s bytecode to the address after the constructor finishes executing. So if you call `extcodesize` on a contract’s own address from within its constructor (or on another contract that hasn’t finished deploying), it will return `0`, even though that address will eventually contain code. As a result, if an address has no code, it could be an EOA or a contract still under construction. And if it does have code, it could be either a deployed contract or an EOA using a custom code payload. In short, this check no longer reliably tells us whether an address is a contract.
+> `extcodesize` 返回存储在给定地址的字节码的大小。从历史上看，这是 EOA 和智能合约之间的主要区别：EOA 没有代码，而合约有代码。但该假设不再成立。使用 EIP-7702，EOA 现在可以附加代码，从而完全模糊了界限。
+> 还有一个重要的边缘情况：在合约的构造函数阶段，其代码尚未存储在链上。EVM 仅在构造函数完成执行后才将合约的字节码写入地址。因此，如果您从其构造函数（或尚未完成部署的另一个合约）中调用合约自身地址上的 `extcodesize`，它将返回 `0`，即使该地址最终将包含代码。因此，如果一个地址没有代码，它可能是一个 EOA 或一个仍在构建中的合约。如果它确实有代码，它可能是一个已部署的合约或一个使用自定义代码有效载荷的 EOA。简而言之，此检查不再能可靠地告诉我们地址是否为合约。
 
-The ERC-223 contract-interface specification is:
+ERC-223 合约接口规范是：
 
 ```solidity
 interface ERC223Token {
-  uint256 public totalSupply;
-  function balanceOf(address who) public view returns (uint256);
-  function name() public view returns (string _name);
-  function symbol() public view returns (string _symbol);
-  function decimals() public view returns (uint8 _decimals);
-  function totalSupply() public view returns (uint256 _supply);
-  function transfer(address to, uint256 value) public returns (bool success);
-  function transfer(address to, uint256 value, bytes data) public returns (bool success);
-  function transfer(address to, uint256 value, bytes data, string custom_fallback)
-      public returns (bool success);
-  event Transfer(address indexed from, address indexed to, uint256 value,
-                 bytes indexed data);
+  uint256 public totalSupply;
+  function balanceOf(address who) public view returns (uint256);
+  function name() public view returns (string _name);
+  function symbol() public view returns (string _symbol);
+  function decimals() public view returns (uint8 _decimals);
+  function totalSupply() public view returns (uint256 _supply);
+  function transfer(address to, uint256 value) public returns (bool success);
+  function transfer(address to, uint256 value, bytes data) public returns (bool success);
+  function transfer(address to, uint256 value, bytes data, string custom_fallback)
+      public returns (bool success);
+  event Transfer(address indexed from, address indexed to, uint256 value,
+                  bytes indexed data);
 }
 ```
 
-ERC-223 is not widely implemented, and there is some debate in the [ERC discussion thread](https://oreil.ly/iguyT) about backward compatibility and trade-offs between implementing changes at the contract interface level versus the user interface. The debate continues.
+ERC-223 没有得到广泛实施，并且在 [ERC 讨论线程](https://oreil.ly/iguyT) 中对于在合约接口级别还是用户界面级别实施更改之间的向后兼容性和权衡有一些争论。争论仍在继续。
 
-### ERC-777: The future that could have been
+### ERC-777：本可能实现的未来
 
-ERC-777 brings a fresh approach to token interactions by introducing *hooks*: functions triggered during token transfers. These hooks are fully compatible with ERC-20, ensuring that existing systems can interact with ERC-777 tokens seamlessly.
+ERC-777 通过引入*挂钩*为代币交互带来了一种新的方法：在代币转移期间触发的函数。这些挂钩与 ERC-20 完全兼容，确保现有系统可以无缝地与 ERC-777 代币交互。
 
-The sender’s hook, `tokensToSend`, is executed before tokens leave the account, allowing senders to add logic like logging or conditional checks. On the other hand, the receiver’s hook, `tokensReceived`, springs into action when tokens land in an account. At the core of ERC-777’s hook architecture is the ERC-1820 registry, which keeps track of which addresses have implemented the required hooks: `tokensToSend` for senders and `tokensReceived` for recipients. This ensures that transfers are successful only when both parties are prepared to handle them, preventing common issues like lost tokens.
+发送者的挂钩 `tokensToSend` 在代币离开帐户之前执行，允许发送者添加逻辑，如日志记录或条件检查。另一方面，接收者的挂钩 `tokensReceived` 在代币到达帐户时会立即生效。ERC-777 挂钩架构的核心是 ERC-1820 注册表，它记录了哪些地址实现了所需的挂钩：发送者的 `tokensToSend` 和接收者的`tokensReceived`。这确保了仅当双方都准备好处理转移时，转移才会成功，从而防止了常见的代币丢失等问题。
 
-Hooks also simplify transactions. With ERC-20, transferring tokens to a contract often requires a cumbersome two-step process: `approve` and then `transferFrom`. ERC-777 does away with that, allowing atomic transactions through its hooks. It’s efficient, intuitive, and, frankly, overdue.
+挂钩还简化了交易。对于 ERC-20，将代币转移到合约通常需要一个繁琐的两步式过程：`approve`，然后是 `transferFrom`。ERC-777 取消了这一点，允许通过其挂钩进行原子交易。它高效、直观，而且坦率地说，早就该这样做了。
 
-Another interesting feature of ERC-777 is its operator mechanism, which allows authorized addresses—often smart contracts, such as exchanges or payment processors—to send and burn tokens on behalf of a holder. Holders have the ability to grant or withdraw authorization for operators whenever they choose, giving them full control over which third parties can manage their tokens on their behalf at any given moment. Every authorization or revocation emits an event, providing visibility into authorization changes.
+ERC-777 的另一个有趣的功能是其运营商机制，该机制允许授权地址（通常是智能合约，如交易所或支付处理器）代表持有人发送和销毁代币。持有人可以随时授予或撤回对运营商的授权，让他们完全控制哪些第三方可以在任何给定时刻管理他们的代币。每个授权或撤销都会发出一个事件，从而提供授权更改的可见性。
 
-The ERC-777 contract interface specification is:
+ERC-777 合约接口规范是：
 
 ```solidity
 interface ERC777Token {
-    function name() public view returns (string);
-    function symbol() public view returns (string);
-    function totalSupply() public view returns (uint256);
-    function granularity() public view returns (uint256);
-    function balanceOf(address owner) public view returns (uint256);
-    function send(address to, uint256 amount, bytes userData) public;
-    function authorizeOperator(address operator) public;
-    function revokeOperator(address operator) public;
-    function isOperatorFor(address operator, address tokenHolder)
-        public constant returns (bool);
-    function operatorSend(address from, address to, uint256 amount,
-                          bytes userData,bytes operatorData) public;
-    event Sent(address indexed operator, address indexed from,
-               address indexed to, uint256 amount, bytes userData,
-               bytes operatorData);
-    event Minted(address indexed operator, address indexed to,
-                 uint256 amount, bytes operatorData);
-    event Burned(address indexed operator, address indexed from,
-                 uint256 amount, bytes userData, bytes operatorData);
-    event AuthorizedOperator(address indexed operator,
-                             address indexed tokenHolder);
-    event RevokedOperator(address indexed operator, address indexed tokenHolder);
+    function name() public view returns (string);
+    function symbol() public view returns (string);
+    function totalSupply() public view returns (uint256);
+    function granularity() public view returns (uint256);
+    function balanceOf(address owner) public view returns (uint256);
+    function send(address to, uint256 amount, bytes userData) public;
+    function authorizeOperator(address operator) public;
+    function revokeOperator(address operator) public;
+    function isOperatorFor(address operator, address tokenHolder)
+        public constant returns (bool);
+    function operatorSend(address from, address to, uint256 amount,
+                         bytes userData,bytes operatorData) public;
+    event Sent(address indexed operator, address indexed from,
+                 address indexed to, uint256 amount, bytes userData,
+                 bytes operatorData);
+    event Minted(address indexed operator, address indexed to,
+                  uint256 amount, bytes operatorData);
+    event Burned(address indexed operator, address indexed from,
+                  uint256 amount, bytes userData, bytes operatorData);
+    event AuthorizedOperator(address indexed operator,
+                                 address indexed tokenHolder);
+    event RevokedOperator(address indexed operator, address indexed tokenHolder);
 }
 ```
 
-#### Issues with ERC-777 tokens
+#### ERC-777 代币的问题
 
-While ERC-777 makes token interactions more intuitive, its hooks introduce some significant challenges—most notably, the risk of reentrancy attacks. These attacks take advantage of a contract’s ability to reenter its own logic before fully updating its state, often resulting in severe consequences. The very nature of ERC-777 hooks, which pass execution control to both the sender and receiver during a token transfer, creates an ideal scenario for such exploits. This design means developers must handle these hooks carefully to avoid vulnerabilities.
+虽然 ERC-777 使代币交互更加直观，但它的挂钩引入了一些重大的挑战——最值得注意的是，重入攻击的风险。这些攻击利用了合约在完全更新其状态之前重新进入其自身逻辑的能力，通常会导致严重的后果。ERC-777 挂钩的本质是在代币转移期间将执行控制权传递给发送者和接收者，这为这种漏洞创造了一个理想的场景。这意味着开发人员必须小心处理这些挂钩，以避免漏洞。
 
-The most infamous case of reentrancy caused by ERC-777 tokens integration was the Uniswap v1 incident in April 2020. Uniswap, a decentralized exchange protocol, inadvertently exposed its reserves to exploitation due to ERC-777’s hooks. Attackers could call back into the Uniswap contract mid-operation, exploiting the discrepancy between token and ether reserves to siphon out funds. While this vulnerability was specific to how Uniswap interacted with ERC-777, it’s a stark reminder of the risks these hooks introduce.
+由 ERC-777 代币集成引起的重入最臭名昭著的案例是 2020 年 4 月的 Uniswap v1 事件。Uniswap 是一种去中心化交换协议，由于 ERC-777 的挂钩，无意中将其储备暴露于利用。攻击者可以在操作中途回调到 Uniswap 合约，从而利用代币和 ether 储备之间的差异来提取资金。虽然此漏洞特定于 Uniswap 与 ERC-777 的交互方式，但它清楚地提醒了这些挂钩引入的风险。
 
-Another issue worth noting is the potential for DoS attacks. Let’s say a contract distributes ERC-777 tokens to multiple accounts. If one of the recipients is a malicious contract programmed to revert the transaction during the `tokensReceived` hook, the entire distribution process would be prevented.
+另一个值得注意的问题是 DoS 攻击的可能性。假设一个合约将 ERC-777 代币分发给多个帐户。如果其中一个接收者是恶意合约，该合约被编程为在 `tokensReceived` 挂钩期间恢复交易，则整个分发过程将被阻止。
 
-These risks highlight why integrating ERC-777 isn’t as simple as swapping out ERC-20. Developers need to adopt best practices like relying on reentrancy locks to mitigate vulnerabilities.
+这些风险突出了为什么集成 ERC-777 并不像交换 ERC-20 那么简单。开发人员需要采用最佳实践，例如依赖重入锁来缓解漏洞。
 
-#### The future that could have been
+#### 本可能实现的未来
 
-ERC-777 could have been the next evolution of Ethereum’s token standard. It addresses many pain points of ERC-20, particularly around the user experience and token handling. The ability to prevent lost tokens, enable atomic transactions, and build richer contract interactions are all compelling advancements.
+ERC-777 本可能成为 Ethereum 代币标准的下一个演变。它解决了 ERC-20 的许多痛点，尤其是在用户体验和代币处理方面。防止代币丢失、启用原子交易以及构建更丰富的合约交互的能力都是引人注目的进步。
 
-The Ethereum community, however, became hesitant. The potential DoS and reentrancy scenarios cast a long shadow. Developers feared the complexities and risks of integrating ERC-777, even though those risks are manageable with the right precautions. Instead of rising to the challenge, we stuck with the familiar but limited ERC-20. It’s a missed opportunity to embrace a standard that aligns tokens more closely with Ethereum’s philosophy while offering superior functionality.
+然而，Ethereum 社区变得犹豫不决。潜在的 DoS 和重入场景投下了长长的阴影。开发人员担心集成 ERC-777 的复杂性和风险，即使这些风险可以通过正确的预防措施来管理。我们没有迎接挑战，而是坚持使用熟悉但有限的 ERC-20。这是一个错失的机会，无法采用一种使代币更接近 Ethereum 理念的标准，同时提供卓越的功能。
 
-In the end, ERC-777’s hooks aren’t the villain; improper implementation is. With a bit of effort and adherence to secure coding practices, ERC-777 could pave the way for a more seamless Ethereum ecosystem. To further research the matter, a suggested read is the [discussion on the deprecation of ERC-777](https://oreil.ly/J4p9B) by the OpenZeppelin library.
+最后，ERC-777 的挂钩不是罪魁祸首；不正确的实施是。通过一些努力并遵守安全编码实践，ERC-777 可以为更无缝的 Ethereum 生态系统铺平道路。要进一步研究这个问题，建议阅读 OpenZeppelin 库[关于 ERC-777 弃用的讨论](https://oreil.ly/J4p9B)。
 
-## ERC-721: NFT Standard
+## ERC-721：NFT 标准
 
-So far, we’ve explored token standards for fungible tokens, like ERC-20, where each unit is interchangeable and the system cares only about account balances. Now, let’s dive into something different and far more unique: ERC-721, the standard for nonfungible tokens, or as everyone knows them now, NFTs. You may have heard of NFTs during the mania of 2021 when digital collectibles like CryptoPunks, Bored Ape Yacht Club, and NBA Top Shot captured headlines and sold for jaw-dropping sums. Trading platforms like OpenSea and Rarible became household names in the crypto world.
+到目前为止，我们已经探索了可替代代币的代币标准，如 ERC-20，其中每个单元都是可互换的，并且系统只关心帐户余额。现在，让我们深入研究一些不同的和更独特的东西：ERC-721，非同质化代币的标准，或者正如现在大家都知道的那样，NFT。您可能在 2021 年的狂热期间听说过 NFT，当时像 CryptoPunks、Bored Ape Yacht Club 和 NBA Top Shot 这样的数字收藏品占据了头条新闻，并以惊人的价格售出。像 OpenSea 和 Rarible 这样的交易平台成为加密货币世界的家喻户晓的名字。
 
-But what exactly makes NFTs special? Unlike ERC-20 tokens, NFTs are all about uniqueness. Each token represents ownership of a distinct item, and that item can be anything: a digital collectible, an in-game asset, a piece of art, or even a real-world asset like property or a car. The beauty of ERC-721 lies in its flexibility. It doesn’t care what the token represents as long as it’s unique and can be identified by a number. Under the hood, this is accomplished with a `uint256` identifier for each NFT. Think of it as a serial number that distinguishes one token from another. In ERC-20, we track balances by mapping an account to the amount it holds, but in ERC-721, on top of balances we’re also mapping each unique token ID to its owner:
+但究竟是什么使 NFT 如此特别？与 ERC-20 代币不同，NFT 全都是关于独特性。每个代币代表对不同项目的拥有权，该项目可以是任何东西：数字收藏品、游戏内资产、艺术品，甚至是房地产或汽车等现实世界的资产。ERC-721 的美妙之处在于它的灵活性。它不在乎代币代表什么，只要它是唯一的并且可以用数字识别。在底层，这是通过每个 NFT 的 `uint256` 标识符来实现的。可以将其视为区分一个代币与另一个代币的序列号。在 ERC-20 中，我们通过将帐户映射到其持有的金额来跟踪余额，但在 ERC-721 中，除了余额之外，我们还将每个唯一的代币 ID 映射到其所有者：
 
 ```solidity
 mapping (uint256 => address) private _owners;
 ```
 
-This subtle shift in structure changes everything. Each NFT is tied to a specific owner, and its history, provenance, and unique attributes can be tracked directly. This is what makes ERC-721 perfect for applications where individuality matters, such as proving ownership of a one-of-a-kind artwork, a rare in-game sword, or even a plot of land in the metaverse.
+结构上的这种微妙变化改变了一切。每个 NFT 都与特定的所有者相关联，并且可以直接跟踪其历史、来源和唯一属性。这就是使 ERC-721 非常适合于个性化很重要的情况，例如证明对独一无二的艺术品、稀有的游戏内剑甚至元宇宙中的一块土地的所有权。
 
-What makes ERC-721 truly powerful and versatile is the optional ERC-721 metadata extension, which allows each token ID to be tied to a uniform resource identifier (URI). This URI can point to metadata describing the NFT, such as its name, description, and image. The URI might be a standard HTTP link pointing to a centralized server or an Inter-Planetary File System (IPFS) link for decentralized storage. Centralized servers can go offline or disappear entirely, making NFTs dependent on third-party infrastructure. By contrast, IPFS helps ensure that metadata remains accessible and tamper resistant, and it is thus the preferred choice for storing NFT metadata. The ability to associate each token with a metadata URI is what enables NFTs to carry rich, descriptive data and multimedia content, further enhancing their uniqueness and usability.
+使 ERC-721 真正强大和通用的原因在于可选的 ERC-721 元数据扩展，该扩展允许将每个代币 ID 绑定到统一资源标识符 (URI)。此 URI 可以指向描述 NFT 的元数据，例如其名称、描述和图像。该 URI 可能是指向集中式服务器的标准 HTTP 链接，也可能是指向去中心化存储的星际文件系统 (IPFS) 链接。集中式服务器可能会离线或完全消失，从而使 NFT 依赖于第三方基础设施。相比之下，IPFS 有助于确保元数据保持可访问且防篡改，因此是存储 NFT 元数据的首选。将每个代币与元数据 URI 相关联的能力使 NFT 能够携带丰富的、描述性数据和多媒体内容，从而进一步增强其独特性和可用性。
 
-The speculative use of NFTs, particularly as digital collectibles, has undeniably dominated the public narrative. These tokens became a symbol of hype, with values driven by scarcity, celebrity endorsements, and community sentiment. Yet, beyond the flashy headlines is a world of practical applications that have the potential to redefine industries. For instance, NFTs can be used in supply chain management to track the provenance of goods, ensuring authenticity and transparency for consumers. They can represent property deeds, streamlining real estate transactions by automating ownership transfers and reducing fraud. NFTs can also be leveraged in education to issue verifiable credentials, like degrees and certificates, that are tamper proof and universally accessible.
+NFT 的投机性使用，尤其是作为数字收藏品，不可否认地主导了公众的叙述。这些代币成为炒作的象征，其价值由稀缺性、名人代言和社区情绪驱动。然而，在引人注目的头条新闻背后，是一个具有重新定义行业潜力的实际应用世界。例如，NFT 可以用于供应链管理，以跟踪商品的来源，确保消费者的真实性和透明度。它们可以代表产权契约，通过自动化所有权转移和减少欺诈来简化房地产交易。NFT 还可以用于教育，以发放可验证的凭证，如学位和证书，这些凭证具有防篡改性并且可以普遍访问。
 
-While collectibles brought NFTs into the spotlight, their real promise lies in these practical, transformative uses. By combining uniqueness, traceability, and programmability, ERC-721 tokens are poised to become a foundational building block for the digital economy. Whether you’re minting a quirky piece of art or tokenizing a life-saving medical record, ERC-721 empowers developers to create solutions that go far beyond speculation.
+虽然收藏品将 NFT 带入了人们的视线，但它们的真正希望在于这些实际的、变革性的用途。通过结合独特性、可追溯性和可编程性，ERC-721 代币有望成为数字经济的基础构建块。无论您是铸造古怪的艺术品还是对挽救生命的医疗记录进行代币化，ERC-721 都使开发人员能够创建远远超出投机的解决方案。
 
-The ERC-721 contract interface specification is as follows:
+ERC-721 合约接口规范如下：
 
 ```solidity
 interface ERC721 /* is ERC165 */ {
-    event Transfer(address indexed _from, address indexed _to, uint256 _deedId);
-    event Approval(address indexed _owner, address indexed _approved,
-                   uint256 _deedId);
-    event ApprovalForAll(address indexed _owner, address indexed _operator,
-                         bool _approved);
-    function balanceOf(address _owner) external view returns (uint256 _balance);
-    function ownerOf(uint256 _deedId) external view returns (address _owner);
-    function transfer(address _to, uint256 _deedId) external payable;
-    function transferFrom(address _from, address _to, uint256 _deedId)
-        external payable;
-    function approve(address _approved, uint256 _deedId) external payable;
-    function setApprovalForAll(address _operator, boolean _approved) payable;
-    function supportsInterface(bytes4 interfaceID) external view returns (bool);
+    event Transfer(address indexed _from, address indexed _to, uint256 _deedId);
+    event Approval(address indexed _owner, address indexed _approved,
+                    uint256 _deedId);
+    event ApprovalForAll(address indexed _owner, address indexed _operator,
+                                bool _approved);
+    function balanceOf(address _owner) external view returns (uint256 _balance);
+    function ownerOf(uint256 _deedId) external view returns (address _owner);
+    function transfer(address _to, uint256 _deedId) external payable;
+    function transferFrom(address _from, address _to, uint256 _deedId)
+        external payable;
+    function approve(address _approved, uint256 _deedId) external payable;
+    function setApprovalForAll(address _operator, boolean _approved) payable;
+    function supportsInterface(bytes4 interfaceID) external view returns (bool);
 }
 ```
 
-## ERC-1155: Multitoken Standard
+## ERC-1155：多代币标准
 
-Ethereum has come a long way since ERC-20 and ERC-721, which set the foundations for fungible and nonfungible tokens. ERC-1155, the multitoken standard, combines the strengths of both to enable efficient and versatile token management.
+自从 ERC-20 和 ERC-721 为可替代和不可替代代币奠定了基础以来，Ethereum 已经走了很长一段路。ERC-1155 多代币标准结合了两者的优势，以实现高效和通用的代币管理。
 
-Imagine you’re a game developer. You want to create a system where players can collect gold coins (fungible), unique swords (nonfungible), and potions that are consumable in stacks (semifungible). With ERC-20 or ERC-721, you’d need a separate smart contract for each type of token. Each new contract would increase gas costs and add complexity because you’d also need to manage permissions and interactions between these contracts. ERC-1155 solves this problem. It lets us deploy a single contract to manage multiple token types. Each token type is identified by a unique ID, and the contract can handle all operations, including transfers, balances, and metadata retrieval, for any combination of token types. This streamlined approach reduces redundancy and transaction costs, making ERC-1155 a widely adopted standard.
+想象一下你是一名游戏开发人员。你想要创建一个系统，让玩家可以收集金币（可替代）、独特的剑（不可替代）和可堆叠消耗的药水（半可替代）。对于 ERC-20 或 ERC-721，你将需要为每种类型的代币创建一个单独的智能合约。每个新合约都会增加 gas 成本并增加复杂性，因为你还需要管理这些合约之间的权限和交互。ERC-1155 解决了这个问题。它允许我们部署一个智能合约来管理多种代币类型。每种代币类型都由唯一的 ID 标识，并且合约可以处理任何代币类型组合的所有操作，包括转移、余额和元数据检索。这种简化的方法减少了冗余和交易成本，使 ERC-1155 成为广泛采用的标准。
 
-ERC-1155’s batch operations are a standout feature. They let us transfer or query multiple tokens in a single transaction, saving gas and making the standard more scalable. Additionally, ERC-1155 includes safety mechanisms to prevent issues like locked tokens. When transferring tokens to a smart contract, the receiving contract must implement the `IERC1155Receiver` interface; otherwise, the transaction will revert. These hooks enable advanced interactions during token transfers. For example, a contract could implement custom logic to execute when it receives tokens, such as updating an in-game leaderboard or triggering an event. However, as seen in ERC-777, if these hooks are not handled carefully, they can introduce vulnerabilities, such as reentrancy attacks. Developers must ensure proper safeguards, such as using checks-effects-interactions patterns and reentrancy locks, to secure their contracts when implementing ERC-1155 tokens.
+ERC-1155 的批量操作是一个突出的功能。它们让我们在单个交易中转移或查询多个代币，节省 gas 并使该标准更具可扩展性。此外，ERC-1155 包括安全机制来防止锁定代币等问题。将代币转移到智能合约时，接收合约必须实现 `IERC1155Receiver` 接口；否则，交易将回退。这些挂钩支持代币转移期间的高级交互。例如，一个合约可以实现在收到代币时执行的自定义逻辑，例如更新游戏内排行榜或触发事件。但是，正如在 ERC-777 中看到的那样，如果这些挂钩处理不当，它们可能会引入漏洞，例如重入攻击。开发人员必须确保适当的安全措施，例如使用检查-效果-交互模式和重入锁，以在实施 ERC-1155 代币时保护他们的合约。
 
-The ERC-1155 contract interface specification is as follows:
+ERC-1155 合约接口规范如下：
 
 ```solidity
 interface IERC1155 /* is IERC165 */ {
-    event TransferSingle(address indexed operator, address indexed from, address indexed to,
+    event TransferSingle(address indexed operator, address indexed from, address indexed to,
 uint256 id, uint256 value);
-    event TransferBatch(
-        address indexed operator,
-        address indexed from,
-        address indexed to,
-        uint256[] ids,
-        uint256[] values
-    );
-    event ApprovalForAll(address indexed account, address indexed operator, bool approved);
-    event URI(string value, uint256 indexed id);
-    function balanceOf(address account, uint256 id) external view returns (uint256);
-    function balanceOfBatch(
-        address[] calldata accounts,
-        uint256[] calldata ids
-    ) external view returns (uint256[] memory);
-    function setApprovalForAll(address operator, bool approved) external;
-    function isApprovedForAll(
-        address account,
-        address operator
-    ) external view returns (bool);
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 id,
-        uint256 value,
-        bytes calldata data
-    ) external;
-    function safeBatchTransferFrom(
-        address from,
-        address to,
-        uint256[] calldata ids,
-        uint256[] calldata values,
-        bytes calldata data
-    ) external;
-}
-```
+    event TransferBatch(
+        address indexed operator,
+        address indexed from,
+        address indexed to,
+        uint256[] ids,
+        uint256[] values
+    );
+    event ApprovalForAll(address indexed account, address indexed operator, bool approved);
+    event URI(string value, uint256 indexed id);
+    function balanceOf(address account, uint256 id) external view returns (uint256);
+    function balanceOfBatch(
+        address[] calldata accounts,
+        uint256[] calldata ids
+    ) external view returns (uint256[] memoryToken 标准是实现的*最低*规范。这意味着，要符合比如说 ERC-20，你至少需要实现 ERC-20 标准指定的功能和行为。你也可以通过实现不属于标准一部分的功能来*添加*功能。
 
-## Using Token Standards
+这些标准的主要目的是鼓励合约之间的*互操作性*。因此，所有钱包、交易所、用户界面和其他基础设施组件都可以以可预测的方式与任何遵循规范的合约进行*交互*。换句话说，如果你部署一个遵循 ERC-20 标准的合约，所有现有的钱包用户都可以无缝地开始交易你的代币，而无需任何钱包升级或你的任何努力。
 
-In the previous section, we reviewed several proposed standards and a couple of widely deployed standards for token contracts. What exactly do these standards do? Should you use these standards? How should you use them? Should you add functionality beyond these standards? Which standards should you use? We will examine some of those questions next.
+这些标准旨在具有*描述性*而不是*规定性*。你如何选择实现这些功能取决于你；合约的内部运作与标准无关。它们有一些功能性要求，这些要求约束特定情况下的行为，但它们不规定实现方式。一个例子是当值设置为零时，转移函数的行为。ERC-20 标准没有规定在这种情况下交易是否应该回滚。
 
-### What Are Token Standards and What Is Their Purpose?
+### 你应该使用这些标准吗？
 
-Token standards are the *minimum* specifications for an implementation. What that means is that in order to be compliant with, say, ERC-20, you need to at minimum implement the functions and behavior specified by the ERC-20 standard. You are also free to *add* to the functionality by implementing functions that are not part of the standard.
+鉴于所有这些标准，每个开发者都面临一个两难境地：使用现有的标准，还是突破它们施加的限制进行创新？
 
-The primary purpose of these standards is to encourage *interoperability* between contracts. Thus, all wallets, exchanges, user interfaces, and other infrastructure components can *interface* in a predictable manner with any contract that follows the specification. In other words, if you deploy a contract that follows the ERC-20 standard, all existing wallet users can seamlessly start trading your token without any wallet upgrade or effort on your part.
+这个两难境地不容易解决。标准必然会限制你的创新能力，创建一个你必须遵循的狭窄的“车辙”。另一方面，基本标准是从数百个应用程序的经验中产生的，并且通常非常适合绝大多数用例。
 
-The standards are meant to be *descriptive* rather than *prescriptive*. How you choose to implement those functions is up to you; the internal functioning of the contract is not relevant to the standard. They have some functional requirements, which govern the behavior under specific circumstances, but they do not prescribe an implementation. An example of this is how a transfer function behaves when the value is set to zero. The ERC-20 standard does not specify whether the transaction should revert or not in this case.
+作为这种考虑的一部分，还有一个更大的问题：互操作性和广泛采用的价值。如果你选择使用现有的标准，你将获得所有为与该标准一起工作而设计的系统的价值。如果你选择偏离标准，你必须考虑自己构建所有支持基础设施或说服其他人支持你的实现作为新标准的成本。倾向于开辟自己的道路并忽略现有标准的行为被称为“非我发明”综合症，与开源文化背道而驰。另一方面，进步和创新有时取决于偏离传统。这是一个棘手的选择，所以请仔细考虑！
 
-### Should You Use These Standards?
-
-Given all these standards, each developer faces a dilemma: use the existing standards or innovate beyond the restrictions they impose?
-
-This dilemma is not easy to resolve. Standards necessarily restrict your ability to innovate by creating a narrow “rut” that you have to follow. On the other hand, the basic standards have emerged from experience with hundreds of applications and often fit well with the vast majority of use cases.
-
-As part of this consideration is an even bigger issue: the value of interoperability and broad adoption. If you choose to use an existing standard, you gain the value of all the systems designed to work with that standard. If you choose to depart from the standard, you have to consider the cost of building all the support infrastructure on your own or persuading others to support your implementation as a new standard. The tendency to forge your own path and ignore existing standards is known as “not invented here” syndrome and is antithetical to open source culture. On the other hand, progress and innovation depend on departing from tradition sometimes. It’s a tricky choice, so consider it carefully!
-
-> **Note**
+> **注意**
 >
-> Per [Wikipedia](https://oreil.ly/TTA96), “not invented here” is a stance adopted by social, corporate, or institutional cultures that avoid using or buying already existing products, research, standards, or knowledge because of their external origins and costs, such as royalties.
+> 根据 [Wikipedia](https://oreil.ly/TTA96)，不是“非我发明”是一种社会、公司或机构文化所采取的立场，它们避免使用或购买已经存在的产品、研究、标准或知识，因为它们的外部来源和成本，例如特许权使用费。
 
-### Detecting Standards: EIP-165
+### 检测标准：EIP-165
 
-As we’ve seen, standards like ERC-20 simplify interactions between tokens and wallets. But how do we identify which interfaces a smart contract supports? This is where EIP-165 comes in, providing a standardized way for contracts to declare and detect interfaces.
+正如我们所看到的，像 ERC-20 这样的标准简化了代币和钱包之间的交互。但是我们如何识别智能合约支持哪些接口呢？这就是 EIP-165 的用武之地，它提供了一种标准化的方式，让合约声明和检测接口。
 
-EIP-165 defines a method for contracts to announce the interfaces they implement. Contracts use the `supportsInterface` function to return a `true` or `false` value for a given interface ID (a unique identifier calculated as the XOR of all the function selectors in an interface). For instance, if an interface includes `foo()` and `bar(int256)`, its ID is derived as:
+EIP-165 定义了一种方法，让合约可以声明它们实现的接口。合约使用 `supportsInterface` 函数来为给定的接口 ID 返回一个 `true` 或 `false` 值（接口 ID 是一个唯一的标识符，计算方式是接口中所有函数选择器的 XOR）。例如，如果一个接口包括 `foo()` 和 `bar(int256)`，那么它的 ID 可以这样得出：
 
 ```
 foo.selector ^ bar.selector
 ```
 
-This approach enables other contracts and tools to verify compatibility before interacting. For example, a marketplace can confirm that an NFT contract supports the ERC-721 interface before listing its tokens.
+这种方法使其他合约和工具能够在交互之前验证兼容性。例如，一个市场可以确认一个 NFT 合约支持 ERC-721 接口，然后再列出它的代币。
 
-To implement EIP-165, a contract inherits from a base class, such as OpenZeppelin’s ERC-165, and overrides the `supportsInterface` method to include the contract’s supported interfaces:
+要实现 EIP-165，一个合约需要继承一个基类，例如 OpenZeppelin 的 ERC-165，并重写 `supportsInterface` 方法来包括合约支持的接口：
 
 ```solidity
 contract MyContract is IMyContract, ERC165 {
@@ -934,7 +896,7 @@ super.supportsInterface(interfaceId);
 }
 ```
 
-To better grasp how EIP-165 works in practice, let’s look at ERC-1155, a versatile and widely used standard for multitoken contracts:
+为了更好地理解 EIP-165 在实践中是如何工作的，让我们看看 ERC-1155，这是一个用途广泛且被广泛使用的多代币合约标准：
 
 ```solidity
 abstract contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI,
@@ -954,40 +916,40 @@ IERC165) returns (bool) {
 }
 ```
 
-> **Warning**
+> **警告**
 >
-> EIP-165 relies on contracts honestly reporting their capabilities. A malicious or poorly implemented contract could falsely claim to support an interface, leading to potential issues. While EIP-165 improves developer experience and reduces friction, it should not be treated as a security guarantee.
+> EIP-165 依赖于合约诚实地报告它们的功能。一个恶意或实现不佳的合约可能会虚假地声称支持一个接口，从而导致潜在的问题。虽然 EIP-165 改善了开发者体验并减少了摩擦，但它不应被视为安全保证。
 
-For more advanced scenarios, such as when contracts implement interfaces on behalf of others, developers could explore ERC-1820, which uses a global registry to track interface support. While ERC-1820 is more complex than EIP-165, it offers greater flexibility for decentralized systems.
+对于更高级的场景，例如当合约代表其他合约实现接口时，开发者可以探索 ERC-1820，它使用一个全局注册表来跟踪接口支持。虽然 ERC-1820 比 EIP-165 更复杂，但它为去中心化系统提供了更大的灵活性。
 
-### Security by Maturity
+### 成熟带来的安全
 
-Beyond the choice of standard, there is the parallel choice of *implementation*. When you decide to use a standard such as ERC-20, you have to then decide how to implement a compatible design. There are a number of existing “reference” implementations that are widely used in the Ethereum ecosystem, or you could write your own from scratch. Again, this choice represents a dilemma that can have serious security implications.
+除了标准的选择，还有*实现*的并行选择。当你决定使用像 ERC-20 这样的标准时，你必须决定如何实现兼容的设计。以太坊生态系统中存在许多现有的“参考”实现，这些实现被广泛使用，或者你可以从头开始编写自己的实现。同样，这种选择代表了一个可能具有严重安全影响的两难境地。
 
-Existing implementations are “battle-tested.” While it is impossible to prove that they are secure, many of them underpin millions of dollars’ worth of tokens—billions, in some cases. They have been attacked, repeatedly and vigorously. So far, no significant vulnerabilities have been discovered. Writing your own is not easy; there are many subtle ways a contract can be compromised. It is much safer to use a well-tested, widely used implementation. In our examples, we used the OpenZeppelin implementation of the ERC-20 standard because this implementation is security focused from the ground up.
+现有的实现都经过了“实战考验”。虽然不可能证明它们是安全的，但其中许多都支撑着价值数百万美元的代币——在某些情况下，价值数十亿美元。它们受到了反复而猛烈的攻击。到目前为止，还没有发现任何重大的漏洞。编写你自己的实现并不容易；合约可以通过许多微妙的方式被破坏。使用经过良好测试、广泛使用的实现要安全得多。在我们的例子中，我们使用了 OpenZeppelin 的 ERC-20 标准实现，因为这个实现从根本上来说是注重安全的。
 
-If you use an existing implementation, you can also extend it. Again, be careful with this impulse. Complexity is the enemy of security. Every single line of code you add expands the attack surface of your contract and could represent a vulnerability lying in wait. You might not notice a problem until you put a lot of value on top of the contract and someone breaks it.
+如果你使用现有的实现，你也可以扩展它。同样，要小心这种冲动。复杂性是安全的敌人。你添加的每一行代码都会扩大合约的攻击面，并且可能代表一个潜伏的漏洞。在你将大量价值放在合约之上并且有人破坏它之前，你可能不会注意到问题。
 
-> **Tip**
+> **提示**
 >
-> Standards and implementation choices are important parts of overall secure smart contract design, but they’re not the only considerations (see Chapter 9).
+> 标准和实现选择是整体安全智能合约设计的重要组成部分，但它们不是唯一的考虑因素（请参阅第 9 章）。
 
-## Extensions to Token Interface Standards
+## 代币接口标准的扩展
 
-The token standards we’ve discussed so far provide essential functionality for creating and managing tokens. However, they’re intentionally minimal, leaving room for projects to extend and adapt them to fit specific needs. Over time, many projects have built on these standards, introducing features that enhance usability, security, and flexibility. OpenZeppelin, a leading library for Ethereum smart contracts, has become the go-to source for such extensions. Let’s explore some of the most notable extensions for ERC-20, ERC-721, and ERC-1155 tokens.
+到目前为止，我们讨论的代币标准为创建和管理代币提供了基本功能。然而，它们有意地保持最小化，为项目扩展和调整它们以适应特定需求留下了空间。随着时间的推移，许多项目都建立在这些标准之上，引入了增强可用性、安全性和灵活性的功能。OpenZeppelin 是以太坊智能合约的领先库，已成为此类扩展的首选来源。让我们来探索一些 ERC-20、ERC-721 和 ERC-1155 代币最值得注意的扩展。
 
-With ERC-20, for example, we see the addition of burning mechanisms. Burning allows tokens to be permanently removed from circulation, reducing supply, which is useful for deflationary models or token economics that require deliberate supply control. On the flip side, some projects incorporate caps to set hard limits on the total supply, ensuring that no more tokens can ever be minted beyond a predefined threshold.
+例如，在 ERC-20 中，我们看到了燃烧机制的添加。燃烧允许代币从流通中永久移除，从而减少供应，这对于通货紧缩模型或需要有意识地控制供应的代币经济学来说非常有用。另一方面，一些项目会加入上限来设置总供应量的硬性限制，确保永远不会铸造超过预定阈值的代币。
 
-Another interesting addition to ERC-20 is voting functionality. This allows token holders to participate in governance decisions directly through their tokens. Projects that implement this create decentralized decision-making processes, enabling stakeholders to have a say in how a protocol evolves.
+ERC-20 的另一个有趣的补充是投票功能。这允许代币持有者直接通过他们的代币参与治理决策。实现此功能的项目创建了去中心化的决策流程，使利益相关者可以在协议的演变过程中发表意见。
 
-ERC-721 has seen similar creativity in its extensions. Features like royalty payments let creators earn a percentage of sales whenever their NFTs are traded. URI storage is another common addition that enables metadata to be stored and retrieved dynamically, which is particularly useful for NFTs with evolving properties. Enumerable extensions allow developers to efficiently list all tokens held by an address, making it easier to build marketplaces or wallets.
+ERC-721 在其扩展中也看到了类似的创造力。像版税支付这样的功能让创作者在他们的 NFT 被交易时可以赚取一定比例的销售额。URI 存储是另一种常见的添加，它允许元数据被动态地存储和检索，这对于具有不断变化的属性的 NFT 尤其有用。可枚举的扩展允许开发者有效地列出地址持有的所有代币，从而更容易构建市场或钱包。
 
-ERC-1155, the multitoken standard, hasn’t been left behind. Extensions for ERC-1155 include burnable tokens and pausable contracts, allowing for added flexibility in use cases like gaming or tokenized supply chains. Some implementations also enhance metadata handling, ensuring that token details remain accessible and easy to update.
+ERC-1155，多代币标准，也没有被抛在后面。ERC-1155 的扩展包括可燃烧代币和可暂停合约，从而在使用案例（如游戏或代币化供应链）中增加了灵活性。一些实现还增强了元数据处理，确保代币详细信息保持可访问且易于更新。
 
-Beyond these, countless other extensions exist, addressing needs like crowdfunding, blocklisting, allowlisting, and implementing fees on transfers. Developers often combine these features with other standard libraries like OpenZeppelin’s Ownable or Access Control, tapping into even more battle-tested resources.
+除了这些之外，还存在无数其他的扩展，用于满足众筹、黑名单、白名单以及在转账中实施费用等需求。开发者经常将这些功能与其他标准库（如 OpenZeppelin 的 Ownable 或访问控制）结合使用，从而利用更多经过实战考验的资源。
 
-With flexibility comes responsibility. Extending token standards involves balancing innovation with interoperability. Writing custom features may seem appealing, but it often introduces unnecessary complexity and risks. Instead, leveraging well-established libraries and extensions, like those from OpenZeppelin, ensures security and code quality and significantly reduces development costs. There’s no need to reinvent the wheel when robust, tested solutions already exist.
+灵活性伴随着责任。扩展代币标准涉及在创新与互操作性之间取得平衡。编写自定义功能可能看起来很有吸引力，但它通常会引入不必要的复杂性和风险。相反，利用完善的库和扩展（如 OpenZeppelin 的库和扩展）可以确保安全性和代码质量，并显着降低开发成本。当已经存在强大、经过测试的解决方案时，没有必要重新发明轮子。
 
-## Conclusion
+## 结论
 
-Tokens are more than just digital currency; they can represent governance rights, access credentials, identities, and real-world assets. Their versatility is only possible thanks to standards like ERC-20, ERC-721, and ERC-1155, which ensure seamless interoperability across wallets, exchanges, and DApps, creating a more efficient and interconnected blockchain ecosystem. In this chapter, we looked at the different types of tokens and token standards, and you built your first token and related application.
+代币不仅仅是数字货币；它们可以代表治理权利、访问凭证、身份和现实世界的资产。它们的通用性之所以成为可能，要归功于像 ERC-20、ERC-721 和 ERC-1155 这样的标准，这些标准确保了钱包、交易所和 DApp 之间的无缝互操作性，从而创建了一个更高效、互联的区块链生态系统。在本章中，我们研究了不同类型的代币和代币标准，并且你构建了你的第一个代币和相关应用程序。

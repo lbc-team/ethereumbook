@@ -1,400 +1,400 @@
-# Chapter 2. Ethereum Basics
+# 第 2 章. 以太坊基础
 
-In this chapter, we will start exploring Ethereum. We'll discuss how to use wallets, create transactions, and run a basic smart contract.
+在这一章，我们将开始探索以太坊。我们将讨论如何使用钱包、创建交易以及运行一个基础的智能合约。
 
-## Ether Currency Units
+## Ether 货币单位
 
-Ethereum's currency unit is called *ether*, identified also as ETH or with the symbols Ξ (from the Greek letter *Xi* that looks like a stylized capital *E*) or, less often, ♦: for example, 1 ether, 1 ETH, Ξ1, or ♦1.
+以太坊的货币单位称为 *ether*，也被标识为 ETH 或使用符号 Ξ (来自希腊字母 *Xi*，看起来像一个风格化的字母 *E*) 或较少使用的 ♦：例如，1 ether, 1 ETH, Ξ1, 或 ♦1。
 
-> **Tip**  
+> **提示**
 >
-> Use Unicode characters U+039E for Ξ and U+2666 for ♦.
+> 使用 Unicode 字符 U+039E 表示 Ξ，U+2666 表示 ♦。
 
-Ether is subdivided into smaller units, down to the smallest unit possible, which is named *wei*. One ether is 1 quintillion wei (1 × 10^18^, or 1,000,000,000,000,000,000). You may hear people refer to the currency as "Ethereum," too, but this is a common beginner's mistake. Ethereum is the system; ether is the currency.
+Ether 被细分为更小的单位，直至最小的可能单位，名为 *wei*。一个 ether 等于 1 百京 wei (1 × 10^18^, 或 1,000,000,000,000,000,000)。你可能也会听到人们将这种货币称为“以太坊”，但这是一个常见的新手错误。以太坊是一个系统；ether 是货币。
 
-The value of ether is always represented internally in Ethereum as an unsigned integer value denominated in wei. When you transact 1 ether, the transaction encodes 1,000,000,000,000,000,000 wei as the value.
+ether 的价值在以太坊内部始终表示为一个以 wei 为单位的无符号整数值。当你交易 1 ether 时，该交易将 1,000,000,000,000,000,000 wei 编码为价值。
 
-Ether's various denominations have both a scientific name using the International System of Units (SI) and a colloquial name that pays homage to many of the great minds of computing and cryptography. Table 2-1 lists the various units, their colloquial (common) names, and their SI names. In keeping with the internal representation of value, the table shows all denominations in wei (first row), with ether shown as 10^18^ wei in the seventh row.
+ether 的各种面额既有使用国际单位制 (SI) 的科学名称，也有向计算机和密码学的许多伟大思想致敬的口语化名称。表 2-1 列出了各种单位、它们的口语化（常用）名称以及它们的 SI 名称。为了与价值的内部表示保持一致，该表显示了所有以 wei 为单位的面额（第一行），其中 ether 在第七行显示为 10^18^ wei。
 
-**Table 2-1. Ether denominations and unit names**
+**表 2-1. Ether 的面额和单位名称**
 
-| Value (in wei) | Exponent | Common name | SI name |
+| 价值 (以 wei 为单位) | 指数 | 常用名称 | SI 名称 |
 |---|---|---|---|
 | 1 | 1 | Wei | Wei |
-| 1,000 | 10^3^ | Babbage | Kilowei or femtoether |
-| 1,000,000 | 10^6^ | Lovelace | Megawei or picoether |
-| 1,000,000,000 | 10^9^ | Shannon | Gigawei or nanoether |
-| 1,000,000,000,000 | 10^12^ | Szabo | Microether or micro |
-| 1,000,000,000,000,000 | 10^15^ | Finney | Milliether or milli |
+| 1,000 | 10^3^ | Babbage | Kilowei 或 femtoether |
+| 1,000,000 | 10^6^ | Lovelace | Megawei 或 picoether |
+| 1,000,000,000 | 10^9^ | Shannon | Gigawei 或 nanoether |
+| 1,000,000,000,000 | 10^12^ | Szabo | Microether 或 micro |
+| 1,000,000,000,000,000 | 10^15^ | Finney | Milliether 或 milli |
 | *1,000,000,000,000,000,000* | *10^18^* | *Ether* | *Ether* |
 | 1,000,000,000,000,000,000,000 | 10^21^ | Grand | Kiloether |
 | 1,000,000,000,000,000,000,000,000 | 10^24^ | | Megaether |
 
-## Choosing an Ethereum Wallet
+## 选择以太坊钱包
 
-The term *wallet* has come to mean many things, although the definitions are all related, and on a day-to-day basis, they all boil down to pretty much the same thing. We will use the term *wallet* to refer to a software application that helps you manage your Ethereum account. In short, an Ethereum wallet is your gateway to the Ethereum system. It holds your keys and can create and broadcast transactions on your behalf. Choosing an Ethereum wallet can be difficult because there are many options with different features and designs. Some are more suitable for beginners, and some are more suitable for experts. The Ethereum platform itself is still being improved, and the "best" wallets are often the ones that adapt to the changes that come with the platform upgrades.
+术语 *钱包* 已经有了多种含义，尽管这些定义都是相关的，并且在日常生活中，它们最终几乎都归结为同一件事。我们将使用术语 *钱包* 来指代帮助你管理以太坊账户的软件应用程序。简而言之，以太坊钱包是你进入以太坊系统的门户。它持有你的密钥，并且可以代表你创建和广播交易。选择以太坊钱包可能很困难，因为有很多具有不同功能和设计的选项。有些更适合初学者，有些更适合专家。以太坊平台本身仍在不断改进，“最佳”钱包通常是那些适应平台升级带来的变化的钱包。
 
-But don't worry! If you choose a wallet and don't like how it works—or if you like it at first but later want to try something else—you can change wallets quite easily. All you have to do is make a transaction that sends your funds from the old wallet to the new wallet or export your private keys and import them into the new one.
+但别担心！如果你选择了一个钱包，但不喜欢它的工作方式——或者如果你一开始喜欢它，但后来想尝试其他的东西——你可以很容易地更换钱包。你所要做的就是创建一个交易，将你的资金从旧钱包发送到新钱包，或者导出你的私钥并将它们导入到新钱包中。
 
-Remember that for a wallet application to work, it must have access to your private keys, so it is vital that you only download and use wallet applications from sources you trust. Fortunately, in general, the more popular a wallet application is, the more trustworthy it is likely to be. Nevertheless, it is good practice to avoid "putting all your eggs in one basket" and have your Ethereum accounts spread across a couple of wallets and seed phrases.
+请记住，为了使钱包应用程序工作，它必须能够访问你的私钥，因此至关重要的是，你只从你信任的来源下载和使用钱包应用程序。幸运的是，一般来说，钱包应用程序越受欢迎，它就越值得信赖。然而，避免“把所有鸡蛋放在一个篮子里”，并将你的以太坊账户分散在几个钱包和助记词中，是一个好的做法。
 
-The following are some good starter wallets; the selection of these wallets is not an endorsement of their quality or security. They are simply a good starting place for demonstrations and testing. All of the following wallets are both browser-extension wallets and mobile wallets:
+以下是一些好的入门钱包；选择这些钱包并不意味着认可它们的质量或安全性。它们只是演示和测试的一个好的起点。以下所有钱包都是浏览器扩展钱包和移动钱包：
 
 **MetaMask**
 
-MetaMask is easy to use and convenient for testing as it is able to connect to a variety of Ethereum nodes and test blockchains.
+MetaMask 易于使用，并且便于测试，因为它能够连接到各种以太坊节点和测试区块链。
 
 **Rabby Wallet**
 
-Rabby is often a good choice for new users as it is designed for simplicity and ease of use. It has a lot of security features built in.
+Rabby 通常是新用户的一个不错的选择，因为它专为简单易用而设计。它内置了许多安全功能。
 
 **Phantom**
 
-Phantom is a wallet that can connect only to Ethereum, among other non-EVM chains.
+Phantom 是一个只能连接到以太坊以及其他非 EVM 链的钱包。
 
-## Control and Responsibility
+## 控制与责任
 
-Open blockchains like Ethereum are important because they operate as a *decentralized* system. That means lots of things, but one crucial aspect is that each user of Ethereum can—and should—control their own *private keys*, which control access to funds and smart contracts. We sometimes call the combination of access to funds and smart contracts an *account* or *wallet*. These terms can get quite complex in their functionality, so we will go into this in more detail later. As a fundamental principle, however, it is as easy as one private key equals one "account." Some users choose to give up control over their private keys by using a third-party custodian, such as an online centralized exchange. In this book, we will teach you how to take control and manage your own private keys.
+像以太坊这样的开放区块链之所以重要，是因为它们作为 *去中心化* 系统运行。这意味着很多事情，但一个关键方面是，以太坊的每个用户都可以——并且应该——控制自己的 *私钥*，私钥控制着对资金和智能合约的访问。我们有时将对资金和智能合约的访问的组合称为 *账户* 或 *钱包*。这些术语在功能上可能非常复杂，因此我们将在后面更详细地介绍这一点。然而，作为一个基本原则，它就像一个私钥等于一个“账户”一样简单。一些用户选择放弃对其私钥的控制权，而是使用第三方托管人，例如在线中心化交易所。在本书中，我们将教你如何控制和管理你自己的私钥。
 
-With control comes a big responsibility. If you lose your private keys, you lose access to your funds and contracts. No one can help you regain access—your funds will be locked forever. Here are a few tips to help you manage this responsibility:
+伴随着控制权而来的是巨大的责任。如果你丢失了你的私钥，你将失去对你的资金和合约的访问权。没有人可以帮助你重新获得访问权——你的资金将被永远锁定。以下是一些帮助你管理这一责任的技巧：
 
-- Do not improvise security. Use tried-and-tested standard approaches.
+- 不要临时抱佛脚。使用经过尝试和测试的标准方法。
 
-- The more important the account (e.g., the higher the value of the funds controlled compared to your total net worth), the higher the security measures that should be taken.
+- 账户越重要（例如，与你的总净资产相比，控制的资金价值越高），应采取的安全措施就越高。
 
-- One of the highest security levels is gained from a hardware wallet device, but this level is not required for every account.
+- 最高安全级别之一来自于硬件钱包设备，但并非每个账户都需要此级别。
 
-- Never store your private key in plain form, especially digitally. Fortunately, most user interfaces today won't even let you see the raw private key without throwing multiple warnings.
+- 永远不要以纯文本形式存储你的私钥，尤其是在数字形式下。幸运的是，如今大多数用户界面甚至不会让你看到原始私钥，除非发出多个警告。
 
-- When you are prompted to back up a key as a mnemonic word sequence, use pen and paper to make a physical backup. Do not leave that task "for later"; you will forget. These backups can be used to rebuild your private key in case you lose all the data saved on your system or if you forget or lose your password. However, they can also be used by attackers to get your private keys, so never store them digitally and keep at least one physical copy stored securely.
+- 当提示你将密钥备份为助记词序列时，请使用纸和笔进行物理备份。不要将该任务“留到以后”；你会忘记的。如果你的系统上保存的所有数据丢失，或者你忘记或丢失了密码，这些备份可用于重建你的私钥。但是，攻击者也可以使用它们来获取你的私钥，因此切勿以数字方式存储它们，并且至少保留一份安全存储的物理副本。
 
-- Before transferring any large amounts (especially to new addresses), first do a small test transaction (e.g., less than $1 value) and wait for confirmation of receipt.
+- 在转移任何大量资金之前（尤其是在新地址上），首先进行一笔小额测试交易（例如，价值低于 1 美元），并等待收到确认。
 
-- When you create a new account, start by sending only a small test transaction to the new address. Once you receive the test transaction, try sending it back again from that account. There are lots of reasons account creation can go wrong, and if it has gone wrong, it is better to find out with a small loss. If the tests work, all is well (also a testnet could be used to avoid any kind of loss).
+- 创建新账户时，首先仅向新地址发送一笔小额测试交易。收到测试交易后，尝试再次从该账户发送回去。账户创建可能会出错有很多原因，如果出错，最好以小额损失来发现。如果测试有效，一切都很好（也可以使用测试网以避免任何类型的损失）。
 
-- Public block explorers are an easy way to independently see whether a transaction has been accepted by the network; while this information is already public on the blockchain, block explorers make it incredibly easy to access. However, this convenience has a negative impact on your privacy because you reveal your addresses to block explorers, which can track you.
+- 公共区块浏览器是独立查看交易是否已被网络接受的一种简单方法；虽然此信息已在区块链上公开，但区块浏览器使访问它变得非常容易。但是，这种便利性对你的隐私有负面影响，因为你向区块浏览器公开了你的地址，区块浏览器可以跟踪你。
 
-- Public block explorers are usually reliable, but not all the time—do not trust them blindly.
+- 公共区块浏览器通常是可靠的，但并非总是如此——不要盲目信任它们。
 
-- Do not send money to any of the addresses shown in this book. The private keys are listed in the book, and someone could immediately take that money.
+- 不要将钱发送到本书中显示的任何地址。私钥已在本书中列出，并且有人可能会立即拿走这些钱。
 
-Now that we've covered some basic best practices for key management and security, let's get to work using MetaMask!
+现在我们已经介绍了一些关于密钥管理和安全性的基本最佳实践，让我们开始使用 MetaMask！
 
-## Getting Started with MetaMask
+## MetaMask 入门
 
-Open the Google Chrome browser and navigate to [Extensions](https://oreil.ly/0rOvX). Search for "MetaMask" and click on the logo of a fox. You should see something similar to Figure 2-1.
+打开 Google Chrome 浏览器并导航到 [Extensions](https://oreil.ly/0rOvX)。搜索“MetaMask”并点击狐狸的徽标。你应该会看到类似于图 2-1 的内容。
 
-![The detail page of the MetaMask Chrome extension](images/ch2/maet_0201.png)
+![MetaMask Chrome 扩展程序的详细信息页面](images/ch2/maet_0201.png)
 
-Figure 2-1. The detail page of the MetaMask Chrome extension
+图 2-1. MetaMask Chrome 扩展程序的详细信息页面
 
-It's important to verify that you are downloading the real MetaMask extension because sometimes people are able to sneak malicious extensions past Google's filters. The real one does the following:
+验证你正在下载真正的 MetaMask 扩展程序非常重要，因为有时人们能够将恶意扩展程序偷偷地绕过 Google 的过滤器。真正的扩展程序执行以下操作：
 
-- Shows the ID `nkbihfbeogaeaoehlefnkodbefgpgknn` in the address bar
+- 在地址栏中显示 ID `nkbihfbeogaeaoehlefnkodbefgpgknn`
 
-- Is offered by [*https://metamask.io*](https://metamask.io)
+- 由 [*https://metamask.io*](https://metamask.io) 提供
 
-- Has more than 5,400 reviews
+- 拥有超过 5,400 条评论
 
-- Has more than 15 million users
+- 拥有超过 1500 万用户
 
-Once you confirm that you are looking at the correct extension, click "Add to Chrome" to install it.
+确认你正在查看正确的扩展程序后，点击“添加到 Chrome”进行安装。
 
-### Creating a Wallet
+### 创建钱包
 
-Once MetaMask is installed, you should see a new icon (the head of a fox) in your browser's toolbar. Click it to get started. You will be asked to accept the terms and conditions and then to create your new Ethereum wallet by entering a password (see Figure 2-2).
+安装 MetaMask 后，你应该会在浏览器的工具栏中看到一个新图标（狐狸的头部）。点击它以开始使用。你将被要求接受条款和条件，然后通过输入密码来创建你的新以太坊钱包（参见图 2-2）。
 
-![The password page of the MetaMask Chrome extension](images/ch2/maet_0202.png)
+![MetaMask Chrome 扩展程序的密码页面](images/ch2/maet_0202.png)
 
-Figure 2-2. The password page of the MetaMask Chrome extension
+图 2-2. MetaMask Chrome 扩展程序的密码页面
 
-> **Tip**  
+> **提示**
 >
-> The password controls access to MetaMask so that it can't be used by anyone with access to your browser. This password is only for your local device; if an attacker gains access to the private key or seed phrase, they will be able to access the funds in your addresses. The password is not needed if the attacker has the private key or seed phrase.
+> 密码控制着对 MetaMask 的访问，这样任何有权访问你的浏览器的人都无法使用它。此密码仅适用于你的本地设备；如果攻击者获得对私钥或种子短语的访问权，他们将能够访问你的地址中的资金。如果攻击者拥有私钥或种子短语，则不需要密码。
 
-Once you've set a password, MetaMask will generate a wallet for you and show you a *mnemonic backup* consisting of 12 English words (see Figure 2-3). These words can be used in any compatible wallet to recover access to your funds should something happen to MetaMask or your computer. You do not need the password for this recovery; the 12 words are sufficient.
+设置密码后，MetaMask 将为你生成一个钱包并向你显示一个由 12 个英语单词组成的 *助记词备份*（参见图 2-3）。如果 MetaMask 或你的计算机出现问题，这些单词可以在任何兼容的钱包中使用，以恢复对你的资金的访问。你不需要密码进行此恢复；这 12 个单词就足够了。
 
-![The mnemonic backup of your wallet created by MetaMask](images/ch2/maet_0203.png)
+![MetaMask 创建的钱包的助记词备份](images/ch2/maet_0203.png)
 
-Figure 2-3. The mnemonic backup of your wallet created by MetaMask
+图 2-3. MetaMask 创建的钱包的助记词备份
 
-> **Tip**  
+> **提示**
 >
-> Back up your mnemonic (12 words) on paper, twice. Store the two paper backups in two separate secure locations, such as a fire-resistant safe, a locked drawer, or a safe deposit box. Treat the paper backups like cash of equivalent value to what you store in your Ethereum wallet. Anyone with access to these words can gain access to and steal your money. We will go into much more detail on how to keep your seed phrase safe in Chapter 5.
+> 将你的助记词（12 个单词）在纸上备份两次。将两个纸质备份存储在两个单独的安全位置，例如防火保险箱、锁定的抽屉或保险箱。像对待等同于你存储在以太坊钱包中的价值的现金一样对待纸质备份。任何有权访问这些单词的人都可以访问和窃取你的资金。我们将在第 5 章中更详细地介绍如何保护你的种子短语。
 
-Once you have confirmed that you have stored the mnemonic securely, you'll be able to see the details of your Ethereum account, as shown in Figure 2-4.
+确认你已安全存储助记词后，你将能够看到你的以太坊账户的详细信息，如图 2-4 所示。
 
-![Your Ethereum account in MetaMask](images/ch2/maet_0204.png)
+![MetaMask 中的以太坊账户](images/ch2/maet_0204.png)
 
-Figure 2-4. Your Ethereum account in MetaMask
+图 2-4. MetaMask 中的以太坊账户
 
-> **Note**  
+> **注意**
 >
-> Do not send any assets to the addresses shown in this book. The seed phrase is public for educational purposes, and every asset sent to these addresses will probably be lost.
+> 不要将任何资产发送到本书中显示的地址。种子短语是为教育目的而公开的，并且发送到这些地址的每个资产都可能会丢失。
 
-Your account page shows the name of your account ("Account 1" by default), an Ethereum address (`0xaa529…f17f` in the example), and a colorful icon to help you visually distinguish this account from other accounts. At the top of the account page, you can see which Ethereum network you are currently working on ("Main Network" in the example).
+你的帐户页面显示你的帐户名称（默认为“帐户 1”）、以太坊地址（在示例中为 `0xaa529…f17f`）以及一个彩色图标，可帮助你直观地区分此帐户与其他帐户。在帐户页面的顶部，你可以看到你当前正在使用的以太坊网络（在示例中为“主网络”）。
 
-Congratulations! You have set up your first Ethereum wallet.
+恭喜！你已经设置了你的第一个以太坊钱包。
 
-### Switching Networks
+### 切换网络
 
-As you can see on the MetaMask account page, you can choose among multiple Ethereum networks. By default, MetaMask will try to connect to the main network. The other choices are public testnets, any Ethereum node of your choice, or nodes running private blockchains on your own computer (localhost):
+正如你在 MetaMask 帐户页面上看到的那样，你可以在多个以太坊网络之间进行选择。默认情况下，MetaMask 将尝试连接到主网络。其他选择是公共测试网、你选择的任何以太坊节点或在你自己的计算机上运行私有区块链的节点（本地主机）：
 
-**Main Ethereum Network**
+**以太坊主网络**
 
-The main public Ethereum blockchain. Real ETH, real value, and real consequences.
+主要的公共以太坊区块链。真正的 ETH、真正的价值和真正的后果。
 
-**Sepolia Test Network**
+**Sepolia 测试网络**
 
-Launched in October 2021 as a proof-of-authority network by Ethereum's core developers, Sepolia has since transitioned to a PoS consensus, mirroring Ethereum's mainnet environment.
+Sepolia 于 2021 年 10 月由以太坊核心开发人员推出，作为一个权威证明网络，此后已过渡到 PoS 共识，镜像了以太坊的主网环境。
 
-**Holesky Test Network**
+**Holesky 测试网络**
 
-The Holesky Testnet is Ethereum's advanced testing ground for staking, infrastructure, and protocol development.
+Holesky 测试网是以太坊用于质押、基础设施和协议开发的高级测试场所。
 
-**Localhost 8545**
+**本地主机 8545**
 
-Connects to a node running on the same computer as the browser. The node can be part of any public blockchain (main or testnet) or a private testnet.
+连接到与浏览器在同一台计算机上运行的节点。该节点可以是任何公共区块链（主网或测试网）或私有测试网的一部分。
 
-**Custom RPC**
+**自定义 RPC**
 
-Allows you to connect MetaMask to any node with a Geth-compatible remote procedure call (RPC) interface. The node can be part of any public or private blockchain.
+允许你将 MetaMask 连接到任何具有与 Geth 兼容的远程过程调用 (RPC) 界面的节点。该节点可以是任何公共或私有区块链的一部分。
 
-> **Note**  
+> **注意**
 >
-> Your MetaMask wallet uses the same private key and Ethereum address on all the networks it connects to. However, your Ethereum address balance on each Ethereum network will be different. For instance, if you use your keys to send ether on the Sepolia testnet, your balances on other networks will remain unaffected.
+> 你的 MetaMask 钱包在它连接的所有网络上使用相同的私钥和以太坊地址。但是，你在每个以太坊网络上的以太坊地址余额将有所不同。例如，如果你使用你的密钥在 Sepolia 测试网上发送以太币，则你在其他网络上的余额将保持不变。
 
-### Getting Some Test Ether
+### 获取一些测试 Ether
 
-Your first task is to get your wallet funded. You won't be doing that on the main network because real ether costs money and handling it requires a bit more experience. For now, you'll load your wallet with some testnet ether.
+你的首要任务是为你的钱包提供资金。你不会在主网络上执行此操作，因为真正的以太币需要花钱，并且处理它需要更多的经验。现在，你将使用一些测试网以太币来加载你的钱包。
 
-Switch MetaMask to the Sepolia Test Network by clicking the Ethereum icon on the top left; toggle the option "Show test networks" and click Sepolia, as shown in Figure 2-5.
+通过点击左上角的以太坊图标将 MetaMask 切换到 Sepolia 测试网络；切换选项“显示测试网络”并点击 Sepolia，如图 2-5 所示。
 
-![MetaMask networks](images/ch2/maet_0205.png)
+![MetaMask 网络](images/ch2/maet_0205.png)
 
-Figure 2-5. MetaMask networks
+图 2-5. MetaMask 网络
 
-Click Buy, then navigate to one of the faucets in [this list](https://oreil.ly/VE0t0). Once you have decided which faucet you want to use—they are all pretty much equivalent—you can request ethers on the test network, as shown in Figure 2-6.
+点击购买，然后导航到[此列表](https://oreil.ly/VE0t0)中的其中一个水龙头。一旦你决定要使用哪个水龙头——它们几乎都是等效的——你就可以在测试网络上请求 ethers，如图 2-6 所示。
 
-![MetaMask Sepolia test faucet](images/ch2/maet_0206.png)
+![MetaMask Sepolia 测试水龙头](images/ch2/maet_0206.png)
 
-Figure 2-6. MetaMask Sepolia test faucet
+图 2-6. MetaMask Sepolia 测试水龙头
 
-The transaction ID for the request of testnet ether looks like this:
+请求测试网 ether 的交易 ID 如下所示：
 
     0x471273d9417e98e7f1adaae61e53a353b2d2313de2e71fc4b6184bf5a63fa0ae
 
-In a few seconds, the new transaction will be processed by the Sepolia network, and your MetaMask wallet will show a balance of 0.05 ETH (this depends on how much ether the faucet is willing to send). Now, click to the first transaction in your browser extension and click "View on block explorer," as shown in Figure 2-7. This will navigate to a *block explorer*, which is a website that allows you to visualize and explore blocks, addresses, and transactions.
+只需几秒钟，Sepolia 网络就会处理新的交易，你的 MetaMask 钱包将显示 0.05 ETH 的余额（这取决于水龙头愿意发送多少以太币）。现在，点击浏览器扩展程序中的第一笔交易，然后点击“在区块浏览器上查看”，如图 2-7 所示。这将导航到一个 *区块浏览器*，这是一个允许你可视化和探索区块、地址和交易的网站。
 
-![Transaction viewed from MetaMask](images/ch2/maet_0207.png)
+![从 MetaMask 查看的交易](images/ch2/maet_0207.png)
 
-Figure 2-7. Transaction viewed from MetaMask
+图 2-7. 从 MetaMask 查看的交易
 
-MetaMask uses the [Etherscan block explorer](https://etherscan.io), one of the more popular Ethereum block explorers. The transaction containing the payment from the Sepolia test faucet is shown in Figure 2-8.
+MetaMask 使用 [Etherscan 区块浏览器](https://etherscan.io)，它是更流行的以太坊区块浏览器之一。包含来自 Sepolia 测试水龙头的付款的交易如图 2-8 所示。
 
-![Etherscan Sepolia block explorer](images/ch2/maet_0208.png)
+![Etherscan Sepolia 区块浏览器](images/ch2/maet_0208.png)
 
-Figure 2-8. Etherscan Sepolia block explorer
+图 2-8. Etherscan Sepolia 区块浏览器
 
-The transaction has been recorded on the Sepolia blockchain and can be viewed at any time by anyone, simply by searching for the transaction ID. Try entering the transaction hash into the [*sepolia.etherscan.io* website](http://sepolia.etherscan.io) to see it for yourself:
+该交易已记录在 Sepolia 区块链上，并且任何人都可以随时通过搜索交易 ID 来查看它。尝试将交易哈希输入到 [*sepolia.etherscan.io* 网站](http://sepolia.etherscan.io) 中，亲自查看：
 
     0x471273d9417e98e7f1adaae61e53a353b2d2313de2e71fc4b6184bf5a63fa0ae
 
-### Sending Ether from MetaMask
+### 从 MetaMask 发送 Ether
 
-Once you've received your first test ether from the Sepolia test faucet, you can experiment with sending ether by trying to send some back to the faucet or to any other address. In this example, we will be trying to send some testnet ether to Vitalik Buterin, as shown in Figure 2-9.
+一旦你从 Sepolia 测试水龙头收到了你的第一个测试 ether，你就可以通过尝试将其发送回水龙头或任何其他地址来试验发送 ether。在此示例中，我们将尝试将一些测试网 ether 发送到 Vitalik Buterin，如图 2-9 所示。
 
-![Sending 0.05 ether to an address](images/ch2/maet_0209.png)
+![将 0.05 ether 发送到一个地址](images/ch2/maet_0209.png)
 
-Figure 2-9. Sending 0.05 ether to an address
+图 2-9. 将 0.05 ether 发送到一个地址
 
-Oops! You probably noticed that you can't complete the transaction—MetaMask says you have an insufficient balance. At first glance, this may seem confusing: you have 0.05 ETH, you want to send 0.05 ETH, so why is MetaMask saying you have insufficient funds?
+哎呀！你可能注意到你无法完成交易——MetaMask 说你的余额不足。乍一看，这似乎令人困惑：你有 0.05 ETH，你想发送 0.05 ETH，那么为什么 MetaMask 说你的资金不足？
 
-The answer is because of the cost of gas. Every Ethereum transaction requires payment of a fee, which is collected by the network to validate the transaction. The fees in Ethereum are charged in a virtual currency called *gas*. You pay for the gas with ether, as part of the transaction.
+答案是因为 gas 的成本。每笔以太坊交易都需要支付费用，该费用由网络收取以验证交易。以太坊中的费用以一种称为 *gas* 的虚拟货币收取。你使用 ether 作为交易的一部分来支付 gas 费用。
 
-> **Note**  
+> **注意**
 >
-> Fees are required on the test networks, too. Without fees, a test network would behave differently from the main network, making it an inadequate testing platform. Fees also protect the test networks from DoS attacks and poorly constructed contracts (e.g., infinite loops), much like they protect the main network.
+> 在测试网络上也需要付费。如果没有费用，测试网络的行为将与主网络不同，从而使其成为一个不足的测试平台。费用还可以保护测试网络免受 DoS 攻击和构造不良的合约（例如，无限循环）的攻击，就像它们保护主网络一样。
 
-When you send the transaction, MetaMask will calculate the average gas price of recent successful transactions—for example, at 3 gwei, which stands for gigawei. Wei is the smallest subdivision of the ether currency, as we discussed in "Ether Currency Units". The gas limit is set at the cost of sending a basic transaction: 21,000 gas units, which is the smallest amount of gas that can be used to send a transaction. Therefore, the maximum amount of ETH you will spend is 3 × 21,000 gwei = 63,000 gwei = 0.000063 ETH. (Be advised that average gas prices can fluctuate. We will see in a later chapter how you can increase or decrease your gas limit to ensure that your transaction takes precedence if need be.)
+当你发送交易时，MetaMask 将计算最近成功交易的平均 gas 价格——例如，在 3 gwei 时，gwei 代表 gigawei。正如我们在“Ether 货币单位”中讨论的那样，Wei 是以太币的最小细分。gas 限制设置为发送基本交易的成本：21,000 个 gas 单位，这是可用于发送交易的最小 gas 量。因此，你将花费的最大 ETH 量为 3 × 21,000 gwei = 63,000 gwei = 0.000063 ETH。（请注意，平均 gas 价格可能会波动。我们将在后面的章节中看到如何增加或减少你的 gas 限制，以确保你的交易在需要时优先处理。）
 
-All this is to say that making a 0.05 ETH transaction costs 0.050063 ETH. Click Reject to cancel this transaction. Let's try again, this time by sending 0.01 ETH.
+所有这些都意味着进行 0.05 ETH 交易的成本为 0.050063 ETH。单击拒绝以取消此交易。让我们再试一次，这次发送 0.01 ETH。
 
-### Exploring the Transaction History of an Address
+### 浏览地址的交易历史记录
 
-By now, you have become an expert in using MetaMask to send and receive test ether. Your wallet has received and sent payments. You can view all these transactions using the [*sepolia.etherscan.io* block explorer](http://sepolia.etherscan.io). You can either copy your wallet address and paste it into the block explorer's search box or have MetaMask open the page for you. Next to your account icon in MetaMask, you will see a button showing three dots. Click it to show a menu of account-related options (see Figure 2-10).
+到目前为止，你已经成为使用 MetaMask 发送和接收测试以太币的专家。你的钱包已经收到并发送了付款。你可以使用 [*sepolia.etherscan.io* 区块浏览器](http://sepolia.etherscan.io)查看所有这些交易。你可以复制你的钱包地址并将其粘贴到区块浏览器的搜索框中，也可以让 MetaMask 为你打开页面。在 MetaMask 中你的帐户图标旁边，你将看到一个显示三个点的按钮。单击它以显示与帐户相关的选项菜单（参见图 2-10）。
 
-![MetaMask account context menu](images/ch2/maet_0210.png)
+![MetaMask 帐户上下文菜单](images/ch2/maet_0210.png)
 
-Figure 2-10. MetaMask account context menu
+图 2-10. MetaMask 帐户上下文菜单
 
-> **Tip**  
+> **提示**
 >
-> The default settings of MetaMask are not very privacy centric. It is advisable to carefully analyze the settings found in Settings → Security and Privacy. Once you are familiar with how MetaMask works, it is also advisable to change the Ethereum mainnet network from the default one to one that uses an RPC with privacy settings that suit your needs. The most private solution would be to have your own node with an RPC to which you can connect; we will see how to do that in Chapter 3.
+> MetaMask 的默认设置不是非常以隐私为中心。建议仔细分析“设置”→“安全和隐私”中的设置。熟悉 MetaMask 的工作方式后，还建议将以太坊主网络从默认网络更改为使用具有适合您需求的隐私设置的 RPC 的网络。最私有的解决方案是拥有自己的带有可以连接到的 RPC 的节点；我们将在第 3 章中看到如何执行此操作。
 
-Select "View account on Etherscan" to open a web page in the block explorer showing your account's transaction history, as shown in Figure 2-11.
+选择“在 Etherscan 上查看帐户”以在区块浏览器中打开一个网页，显示你的帐户的交易历史记录，如图 2-11 所示。
 
-![Address transaction history on Etherscan](images/ch2/maet_0211.png)
+![Etherscan 上的地址交易历史记录](images/ch2/maet_0211.png)
 
-Figure 2-11. Address transaction history on Etherscan
+图 2-11. Etherscan 上的地址交易历史记录
 
-Here you can see the entire transaction history of your Ethereum address. It shows all the transactions recorded on the Sepolia blockchain where your address is the sender or recipient. Click on a few of these transactions to see more details.
+在这里，你可以看到你的以太坊地址的整个交易历史记录。它显示了 Sepolia 区块链上记录的所有交易，其中你的地址是发送方或接收方。点击其中一些交易以查看更多详细信息。
 
-> **Warning**  
+> **警告**
 >
-> Beware, there is a known attack, called *address poisoning*, that can display transactions with spoofed addresses on the block explorer. The block explorer should be used for a quick check, but the information shown might not be accurate.
+> 请注意，存在一种已知的攻击，称为 *地址中毒*，它可以在区块浏览器上显示带有欺骗地址的交易。区块浏览器应该用于快速检查，但显示的信息可能不准确。
 
-You can explore the transaction history of any address. Take a look at the transaction history of the Sepolia test faucet address (hint: it is the "sender" address listed in the oldest payment to your address). You can see all the test ether sent from the faucet to you and to other addresses. Every transaction you see can lead you to more addresses and more transactions. Before long, you will be lost in the maze of interconnected data. Public blockchains contain an enormous wealth of information, all of which can be explored programmatically, as we will see in future examples.
+你可以浏览任何地址的交易历史记录。查看 Sepolia 测试水龙头地址的交易历史记录（提示：它是列在发送到你的地址的最旧付款中的“发送方”地址）。你可以看到从水龙头发送给你的和发送给其他地址的所有测试以太币。你看到的每笔交易都可以将你引向更多的地址和更多的交易。不久之后，你就会迷失在相互连接的数据迷宫中。公共区块链包含大量的信息，所有这些信息都可以通过编程方式进行探索，正如我们将在以后的示例中看到的那样。
 
-## Introducing the World Computer
+## 介绍世界计算机
 
-You've now created a wallet and sent and received ether. So far, we've treated Ethereum as a cryptocurrency. But Ethereum is much, much more. In fact, the cryptocurrency function is subservient to Ethereum's function as a decentralized world computer. Ether is meant to be used to pay for running *smart contracts*, which are computer programs that run on an emulated computer called the *EVM*.
+你现在已经创建了一个钱包并发送和接收了以太币。到目前为止，我们将以太坊视为一种加密货币。但以太坊远不止于此。事实上，加密货币功能是从属于以太坊作为去中心化世界计算机的功能的。以太币旨在用于支付运行 *智能合约* 的费用，智能合约是在一个名为 *EVM* 的模拟计算机上运行的计算机程序。
 
-The EVM is a global singleton, meaning that it operates as if it were a global single-instance computer, running everywhere. Each node on the Ethereum network runs a local copy of the EVM to validate contract execution, while the Ethereum blockchain records the changing *state* of this world computer as it processes transactions and smart contracts. We'll discuss this in much greater detail in Chapter 14.
+EVM 是一个全局单例，这意味着它的运行方式就像一个全局单实例计算机，在任何地方都在运行。以太坊网络上的每个节点都运行 EVM 的本地副本，以验证合约的执行，而以太坊区块链记录了这个世界计算机在处理交易和智能合约时不断变化的 *状态*。我们将在第 14 章中更详细地讨论这个问题。
 
-## Externally Owned Accounts and Contracts
+## 外部拥有帐户和合约
 
-The type of account you created in the MetaMask wallet is called an *externally owned account* (EOA). EOAs are those that have a private key; having the private key means control over access to funds or contracts.
+你在 MetaMask 钱包中创建的帐户类型称为 *外部拥有帐户* (EOA)。EOA 是那些拥有私钥的帐户；拥有私钥意味着控制对资金或合约的访问。
 
-You're probably guessing that there is another type of account. That other type of account is a *contract account*. A contract account has smart contract code, which a simple EOA can't have. Furthermore, a contract account does not have a private key. Instead, it is owned (and controlled) by the logic of its smart contract code: the software program recorded on the Ethereum blockchain at the contract account's creation and executed by the EVM.
+你可能在猜测还有另一种帐户类型。另一种帐户类型是 *合约帐户*。合约帐户具有智能合约代码，这是简单的 EOA 无法拥有的。此外，合约帐户没有私钥。相反，它由其智能合约代码的逻辑拥有（和控制）：该软件程序记录在以太坊区块链上，在合约帐户创建时由 EVM 执行。
 
-Contracts have addresses, just like EOAs. Contracts can also send and receive ether, just like EOAs. However, when a transaction destination is a contract address, it causes that contract to *run* in the EVM, using the transaction—and the transaction's data—as its input. In addition to ether, transactions can contain *data* indicating which specific function in the contract to run and what parameters to pass to that function. In this way, transactions can *call* functions within contracts.
+合约具有地址，就像 EOA 一样。合约也可以发送和接收以太币，就像 EOA 一样。但是，当交易目的地是合约地址时，它会导致该合约在 EVM 中 *运行*，使用交易——以及交易的数据——作为其输入。除了以太币之外，交易还可以包含 *数据*，指示要运行合约中的哪个特定函数以及要将哪些参数传递给该函数。通过这种方式，交易可以 *调用* 合约中的函数。
 
-Note that because a contract account does not have a private key, it cannot *initiate* a transaction. Only EOAs can initiate transactions, but contracts can *react* to transactions by calling other contracts, building complex execution paths.
+请注意，由于合约帐户没有私钥，因此它不能 *发起* 交易。只有 EOA 可以发起交易，但是合约可以通过调用其他合约来 *响应* 交易，从而构建复杂的执行路径。
 
-In the next few sections, we will write our first contract. You will then learn how to create, fund, and use that contract with your MetaMask wallet and test ether on the Sepolia test network.
+在接下来的几节中，我们将编写我们的第一个合约。然后，你将学习如何使用你的 MetaMask 钱包和 Sepolia 测试网络上的测试以太币来创建、资助和使用该合约。
 
-## A Simple Contract: A Test Ether Faucet
+## 一个简单的合约：一个测试以太币水龙头
 
-Ethereum has a few different high-level languages, all of which can be used to write a contract and produce EVM bytecode. You can read about the most prominent and interesting ones in Chapter 7. One high-level language is by far the dominant choice for smart contract programming: Solidity. Solidity was created by Gavin Wood and has become the most widely used language in Ethereum (and beyond). We'll use Solidity to write our first contract.
+以太坊有几种不同的高级语言，所有这些语言都可以用于编写合约和生成 EVM 字节码。你可以在第 7 章中阅读最突出和最有趣的语言。一种高级语言是智能合约编程的绝对主导选择：Solidity。Solidity 由 Gavin Wood 创建，并且已成为以太坊（及其他地区）中使用最广泛的语言。我们将使用 Solidity 编写我们的第一个合约。
 
-For our first example (Example 2-1), we will write a contract that controls a faucet. You've already used a faucet to get test ether on the Sepolia test network. A *faucet* is a relatively simple thing: it gives out ether to any address that asks and can be refilled.
+对于我们的第一个示例（示例 2-1），我们将编写一个控制水龙头的合约。你已经使用水龙头在 Sepolia 测试网络上获得测试以太币。 *水龙头* 相对简单：它将以太币分发给任何请求的地址，并且可以重新填充。
 
-##### Example 2-1. *Faucet.sol*: a Solidity contract implementing a faucet
+##### 示例 2-1. *Faucet.sol*：一个实现水龙头的 Solidity 合约
 
 ```solidity
 pragma solidity 0.8.26;
 // SPDX-License-Identifier: GPL-3.0
 
-// Our first contract is a faucet!
+// 我们的第一个合约是一个水龙头！
 contract Faucet {
 
-    // Give out ether to anyone who asks
+    // 向任何提出要求的人提供 ether
     function withdraw(uint256 _withdrawAmount, address payable _to) public {
 
-        // Limit withdrawal amount
+        // 限制提款金额
         require(_withdrawAmount <= 1000000000000);
 
-        // Send the amount to the address that requested it
+        // 将金额发送到请求它的地址
         _to.transfer(_withdrawAmount);
     }
 
-    // Function to receive Ether. msg.data must be empty
+    // 接收 Ether 的函数。msg.data 必须为空
     receive() external payable {}
 
-    // Fallback function is called when msg.data is not empty
+    // 当 msg.data 不为空时调用 Fallback 函数
     fallback() external payable {}
 }
 ```
 
-This is a very simple contract, about as simple as we can make it. It is also a *flawed* contract, demonstrating a number of bad practices and security vulnerabilities. We will learn by examining many of its flaws in later sections. But for now, let's look at what this contract does and how it works, line by line. You will quickly notice that many elements of Solidity are similar to existing programming languages, such as JavaScript, Java, or C++.
+这是一个非常简单的合约，它几乎和我们可以做到的最简单。它也是一个 *有缺陷的* 合约，展示了许多不良做法和安全漏洞。我们将在后面的章节中通过检查它的许多缺陷来学习。但是现在，让我们逐行查看此合约的作用以及其工作原理。你将很快注意到 Solidity 的许多元素与现有的编程语言（例如 JavaScript、Java 或 C++）相似。
 
-The first line is the `pragma` statement:
+第一行是 `pragma` 语句：
 
     pragma solidity 0.8.26;
 
-By including this line at the top of a Solidity source file, you ensure that the code is compiled with version 0.8.26 of the Solidity compiler, ensuring compatibility and avoiding potential issues that might arise from using a different compiler version.
+通过在 Solidity 源文件的顶部包含此行，你可以确保代码使用 Solidity 编译器的 0.8.26 版本进行编译，从而确保兼容性并避免因使用不同的编译器版本而可能出现的问题。
 
-Next is a comment indicating that the smart contract is licensed under the GPL-3.0 license:
+接下来是一个注释，表明该智能合约已获得 GPL-3.0 许可的许可：
 
     // SPDX-License-Identifier: GPL-3.0
 
-This is important for legal and compliance reasons because it informs users and developers about their rights and obligations concerning the use and distribution of the code.
+这对于法律和合规性原因非常重要，因为它告知用户和开发人员关于他们在使用和分发代码方面的权利和义务。
 
-Comments are for humans to read and are not included in the executable EVM bytecode. We usually put them on the line before the code we are trying to explain, or sometimes on the same line. Comments start with two forward slashes: `//`. Everything from the first slash until the end of that line is treated the same as a blank line and ignored.
+注释供人类阅读，不包含在可执行的 EVM 字节码中。我们通常将它们放在我们试图解释的代码的前一行，或者有时放在同一行上。注释以两条正斜杠开头：`//`。从第一条斜杠到该行末尾的所有内容都被视为与空行相同，并被忽略。
 
-This is also a comment:
+这也是一条注释：
 
-    // Our first contract is a faucet!
+    // 我们的第一个合约是一个水龙头！
 
-The next line is where our actual contract starts:
+下一行是我们的实际合约开始的地方：
 
     contract Faucet {
 
-This line declares a `contract` object, similar to a `class` declaration in other object-oriented languages. The contract definition includes all the lines between the curly braces (`{}`), which define a *scope*, much like how curly braces are used in many other programming languages.
+此行声明一个 `contract` 对象，类似于其他面向对象语言中的 `class` 声明。合约定义包括花括号 (`{}`) 之间的所有行，这些行定义一个 *范围*，很像花括号在许多其他编程语言中的使用方式。
 
-Next, we declare the first function of the `Faucet` contract:
+接下来，我们声明 `Faucet` 合约的第一个函数：
 
     function withdraw(uint256 _withdrawAmount, address payable _to) public {
 
-The function is named `withdraw`, and it takes one unsigned integer (`uint256`) named `_withdrawAmount` and an `address payable` named `_to`. It is declared as a public function, meaning it can be called by other contracts. The function definition follows, between curly braces. The first part of the `withdraw` function sets a limit on withdrawals:
+该函数名为 `withdraw`，它接受一个名为 `_withdrawAmount` 的无符号整数 (`uint256`) 和一个名为 `_to` 的 `address payable`。它被声明为一个公共函数，这意味着它可以被其他合约调用。函数定义如下，在花括号之间。`withdraw` 函数的第一部分设置了提款限制：
 
     require(_withdrawAmount <= 1000000000000);
 
-It uses the built-in Solidity function `require` to test a precondition: that the `_withdrawAmount` is less than or equal to 1,000,000,000,000 wei, which is the base unit of ether (see Table 2-1) and equivalent to 0.000001 ether. If the `withdraw` function is called with a `withdraw_amount` greater than that amount, the `require` function here will cause contract execution to stop and fail with an *exception*. Note that statements need to be terminated with a semicolon in Solidity.
+它使用内置的 Solidity 函数 `require` 来测试一个前提条件：`_withdrawAmount` 小于或等于 1,000,000,000,000 wei，这是以太币的基本单位（参见表 2-1），相当于 0.000001 以太币。如果在调用 `withdraw` 函数时 `withdraw_amount` 大于该金额，则此处的 `require` 函数将导致合约执行停止并失败并出现 *异常*。请注意，语句需要在 Solidity 中以分号结尾。
 
-This part of the contract is the main logic of our faucet. It controls the flow of funds out of the contract by placing a limit on withdrawals. It's a very simple control but can give you a glimpse of the power of a programmable blockchain: decentralized software controlling money.
+合约的这部分是我们水龙头的主要逻辑。它通过限制提款来控制资金从合约中流出。这是一个非常简单的控制，但可以让你一窥可编程区块链的强大之处：去中心化的软件控制资金。
 
-Here we have the first design flaw of the contract. It is not a security flaw, but it would be better to always add an error message to the `require` statement. This way, when a user's transaction fails due to a `require` statement, the reason is clear.
+这里我们有合约的第一个设计缺陷。这不是一个安全缺陷，但最好始终在 `require` 语句中添加一条错误消息。这样，当用户的交易由于 `require` 语句而失败时，原因就很清楚了。
 
-The corrected `require` statement is:
+更正后的 `require` 语句是：
 
-    require(_withdrawAmount <= 1000000000000, "The requested amount is too much, try a smaller amount!");
+    require(_withdrawAmount <= 1000000000000, "请求的金额太大，请尝试较小的金额！");
 
-Next comes the actual withdrawal:
+接下来是实际的提款：
 
     _to.transfer(_withdrawAmount);
 
-A couple of interesting things are happening here. The function `transfer` is a built-in function that transfers ether from the current contract to another specified address—in this case, the `_to` address. The `transfer` function takes an amount as its only argument. We pass the `_withdrawAmount` value that was the parameter to the `withdraw` function declared a few lines earlier.
+这里发生了一些有趣的事情。函数 `transfer` 是一个内置函数，它将以太币从当前合约转移到另一个指定的地址——在本例中为 `_to` 地址。`transfer` 函数以金额作为其唯一参数。我们传递作为几行之前声明的 `withdraw` 函数的参数的 `_withdrawAmount` 值。
 
-This is possible because the `_to` address was defined as payable. The built-in functions `transfer` and `send` can be called only on payable addresses. Here is the second flaw in the code: while `transfer` is perfectly fine if an EOA calls the `withdraw` function, it becomes problematic if another contract triggers this function. In that case, the transaction might fail because the `transfer` function can utilize only up to 2,300 gas, and multiple contract calls will likely exceed this limit. To fix this issue, you can use the built-in `call` function instead of `transfer` and `send`. However, this built-in function needs to be handled properly to avoid security flaws. For now, we will leave the built-in `transfer` function as is.
+这是可能的，因为 `_to` 地址被定义为 payable。内置函数 `transfer` 和 `send` 只能在 payable 地址上调用。这是代码中的第二个缺陷：虽然如果 EOA 调用 `withdraw` 函数，`transfer` 绝对没有问题，但如果另一个合约触发此函数，则会变得有问题。在这种情况下，交易可能会失败，因为 `transfer` 函数最多只能使用 2,300 个 gas，并且多次合约调用很可能超过此限制。要解决此问题，可以使用内置的 `call` 函数而不是 `transfer` 和 `send`。但是，需要正确处理此内置函数，以避免安全缺陷。目前，我们将内置的 `transfer` 函数保持原样。
 
-The very next line is the closing curly brace, indicating the end of the definition of our `withdraw` function.
+紧接着的一行是右花括号，指示我们的 `withdraw` 函数的定义结束。
 
-Next, we declare two more functions:
+接下来，我们声明另外两个函数：
 
     receive() external payable {}
     fallback() external payable {}
 
-These functions are the `fallback` and `receive` functions, which are called if the transaction that triggered the contract didn't name any of the declared functions in the contract, or any function at all, or didn't contain data. Contracts can have these functions and are usually the ones that receive ether. When *msg.data* is empty, the `receive` function will be triggered; when *msg.data* is not empty, the `fallback` function will be triggered.
+这些函数是 `fallback` 和 `receive` 函数，如果在触发合约的交易中没有命名合约中声明的任何函数，或者根本没有命名任何函数，或者不包含数据，则会调用这些函数。合约可以具有这些函数，并且通常是接收以太币的函数。当 *msg.data* 为空时，将触发 `receive` 函数；当 *msg.data* 不为空时，将触发 `fallback` 函数。
 
-Right below our `fallback` function is the final closing curly brace, which closes the definition of the contract `Faucet`. That's it!
+在我们 `fallback` 函数的正下方是最后的右花括号，它关闭了合约 `Faucet` 的定义。就这样！
 
-## Compiling the Faucet Contract
+## 编译水龙头合约
 
-Now that we have our first example contract, we need to use a Solidity compiler to convert the Solidity code into EVM bytecode so that it can be executed by the EVM on the blockchain itself.
+现在我们有了我们的第一个示例合约，我们需要使用 Solidity 编译器将 Solidity 代码转换为 EVM 字节码，以便它可以由区块链本身的 EVM 执行。
 
-The Solidity compiler comes as a standalone executable, as part of various frameworks, and bundled in IDEs. To keep things simple, we will use one of the more popular IDEs: Remix.
+Solidity 编译器作为独立的可执行文件提供，作为各种框架的一部分提供，并且捆绑在 IDE 中。为了保持简单，我们将使用更流行的 IDE 之一：Remix。
 
-Use your Chrome browser (with the MetaMask wallet you installed earlier) to navigate to the [Remix IDE](https://remix.ethereum.org).
+使用你的 Chrome 浏览器（带有你之前安装的 MetaMask 钱包）导航到 [Remix IDE](https://remix.ethereum.org)。
 
-When you first load Remix, it will start with a sample contract called *Storage.sol*. We don't need that, so close it by clicking the `x` on the corner of the tab, as seen in Figure 2-12.
+当你第一次加载 Remix 时，它将从一个名为 *Storage.sol* 的示例合约开始。我们不需要它，所以点击选项卡角上的 `x` 将其关闭，如图 2-12 所示。
 
-![Closing the default example tab](images/ch2/maet_0212.png)
+![关闭默认示例标签](images/ch2/maet_0212.png)
 
-Figure 2-12. Closing the default example tab
+图 2-12. 关闭默认示例标签
 
-Now, create a new file, as shown in Figure 2-13. Name the new file *Faucet.sol*.
+现在，创建一个新文件，如图 2-13 所示。将新文件命名为 *Faucet.sol*。
 
-![Creating a new contract](images/ch2/maet_0213.png)
+![创建一个新合约](images/ch2/maet_0213.png)
 
-Figure 2-13. Creating a new contract
+图 2-13. 创建一个新合约
 
-Once you have the new tab open, copy and paste the code from our example *Faucet.sol*, as shown in Figure 2-14.
+打开新标签后，复制并将代码从我们的示例 *Faucet.sol* 粘贴进去，如图 2-14 所示。
 
-![Copying the Faucet example code into the new contract](images/ch2/maet_0214.png)
+![将 Faucet 示例代码复制到新合约中](images/ch2/maet_0214.png)
 
-Figure 2-14. Copying the Faucet example code into the new contract
+图 2-14. 将 Faucet 示例代码复制到新合约中
 
-Once you have loaded the *Faucet.sol* contract into the Remix IDE, navigate to the compile section of Remix and click Compile *Faucet.sol*. If all goes well, you will see a green box (see Figure 2-15).
+将 *Faucet.sol* 合约加载到 Remix IDE 后，导航到 Remix 的编译部分并点击 编译 *Faucet.sol*。如果一切顺利，你将看到一个绿色框（参见图 2-15）。
 
-![Remix successfully compiles the Faucet.sol contract](images/ch2/maet_0215.png)
+![Remix 成功编译 Faucet.sol 合约](images/ch2/maet_0215.png)
 
-Figure 2-15. Remix successfully compiles the *Faucet.sol* contract
+图 2-15. Remix 成功编译 *Faucet.sol* 合约
 
-If something goes wrong, the most likely problem is that the Remix IDE is using a version of the Solidity compiler that is different from 0.8.26. In that case, our `pragma` directive will prevent *Faucet.sol* from compiling. To change the compiler version, go to the Compiler tab, set the version to 0.8.26, and try again.
+如果出现问题，最可能的问题是 Remix IDE 使用的 Solidity 编译器版本与 0.8.26 不同。在这种情况下，我们的 `pragma` 指令将阻止 *Faucet.sol* 编译。要更改编译器版本，请转到“编译器”选项卡，将版本设置为 0.8.26，然后重试。
 
-The Solidity compiler has now compiled our *Faucet.sol* into EVM bytecode. If you are curious, the bytecode looks like this:
+Solidity 编译器现在已将我们的 *Faucet.sol* 编译为 EVM 字节码。如果你好奇，字节码如下所示：
 
     6080604052348015600e575f80fd5b506101af8061001c5f395ff3fe608060405260043610610020575f3560
     e01c8062f714ce1461002957610027565b3661002757005b005b348015610034575f80fd5b5061004f600480
@@ -408,132 +408,116 @@ The Solidity compiler has now compiled our *Faucet.sol* into EVM bytecode. If yo
     915050925092905056fea26469706673582212207de2f4d88c747c9332dceef5dcd739f3380ec8a8c2167a29
     2ba64ee24fa32a8a64736f6c634300081a0033
 
-Aren't you glad you are using a high-level language like Solidity instead of programming directly in EVM bytecode? Us too!
+你是否很高兴你使用像 Solidity 这样的高级语言而不是直接用 EVM 字节码进行编程？我们也是！Remix 将构建特殊的“创建”交易，MetaMask 会要求你批准它，如图 2-17 所示。你会注意到合约创建交易中没有以太币，但它有一些数据字节（已编译的合约），并且会消耗一些 Gwei 的 gas。单击“提交”以批准它。
 
-## Creating the Contract on the Blockchain
+![MetaMask 显示合约创建交易](images/ch2/maet_0217.png)
 
-So, we have a contract. We've compiled it into bytecode. Now, we need to "register" the contract on the Ethereum blockchain. We will be using the Sepolia testnet to test our contract, so that's the blockchain we want to submit it to.
+图 2-17. MetaMask 显示合约创建交易
 
-Registering a contract on the blockchain involves creating a special transaction whose destination is the address `0x0000000000000000000000000000000000000000`, also known as the *zero address*. The zero address is a special address that tells the Ethereum blockchain that you want to register a contract. Fortunately, the Remix IDE will handle all of that for you and send the transaction to MetaMask.
+现在你必须等待。合约在 Sepolia 上处理大约需要 15-30 秒。Remix 似乎没有做什么，但请耐心等待。
 
-First, switch to the Run tab and select Injected Web3 in the Environment drop-down selection box. This connects the Remix IDE to the MetaMask wallet and, through MetaMask, to the Sepolia test network. Once you do that, you can see Sepolia under Environment. Also, the Account selection box shows the address of your wallet (see Figure 2-16).
+合约创建完成后，它会出现在“运行”选项卡的底部（参见图 2-18）。
 
-![Remix IDE Run tab with Injected Web3 environment selected](images/ch2/maet_0216.png)
+![Faucet 合约已启动！](images/ch2/maet_0218.png)
 
-Figure 2-16. Remix IDE Run tab with Injected Web3 environment selected
+图 2-18. Faucet 合约已启动！
 
-Right below the Run settings you just confirmed is the `Faucet` contract, ready to be created. Click the Deploy button shown in Figure 2-16.
+请注意，`Faucet` 合约现在有自己的地址：Remix 将其显示为“Faucet at 0x4E7…6EA46”（虽然你的地址——随机字母和数字——会有所不同）。
 
-Remix will construct the special "creation" transaction, and MetaMask will ask you to approve it, as shown in Figure 2-17. You'll notice that the contract-creation transaction has no ether in it, but it has some bytes of data (the compiled contract) and will consume some gwei in gas. Click Submit to approve it.
+## 与合约交互
 
-![MetaMask showing the contract creation transaction](images/ch2/maet_0217.png)
+让我们回顾一下到目前为止所学的内容。以太坊合约是控制资金的程序，它在名为 EVM 的虚拟机中运行。它们由一个特殊的交易创建，该交易提交它们的字节码以记录在区块链上。一旦它们在区块链上创建，它们就拥有一个以太坊地址，就像钱包一样。任何时候有人向合约地址发送交易，都会导致合约在 EVM 中运行，并将该交易作为其输入。发送到合约地址的交易可能包含以太币或数据，或两者都包含。如果它们包含以太币，则将其“存入”合约余额。如果它们包含数据，则数据可以指定合约中的命名函数并调用它，并将参数传递给该函数。
 
-Figure 2-17. MetaMask showing the contract creation transaction
+### 在区块浏览器中查看合约地址
 
-Now you have to wait. It will take about 15–30 seconds for the contract to be processed on Sepolia. Remix won't appear to be doing much, but be patient.
+我们现在有一个记录在区块链上的合约，我们可以看到它有一个以太坊地址。让我们在 [*sepolia.etherscan.io* 区块浏览器](http://sepolia.etherscan.io) 中查看它，看看合约是什么样子的。在 Remix IDE 中，通过单击其名称旁边的图标来复制合约的地址（参见图 2-19）。
 
-Once the contract is created, it appears at the bottom of the Run tab (see Figure 2-18).
+![从 Remix 复制合约地址](images/ch2/maet_0219.png)
 
-![The Faucet contract is alive!](images/ch2/maet_0218.png)
+图 2-19. 从 Remix 复制合约地址
 
-Figure 2-18. The Faucet contract is alive!
+保持 Remix 处于打开状态；我们稍后会回到它。现在，在浏览器中导航到 [*sepolia.etherscan.io*](http://sepolia.etherscan.io) 并将地址粘贴到搜索框中。你应该看到合约的以太坊地址历史记录，如图 2-20 所示。
 
-Notice that the `Faucet` contract now has an address of its own: Remix shows it as "Faucet at 0x4E7…6EA46" (although your address—the random letters and numbers—will be different).
+![在 Etherscan 区块浏览器中查看 Faucet 合约地址](images/ch2/maet_0220.png)
 
-## Interacting with the Contract
+图 2-20. 在 Etherscan 区块浏览器中查看 Faucet 合约地址
 
-Let's recap what we've learned so far. Ethereum contracts are programs that control money, which run inside a virtual machine called the EVM. They are created by a special transaction that submits their bytecodes to be recorded on the blockchain. Once they are created on the blockchain, they have an Ethereum address, just like wallets. Anytime someone sends a transaction to a contract address, it causes the contract to run in the EVM, with the transaction as its input. Transactions sent to contract addresses may have ether or data or both. If they contain ether, it is "deposited" to the contract balance. If they contain data, the data can specify a named function in the contract and call it, passing arguments to the function.
+### 资助合约
 
-### Viewing the Contract Address in a Block Explorer
+目前，合约的历史记录中只有一个交易：合约创建交易。正如你所看到的，合约也没有以太币（零余额）。那是因为我们没有在创建交易中向合约发送任何以太币，即使我们可以发送。
 
-We now have a contract recorded on the blockchain, and we can see it has an Ethereum address. Let's check it out in the [*sepolia.etherscan.io* block explorer](http://sepolia.etherscan.io) and see what a contract looks like. In the Remix IDE, copy the address of the contract by clicking the icon next to its name (see Figure 2-19).
+我们的 faucet 需要资金！我们的第一个项目是使用 MetaMask 向合约发送以太币。你的剪贴板中应该仍然有合约的地址（如果没有，请再次从 Remix 复制它）。打开 MetaMask 并向其发送 0.01 以太币，就像你向任何其他以太坊地址发送一样（参见图 2-21）。
 
-![Copying the contract address from Remix](images/ch2/maet_0219.png)
+![向合约地址发送 0.01 以太币](images/ch2/maet_0221.png)
 
-Figure 2-19. Copying the contract address from Remix
+图 2-21. 向合约地址发送 0.01 以太币
 
-Keep Remix open; we'll come back to it later. Now, navigate your browser to [*sepolia.etherscan.io*](http://sepolia.etherscan.io) and paste the address into the search box. You should see the contract's Ethereum address history, as shown in Figure 2-20.
+稍等片刻，如果你重新加载 Etherscan 区块浏览器，它将显示到合约地址的另一个交易和 0.01 以太币的更新余额。
 
-![Viewing the Faucet contract address in the Etherscan block explorer](images/ch2/maet_0220.png)
-
-Figure 2-20. Viewing the Faucet contract address in the Etherscan block explorer
-
-### Funding the Contract
-
-For now, the contract has only one transaction in its history: the contract-creation transaction. As you can see, the contract also has no ether (zero balance). That's because we didn't send any ether to the contract in the creation transaction, even though we could have.
-
-Our faucet needs funds! Our first project will be to use MetaMask to send ether to the contract. You should still have the address of the contract in your clipboard (if not, copy it again from Remix). Open MetaMask and send 0.01 ether to it, exactly as you would to any other Ethereum address (see Figure 2-21).
-
-![Sending 0.01 ether to the contract address](images/ch2/maet_0221.png)
-
-Figure 2-21. Sending 0.01 ether to the contract address
-
-In a minute, if you reload the Etherscan block explorer, it will show another transaction to the contract address and an updated balance of 0.01 ether.
-
-Remember the `receive` function in our *Faucet.sol* code? It looked like this:
+还记得我们的 *Faucet.sol* 代码中的 `receive` 函数吗？它看起来像这样：
 
     receive() external payable {}
 
-When you send the transaction to the contract address, with no data specifying which function to call, it calls this `receive` function. Your transaction caused the contract to run in the EVM, updating its balance. You have funded your faucet!
+当你向合约地址发送交易，而没有指定要调用哪个函数的数据时，它会调用此 `receive` 函数。你的交易导致合约在 EVM 中运行，更新其余额。你已经资助了你的 faucet！
 
-### Withdrawing from Our Contract
+### 从我们的合约中提取资金
 
-Next, let's withdraw some funds from the faucet. To withdraw, we have to construct a transaction that calls the `withdraw` function and passes a `_withdrawAmount` and a `_to` argument to it. To keep things simple for now, Remix will construct that transaction for us, and MetaMask will present it for our approval.
+接下来，让我们从 faucet 中提取一些资金。要提取资金，我们必须构建一个调用 `withdraw` 函数的交易，并将一个 `_withdrawAmount` 和一个 `_to` 参数传递给它。为了现在使事情简单，Remix 将为我们构建该交易，MetaMask 将提交它以供我们批准。
 
-Return to the Remix tab and look at the contract on the Run tab. You should see a red box labeled "withdraw" with a field entry labeled "uint256 \_withdrawAmount, address \_to" (see Figure 2-22).
+返回到 Remix 选项卡，查看“运行”选项卡上的合约。你应该看到一个标有“withdraw”的红色框，其中有一个标有“uint256 \_withdrawAmount, address \_to”的字段条目（参见图 2-22）。
 
-![The withdraw function of Faucet.sol in Remix](images/ch2/maet_0222.png)
+![Remix 中 Faucet.sol 的 withdraw 函数](images/ch2/maet_0222.png)
 
-Figure 2-22. The withdraw function of *Faucet.sol* in Remix
+图 2-22. Remix 中 *Faucet.sol* 的 withdraw 函数
 
-This is the Remix interface to the contract. It allows us to construct transactions that call the functions defined in the contract. We will enter a `_withdrawAmount` and a `_to` address and click the withdraw button to generate the transaction.
+这是合约的 Remix 接口。它允许我们构建调用合约中定义的函数的交易。我们将输入一个 `_withdrawAmount` 和一个 `_to` 地址，然后单击 withdraw 按钮来生成交易。
 
-First, let's figure out the `_withdrawAmount`. We want to try to withdraw 0.000001 ether, which is the maximum amount allowed by our contract. Remember that all currency values in Ethereum are denominated in wei internally, and our `withdraw` function expects the `_withdrawAmount` to be denominated in wei, too. The amount we want is 0.000001 ether, which is 1,000,000,000,000 wei (a 1 followed by 12 zeros).
+首先，让我们计算出 `_withdrawAmount`。我们想尝试提取 0.000001 以太币，这是我们的合约允许的最大金额。请记住，以太坊中的所有货币值在内部都以 wei 为单位，并且我们的 `withdraw` 函数也希望 `_withdrawAmount` 以 wei 为单位。我们想要的金额是 0.000001 以太币，即 1,000,000,000,000 wei（一个 1 后面跟着 12 个零）。
 
-For the `_to` address we will just use our Account 1 in MetaMask.
+对于 `_to` 地址，我们将只使用 MetaMask 中的 Account 1。
 
-> **Tip**  
+> **提示**
 >
-> Due to a limitation in JavaScript, a number as large as 10^17^ cannot be processed by Remix. Instead, we enclose it in quotation marks to allow Remix to receive it as a string and manipulate it as a `BigNumber`. If we don't enclose it in quotes, the Remix IDE will fail to process it and display "Error encoding arguments: Error: Assertion failed."
+> 由于 JavaScript 中的一个限制，Remix 无法处理像 10^17^ 这么大的数字。相反，我们将它用引号括起来，以允许 Remix 将它作为字符串接收并将其作为 `BigNumber` 进行操作。如果我们不用引号将其括起来，Remix IDE 将无法处理它并显示“Error encoding arguments: Error: Assertion failed.”
 
-Type `"1000000000000"` (with the quotes) into the `_withdrawAmount` box, copy-paste your Account 1 address from MetaMask, and click the transact button. (You might see it as the withdraw button. Figure 2-23 shows an expanded view of the function; if your view is not expanded, then the button will be called "withdraw.")
+将 `"1000000000000"`（带引号）输入到 `_withdrawAmount` 框中，从 MetaMask 复制粘贴你的 Account 1 地址，然后单击 transact 按钮。（你可能会看到它是 withdraw 按钮。图 2-23 显示了该函数的展开视图；如果你的视图未展开，则该按钮将被称为“withdraw”。）
 
-![Click transact in Remix to create a withdrawal transaction](images/ch2/maet_0223.png)
+![在 Remix 中单击 transact 以创建提款交易](images/ch2/maet_0223.png)
 
-Figure 2-23. Click transact in Remix to create a withdrawal transaction
+图 2-23. 在 Remix 中单击 transact 以创建提款交易
 
-MetaMask will pop up a transaction window for you to approve. Click Submit to send your withdrawal call to the contract (see Figure 2-24).
+MetaMask 将弹出一个交易窗口供你批准。单击“提交”以将你的提款调用发送到合约（参见图 2-24）。
 
-![MetaMask transaction to call the withdraw function](images/ch2/maet_0224.png)
+![MetaMask 交易调用 withdraw 函数](images/ch2/maet_0224.png)
 
-Figure 2-24. MetaMask transaction to call the withdraw function
+图 2-24. MetaMask 交易调用 withdraw 函数
 
-Wait a minute and then reload the Etherscan block explorer to see the transaction reflected in the `Faucet` contract address history (see Figure 2-25).
+等待一分钟，然后重新加载 Etherscan 区块浏览器，以在 `Faucet` 合约地址历史记录中看到该交易（参见图 2-25）。
 
-![Etherscan shows the transaction calling the withdraw function](images/ch2/maet_0225.png)
+![Etherscan 显示调用 withdraw 函数的交易](images/ch2/maet_0225.png)
 
-Figure 2-25. Etherscan shows the transaction calling the withdraw function
+图 2-25. Etherscan 显示调用 withdraw 函数的交易
 
-We now see a new transaction with the contract address as the destination and a value of 0 ether. The contract balance has changed and is now 0.009999 ether because it sent us 0.000001 ether as requested.
+我们现在看到一个新交易，其中合约地址为目的地，值为 0 以太币。合约余额已更改，现在为 0.009999 以太币，因为它按请求向我们发送了 0.000001 以太币。
 
-But we don't see an "OUT" transaction in the contract address history. Where's the outgoing withdrawal? A new tab named Internal Transactions has appeared on the contract's address history page. Because the 0.000001 ether transfer originated from the contract code, it is an internal transaction (also called a *message*). Click that tab to see it (see Figure 2-26).
+但是我们在合约地址历史记录中没有看到“OUT”交易。外发提款在哪里？合约的地址历史记录页面上出现了一个名为“Internal Transactions”的新选项卡。由于 0.000001 以太币的转移源自合约代码，因此它是一个内部交易（也称为*消息*）。单击该选项卡以查看它（参见图 2-26）。
 
-This "internal transaction" was sent by the contract in this line of code (from the `withdraw` function in *Faucet.sol*):
+此“内部交易”由合约在此行代码中发送（来自 *Faucet.sol* 中的 `withdraw` 函数）：
 
     _to.transfer(_withdrawAmount);
 
-![Etherscan shows the internal transaction transferring ether out from the contract](images/ch2/maet_0226.png)
+![Etherscan 显示将以太币从合约中转出的内部交易](images/ch2/maet_0226.png)
 
-Figure 2-26. Etherscan shows the internal transaction transferring ether out from the contract
+图 2-26. Etherscan 显示将以太币从合约中转出的内部交易
 
-To recap: you sent a transaction from your MetaMask wallet that contained data instructions to call the `withdraw` function with a `_withdrawAmount` argument of 0.000001 ether and an address. That transaction caused the contract to run inside the EVM. As the EVM ran the `Faucet` contract's `withdraw` function, it first called the `require` function and validated that the requested amount was less than or equal to the maximum allowed withdrawal of 0.000001 ether. Then, it called the `transfer` function to send you the ether. Running the `transfer` function generated an internal transaction that deposited 0.000001 ether into your wallet address from the contract's balance. That's the one shown on the Internal Transactions tab in Etherscan.
+回顾一下：你从你的 MetaMask 钱包发送了一个交易，其中包含调用 `withdraw` 函数的数据指令，其中 `_withdrawAmount` 参数为 0.000001 以太币和一个地址。该交易导致合约在 EVM 中运行。当 EVM 运行 `Faucet` 合约的 `withdraw` 函数时，它首先调用 `require` 函数并验证请求的金额小于或等于允许的最大提款额 0.000001 以太币。然后，它调用 `transfer` 函数向你发送以太币。运行 `transfer` 函数生成一个内部交易，该交易从合约余额中将 0.000001 以太币存入你的钱包地址。这就是 Etherscan 中“Internal Transactions”选项卡上显示的交易。
 
-## Conclusion
+## 结论
 
-In this chapter, you set up a wallet using MetaMask and funded it using a faucet on the Sepolia test network. You received ether into your wallet's Ethereum address, and then you sent ether to another address.
+在本章中，你使用 MetaMask 设置了一个钱包，并使用 Sepolia 测试网络上的 faucet 为其提供资金。你将以太币接收到你的钱包的以太坊地址中，然后你将以太币发送到另一个地址。
 
-Next, you wrote a `Faucet` contract in Solidity. You used the Remix IDE to compile the contract into EVM bytecode, then used Remix to form a transaction and created the `Faucet` contract on the Sepolia blockchain. Once created, the `Faucet` contract had an Ethereum address, and you sent it some ether. Finally, you constructed a transaction to call the `withdraw` function and successfully asked for 0.000001 ether. The contract checked the request and sent you 0.000001 ether with an internal transaction.
+接下来，你用 Solidity 编写了一个 `Faucet` 合约。你使用 Remix IDE 将合约编译成 EVM 字节码，然后使用 Remix 形成一个交易并在 Sepolia 区块链上创建了 `Faucet` 合约。创建后，`Faucet` 合约有了一个以太坊地址，你向它发送了一些以太币。最后，你构建了一个交易来调用 `withdraw` 函数并成功请求了 0.000001 以太币。合约检查了请求并通过内部交易向你发送了 0.000001 以太币。
 
-It may not seem like much, but you've just successfully interacted with software that controls money on a decentralized world computer.
+这看起来可能不多，但你刚刚成功地与在去中心化世界计算机上控制资金的软件进行了交互。
 
-We will do a lot more Solidity smart contract programming in Chapter 7 and learn about best practices and security considerations in Chapter 9.
+我们将在第 7 章中进行更多的 Solidity 智能合约编程，并在第 9 章中了解最佳实践和安全注意事项。
