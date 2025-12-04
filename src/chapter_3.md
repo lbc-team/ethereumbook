@@ -2,7 +2,7 @@
 
 以太坊节点是一个实现以太坊规范并通过 P2P 网络与其他以太坊节点通信的软件应用程序。
 
-最初，一个节点只需要运行一个客户端就可以完全实现成为以太坊生态系统一部分的所有要求。在 2022 年 9 月 15 日，发生了 The Merge 硬分叉，将共识协议从基于 PoW 的方案更改为 Gasper，新的基于 PoS 的共识协议。这也导致了关注点分离——共识和执行——以及一种新型以太坊客户端的创建：共识客户端。
+最初，一个节点只需要运行一个客户端就可以完全实现成为以太坊生态系统一部分的所有要求。在 2022 年 9 月 15 日，发生了 The Merge 硬分叉，将共识协议从基于 [PoW](https://learnblockchain.cn/tags/PoW) 的方案更改为 Gasper，新的基于 [PoS](https://learnblockchain.cn/tags/PoS) 的共识协议。这也导致了关注点分离——共识和执行——以及一种新型以太坊客户端的创建：共识客户端。
 
 因此，在撰写本文时，一个以太坊节点必须同时运行两个软件才能与最新的规范兼容，如图 3-1 所示，定义如下：
 
@@ -62,7 +62,7 @@
 
 **Reth**
 
-一个新的基于 Rust 的执行客户端，由 Paradigm 在 Parity/OpenEthereum 停止后创建
+一个新的基于 [Rust](https://learnblockchain.cn/tags/Rust) 的执行客户端，由 Paradigm 在 Parity/OpenEthereum 停止后创建
 
 我们将研究以下两个共识客户端：
 
@@ -157,7 +157,7 @@
 
 - 没有其他用户意味着您的本地链的行为与公共区块链不同。交易空间或交易排序没有竞争。
 - 除了您之外没有其他区块生产者意味着区块生产更可预测；因此，您无法测试公共区块链上发生的一些场景。值得一提的是，Anvil（以及像 Hardhat 这样的其他工具）允许您配置区块生产模式以尝试重现类似于主网的行为，但仍然与在以太坊主网上不同。
-- 没有其他合约意味着您必须部署所有要测试的内容，包括依赖项和合约库。幸运的是，像 Anvil 这样的工具允许您在任意区块分叉以太坊主网链，并在类似于主网的状态下试验您的智能合约。
+- 没有其他合约意味着您必须部署所有要测试的内容，包括依赖项和合约库。幸运的是，像 Anvil 这样的工具允许您在任意区块分叉以太坊主网链，并在类似于主网的状态下试验您的[智能合约](https://learnblockchain.cn/tags/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6)。
 
 ## 运行以太坊节点
 
@@ -197,7 +197,7 @@
 >
 > 在本章的许多示例中，我们将使用操作系统的 CLI（也称为 shell），通过终端应用程序访问。shell 将显示一个提示符；您键入一个命令，shell 会响应一些文本和一个用于您的下一个命令的新提示符。提示符在您的系统上可能看起来不同，但在以下示例中，它由一个 $ 符号表示。在示例中，当您看到 $ 符号后的文本时，不要键入 $ 符号，而是键入紧随其后的命令（以粗体显示），然后按 Enter 键执行该命令。在示例中，每个命令下面的行是操作系统对该命令的响应。当您看到下一个 $ 前缀时，您就会知道这是一个新命令，您应该重复该过程。
 
-在我们开始之前，您可能需要安装一些软件。如果您从未在当前使用的计算机上进行过任何软件开发，您可能需要安装一些基本工具。对于以下示例，您将需要安装 git（源代码管理系统）、golang（Go 编程语言和标准库）和 Rust（一种系统编程语言）。
+在我们开始之前，您可能需要安装一些软件。如果您从未在当前使用的计算机上进行过任何软件开发，您可能需要安装一些基本工具。对于以下示例，您将需要安装 git（源代码管理系统）、golang（Go 编程语言和标准库）和 [Rust](https://learnblockchain.cn/tags/Rust)（一种系统编程语言）。
 
 以下是我们将在本示例中使用的四个客户端的文档页面：
 
@@ -290,7 +290,7 @@ $ git checkout v1.14.3
 $ make geth
 ```
 
-如果一切顺利，您将看到 Go 编译器构建每个组件，直到它生成 Geth 可执行文件：
+如果一切顺利，您将看到 [Go](https://learnblockchain.cn/tags/Go) 编译器构建每个组件，直到它生成 Geth 可执行文件：
 
 ```bash
 go run build/ci.go install ./cmd/geth
@@ -323,7 +323,7 @@ Operating System: darwin
 
 #### Prysm
 
-现在轮到共识客户端了。Prysm 是 Go 语言实现的共识规范，由 Offchain Labs 积极开发。最初，它是 The Merge 之后使用最广泛的共识客户端。现在，由于社区为促进客户端多样性做出的巨大努力，其市场份额已大大降低，为 37%。
+现在轮到共识客户端了。Prysm 是 [Go](https://learnblockchain.cn/tags/Go) 语言实现的共识规范，由 Offchain Labs 积极开发。最初，它是 The Merge 之后使用最广泛的共识客户端。现在，由于社区为促进客户端多样性做出的巨大努力，其市场份额已大大降低，为 37%。
 
 **安装二进制文件**。Prysm 可以像我们为 Geth 所做的那样从源代码构建，但这有点复杂。建议的安装方法是以下方法。首先，转到 *consensus* 文件夹：
 
@@ -657,11 +657,11 @@ $ echo $((0x1B1717FC7))7271972807
 
 - 在钱包中管理私钥和以太坊地址
 - 创建、签名和广播交易
-- 使用数据有效载荷与智能合约交互
-- 浏览并与 DApp 交互
+- 使用数据有效载荷与[智能合约](https://learnblockchain.cn/tags/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6)交互
+- 浏览并与 [DApp](https://learnblockchain.cn/tags/DApp) 交互
 - 提供指向外部服务的链接，例如区块浏览器
 - 转换以太币单位并从外部来源检索汇率
-- 将 Web3 实例作为 JavaScript 对象注入到 Web 浏览器中
+- 将 Web3 实例作为 [JavaScript](https://learnblockchain.cn/tags/JavaScript) 对象注入到 Web 浏览器中
 - 使用由另一个客户端提供或注入到浏览器中的 Web3 实例
 - 访问本地或远程以太坊节点上的 RPC 服务
 
@@ -677,36 +677,36 @@ $ echo $((0x1B1717FC7))7271972807
 
 **Coinbase Wallet**
 
-一款移动钱包，支持多种不同的链，例如以太坊（以及所有 L2）、与 EVM 兼容的 L1、比特币、Solana、莱特币和狗狗币。它还可以连接到 Coinbase 帐户。
+一款移动钱包，支持多种不同的链，例如以太坊（以及所有 L2）、与 EVM 兼容的 L1、[比特币](https://learnblockchain.cn/tags/比特币?map=BTC)、[Solana](https://learnblockchain.cn/tags/Solana?map=Solana)、莱特币和狗狗币。它还可以连接到 Coinbase 帐户。
 
 **Phantom**
 
-Phantom 是另一个多链钱包，与以太坊、Solana、比特币和 Polygon 兼容。
+Phantom 是另一个多链钱包，与以太坊、[Solana](https://learnblockchain.cn/tags/Solana?map=Solana)、[比特币](https://learnblockchain.cn/tags/比特币?map=BTC)和 Polygon 兼容。
 
 **Trust Wallet**
 
 一款移动多链钱包，支持一百多个区块链。Trust Wallet 适用于 iOS 和 Android。
 
-**Uniswap Wallet**
+**[Uniswap](https://learnblockchain.cn/tags/Uniswap?map=EVM) Wallet**
 
-一款移动钱包，仅支持以太坊和与 EVM 兼容的 L2 和 L1。它由 Uniswap 团队制作。它非常新，适用于 iOS 和 Android。
+一款移动钱包，仅支持以太坊和与 EVM 兼容的 L2 和 L1。它由 [Uniswap](https://learnblockchain.cn/tags/Uniswap?map=EVM) 团队制作。它非常新，适用于 iOS 和 Android。
 
 ### 浏览器钱包
 
-各种钱包和 DApp 浏览器可以作为 Chrome 和 Firefox 等 Web 浏览器的插件或扩展程序使用。这些是在您的浏览器中运行的远程客户端。一些比较流行的包括：
+各种钱包和 [DApp](https://learnblockchain.cn/tags/DApp) 浏览器可以作为 Chrome 和 Firefox 等 Web 浏览器的插件或扩展程序使用。这些是在您的浏览器中运行的远程客户端。一些比较流行的包括：
 
 **MetaMask**
 
 // TODO: 在此处添加第2章参考链接
 [MetaMask](https://metamask.io)，在[第2章](add-link)中介绍，是一个多功能的基于浏览器的钱包、RPC 客户端和基本合约浏览器。它可在 Chrome、Firefox、Opera 和 Brave 浏览器上使用。
 
-**Phantom**
+**[Phantom](https://learnblockchain.cn/tags/Phantom?map=Solana)**
 
-Phantom 也有一个 Web 浏览器钱包，它具有非常漂亮和简洁的 UI。
+[Phantom](https://learnblockchain.cn/tags/Phantom?map=Solana) 也有一个 Web 浏览器钱包，它具有非常漂亮和简洁的 UI。
 
 **Rabby Wallet**
 
-Rabby 是一款新的多链 Web 浏览器钱包，支持一百多个不同的区块链（与 EVM 兼容的链）。
+Rabby 是一款新的多链 Web 浏览器钱包，支持一百多个不同的区块链（与 [EVM](https://learnblockchain.cn/tags/EVM?map=EVM) 兼容的链）。
 
 **Coinbase Wallet**
 
@@ -714,13 +714,13 @@ Coinbase Wallet 也有 Web 浏览器钱包。它具有与移动版本相同的�
 
 ### 硬件钱包
 
-大多数移动和浏览器钱包都可以与更高安全性的硬件钱包结合使用：离线设备旨在永不连接到互联网，并且旨在抵抗篡改和其他形式的物理攻击，从而提供更高级别的安全性。几家公司正在构建此类设备，但两种最广泛使用的是 Ledger 和 Trezor。
+大多数移动和浏览器[钱包](https://learnblockchain.cn/tags/%E9%92%B1%E5%8C%85)都可以与更高安全性的硬件[钱包](https://learnblockchain.cn/tags/%E9%92%B1%E5%8C%85)结合使用：离线设备旨在永不连接到互联网，并且旨在抵抗篡改和其他形式的物理攻击，从而提供更高级别的安全性。几家公司正在构建此类设备，但两种最广泛使用的是 Ledger 和 Trezor。
 
 ## 结论
 
 在本章中，我们探讨了以太坊客户端。您下载、安装并同步了一个客户端，从而成为以太坊网络的参与者，并通过在您自己的计算机上复制区块链来为系统的健康和稳定做出贡献。
 
-将来，由于围绕以太坊的研究和开发非常庞大，因此将提供新型的以太坊客户端。有趣的领域包括：
+将来，由于围绕以太坊的研究和开发非常庞大，因此将提供新型的[以太坊](https://learnblockchain.cn/tags/以太坊?map=EVM)客户端。有趣的领域包括：
 
 **历史修剪**
 
@@ -728,10 +728,10 @@ Coinbase Wallet 也有 Web 浏览器钱包。它具有与移动版本相同的�
 
 **Verkle 树和无状态性**
 
-能够验证一个区块而无需拥有完整的以太坊状态
+能够验证一个区块而无需拥有完整的[以太坊](https://learnblockchain.cn/tags/以太坊?map=EVM)状态
 
-**zk-EVM**
+**zk-[EVM](https://learnblockchain.cn/tags/EVM?map=EVM)**
 
-通过验证零知识证明来验证区块的正确性，而无需重新执行区块中的所有交易
+通过验证[零知识证明](https://learnblockchain.cn/tags/%E9%9B%B6%E7%9F%A5%E8%AF%86%E8%AF%81%E6%98%8E)来验证区块的正确性，而无需重新执行区块中的所有交易
 
 我们将在以下章节中探讨这些概念，但首先，我们需要揭示使这一切成为可能的真正魔力：密码学。

@@ -1,6 +1,6 @@
 # 第 8 章. 智能合约和 Vyper
 
-Vyper 是一种成熟的、面向合约的 EVM 编程语言，它致力于通过让开发者更容易编写可理解的代码来提供卓越的可审计性。事实上，Vyper 的一个原则是让开发者几乎不可能编写具有误导性的代码。
+Vyper 是一种成熟的、面向合约的 [EVM](https://learnblockchain.cn/tags/EVM?map=EVM) 编程语言，它致力于通过让开发者更容易编写可理解的代码来提供卓越的可审计性。事实上，Vyper 的一个原则是让开发者几乎不可能编写具有误导性的代码。
 
 在本章中，我们将了解智能合约的常见问题，介绍 Vyper 合约编程语言，并将其与 Solidity 进行比较，展示两者之间的差异。
 
@@ -12,7 +12,7 @@ Vyper 是一种成熟的、面向合约的 EVM 编程语言，它致力于通过
 
 Vyper 尝试使编写不安全代码更加困难的一种方法是有意省略 Solidity 的一些功能。这种设计选择反映了 Vyper 以安全为先的原则，以及它从 Python 的清晰性和简洁性中获得的灵感。对于那些正在考虑使用 Vyper 开发智能合约的人来说，了解 Vyper 没有哪些功能以及为什么没有这些功能非常重要。在本节中，我们将探讨这些功能，并提供省略它们的原因。
 
-尽管减少了功能集以减少歧义，但 Vyper 已经发展到可以满足开发人员和审计人员的实际需求。例如，将合约保存在单个文件中的最初理念有助于最大限度地提高可审计性，但随着协议变得越来越大和越来越复杂，它最终成为一个瓶颈。为了解决这个问题，现代 Vyper 引入了一个复杂的模块系统，该系统允许开发人员将合约拆分为多个文件，同时保持对状态访问和代码重用的严格控制。该模块系统遵循组合原则而不是传统的继承，从而在结构和可读性之间取得了更好的平衡。Vyper 在高保证用例中发挥着越来越重要的作用，例如去中心化金融 (DeFi) 协议和质押系统，在这些用例中，开发人员非常重视清晰性和易于审计。
+尽管减少了功能集以减少歧义，但 Vyper 已经发展到可以满足开发人员和审计人员的实际需求。例如，将合约保存在单个文件中的最初理念有助于最大限度地提高可审计性，但随着协议变得越来越大和越来越复杂，它最终成为一个瓶颈。为了解决这个问题，现代 Vyper 引入了一个复杂的模块系统，该系统允许开发人员将合约拆分为多个文件，同时保持对状态访问和代码重用的严格控制。该模块系统遵循组合原则而不是传统的继承，从而在结构和可读性之间取得了更好的平衡。Vyper 在高保证用例中发挥着越来越重要的作用，例如去中心化金融 ([DeFi](https://learnblockchain.cn/tags/DeFi?map=EVM)) 协议和质押系统，在这些用例中，开发人员非常重视清晰性和易于审计。
 
 ### 修饰器 (Modifiers)
 
@@ -116,7 +116,7 @@ large_value: uint256 = convert(small_value, uint256)  # 安全向上转换
 back_to_small: uint8 = convert(large_value, uint8)   # 边界检查向下转换
 ```
 
-这种显式方法意味着，在处理类型转换时，虽然 Vyper 代码可能比 Solidity 更冗长，但它也更安全。不可能意外截断值或出现意外的溢出行为，因为每次转换都必须是有意且显式的。如果转换会导致数据丢失，或者如果输入值超出目标类型的有效范围，则 `convert()` 函数将回滚交易。
+这种显式方法意味着，在处理类型转换时，虽然 Vyper 代码可能比 [Solidity](https://learnblockchain.cn/tags/Solidity?map=EVM) 更冗长，但它也更安全。不可能意外截断值或出现意外的溢出行为，因为每次转换都必须是有意且显式的。如果转换会导致数据丢失，或者如果输入值超出目标类型的有效范围，则 `convert()` 函数将回滚交易。
 
 ## 装饰器 (Decorators)
 
@@ -189,7 +189,7 @@ stored_data: public(uint256)
 
 > **注意**
 >
-> Vyper 带有 [内置的通用接口](https://github.com/vyperlang/vyper/tree/master/vyper/builtins/interfaces)，例如 ERC-20 和 ERC-721，允许直接与此类合约进行交互。Vyper 中的合约必须声明为全局变量。声明 ERC-20 变量的示例如下：
+> Vyper 带有 [内置的通用接口](https://github.com/vyperlang/vyper/tree/master/vyper/builtins/interfaces)，例如 [ERC-20](https://learnblockchain.cn/tags/ERC20?map=EVM) 和 [ERC-721](https://learnblockchain.cn/tags/ERC721?map=EVM)，允许直接与此类合约进行交互。Vyper 中的合约必须声明为全局变量。声明 [ERC-20](https://learnblockchain.cn/tags/ERC20?map=EVM) 变量的示例如下：
 > `from vyper.interfaces import ERC20` `token: ERC20`
 
 你还可以使用命令行编译合约。每个 Vyper 合约都保存在一个带有 *.vy* 扩展名的文件中。安装 Vyper 后，你可以通过运行以下命令来编译合约：
@@ -198,7 +198,7 @@ stored_data: public(uint256)
 vyper ~/hello_world.vy
 ```
 
-编译器提供了广泛的输出选项。要以 JSON 格式获取人类可读的 ABI 描述，请使用：
+编译器提供了广泛的输出选项。要以 JSON 格式获取人类可读的 [ABI](https://learnblockchain.cn/tags/ABI?map=EVM) 描述，请使用：
 
 ```bash
 vyper -f abi ~/hello_world.vy
@@ -259,12 +259,12 @@ event SimpleEvent: pass
 log SimpleEvent()
 ```
 
-虽然智能合约可以通过日志事件写入以太坊的链数据，但它们无法读取它们创建的链上日志事件。但是，通过日志事件写入以太坊链数据的优势之一是，轻客户端可以在公共链上发现和读取日志。例如，已发布块中的 `logsBloom` 值可以指示是否存在日志事件。一旦确定了日志事件的存在，就可以从给定的交易收据中获取日志数据。
+虽然智能合约可以通过日志事件写入[以太坊](https://learnblockchain.cn/tags/以太坊?map=EVM)的链数据，但它们无法读取它们创建的链上日志事件。但是，通过日志事件写入[以太坊](https://learnblockchain.cn/tags/以太坊?map=EVM)链数据的优势之一是，轻客户端可以在公共链上发现和读取日志。例如，已发布块中的 `logsBloom` 值可以指示是否存在日志事件。一旦确定了日志事件的存在，就可以从给定的交易收据中获取日志数据。
 
 ## 结论 (Conclusion)
 
 Vyper 是一种功能强大的、引人入胜的面向合约的编程语言。它的设计偏向于“正确性”，优先考虑安全性和简易性。这种方法可能允许程序员编写更好的智能合约，并避免可能导致出现严重漏洞的某些陷阱。
 
-但是，重要的是要认识到一切都有权衡之处。虽然 Vyper 严格的设计原则增强了安全性和代码清晰度，但它们也限制了开发人员在其他语言中可能找到的一些灵活性。此外，Vyper 的使用不如 Solidity 广泛或发达，这意味着可供开发人员使用的资源、库和工具更少。这可能会给那些希望寻找社区支持、预构建解决方案和全面文档的人带来挑战。
+但是，重要的是要认识到一切都有权衡之处。虽然 Vyper 严格的设计原则增强了安全性和代码清晰度，但它们也限制了开发人员在其他语言中可能找到的一些灵活性。此外，[Vyper](https://learnblockchain.cn/tags/Vyper?map=EVM) 的使用不如 [Solidity](https://learnblockchain.cn/tags/Solidity?map=EVM) 广泛或发达，这意味着可供开发人员使用的资源、库和工具更少。这可能会给那些希望寻找社区支持、预构建解决方案和全面文档的人带来挑战。
 
-接下来，我们将更详细地了解智能合约安全性。一旦你了解了智能合约中可能出现的所有可能的安全问题后，Vyper 设计的一些细微之处可能会变得更加明显。
+接下来，我们将更详细地了解[智能合约](https://learnblockchain.cn/tags/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6)安全性。一旦你了解了[智能合约](https://learnblockchain.cn/tags/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6)中可能出现的所有可能的安全问题后，[Vyper](https://learnblockchain.cn/tags/Vyper?map=EVM) 设计的一些细微之处可能会变得更加明显。

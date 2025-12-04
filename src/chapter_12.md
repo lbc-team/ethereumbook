@@ -14,11 +14,11 @@
 
 图 12-1. 传统应用程序的通用架构
 
-想想 Instagram、TikTok、你的银行，或者你手机上的任何应用程序。它们可能依赖于非常相似的架构。只有当其背后的团队允许你访问时，你才能访问该应用程序；如果官方网站无法使用，你无法访问其他网站来登录你的 Instagram 账户。
+想想 Instagram、TikTok、你的银行，或者你手机上的任何应用程序。它们可能依赖于非常相似的架构。只有当其背后的团队允许你访问时，你才能访问该应用程序；如果官方网站无法使用，你无法访问其他网站来登录你的 Instagram [账户](https://learnblockchain.cn/tags/账户?map=EVM)。
 
 DApp 有两个明确的目标：不要有单点故障，并且即使整个团队消失，人们仍然可以使用该产品。它们的架构可以简化为以下方式，如图 12-2 所示：
 
-- 一些以太坊智能合约构成了 DApp 逻辑部分的基础。大多数情况下，Solidity (或 Vyper) 代码也是开源的。
+- 一些以太坊智能合约构成了 DApp 逻辑部分的基础。大多数情况下，[Solidity](https://learnblockchain.cn/tags/Solidity?map=EVM) (或 [Vyper](https://learnblockchain.cn/tags/Vyper?map=EVM)) 代码也是开源的。
 - 智能合约也可以包含数据，充当适当的数据库，并收集所有必要的用户信息。
 - 人们可以通过官方前端访问应用程序，如果主前端由于任何原因无法工作，可以很容易地用替代前端（甚至是由社区制作的）替换。
 
@@ -80,9 +80,9 @@ IPFS 旨在取代 HTTP 作为 Web 应用程序交付的首选协议。与将 Web
 >
 > 编者注：以下代码示例在非常特定的技术上下文中引用“白名单”。尽管此术语具有成问题的含义，但它也已广泛应用于整个行业及其文档中。虽然我们非常重视包容性，但作者选择在此处保留该术语的现状，以使对技术概念的介绍更加清晰。
 
-最常见的用例是当你创建一个 NFT 集合并且想要将不同的地址列入白名单，以便他们可以在公开销售向所有人开放之前以较低的价格铸造这些 NFT 时。你有两个选项。
+最常见的用例是当你创建一个 [NFT](https://learnblockchain.cn/tags/NFT) 集合并且想要将不同的地址列入白名单，以便他们可以在公开销售向所有人开放之前以较低的价格铸造这些 [NFT](https://learnblockchain.cn/tags/NFT) 时。你有两个选项。
 
-第一个是在智能合约中创建一个存储变量，该变量将每个地址映射到一个布尔值，该布尔值对于所有列入白名单的地址都为 true。然后，你可以使用此映射来验证某个地址是否确实已列入白名单。用户在提交 mint 交易时无需提供任何信息；合约只需检查 `msg.sender` 是否包含在白名单映射中，如下所示：
+第一个是在[智能合约](https://learnblockchain.cn/tags/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6)中创建一个存储变量，该变量将每个地址映射到一个布尔值，该布尔值对于所有列入白名单的地址都为 true。然后，你可以使用此映射来验证某个地址是否确实已列入白名单。用户在提交 mint 交易时无需提供任何信息；合约只需检查 `msg.sender` 是否包含在白名单映射中，如下所示：
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -220,7 +220,7 @@ $ npx create-eth@latest
 ? Your project name: mastering-ethereum
 ```
 
-然后，它会询问我们要使用的 Solidity 框架。我们将在这里使用 Hardhat，但你可以随意选择你更熟悉的那个：
+然后，它会询问我们要使用的 [Solidity](https://learnblockchain.cn/tags/Solidity?map=EVM) 框架。我们将在这里使用 Hardhat，但你可以随意选择你更熟悉的那个：
 
 ```
 ? What solidity framework do you want to use?
@@ -274,7 +274,7 @@ $ cd mastering-ethereum
 
 由于这是一个非常基本的教程，我们将不从头开始编写任何合约或修改前端。我们将坚持使用默认值来快速展示通常的工作流程。
 
-首先，你需要启动一个链以进行本地开发。实际上，即使最终的产品将使用部署在以太坊主网上的智能合约，你也不应该使用真正的链来构建和测试你的 DApp。这会非常慢，而且会浪费很多钱。Scaffold-ETH 带有一个非常有用的且简单的命令，可以立即启动一个用于本地开发的新链。你只需要运行：
+首先，你需要启动一个链以进行本地开发。实际上，即使最终的产品将使用部署在[以太坊](https://learnblockchain.cn/tags/以太坊?map=EVM)主网上的[智能合约](https://learnblockchain.cn/tags/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6)，你也不应该使用真正的链来构建和测试你的 DApp。这会非常慢，而且会浪费很多钱。Scaffold-ETH 带有一个非常有用的且简单的命令，可以立即启动一个用于本地开发的新链。你只需要运行：
 
 ```bash
 $ yarn chain
@@ -376,7 +376,7 @@ Burner 钱包是你开发工作流程的一个杀手级功能，因为你无需�
 
 ![选择钱包](https://img.learnblockchain.cn/masterethereumbook/images/ch12/maet_1207.png)
 
-图 12-7. 选择钱包
+图 12-7. 选择[钱包](https://learnblockchain.cn/tags/%E9%92%B1%E5%8C%85)
 
 第二个杀手级功能是 Debug Contracts 部分。要打开它，只需单击页面中心的 Debug Contracts 链接。使用默认示例，你现在应该看到类似图 12-8 的内容。
 
@@ -386,7 +386,7 @@ Burner 钱包是你开发工作流程的一个杀手级功能，因为你无需�
 
 在这里，你可以轻松地与你的所有合约进行交互，而无需在其之上构建任何类型的前端。这在开发过程中非常有用，可以不断检查你的合约是否如你所期望的那样工作。
 
-让我们做一个小演示。首先，我们需要为我们的 burner 钱包充值，以便我们稍后可以发送一些交易来与已部署的合约进行交互。为此，你只需要单击最右边的按钮，如图 12-9 所示。你几乎会立即收到一些 ETH，并且你会看到你的 ETH 余额增加。
+让我们做一个小演示。首先，我们需要为我们的 burner [钱包](https://learnblockchain.cn/tags/%E9%92%B1%E5%8C%85)充值，以便我们稍后可以发送一些交易来与已部署的合约进行交互。为此，你只需要单击最右边的按钮，如图 12-9 所示。你几乎会立即收到一些 ETH，并且你会看到你的 ETH 余额增加。
 
 ![Grab funds 按钮](https://img.learnblockchain.cn/masterethereumbook/images/ch12/maet_1209.png)
 
@@ -492,7 +492,7 @@ $ yarn ipfs
 🚀 上传完成！ 你的网站现在可以访问：https://community.bgipfs.com/ipfs/bafybei…
 ```
 
-如果你访问显示的网站，你应该会看到你的 DApp 在 IPFS 上托管的前端正常工作。“bafy…”字符串是 IPFS 内容哈希。如果你有个人 ENS，并且想将其重定向到此 IPFS 托管的站点，你仍然需要配置 `eth.limo`。
+如果你访问显示的网站，你应该会看到你的 DApp 在 IPFS 上托管的前端正常工作。“bafy…”字符串是 [IPFS](https://learnblockchain.cn/tags/IPFS) 内容哈希。如果你有个人 ENS，并且想将其重定向到此 [IPFS](https://learnblockchain.cn/tags/IPFS) 托管的站点，你仍然需要配置 `eth.limo`。
 
 以下是此 `yarn ipfs` 命令幕后实际发生的事情：
 
@@ -514,4 +514,4 @@ $ yarn ipfs
 
 ## 结论
 
-在本章中，我们探讨了如何使用现代工具从头开始构建一个基本的 DApp，以简化开发工作流程。在下一章中，我们将更仔细地研究以太坊上一些最重要的 DApp（以及 DApp 的类别），它们共同创建了所谓的 DeFi。
+在本章中，我们探讨了如何使用现代工具从头开始构建一个基本的 DApp，以简化开发工作流程。在下一章中，我们将更仔细地研究[以太坊](https://learnblockchain.cn/tags/以太坊?map=EVM)上一些最重要的 [DApp](https://learnblockchain.cn/tags/DApp)（以及 [DApp](https://learnblockchain.cn/tags/DApp) 的类别），它们共同创建了所谓的 [DeFi](https://learnblockchain.cn/tags/DeFi?map=EVM)。
