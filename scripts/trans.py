@@ -1,5 +1,5 @@
 import llm_translator
-from config import LLM_MODEL_DEEPSEEK_V3, LLM_MODEL_GPT_4O_MINI, OPENROUTER_MODEL_GEMINI_20_FLASH
+from config import OPENROUTER_MODEL_GEMINI_20_FLASH
 import os
 from pathlib import Path
 
