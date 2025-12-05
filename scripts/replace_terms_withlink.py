@@ -6,6 +6,7 @@ import traceback
 from pathlib import Path
 
 MAX_LINKS_PER_TERM = 2  # 每个术语在同一文档中最多出现2次链接
+DEBUG = False  # 是否显示调试信息
 
 
 def extract_terms_and_links(termlink_path):
@@ -76,9 +77,26 @@ def is_in_title(text, pos):
     before_text = text[:pos]
     # 查找最近的 #
     last_hash = before_text.rfind('#')
-    if last_hash != -1:
-        return True
-    return False
+    if last_hash == -1:
+        return False
+    
+    # 检查从 # 到当前位置之间是否有换行符
+    # 如果没有换行符，说明在同一行（即在标题中）
+    line_start = before_text.rfind('\n', 0, last_hash)
+    if line_start == -1:
+        line_start = 0
+    else:
+        line_start += 1  # 跳过换行符
+    
+    # 检查当前位置是否在同一行
+    current_line_start = before_text.rfind('\n', 0, pos)
+    if current_line_start == -1:
+        current_line_start = 0
+    else:
+        current_line_start += 1
+    
+    # 如果 # 和当前位置在同一行，说明在标题中
+    return line_start == current_line_start
 
 def is_in_link(text, pos, term_len):
     """检查术语是否在链接中（包括链接文本部分和URL部分）"""
@@ -164,11 +182,25 @@ def add_links_to_content(content, term_links):
                 continue
 
             # 检查是否应该跳过这个匹配
-            if (is_in_code_block(result, pos) or
-                is_in_inline_code(result, pos) or
-                is_in_title(result, pos) or
-                is_in_link(result, pos, len(term)) or
-                is_in_url(result, pos)):
+            skip_reason = None
+            if is_in_code_block(result, pos):
+                skip_reason = "代码块"
+            elif is_in_inline_code(result, pos):
+                skip_reason = "行内代码"
+            elif is_in_title(result, pos):
+                skip_reason = "标题"
+            elif is_in_link(result, pos, len(term)):
+                skip_reason = "链接中"
+            elif is_in_url(result, pos):
+                skip_reason = "URL中"
+            
+            if skip_reason:
+                if DEBUG:
+                    # 获取上下文用于调试
+                    start = max(0, pos - 20)
+                    end = min(len(result), pos + len(term) + 20)
+                    context = result[start:end].replace('\n', '\\n')
+                    print(f"  跳过 '{term}': {skip_reason} (位置 {pos}, 上下文: ...{context}...)")
                 continue
 
             # 替换为链接
@@ -183,6 +215,13 @@ def replace_terms_in_file(file_path, terms_dict):
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
+
+        # 检查是否已经处理过（包含3次以上的 learnblockchain.cn/tags/ 链接）
+        link_count = content.count('https://learnblockchain.cn/tags/')
+        if link_count >= 3:
+            if DEBUG:
+                print(f"  跳过 {file_path}: 已包含 {link_count} 个链接，可能已处理过")
+            return False
 
         # 使用改进的链接添加函数
         new_content = add_links_to_content(content, terms_dict)
@@ -233,9 +272,16 @@ def process_directory(directory, terms_dict):
 
 
 def main():
+    global DEBUG
     try:
         termlink_path = '/Users/emmett/blockdocs/web3map/scripts/termlink.md'
         target_dir = 'src'
+        
+        # 可以通过命令行参数启用调试模式
+        import sys
+        if '--debug' in sys.argv:
+            DEBUG = True
+            print("调试模式已启用")
 
         terms_dict = extract_terms_and_links(termlink_path)
         print(f"从 termlink.md 中找到 {len(terms_dict)} 个术语")

@@ -1,1 +1,4 @@
 book
+.env
+.claude
+scripts/published_articles.json

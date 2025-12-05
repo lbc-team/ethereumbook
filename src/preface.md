@@ -1,4 +1,4 @@
-# 前言
+# 精通以太坊 - 第二版前言
 
 本书是我（Carlo Parisi，又名 Blackie）、Alessandro Mazza 和 Niccolò Pozzolini 共同合作完成的。第一版由 Andreas M. Antonopoulos 和 Gavin Wood 博士于 2016 年至 2019 年间撰写，当然，它对我们的工作产生了重大影响。
 

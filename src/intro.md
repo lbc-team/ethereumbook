@@ -1,6 +1,6 @@
 # 精通以太坊：第二版
 
-这是书籍 "精通[以太坊](https://learnblockchain.cn/tags/以太坊?map=EVM)" 的第二版。您可以通过以下方式访问本书：
+这是书籍 "精通以太坊 " 的第二版。您可以通过以下方式访问本书：
 
 - [在亚马逊上购买本书](https://www.amazon.com/_/dp/1098168429?smid=ATVPDKIKX0DER&_encoding=UTF8&tag=oreilly20-20)
 - [阅读在线版本](https://masteringethereum.xyz)
